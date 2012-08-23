@@ -1,0 +1,1 @@
+<p><b>Total Leads: </b><?php echo $total_leads ?></p>

@@ -1,0 +1,193 @@
+<!doctype html>
+<!--[if IE 7 ]>    <html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+	<title><?php echo $title; ?></title>
+	<meta charset="UTF-8">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<?php echo Asset::js('jquery/jquery-1.5.1.min.js'); ?>
+	
+	<link rel="shortcut icon" href="/favicon.ico">
+	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+	
+	<!-- CSS Styles -->
+	<?php echo Asset::css('style.css'); ?>
+	<?php echo Asset::css('colors.css'); ?>
+	<?php echo Asset::css('jquery.tipsy.css'); ?>
+	<?php echo Asset::css('jquery.wysiwyg.css'); ?>
+	<?php echo Asset::css('jquery.datatables.css'); ?>
+	<?php echo Asset::css('jquery.nyromodal.css'); ?>
+	<?php echo Asset::css('jquery.datepicker.css'); ?>
+	<?php echo Asset::css('jquery.fileinput.css'); ?>
+	<?php echo Asset::css('jquery.fullcalendar.css'); ?>
+	<?php echo Asset::css('jquery.visualize.css'); ?>
+
+	<!-- Google WebFonts -->
+	<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+
+	<?php echo Asset::js('libs/modernizr-1.7.min.js'); ?>
+</head>
+
+<!-- Add class .fixed for fixed layout. You would need also edit CSS file for width -->
+<body>
+
+	<!-- Fixed Layout Wrapper -->
+	<div class="fixed-wraper">
+
+	<!-- Aside Block -->
+	<section role="navigation">
+		<!-- Header with logo and headline -->
+		<div align="center">
+			<?php echo Html::anchor('/', '<img src="/assets/img/gablogo.png">'); ?>
+		</div>
+		
+		<!-- User Info -->
+		<section id="user-info">
+			<img src="https://secure.gravatar.com/avatar/<?php echo md5(strtolower(trim($current_user->email))); ?>?d=mm" alt="Gravatar Image">
+			<div>
+				<?php echo Html::anchor('user/view/'.$current_user->id, $current_user->name); ?>
+				<em><?php echo $group_name; ?></em>
+				<ul>
+					<?php
+						$uri = 'http://www.gravatar.com/avatar/' . md5(strtolower(trim($current_user->email))) . '?d=404'; 
+						$headers = @get_headers($uri);
+						if (!preg_match("|200|", $headers[0])) {
+							echo '<li><a class="button-link" href="http://gravatar.com" target="_newWindow" title="Add your e-mail at Gravatar!" rel="tooltip">Add Your Image</a></li>';
+						}
+						 
+					?>
+					<li><?php echo Html::anchor('user/logout', 'logout', array('class'=>'button-link')); ?></li>
+				</ul>
+			</div>
+		</section>
+		<!-- /User Info -->
+		
+		<!-- Main Navigation -->
+		<nav id="main-nav">
+			<ul>
+				<li><a href="/" title="" class="dashboard no-submenu">Dashboard</a></li> <!-- Use class .no-submenu to open link instead of a sub menu-->
+				<!-- Use class .current to open submenu on page load -->
+				
+				
+				<?php if (Auth::has_access('reports.menu')): ?>
+				<li>
+					<a href="/reports" title="" class="logs">Reports</a>
+					<ul>
+						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('reports/disposition', 'Disposition Report'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('reports.supplier')): ?><li><?php echo Html::anchor('reports/supplier', 'Supplier Reports'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('reports.best_solutions')): ?><li><?php echo Html::anchor('reports/best_solutions', 'Best Solutions Report'); ?></li><?php endif; ?>
+
+					</ul>
+				</li>
+				<?php endif; ?>
+				
+				<?php if (Auth::has_access('database.menu')): ?>
+				<li>
+					<a href="" title="" class="projects">Database</a>
+					<ul>
+						<?php if (Auth::has_access('database.servers')): ?><li><?php echo Html::anchor('database/server', 'Servers'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('database.queries')): ?><li><?php echo Html::anchor('database/query', 'Queries'); ?></li><?php endif; ?>
+					</ul>
+				</li>
+				<?php endif; ?>
+				
+				<?php if (Auth::has_access('data_suppliers.menu')): ?>
+				<li class="current">
+					<a href="/reports" title="" class="logs">Data Suppliers</a>
+					<ul>
+						<?php if (Auth::has_access('data_suppliers.view')): ?><li><?php echo Html::anchor('data/supplier/index', 'View Suppliers'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('data_suppliers.lists')): ?><li><?php echo Html::anchor('data/supplier/list/index', 'Data Lists'); ?></li><?php endif; ?>
+					</ul>
+				</li>
+				<?php endif; ?>
+				
+				<?php if (Auth::has_access('news.menu')): ?>
+				<li>
+					<a href="/reports" title="" class="logs">Latest News</a>
+					<ul>
+						<?php if (Auth::has_access('news.create')): ?><li><?php echo Html::anchor('news/create', 'Add News'); ?></li><?php endif; ?>
+					</ul>
+				</li>
+				<?php endif; ?>
+				
+				<?php if (Auth::has_access('support.menu')): ?>
+				<li>
+					<a href="/reports" title="" class="logs">Support</a>
+					<ul>
+						<?php if (Auth::has_access('support.knowledge_base')): ?><li><?php echo Html::anchor('ss', 'Knowledge Base'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('support.create_ticket')): ?><li><?php echo Html::anchor('help/ticket/create', 'Create Ticket'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('support.view_tickets')): ?><li><?php echo Html::anchor('help/ticket/index', 'View Tickets'); ?></li><?php endif; ?>
+						
+						
+						<?php if (Auth::has_access('support.manage_topics')): ?><li><?php echo Html::anchor('help/topic', 'Manage Topics'); ?></li><?php endif; ?>
+					</ul>
+				</li>
+				<?php endif; ?>
+				
+				<?php if (Auth::has_access('user.menu')): ?>
+				<li>
+					<a href="/users" title="" class="logs">Users</a>
+					<ul>
+						<?php if (Auth::has_access('user.view')): ?><li><?php echo Html::anchor('user/view', 'User List'); ?></li><?php endif; ?>
+					</ul>
+				</li>
+				<?php endif; ?>
+
+				
+			</ul>
+		</nav>
+		<!-- /Main Navigation -->
+		
+		<!-- Sidebar -->
+		<!-- /Sidebar -->
+		
+	</section>
+	<!-- /Aside Block -->
+	
+	<!-- Main Content -->
+	<section role="main">
+
+		
+		<!-- Breadcumbs -->
+		<?php echo Breadcrumb::create_links(); ?>
+		<!-- /Breadcumbs -->
+		
+		<?php if (Session::get_flash('fail')): ?>
+		<div class="notification error">
+			<a href="#" class="close-notification" title="Hide Notification" rel="tooltip">x</a>
+			<p>
+			<?php echo implode('</p><p>', e((array) Session::get_flash('fail'))); ?>
+			</p>
+		</div>
+		<?php endif; ?>
+	
+		<?php echo $content; ?>
+		
+	</section>
+	<!-- /Main Content -->
+	
+	</div>
+	<!-- /Fixed Layout Wrapper -->
+
+	<!-- JS Libs at the end for faster loading -->
+	<?php echo Asset::js('libs/selectivizr.js'); ?>
+	<?php echo Asset::js('jquery/jquery.nyromodal.js'); ?>
+	<?php echo Asset::js('jquery/jquery.tipsy.js'); ?>
+	<?php echo Asset::js('jquery/jquery.wysiwyg.js'); ?>
+	<?php echo Asset::js('jquery/jquery.wysiwyg.link.js'); ?>
+	<?php echo Asset::js('jquery/jquery.datatables.js'); ?>
+	<?php echo Asset::js('jquery/jquery.datepicker.js'); ?>
+	<?php echo Asset::js('jquery/jquery.fileinput.js'); ?>
+	<?php echo Asset::js('jquery/jquery.fullcalendar.min.js'); ?>
+	<?php echo Asset::js('jquery/excanvas.js'); ?>
+	<?php echo Asset::js('jquery/jquery.visualize.js'); ?>
+	<?php echo Asset::js('jquery/jquery.visualize.tooltip.js'); ?>
+	<?php echo Asset::js('script.js'); ?>
+	
+</body>
+</html>
