@@ -1,0 +1,40 @@
+body section[role=navigation]
+{
+	display: none;
+}
+
+body section[role=main] {
+	margin-left:0px;
+}
+
+article header {
+	display: none;
+}
+
+#breadcrumbs
+{
+	display: none;
+}
+
+#remittance-choices
+{
+	display: none;
+}
+
+body
+{
+	font-size: 10pt;
+}
+
+#date-view
+{
+	display: block!important;
+	font-weight: bold;
+}
+
+#gablogo
+{
+	display: block!important;
+	border: 0px!important;
+	
+}

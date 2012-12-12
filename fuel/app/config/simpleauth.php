@@ -51,12 +51,13 @@ return array(
 		 
 		 1	  => array('name' => 'Data Supplier', 'roles' => array('dsupplier')),
 		 
-		 2	  => array('name' => 'Introducer', 'roles' => array('introducer')),
+		 2	  => array('name' => 'External Introducer', 'roles' => array('introducer')),
 		 
 		 5    => array('name' => 'Receptionist', 'roles' => array()),
 		 
+		 
 		 10   => array('name' => 'Telesales', 'roles' => array()),
-		 15   => array('name' => 'Consolidator', 'roles' => array()),
+		 15   => array('name' => 'Consolidator', 'roles' => array('ppi')),
 		 30   => array('name' => 'Admin', 'roles' => array()),
 		 40   => array('name' => 'Legal', 'roles' => array()),
 		 
@@ -64,17 +65,19 @@ return array(
 		 
 		 65   => array('name' => 'External Support Rep', 'roles' => array('telesales_manager', 'area_manager')),
 		 
-		 69   => array('name' => 'Telesales Manager', 'roles' => array('telesales_manager')),
+		 69   => array('name' => 'Telesales Manager', 'roles' => array('telesales_manager', 'ppi')),
 		 
-		 70   => array('name' => 'Sales Manager', 'roles' => array('telesales_manager')),
+		 70   => array('name' => 'Sales Manager', 'roles' => array('telesales_manager', 'ppi')),
 		 
-		 72   => array('name' => 'Super Sales Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager')),
+		 72   => array('name' => 'Super Sales Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'ppi')),
 		 
-		 73   => array('name' => 'Manager', 'roles' => array('telesales_manager', 'manager')),
+		 73   => array('name' => 'Manager', 'roles' => array('telesales_manager', 'manager', 'ppi')),
 		 
-		 75	  => array('name' => 'Area Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier')),
+		 75	  => array('name' => 'Area Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi')),
 		 
-		 80   => array('name' => 'Director', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier')),
+		 80   => array('name' => 'Director', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi')),
+		 
+		 96   => array('name' => 'Database Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier')),
 		 
 		 97   => array('name' => 'Dialler Manager', 'roles' => array()),
 		 
@@ -108,7 +111,7 @@ return array(
 		 ),
 		 
 		 'telesales_manager' => array(
-		 	'reports' => array('menu','disposition'),
+		 	'reports' => array('menu','disposition','all_centers'),
 		 ),
 		 
 		 'manager' => array(
@@ -116,7 +119,12 @@ return array(
 		 ),
 		 
 		 'area_manager' => array(
-		 	'reports' => array('all_centers'),
+		 	'reports' => array('all_centers','commission'),
+		 ),
+		 
+		 
+		 'ppi' => array(
+		 	'ppi' => array('menu','referrals'),
 		 ),
 		 
 		 'superuser' => true,

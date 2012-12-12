@@ -1,0 +1,51 @@
+.companyChoice
+{
+	float: left;
+
+	height: 30px;
+	min-width: 200px;
+	line-height: 30px;
+	text-align: center;
+	font-family: 'Rambla', sans-serif;
+	font-weight: bold;
+	font-size: 16px;
+	
+	padding-left: 40px;
+	padding-right: 10px;
+	margin: 4px 10px 4px 0px;
+	
+	border-radius: 8px;
+	
+	cursor: pointer;
+	
+}
+
+.deselected
+{
+
+	color: white;
+	
+	background-color: #5fa0bc;
+	
+	border-color: #87b8ce;
+	border-style: outset;
+	border-width: 2px;
+	
+	text-shadow: 1px 1px 2px black;
+	
+}
+
+.selected
+{
+
+	color: white;
+	
+	background-color: #137a5e;
+	
+	border-color: #6db5a2;
+	border-style: inset;
+	border-width: 2px;
+	
+	text-shadow: 1px 1px 2px black;
+	
+}

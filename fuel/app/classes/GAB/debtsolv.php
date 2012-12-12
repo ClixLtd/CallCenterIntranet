@@ -29,7 +29,631 @@ class Debtsolv {
 	
 	
 	
+	public static function change_center($ds_lead_id, $new_center)
+	{
+		$success = FALSE;
+		$message = "";
+		
+		// Check lead exists in Leadpool
+		$leadpool = \DB::query("
+			SELECT
+				  ClientID
+				, LeadBatchID
+				, LeadRef
+				, LeadRef2
+				, CONVERT(datetime, DateCreated, 120) AS DateCreated
+			FROM
+				Leadpool_DM.dbo.Client_LeadDetails
+			WHERE
+				ClientID = ".$ds_lead_id."
+		")->cached(0)->execute(static::$_connection);
+		
+		// Change LeadRef2
+		
+		if ($leadpool->count() > 0)
+		{
+			\DB::query("UPDATE Leadpool_DM.dbo.Client_LeadDetails SET LeadRef2='".$new_center."' WHERE ClientID=".$ds_lead_id)->execute(static::$_connection);
+			
+			$referral_table = \DB::query("
+				SELECT
+					  id
+					, list_id
+					, lead_id
+					, leadpool_id
+					, list_name
+					, short_code
+					, user_login
+					, full_name
+					, referral_date
+					, product
+				FROM
+					Dialler.dbo.referrals
+				WHERE
+					leadpool_id = ".$ds_lead_id."
+			")->execute(static::$_connection);
+			
+			$our_referral = $leadpool->as_array();
+			
+			$success = TRUE;
+			$message = "";
+			
+			if ($referral_table->count() > 0)
+			{
+				// Update the entry
+				\DB::query("UPDATE Dialler.dbo.referrals SET short_code='".$new_center."', referral_date='".$our_referral[0]['DateCreated']."' WHERE leadpool_id = ".$ds_lead_id."")->execute(static::$_connection);
+			}
+			else
+			{
+				// Create a new entry
+				\DB::query("INSERT INTO Dialler.dbo.referrals
+					( list_id
+					,lead_id
+					,leadpool_id
+					,list_name
+					,short_code
+					,user_login
+					,full_name
+					,referral_date
+					,product)
+					VALUES
+					( ''
+					, ''
+					, " . $ds_lead_id . "
+					, ''
+					, '" . $new_center . "'
+					, ''
+					, ''
+					, '".$our_referral[0]['DateCreated']."'
+					, 'DR')")->execute(static::$_connection);
+			}
+			
+			\Cache::delete_all("disposition.report/");
+			
+		}
+		else
+		{
+			$success = FALSE;
+			$message = "Leadpool ID not found!";
+		}
+		
+		return array(
+			"success" => $success,
+			"message" => $message,
+		);
+		
+	}
 	
+	
+	
+	// Start New Debtsolv Referral table functions
+	
+	public static function get_referrals($centers=null, $start_date=null, $end_date=null, $cache=0)
+	{
+		$date_where = (!is_null($start_date) AND !is_null($end_date)) 
+			? "(referral_date >= CONVERT(datetime, '".$start_date."', 105) AND referral_date <= CONVERT(datetime, '".$end_date."', 105) ) "
+			: "referral_date >= DATEADD(DAY,DATEDIFF(day,0,GetDate()),0)";
+		
+		if (!is_null($centers))
+		{
+			$center_where = (is_array($centers)) ? "AND short_code IN ('".implode("','", $centers)."')" : "AND short_code='".$centers."'";
+		}
+		else
+		{
+			$center_where = "";
+		}
+		
+		
+		$results = \DB::query("
+			SELECT
+				list_id,
+				lead_id,
+				leadpool_id,
+				list_name,
+				short_code,
+				user_login,
+				full_name,
+				referral_date
+			FROM
+				Dialler.dbo.referrals
+			WHERE
+				" . $date_where . "
+				" . $center_where . ";
+		")->cached($cache)->execute(static::$_connection);
+		
+		
+		return $results;
+	}
+	
+	
+	
+	
+	
+	// End New Debtsolv Referral table functions
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// Today's Stats
+	
+	public static function paid_in($start_date=null, $end_date=null)
+	{
+		$date_where = (!is_null($start_date) AND !is_null($end_date)) 
+			? "(Date >= CONVERT(datetime, '".$start_date."', 105) AND Date <= CONVERT(datetime, '".$end_date."', 105) ) "
+			: "Date = DATEADD(DAY,DATEDIFF(day,0,GetDate()),0)";
+
+		$results = \DB::query("
+			SELECT
+				count(AmountIn) AS paid,
+				(SUM(AmountIn)/100) AS payments
+			FROM
+				Debtsolv.dbo.Payment_Account AS PA
+			WHERE
+				".$date_where.";
+		")->cached(600)->execute(static::$_connection);
+		
+		
+		return array(
+			'paid' => $results[0]['paid'],
+			'total' => $results[0]['payments'],
+		);
+
+
+	}
+	
+	
+	public static function paid_in_report($start_date=null, $end_date=null)
+	{
+		$date_where = (!is_null($start_date) AND !is_null($end_date)) 
+			? "(Date >= CONVERT(datetime, '".$start_date."', 105) AND Date <= CONVERT(datetime, '".$end_date."', 105) ) "
+			: "(Date >= CONVERT(datetime, '".date("t-m-Y", strtotime('last month'))."', 105) AND Date <= CONVERT(datetime, '".((int)date("t", strtotime('this month'))-1)."-".date("m-Y", strtotime('this month'))."', 105) ) ";
+
+
+		$results = \DB::query("
+			SELECT
+				  PA.ClientID
+				, (CD.Forename + ' ' + CD.Surname) AS Name
+				, ISNULL(LCLD.LeadRef2,'NONE') AS Office
+				, DCPD.NormalExpectedPayment AS DI
+				, (SELECT COUNT(AmountIn) FROM Debtsolv.dbo.Payment_Account WHERE AmountIn > 0 AND ClientID=PA.ClientID) AS TotalPayments
+				, (SELECT SUM(AmountIn) FROM Debtsolv.dbo.Payment_Account WHERE AmountIn > 0 AND ClientID=PA.ClientID) AS TotalPaid
+				, (
+			        SELECT Top (1)
+			          Undersigned
+			        FROM
+			          Debtsolv.dbo.Users AS D_URS
+			        LEFT JOIN
+			          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+			        WHERE
+			          D_CLD.LeadPoolReference = LCLD.ClientID
+			      ) AS 'Consolidator'
+			FROM
+				Debtsolv.dbo.Payment_Account AS PA
+			LEFT JOIN
+				Debtsolv.dbo.Client_PaymentData AS DCPD ON PA.ClientID=DCPD.ClientID
+			LEFT JOIN
+				Debtsolv.dbo.Client_LeadData AS DCLD ON PA.ClientID=DCLD.Client_ID
+			LEFT JOIN 
+				Leadpool_DM.dbo.Client_LeadDetails AS LCLD ON DCLD.LeadPoolReference=LCLD.ClientID
+			LEFT JOIN
+				LeadPool_DM.dbo.Client_Details AS CD ON LCLD.ClientID = CD.ClientID
+			WHERE
+				".$date_where."
+				AND PA.AmountIn > 0
+		")->cached(3600)->execute(static::$_connection);
+		
+		
+		// Dedupe all the data and only add to the list if they have reached their DI
+		$all_clients = array();
+		$client_list = array();
+		$invalid_clients = array();
+		foreach ($results AS $result)
+		{
+			if ($result['Consolidator'] <> "FAB Admin")
+			{
+				if ($result['TotalPaid'] == $result['DI'])
+				{
+					$client_list[] = $result;
+				}
+				
+				
+				if ((int)$result['DI'] > 0 AND $result['Office']<>'NONE' AND $result['Office']<>' ')
+				{
+					// Check that the 
+					if ($result['TotalPaid'] == $result['DI'])
+					{
+						$all_clients[$result['ClientID']] = $result;
+					} 
+					else if ($result['TotalPaid'] > $result['DI'])
+					{
+						// Client has already reached their DI, but when?
+						// Check database and find out
+						$quickCheck = \DB::query("SELECT Date,AmountIn FROM Debtsolv.dbo.Payment_Account WHERE AmountIn > 0 AND ClientID=".$result['ClientID']." ORDER BY Date ASC")->cached(3600)->execute(static::$_connection);
+						$running_total = 0;
+						$first_pay_date = null;
+						foreach ($quickCheck AS $check)
+						{
+							if (is_null($first_pay_date))
+							{
+								$running_total = $running_total + $check['AmountIn'];
+								if ($running_total >= $result['DI'])
+								{
+									$first_pay_date = $check['Date'];
+								}
+							}
+						}
+						
+						if (strtotime($first_pay_date) >= strtotime($start_date) AND strtotime($first_pay_date) <= strtotime($end_date) AND !isset($all_clients[$result['ClientID']]))
+						{
+							$all_clients[$result['ClientID']] = $result;
+							$client_list[] = $result;
+						}
+						
+						
+					}
+				}
+				else
+				{
+					if ($result['TotalPaid'] == $result['DI'] || $result['DI'] == 0)
+					{
+						$invalid_clients[] = $result;
+					}
+				}
+			}
+		}
+		
+		// Group the data by Consolidator
+		$consolidator_clients = array();
+		foreach ($all_clients AS $client)
+		{
+		
+			$consolidator_clients[$client['Consolidator']]['TotalDue'] = (isset($consolidator_clients[$client['Consolidator']]['TotalDue'])) ? $consolidator_clients[$client['Consolidator']]['TotalDue'] : 0;
+			$consolidator_clients[$client['Consolidator']]['Weekly'] = (isset($consolidator_clients[$client['Consolidator']]['Weekly'])) ? $consolidator_clients[$client['Consolidator']]['Weekly'] : 0;
+			$consolidator_clients[$client['Consolidator']]['Internal'] = (isset($consolidator_clients[$client['Consolidator']]['Internal'])) ? $consolidator_clients[$client['Consolidator']]['Internal'] : 0;
+			$consolidator_clients[$client['Consolidator']]['External'] = (isset($consolidator_clients[$client['Consolidator']]['External'])) ? $consolidator_clients[$client['Consolidator']]['External'] : 0;
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			// If the comission is based on a weekly payment
+			if ($client['TotalPayments'] > 1)
+			{
+				$client['DuePayment'] = ($client['DI']*0.1);
+				
+				$consolidator_clients[$client['Consolidator']]['Clients']['Weekly'][] = $client;
+				
+				$consolidator_clients[$client['Consolidator']]['Weekly'] = (isset($consolidator_clients[$client['Consolidator']]['Weekly'])) ? $consolidator_clients[$client['Consolidator']]['Weekly'] + number_format($client['DuePayment']/100,2,'.','') : number_format($client['DuePayment']/100,2,'.','');
+			}
+			else
+			{
+				// If the comission is internal
+				if (in_array($client['Office'], array( 'GAB', 'RESOLVE' )))
+				{
+					$client['DuePayment'] = ($client['DI']*0.1);
+					
+					$consolidator_clients[$client['Consolidator']]['Clients']['Internal'][] = $client;
+					
+					$consolidator_clients[$client['Consolidator']]['Internal'] = (isset($consolidator_clients[$client['Consolidator']]['Internal'])) ? $consolidator_clients[$client['Consolidator']]['Internal'] + number_format($client['DuePayment']/100,2,'.','') : number_format($client['DuePayment']/100,2,'.','');
+				}
+				else if (in_array($client['Office'], array( 'GBS', 'RJ5', 'SO', 'SixEleven' )))
+				{
+					$client['DuePayment'] = ($client['DI']*0.1);
+					
+					$consolidator_clients[$client['Consolidator']]['Clients']['External'][] = $client;
+					
+					$consolidator_clients[$client['Consolidator']]['External'] = (isset($consolidator_clients[$client['Consolidator']]['External'])) ? $consolidator_clients[$client['Consolidator']]['External'] + number_format($client['DuePayment']/100,2,'.','') : number_format($client['DuePayment']/100,2,'.','');
+				}
+				else
+				{
+					$client['DuePayment'] = 0;
+					
+					print_r($client);
+				}
+				
+			}
+		
+			
+			$consolidator_clients[$client['Consolidator']]['TotalDue'] = (isset($consolidator_clients[$client['Consolidator']]['TotalDue'])) ? $consolidator_clients[$client['Consolidator']]['TotalDue'] + number_format($client['DuePayment']/100,2,'.','') : number_format($client['DuePayment']/100,2,'.','');
+			
+			
+			//$consolidator_clients[$client['Consolidator']][] = $client;
+			
+		}
+		
+		
+		
+		
+		return array(
+			'valids'   => $consolidator_clients,
+			'invalids' => $invalid_clients,
+			'all-clients' => $client_list,
+		);
+
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public static function get_referral_count($center=null, $start_date=null, $end_date=null, $cache=null)
+	{
+	
+		if (!is_null($center))
+		{
+			if ($center == "INTERNAL")
+			{
+				$center_query = "AND CLD.LeadRef2 IN ('GAB','GBS')";
+			}
+			else
+			{
+				$center_query = "AND CLD.LeadRef2 = '".$center."'";
+			}
+		}
+		else
+		{
+			$center_query = "";
+		}
+	
+	
+		$date_where = (!is_null($start_date) AND !is_null($end_date)) 
+			? "(
+				(CLD.DateCreated >= CONVERT(datetime, '". $start_date ."', 105) AND CLD.DateCreated <= CONVERT(datetime, '". $end_date ."', 105)+1)
+				OR
+				(CC.LastContactAttempt >= CONVERT(datetime, '". $start_date ."', 105) AND CC.LastContactAttempt <= CONVERT(datetime, '". $end_date ."', 105)+1)
+			) "
+			: "(CLD.DateCreated >= DATEADD(day, DATEDIFF(day, 0, GetDate()), 0) OR CC.LastContactAttempt >= DATEADD(day, DATEDIFF(day, 0, GetDate()), 0))";
+			
+		
+		if (!is_null($cache))
+		{
+			$data_cache = $cache;
+		}
+		else
+		{
+			$data_cache = (!is_null($start_date) AND !is_null($end_date)) ? 86400 : 30;
+		}
+			
+		$results1 = \DB::query("SELECT CLD.ClientID
+		  ,CLD.LeadRef AS 'Dialler Lead ID'
+	      ,(CD.Forename + ' ' + CD.Surname) AS Name
+	      ,LSO.[Description] AS 'Lead Source'
+	      ,CLD.LeadRef2 AS Office
+	      ,D_U.Undersigned AS 'Telesales Agent',
+	      (
+	        SELECT Top (1)
+	          Undersigned
+	        FROM
+	          Debtsolv.dbo.Users AS D_URS
+	        LEFT JOIN
+	          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+	        WHERE
+	          D_CLD.LeadPoolReference = CLD.ClientID
+	      ) AS 'Consolidator'
+	      ,TCR.[Description]
+	      ,CASE
+	         WHEN D_CPD.InitialAgreedAmount > 0 AND CC.ContactResult = 1500
+	            THEN 'DR'
+	         WHEN (D_CPD.InitialAgreedAmount is null OR D_CPD.InitialAgreedAmount <= 0) AND CC.ContactResult = 1500
+	            THEN 'PPI'
+	         ELSE
+	           ''
+	         END AS Product
+	      ,D_CPD.InitialAgreedAmount / 100 AS DI,
+	      (
+	      	SELECT Top (1)
+	      		ResponseText
+	      	FROM
+	      		Debtsolv.dbo.Client_CustomQuestionResponses
+	      	WHERE
+	      		QuestionID = 1
+	      		AND ClientID = D_CLD.Client_ID
+	      ) AS 'Delivery'
+	      ,CONVERT(varchar, CLD.DateCreated, 105) AS 'Referred Date'
+	      ,CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
+	      ,CASE
+	         WHEN CC.ContactResult = 700
+	           THEN CONVERT(varchar, CC.Appointment, 120)
+	         ELSE
+	           ''
+	       END AS 'Call Back Date'
+	  FROM
+	    LeadPool_DM.dbo.Client_LeadDetails AS CLD
+	  LEFT JOIN
+	    LeadPool_DM.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
+	  LEFT JOIN
+	    LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+	  LEFT JOIN
+	    LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+	  LEFT JOIN
+		LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+	  LEFT JOIN
+		LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+	  LEFT JOIN
+	    Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+	  LEFT JOIN
+	    Debtsolv.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+	  LEFT JOIN
+	    Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+	  LEFT JOIN
+	  	Dialler.dbo.referrals AS DI_REF ON CLD.ClientID = DI_REF.leadpool_id
+	  WHERE
+	    ".$date_where."
+		AND NOT ((D_CPD.InitialAgreedAmount is null OR D_CPD.InitialAgreedAmount <= 0) AND CC.ContactResult = 1500)
+		AND TCR.Description <> 'Referred'
+	    ".$center_query."
+	    AND ISNULL(DI_REF.product,'DR') = 'DR'
+	  ORDER BY
+		CLD.LeadRef2
+	    ,TCR.[Description]
+	    ,Product
+	    ,CLD.DateCreated DESC")->cached($data_cache)->execute(static::$_connection);
+	    
+	    
+	    $results2 = \DB::query("SELECT CLD.ClientID
+		  ,CLD.LeadRef AS 'Dialler Lead ID'
+	      ,(CD.Forename + ' ' + CD.Surname) AS Name
+	      ,LSO.[Description] AS 'Lead Source'
+	      ,CLD.LeadRef2 AS Office
+	      ,D_U.Undersigned AS 'Telesales Agent',
+	      (
+	        SELECT Top (1)
+	          Undersigned
+	        FROM
+	          BS_Debtsolv_DM.dbo.Users AS D_URS
+	        LEFT JOIN
+	          BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+	        WHERE
+	          D_CLD.LeadPoolReference = CLD.ClientID
+	      ) AS 'Consolidator'
+	      ,TCR.[Description]
+	      ,CASE
+	         WHEN D_CPD.InitialAgreedAmount > 0 AND CC.ContactResult = 1500
+	            THEN 'DR'
+	         WHEN (D_CPD.InitialAgreedAmount is null OR D_CPD.InitialAgreedAmount <= 0) AND CC.ContactResult = 1500
+	            THEN 'PPI'
+	         ELSE
+	           ''
+	         END AS Product
+	      ,D_CPD.InitialAgreedAmount / 100 AS DI,
+	      (
+	      	SELECT Top (1)
+	      		ResponseText
+	      	FROM
+	      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
+	      	WHERE
+	      		QuestionID = 1
+	      		AND ClientID = D_CLD.Client_ID
+	      ) AS 'Delivery'
+	      ,CONVERT(varchar, CLD.DateCreated, 105) AS 'Referred Date'
+	      ,CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
+	      ,CASE
+	         WHEN CC.ContactResult = 700
+	           THEN CONVERT(varchar, CC.Appointment, 120)
+	         ELSE
+	           ''
+	       END AS 'Call Back Date'
+	  FROM
+	    BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD
+	  LEFT JOIN
+	    BS_LeadPool_DM.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
+	  LEFT JOIN
+	    BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+	  LEFT JOIN
+	    BS_LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+	  LEFT JOIN
+		BS_LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+	  LEFT JOIN
+		BS_LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+	  LEFT JOIN
+	    BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+	  LEFT JOIN
+	    BS_Debtsolv_DM.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+	  LEFT JOIN
+	    BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+	  LEFT JOIN
+	  	Dialler.dbo.referrals AS DI_REF ON CLD.ClientID = DI_REF.leadpool_id
+	  WHERE
+	    ".$date_where."
+		AND NOT ((D_CPD.InitialAgreedAmount is null OR D_CPD.InitialAgreedAmount <= 0) AND CC.ContactResult = 1500)
+		AND TCR.Description <> 'Referred'
+	    ".$center_query."
+	    AND ISNULL(DI_REF.product,'DR') = 'DR'
+	  ORDER BY
+		CLD.LeadRef2
+	    ,TCR.[Description]
+	    ,Product
+	    ,CLD.DateCreated DESC")->cached($data_cache)->execute(static::$_connection);
+	    
+	    $results = array();
+	    
+	    foreach ($results1 AS $rsult)
+	    {
+		    $results[] = $rsult;
+	    }
+	    
+	    foreach ($results2 AS $rsult)
+	    {
+		    $results[] = $rsult;
+	    }
+	    
+	    
+	    
+	    $return_array = array(
+	    	'referrals' => 0,
+	    	'pack_outs' => 0,
+	    	'pack_outs_value' => 0,
+	    );
+	    
+	    
+	    if (!is_null($start_date) AND !is_null($end_date))
+	    {
+	    	$return_array = array(
+	    		'referrals' => 0,
+	    		'pack_outs' => 0,
+	    		'pack_outs_value' => 0,
+	    	);
+		    foreach ($results AS $result)
+		    {
+			    if ($result['Description']=='Lead Completed')
+			    {
+			    	$return_array['pack_outs']++;
+			    	$return_array['pack_outs_value'] = $return_array['pack_outs_value'] + $result['DI'];
+			    }
+			    
+			    $return_array['referrals']++;
+			   
+		    }
+	    }
+	    else
+	    {
+	    	$return_array = array(
+		    	'referrals' => 0,
+		    	'pack_outs' => 0,
+		    	'pack_outs_value' => 0,
+		    	'pack_outs_previous' => 0,
+		    	'pack_outs_previous_value' => 0,
+		    );
+		    foreach ($results AS $result)
+		    {
+			    if ($result['Description']=='Lead Completed')
+			    {
+			    	if ($result['Referred Date'] == date("d-m-Y"))
+			    	{
+				    	$return_array['pack_outs']++;
+				    	$return_array['pack_outs_value'] = $return_array['pack_outs_value'] + $result['DI'];
+				    }
+				    else
+				    {
+					    $return_array['pack_outs_previous']++;
+				    	$return_array['pack_outs_previous_value'] = $return_array['pack_outs_value'] + $result['DI'];
+				    }
+			    }
+			    
+			    if ($result['Referred Date'] == date("d-m-Y"))
+			    {
+			    	$return_array['referrals']++;
+			    }
+		    }
+	    }
+	    
+	    
+	    
+	    return $return_array;
+	    
+	}
 	
 	
 	
@@ -162,6 +786,7 @@ class Debtsolv {
 				, LSO.Description AS 'Lead Source'
 				, (CD.Forename + ' ' + CD.Surname) AS Name
 				, SUM(AmountIn)/100 AS 'Total Payments'
+				, PD.InitialAgreedAmount/100 AS DI
 				, COUNT(AmountIn) AS 'Number of Payments'
 			FROM
 				Debtsolv.dbo.Payment_Account AS PA
@@ -175,10 +800,12 @@ class Debtsolv {
 				LeadPool_DM.dbo.LeadBatch AS LBA ON CLDe.LeadBatchID = LBA.ID
 			LEFT JOIN
 				LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+			LEFT JOIN
+				DebtSolv.dbo.Client_PaymentData AS PD ON PA.ClientID = PD.ClientID
 			WHERE
 				LSO.Reference IN ('".$client_ids."')
 				AND PA.AmountIn > 0
-			GROUP BY PA.ClientID, CD.Forename, CD.Surname, CLD.LeadPoolReference, LSO.Description, LSO.Reference;")->cached(900)->execute(static::$_connection);
+			GROUP BY PA.ClientID, CD.Forename, CD.Surname, CLD.LeadPoolReference, LSO.Description, LSO.Reference, PD.InitialAgreedAmount;")->cached(900)->execute(static::$_connection);
 		
 		return $results;
 		
@@ -259,6 +886,28 @@ class Debtsolv {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// Save To Debtsolv functions go down here!
+	
+	
+	
+	
+	
+	
+	
+	
 	public static function insert_lead_details($lead_id, $list_id, $dialler_id)
 	{
 		
@@ -275,6 +924,11 @@ class Debtsolv {
 				"message" 	=> 'Lead already exists.',
 			);
 		}
+		
+		
+		
+		
+		
 		
 		
 		$lead_batch_id = \DB::query("SELECT Top (1) ID FROM ".static::$_debtsolv_database.".dbo.Type_Lead_Source 

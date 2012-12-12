@@ -7,11 +7,13 @@
 			<nav>
 				<ul class="tab-switch">
 					<li><a class="default-tab" href="#quickview">Quick View</a></li>
+					<li><a href="#diallerdata">Dialler Data</a></li>
 					<li><a href="#referrals">Referrals</a></li>
 					<li><a href="#packouts">Pack Outs</a></li>
 					<li><a href="#packins">Pack Ins</a></li>
 					<li><a href="#payments">Payments</a></li>
 					<li><a href="#supplierpayouts">Supplier Payouts</a></li>
+					<li><a href="#remittance">Remittance</a></li>
 				</ul>
 			</nav>
 			
@@ -23,6 +25,71 @@
 	<section>
 	
 	
+	<div class="tab" id="remittance">
+		<nav style="margin-bottom: 10px;">
+			<select id="remittance-choices">
+			</select>
+			
+			<div id="gablogo" style="text-align: right; display: none;">
+				<?php echo Html::anchor('/', '<img src="/assets/img/gablogo.png">'); ?>
+			</div>
+			
+			<div id="date-view" style="display: none;">
+			</div>
+		</nav>
+		
+		<div class="clearfix"></div>
+		
+		<article class="full-block">
+			<table id="remittance-table">
+				<thead>
+					<tr>
+						<th>Client ID</th>
+						<th>Dialler List</th>
+						<th>Client Name</th>
+						<th>Payment</th>
+						<th>Owed</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</article>
+	</div>
+	
+	
+	
+	<div class="tab" id="diallerdata">
+		<article class="full-block">
+			<h3>Supplier Payouts</h3>
+			
+			<article class="full-block">
+				<table id="diallerdata_table"></table>
+				
+				<script>
+					$(document).ready(function() {
+					
+						$.ajax({
+							"url" : "/reports/list_reports/<?php echo $campaign_id; ?>.json",
+							"success": function ( json ) {
+								if (json['error']) {
+									alert(json['error']);
+								} else {
+									$('#diallerdata_table').dataTable(json)
+								}
+							},
+							"dataType": "json"
+						});
+					
+					})
+				</script>
+
+			</article>
+			
+		</article>
+	</div>
+	
+	
 	<div class="tab" id="supplierpayouts">
 		<article class="full-block">
 			<h3>Supplier Payouts</h3>
@@ -32,6 +99,75 @@
 			
 				<script>
 					$(document).ready(function() {
+					
+						var remittanceDetails = "";
+						
+						$("#remittance-choices").change(function () {
+							setRemittance($(this).val());
+						});
+						
+					
+						function addCommas(nStr)
+						{
+							nStr = nStr.toFixed(2);
+							nStr += '';
+							x = nStr.split('.');
+							x1 = x[0];
+							x2 = x.length > 1 ? '.' + x[1] : '';
+							var rgx = /(\d+)(\d{3})/;
+							while (rgx.test(x1)) {
+								x1 = x1.replace(rgx, '$1' + ',' + '$2');
+							}
+							return x1 + x2;
+						}
+					
+						function setRemittance(dateString)
+						{
+							$("#date-view").html("Remittance for " + dateString);
+						
+							$("#remittance-table tbody").html("");
+						
+							var secondTotal = 0;
+							var firstTotal = 0;
+							
+							firstPayments = remittanceDetails['first'][dateString];
+							secondPayments = remittanceDetails['second'][dateString];
+							
+							$("#remittance-table tbody").append('<tr><th colspan="5">First Payments This Month</th></th>');
+							
+							if (firstPayments === undefined)
+							{
+								$("#remittance-table tbody").append('<tr><td colspan="5">No First Payments this Month.</td></tr>');
+							} else {
+								
+								$.each(firstPayments, function(key, data) {
+									$("#remittance-table tbody").append('<tr><td>'+data['ClientID']+'</td><td>'+data['ListName']+'</td><td>'+data['Name']+'</td><td>&pound;'+addCommas((data['DI']/100))+'</td><td>&pound;'+addCommas(((data['DI']*0.75)/100))+'</td></tr>');
+									firstTotal = firstTotal + ((data['DI']*0.75)/100);
+								})
+								$("#remittance-table tbody").append('<tr><td align="right" style="text-align: right;" colspan="4"><b>First Payments Value : </b></td><td><b>&pound;'+addCommas(firstTotal)+'</b></td></tr>');
+							}
+							
+							$("#remittance-table tbody").append('<tr><th colspan="5">Second Payments This Month</th></th>');
+							
+							if (secondPayments === undefined)
+							{
+								$("#remittance-table tbody").append('<tr><td colspan="5">No Second Payments this Month.</td></tr>');
+							} else {
+								
+								$.each(secondPayments, function(key,data) {
+									$("#remittance-table tbody").append('<tr><td>'+data['ClientID']+'</td><td>'+data['ListName']+'</td><td>'+data['Name']+'</td><td>&pound;'+addCommas((data['DI']/100))+'</td><td>&pound;'+addCommas(((data['DI']*0.5)/100))+'</td></tr>');
+									secondTotal = secondTotal + ((data['DI']*0.5)/100);
+								})
+								$("#remittance-table tbody").append('<tr><td align="right" style="text-align: right;" colspan="4"><b>Second Payments Value : </b></td><td><b>&pound;'+addCommas(secondTotal)+'</b></td></tr>');
+								
+								
+								
+							}
+							
+							$("#remittance-table tbody").append('<tr><th align="right" style="text-align: right;" colspan="4"><b>Total Payment : </b></th><th><b>&pound;'+addCommas((firstTotal+secondTotal))+'</b></th></tr>');
+							
+						}
+					
 						$.ajax({
 							"url" : "/reports/supplier_payouts/<?php echo $campaign_id; ?>.json",
 							"success": function ( json ) {
@@ -40,6 +176,15 @@
 								} else {
 									$('#supplierpayouts_table').dataTable(json)
 									$('#supplier_payments_available').html(json['totalPayments']);
+									
+									remittanceDetails = json['allClientsMonthly'];
+									
+									$.each(json['allClientsMonths'], function(index, value) {
+										$("#remittance-choices").append('<option>' + value + '</option>');
+									})
+									
+									setRemittance(json['allClientsMonths'][0]);
+									
 								}
 							},
 							"dataType": "json"
@@ -63,6 +208,7 @@
 				<table class="zebra-striped datatable">
 					<thead>
 						<tr>
+							<th><input type="checkbox"></th>
 				<?php foreach ($list_stats_headings AS $column): ?>
 							<th><?php echo $column; ?></th>
 				<?php endforeach; ?>
@@ -71,6 +217,7 @@
 					<tbody>
 				<?php foreach ($list_stats as $query_result): ?>
 						<tr>
+							<td><input type="checkbox"></td>
 				<?php foreach ($list_stats_headings AS $column): ?>
 							<td>
 								<?php echo $query_result[$column]; ?>
@@ -83,6 +230,66 @@
 			</article>
 			
 		</article>
+		
+		<div class="clearfix"></div>
+		
+		
+		<article class="full-block">
+			
+			<div class="article-container">
+				<header>
+					<h2>Conversion Ratios Over Dates</h2>
+				</header>
+			
+				<section>
+				
+					<div id="conversionRatioChart" style="width: 100%; height: 500px;"></div>
+					
+					<script>
+					$(function () {
+					
+var conversionData = {
+	<?php foreach($conversions AS $list=>$conversion): ?>
+"<?php echo $list; ?>": {
+		label: "<?php echo $list; ?>",
+		data: [ <?php foreach($conversion AS $date=>$ratio): ?>[<?php echo (((int)strtotime($date))*1000); ?>,<?php echo $ratio; ?>], <?php endforeach; ?>]
+	},
+<?php endforeach; ?>
+}
+						var data = [];
+						
+						$.each(conversionData, function(key, values) {
+							
+							data.push(values);
+						
+						});
+						
+						$.plot(
+							$("#conversionRatioChart"), 
+							data,
+							{
+							    xaxis: {
+							        mode: "time"
+							    },
+							    series: {
+				                   lines: { show: true },
+				                   points: { show: true }
+				               },
+				               crosshair: { mode: "x" },
+				               grid: { hoverable: true, }
+							}
+						);
+
+						
+					});
+					</script>
+				</section>
+				
+			</div>
+		</article>
+		
+		
+
 		
 		<div class="clearfix"></div>
 		

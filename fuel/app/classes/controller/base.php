@@ -3,9 +3,13 @@
 	class Controller_Base extends Controller_Template
 	{
 	
+		
+		
 		public function before()
 		{
 			parent::before();
+			
+			\Session::set("current_page", \Uri::string());
 			
 			$segments = implode(\Uri::segments());
 			
@@ -17,6 +21,11 @@
 				$this->current_user = Model_User::find($user_id);
 			
 			} else {
+				
+				if ($segments != 'userlogin')
+				{
+					Session::set("lastpage", implode("/",\Uri::segments()));
+				}
 				
 				$this->current_user = null;
 				

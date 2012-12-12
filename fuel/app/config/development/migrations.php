@@ -33,6 +33,28 @@ return array(
 				24 => '026_create_data_supplier_campaigns',
 				25 => '027_create_data_supplier_campaigns_data_suppliers',
 				26 => '028_create_data_supplier_campaign_lists',
+				27 => '029_create_surnames',
+				28 => '030_create_towns',
+				29 => '031_add_last_town_to_surnames',
+				30 => '032_create_selfgenerations',
+				31 => '033_create_proxies',
+				32 => '034_add_use_count_to_proxies',
+				33 => '035_create_proxy_imports',
+				34 => '036_create_adam_messages',
+				35 => '037_create_adam_announcements',
+				36 => '038_create_data_supplier_campaign_lists_duplicates',
+				37 => '039_add_dialler_to_data_supplier_campaign_lists_duplicates',
+				38 => '040_add_lead_id_to_data_supplier_campaign_lists_duplicates',
+				39 => '041_create_tomorrow_list_stats',
+				40 => '042_add_dialler_to_tomorrow_list_stats',
+				41 => '043_add_campaign_to_tomorrow_list_stats',
+				42 => '044_create_lead_tables',
+				43 => '045_create_dialler_campaign_calls',
+				44 => '046_create_api_users',
+				45 => '047_create_printmanager_printers',
+				46 => '048_create_printmanager_trays',
+				47 => '049_create_printmanager_queues',
+				48 => '050_add_api_key_to_call_centers',
 			),
 		),
 		'module' => 
@@ -40,6 +62,69 @@ return array(
 		),
 		'package' => 
 		array(
+			'printmanager' => 
+			array(
+			),
+			'sexyticket' => 
+			array(
+				0 => '001_create_sexy_ticket_departments',
+				1 => '002_create_sexy_ticket_topics',
+				2 => '003_create_sexy_ticket_tickets',
+				3 => '004_create_sexy_ticket_priorities',
+			),
+		),
+		'subpackage' => 
+		array(
+			'crm_company' => 
+			array(
+				0 => '001_create_crm_companies',
+				1 => '002_create_crm_company_groups',
+				2 => '003_alter_crm_companies',
+				3 => '004_alter_crm_companies_add_sales_email',
+			),
+			'crm_letter' => 
+			array(
+				0 => '001_create_crm_letters_pack_letters',
+				1 => '002_create_crm_letter_packs',
+				2 => '003_create_crm_letter_letters',
+				3 => '004_create_crm_letter_letterhead',
+			),
+			'crm_logs' => 
+			array(
+				0 => '001_create_crm_client_access_log',
+				1 => '002_create_crm_referrals_access_log',
+				2 => '003_create_crm_type_access_log',
+			),
+			'crm_ppi' => 
+			array(
+				0 => '001_create_crm_ppi_claims',
+				1 => '002_create_crm_ppi_clients',
+				2 => '003_create_crm_ppi_correspondence',
+				3 => '004_create_crm_ppi_refund',
+				4 => '005_create_crm_type_ppi_claim_stage',
+				5 => '006_create_crm_type_ppi_claim_status',
+				6 => '007_create_crm_type_ppi_refund_method',
+				7 => '008_alter_crm_ppi_clients_add_packs',
+			),
+			'crm_product' => 
+			array(
+				0 => '001_create_crm_products',
+				1 => '002_alter_crm_products_added_shortcode',
+			),
+			'crm_referrals' => 
+			array(
+				0 => '001_create_crm_referrals',
+				1 => '002_create_crm_type_disposition',
+				2 => '003_alter_crm_referrals',
+				3 => '004_create_crm_introducers',
+				4 => '005_alter_crm_referrals_add_introducer_id',
+				5 => '006_alter_crm_referrals_add_data',
+				6 => '007_create_crm_referrals_callbacks',
+				7 => '008_alter_crm_type_disposition',
+				8 => '009_alter_crm_referrals_add_consolidation_centre',
+				9 => '010_alter_crm_referrals_callbacks_add_centre_id',
+				10 => '011_alter_crm_referrals_added_intro_name',
+			),
 		),
 	),
 	'folder' => 'migrations/',

@@ -1,0 +1,344 @@
+<HTML>
+	<HEAD>
+		<TITLE>Wallboard</TITLE>
+		<meta name="viewport" content="width=200"/>
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		
+		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jquery-1.5.1.min.js"></script>
+		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jquery.circleval.js"></script>
+		<script>
+		
+			var internalref = "xxx";
+			var hqref = "xxx";
+			var burref = "xxx";
+			var pccref = "xxx";
+			
+			var rj5ref = "xxx";
+			var sixelevenref = "xxx";
+			var soref = "xxx";
+			
+			function updateJson()
+			{
+				$.getJSON('https://intranet.gregsonandbrooke.co.uk/dialler/api/mobile_wallboard.json', function(data) {
+					
+					
+					$('#internalval').html('&pound;' + data['INTERNAL']['pack_out_value']);
+					$('#hqval').html('&pound;' + data['HQ']['pack_out_value']);
+					$('#burval').html('&pound;' + data['RESOLVE']['pack_out_value']);
+					$('#pccval').html('&pound;' + data['PCC']['pack_out_value']);
+					
+					
+					$('#internaldi').html('&pound;' + data['INTERNAL']['di']);
+					$('#hqdi').html('&pound;' + data['HQ']['di']);
+					$('#burdi').html('&pound;' + data['RESOLVE']['di']);
+					$('#pccdi').html('&pound;' + data['PCC']['di']);
+					
+					
+					
+					$('#weekreferrals').html(data['this_week']['referrals']);
+					$('#weekpackout').html(data['this_week']['pack_out']);
+					$('#weekvalue').html('&pound;' + data['this_week']['pack_out_value']);
+					
+					$('#thismonthreferrals').html(data['this_month']['referrals']);
+					$('#thismonthpackout').html(data['this_month']['pack_out']);
+					$('#thismonthvalue').html('&pound;' + data['this_month']['pack_out_value']);
+					
+					$('#lastmonthreferrals').html(data['last_month']['referrals']);
+					$('#lastmonthpackout').html(data['last_month']['pack_out']);
+					$('#lastmonthvalue').html('&pound;' + data['last_month']['pack_out_value']);
+					
+					
+					if (data['INTERNAL']['referrals']+"-"+data['INTERNAL']['pack_out'] != internalref)
+					{
+						$('#internalkey').html(data['INTERNAL']['pack_out']);
+						$('.circleValueBlueish').each(function(){
+							$(this).circleval({
+								'speed' : 1,
+								'increment' : 3,
+								'inner' : '#CCCCCC',
+								'outer' : '#000000',
+								'text'	: '#000000',
+								'specialText' : data['INTERNAL']['referrals'],
+							});
+						});
+						internalref = data['INTERNAL']['referrals']+"-"+data['INTERNAL']['pack_out'];
+					}
+					
+					if (data['HQ']['referrals']+"-"+data['HQ']['pack_out'] != hqref)
+					{
+						$('#hqkey').html(data['HQ']['pack_out']);
+						$('.circleValueBlue').each(function(){
+							$(this).circleval({
+								'speed' : 1,
+								'increment' : 3,
+								'inner' : '#a2cde9',
+								'outer' : '#426097',
+								'text'	: '#426097',
+								'specialText' : data['HQ']['referrals'],
+							});
+						});
+						hqref = data['HQ']['referrals']+"-"+data['HQ']['pack_out'];
+					}
+					
+					
+					if (data['RESOLVE']['referrals']+"-"+data['RESOLVE']['pack_out'] != burref)
+					{
+						$('#burkey').html(data['RESOLVE']['pack_out']);
+						$('.circleValueOrange').each(function(){
+							$(this).circleval({
+								'speed' : 1,
+								'increment' : 1,
+								'inner' : '#eeae5b',
+								'outer' : '#c28212',
+								'text'	: '#c28212',
+								'specialText' : data['RESOLVE']['referrals'],
+							});
+						});
+						burref = data['RESOLVE']['referrals']+"-"+data['RESOLVE']['pack_out'];
+					}
+	
+					
+					if (data['PCC']['referrals']+"-"+data['PCC']['pack_out'] != pccref)
+					{
+						$('#pcckey').html(data['PCC']['pack_out']);
+						$('.circleValueGreen').each(function(){
+							$(this).circleval({
+								'speed' : 1,
+								'increment' : 1,
+								'inner' : '#c3e5b0',
+								'outer' : '#1b6b0d',
+								'text'	: '#1b6b0d',
+								'specialText' : data['PCC']['referrals'],
+							});
+						});
+						pccref = data['PCC']['referrals']+"-"+data['PCC']['pack_out'];
+					}
+					
+					
+					
+					
+					
+					if (data['RJ5']['referrals']+"-"+data['RJ5']['pack_out'] != rj5ref)
+					{
+						$('#rj5key').html(data['RJ5']['pack_out']);
+						$('.circleValueRed').each(function(){
+							$(this).circleval({
+								'speed' : 1,
+								'increment' : 1,
+								'inner' : '#33CC33',
+								'outer' : '#208120',
+								'text'	: '#208120',
+								'specialText' : data['RJ5']['referrals'],
+							});
+						});
+						rj5ref = data['RJ5']['referrals']+"-"+data['RJ5']['pack_out'];
+					}
+					
+					
+					if (data['SIXELEVEN']['referrals']+"-"+data['SIXELEVEN']['pack_out'] != sixelevenref)
+					{
+						$('#sixelevenkey').html(data['SIXELEVEN']['pack_out']);
+						$('.circleValueMint').each(function(){
+							$(this).circleval({
+								'speed' : 1,
+								'increment' : 1,
+								'inner' : '#84A684',
+								'outer' : '#5C745C',
+								'text'	: '#5C745C',
+								'specialText' : data['SIXELEVEN']['referrals'],
+							});
+						});
+						sixelevenref = data['SIXELEVEN']['referrals']+"-"+data['SIXELEVEN']['pack_out'];
+					}
+
+					
+					if (data['SO']['referrals']+"-"+data['SO']['pack_out'] != soref)
+					{
+						$('#sokey').html(data['SO']['pack_out']);
+						$('.circleValueMauve').each(function(){
+							$(this).circleval({
+								'speed' : 1,
+								'increment' : 1,
+								'inner' : '#339966',
+								'outer' : '#1F5C3D',
+								'text'	: '#1F5C3D',
+								'specialText' : data['SO']['referrals'],
+							});
+						});
+						soref = data['SO']['referrals']+"-"+data['SO']['pack_out'];
+					}
+					
+
+				});
+			}
+
+			$(document).ready(function(){
+				
+				
+								
+				
+				updateJson()
+				
+				var tInverval = setInterval(function() {
+					updateJson();
+				}, 15000);
+				
+			});
+			
+
+	    </script>
+	
+		<STYLE>
+			
+			body
+			{
+				margin: 0px;
+				padding: 0px;
+				background-color: #F9F9F9;
+			}
+		
+			
+			.minihold
+			{
+				height: 10px;
+				display: block;
+			}
+		
+			.title
+			{
+				display: block;
+				text-align: center;
+				font-family: verdana;
+				font-weight: bold;
+				font-size: 36px;
+				color: #777;
+				height: 80px;
+				line-height: 80px;
+				border-bottom: 2px #DDD solid;
+			}
+			
+			.statHolder
+			{
+				border-bottom: 2px #DDD solid;
+				background-color: #F9F9F9;
+			}
+			
+			.circleValue
+			{
+				height: 134px;
+				width: 140px;
+			}
+			
+			h3
+			{
+				height: 20px;
+				padding: 0px;
+				margin: 0px;
+				margin-top: 10px;
+				font-family: tahoma;
+				color: #BBB;
+				line-height: 20px;
+				font-size: 16px;
+				
+				text-shadow: 1px 1px 2px #999;
+			}
+		
+			.bluebg { background-color: #a2cde9; border-right: 2px white solid; }
+			.orangebg { background-color: #eeae5b; }
+			.greenbg { background-color: #c3e5b0; border-left: 2px white solid; }
+			.floatLeft { float: left; }
+			.thirdLeft { width: 212px; border-right: 2px #F9F9F9 solid; }
+			.thirdLeftStat { width: 212px; border-right: 2px #DDD solid; }
+			.third { width: 212px;  }
+			.thirdRight { width: 212px; border-left: 2px #F9F9F9 solid; }
+			.thirdRightStat { width: 212px; border-left: 2px #DDD solid; }
+			
+			.stat
+			{
+				display: block;
+				text-align: center;
+				font-family: verdana;
+				font-weight: bold;
+				font-size: 24px;
+				color: #777;
+				height: 60px;
+				line-height: 60px;
+			}
+			
+			.entry
+			{
+				margin-top: 20px;
+				height: 80px;
+				text-align: center;
+				font-family: verdana;
+				font-size: 22px;
+				color: #777;
+			}
+				.entry .etitle
+				{
+					float: left;
+					width: 214px;
+					line-height: 60px;
+					text-align: center;
+					font-weight: bold;
+				}
+				.entry .info
+				{
+					float: left;
+					width: 426px;
+					height: 80px;
+					line-height: 30px;
+					text-align: center;
+				}
+					.entry .info .referrals, .entry .info .pack_out
+					{
+						width: 212px;
+						float: left;
+						height: 30px;
+						line-height: 30px;
+						text-align: center;
+					}
+					
+					.entry .info .referrals
+					{
+						border-right: #EEE 1px solid;
+						width: 212px;
+					}
+					
+					
+					
+					.entry .info .value
+					{
+						border-top: #EEE 1px solid;
+						width: 426px;
+						float: left;
+						height: 50px;
+						line-height: 50px;
+						text-align: center;
+					}
+		</STYLE>
+		
+	</HEAD>
+	<BODY>
+		
+		<div id="holder"><center>
+			<h3>INTERNAL</h3>
+			<div class="circleValueBlueish circleValue" id="internalkey"></div><br />
+			<h3>RESOLVE</h3>
+			<div class="circleValueOrange circleValue" id="burkey"></div><br />
+			<h3>HQ</h3>
+			<div class="circleValueBlue circleValue" id="hqkey"></div><br />
+			<h3>GBS</h3>
+			<div class="circleValueGreen circleValue" id="pcckey"></div><br />
+			
+			
+			<h3>RJ5</h3>
+			<div class="circleValueRed circleValue" id="rj5key"></div><br />
+			<h3>Six Eleven</h3>
+			<div class="circleValueMint circleValue" id="sixelevenkey"></div><br />
+			<h3>Simply Outbound</h3>
+			<div class="circleValueMauve circleValue" id="sokey"></div><br />
+		</center></div>
+		
+	</BODY>
+</HTML>

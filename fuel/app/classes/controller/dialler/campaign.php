@@ -1,5 +1,5 @@
 <?php
-class Controller_Dialler_Campaign extends Controller_Base 
+class Controller_Dialler_Campaign extends Controller_BaseHybrid 
 {
 
 	public function action_index()
@@ -20,7 +20,76 @@ class Controller_Dialler_Campaign extends Controller_Base
 		$this->template->content = View::forge('dialler/campaign/view', $data);
 
 	}
-
+	
+	public function action_allcalls()
+	{
+		date_default_timezone_set('Europe/London');
+		
+		$this->template->title = "View Campaign Calls";
+		$this->template->content = View::forge('dialler/campaign/calls');
+	}
+	
+	public function get_liveview($campaign)
+	{
+		date_default_timezone_set('Europe/London');
+		
+		$time_limit = $this->param('showtime');
+		
+		
+		$stats = \Model_Dialler_Campaign_Call::find()->where('campaign', $campaign);
+				
+		if (!is_null($time_limit))
+		{
+			$time_strings = Array(
+				'10m' => '10 minutes ago',
+				'30m' => '30 minutes ago',
+				'1h' => '1 hour ago',
+				'2h' => '2 hours ago',
+				'6h' => '6 hours ago',
+				'12h' => '12 hours ago',
+				'1d' => '1 day ago',
+				'1w' => '1 week ago',
+			);
+		
+			$stats = $stats->where('date', '>=', date("Y-m-d H:i:s", strtotime($time_strings[$time_limit])));
+		}
+		else
+		{
+			$stats = $stats->where('date', '>=', date("Y-m-d 08:50:00"))->where('date', '<=', date("Y-m-d 20:10:00"));
+		}
+		
+		$stats = $stats->order_by('date','asc')->get();
+		
+		
+		
+		$calls = array(
+			'label' => "Calls Made",
+			'data' => array(),
+		);
+		$answers = array(
+			'label' => "Calls Answered",
+			'data' => array(),
+		);
+		foreach ($stats AS $stat)
+		{
+			$calls['data'][] = array(
+				(int)strtotime($stat->date) * 1000,
+				(int)$stat->calls_made
+			);
+			
+			$answers['data'][] = array(
+				(int)strtotime($stat->date) * 1000,
+				(int)$stat->calls_answered
+			);
+		}
+		
+		$this->response(array(
+			'calls_made' => $calls,
+			'calls_answered' => $answers,
+		));
+		
+	}
+	
 	public function action_create()
 	{
 		if (Input::method() == 'POST')

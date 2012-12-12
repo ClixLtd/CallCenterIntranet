@@ -102,7 +102,9 @@ class Controller_User extends Controller_BaseHybrid
 
 	public function action_login()
 	{
-	
+		
+		
+		
 		$login_log = new Model_Users_Log_Login();
 		
 	
@@ -117,6 +119,7 @@ class Controller_User extends Controller_BaseHybrid
 				$login_log->attempted_login = Input::post('username');
 				$login_log->ip_address = $_SERVER['REMOTE_ADDR'];
 				$login_log->save();
+				
 				Response::redirect('/');
 			} else {
 				
@@ -148,6 +151,7 @@ class Controller_User extends Controller_BaseHybrid
 		}
 		
 		
+		
 		return View::forge('welcome/login', array(
 			'title' => 'Login'
 		));
@@ -172,5 +176,32 @@ class Controller_User extends Controller_BaseHybrid
 		Response::redirect('/');
 		
 	}
-
+	
+	
+	
+	
+	
+	
+	// Creating Users
+	
+	public function action_create()
+	{
+		
+		$user_details   = array(
+			'username'	  => null,
+			'first_name'  => 'Test',
+			'last_name'   => 'Account',
+		);
+		
+		// Create Username unless already set
+		if (is_null($user_details['username']))
+		{
+			$user_details['username'] = substr($user_details['first_name'],0,1).$user_details['last_name'];
+		}
+	
+		$intranet_user  = new MassUser\Intranet;
+		$intranet_user->forge($user_details);
+		$intranet_user->save();
+	}
+	
 }

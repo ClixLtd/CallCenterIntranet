@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<HTML>
+	<HEAD>
+		<TITLE>Wallboard</TITLE>
+		
+		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jquery-1.5.1.min.js"></script>
+		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jqtouch.js"></script>
+		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jqtouch-jquery.min.js"></script>
+		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jquery.circleval.js"></script>
+		<script>
+			
+			//$.getJSON('https://intranet.gregsonandbrooke.co.uk/dialler/api/mobile_wallboard.json', function(data) {
+			
+			$(document).ready(function(){
+			
+				var tInverval = setInterval(function() {
+					$(".campaign").each(function(){
+						
+						var holdingDiv = $(this);
+						var campaign = $(this).attr('id');
+						
+						$.getJSON('https://intranet.gregsonandbrooke.co.uk/dialler/api/live_agents/'+campaign+'.json', function(data) {
+							
+							holdingDiv.html('');
+							
+							
+							$.each(data, function(key, val) {
+							
+								var appendHTML = "", fulltime = "";
+								var hmstime;
+								var statusChoice = val['status'].toLowerCase();
+								var groupChoice = val['user']['group'].toLowerCase();
+								var callType = val['comments'].toLowerCase();
+							
+								if (val['last_state_change_ago'] > 300)
+								{
+									statusChoice = val['status'].toLowerCase() + 'Long';
+								} 
+								else if (val['last_state_change_ago'] > 60 && val['last_state_change_ago'] <= 300 )
+								{
+									statusChoice = val['status'].toLowerCase() + 'Medium';
+								}
+								
+								hmstime = secondsToTime(val['last_state_change_ago']);
+								
+								if (hmstime['h'] > 0)
+								{
+									fulltime += hmstime['h'] + "h ";
+								}
+								
+								if (hmstime['m'] > 0)
+								{
+									fulltime += hmstime['m'] + "m ";
+								}
+								
+								
+								fulltime += hmstime['s'] + "s";
+								
+								
+								var referralBadge = (val['user']['referrals'] > 0) ? "<div class='referrals'>"+val['user']['referrals']+"</div>" : "";
+								var packOutBadge = (val['user']['pack_outs'] > 0) ? "<div class='packouts'>"+val['user']['pack_outs']+"</div>" : "";
+								
+								
+								appendHTML += "<div class='person "+groupChoice+" "+statusChoice+"'>"+packOutBadge+""+referralBadge+"<div style='position: absolute;' class='"+callType+"'>&nbsp;</div>";
+								
+								appendHTML += "<div class='name'>"+val['user']['full_name']+"</div><div class='time'>"+fulltime+"</div>";
+								
+								if (val['lead'] != 0)
+								{
+									appendHTML += "<div class='client_name'>"+val['lead']['name']+"</div><div class='list_id'>"+val['lead']['list_id']+"</div>";
+								}
+								
+								appendHTML += "</div>";
+								
+								
+								holdingDiv.append(appendHTML);
+							});
+							
+						})
+						
+					});
+
+				}, 5000);
+			
+							
+			});
+			
+			function secondsToTime(secs)
+			{
+				var hours = Math.floor(secs / (60 * 60));
+				
+				var divisor_for_minutes = secs % (60 * 60);
+				var minutes = Math.floor(divisor_for_minutes / 60);
+			
+				var divisor_for_seconds = divisor_for_minutes % 60;
+				var seconds = Math.ceil(divisor_for_seconds);
+				
+				var obj = {
+					"h": hours,
+					"m": minutes,
+					"s": seconds
+				};
+				return obj;
+			}
+			
+			
+	    </script>
+	
+	    <STYLE>
+	    
+		    body, html
+		    {
+			    margin: 0px;
+			    padding: 0px;
+		    }
+		    
+		    
+		    .referrals
+		    {
+			    position: absolute;
+			    left: -8px;
+			    top: -8px;
+			    color: white;
+			    alpha: 0.5;
+			    
+			    padding-left: 2px;
+			    padding-right: 2px;
+			    
+			    font-size: 11px;
+			    
+			    min-width: 20px;
+			    height: 20px;
+			    
+			    border-radius: 20px;
+			    text-align: center;
+			    line-height: 20px;
+			    font-weight: bold;
+			    
+			    background-color: red;
+			    
+			    border: #FFF 2px solid;
+			    box-shadow: 0px 0px 5px 0px RGBA(0,0,0,0.5);
+			    
+			    text-shadow: 1px 1px 1px black;
+			    
+		    }
+		    
+		    .packouts
+		    {
+			    position: absolute;
+			    right: -8px;
+			    top: -8px;
+			    color: white;
+			    alpha: 0.5;
+			    
+			    padding-left: 2px;
+			    padding-right: 2px;
+			    
+			    font-size: 11px;
+			    
+			    min-width: 20px;
+			    height: 20px;
+			    
+			    border-radius: 20px;
+			    text-align: center;
+			    line-height: 20px;
+			    font-weight: bold;
+			    
+			    background-color: blue;
+			    
+			    border: #FFF 2px solid;
+			    box-shadow: 0px 0px 5px 0px RGBA(0,0,0,0.5);
+			    
+			    text-shadow: 1px 1px 1px black;
+			    
+		    }
+		    
+	    	h1
+	    	{
+		    	clear: both;
+		    	font-family: verdana;
+		    	font-size: 20px;
+		    	padding: 0px;
+		    	margin: 0px;
+		    	margin-bottom: 10px;
+		    	text-align: center;
+	    	}
+	    	
+	    	.gbsagent
+	    	{
+		    	background-image: URL(/assets/img/gbs.png);
+	    	}
+	    	
+	    	.gabagent, .gabsenior, .gabppisnr
+	    	{
+		    	background-image: URL(/assets/img/gab.png);
+	    	}
+	    	
+	    	.person
+	    	{
+		    	float: left;
+		    	position: relative;
+		    	width: 150px;
+		    	height: 110px;
+		    	margin: 5px;
+		    	padding: 3px;
+		    	
+		    	font-family: verdana;
+		    	font-size: 12px;
+		    	
+		    	/* CSS 3 */
+		    	border-radius: 5px;
+	    	}
+	    	
+	    		.person .name
+	    		{
+	    			display: block;
+		    		text-align: center;
+		    		font-weight: bold;
+		    		border-bottom: RGBA(255,255,255,0.5) 1px solid;
+		    		
+		    		padding-bottom: 3px;
+		    		margin-bottom: 3px;
+	    		}
+	    		
+	    		.person .calls_today
+	    		{
+		    		float: right;
+	    		}
+	    	
+	    		.person .time
+	    		{
+		    		text-align: center;
+	    		}
+	    		
+	    		
+	    	
+	    		.person .client_name
+	    		{
+		    		text-align: center;
+		    		font-weight: bold;
+		    		border-bottom: RGBA(255,255,255,0.5) 1px solid;
+		    		border-top: RGBA(255,255,255,0.5) 1px solid;
+		    		
+		    		padding-bottom: 3px;
+		    		margin-bottom: 3px;
+		    		padding-top: 3px;
+		    		margin-top: 10px;
+	    		}
+	    	
+	    	
+	    	.inbound
+	    	{
+	    		position: absolute;
+	    		bottom: 0px;
+	    		right: 0px;
+	    		height: 20px;
+	    		width: 20px;
+		    	background-image: URL(/assets/img/inbound.png);
+	    	}
+	    	
+	    	.manual
+	    	{
+	    		position: absolute;
+	    		bottom: 2px;
+	    		right: 2px;
+	    	
+	    		height: 14px;
+	    		width: 14px;
+		    	background-image: URL(/assets/img/manual.png);
+	    	}
+	    	
+	    	.auto
+	    	{
+		    	
+	    	}
+	    	
+	    	
+	    	/* Current Status */
+	    	.ready
+	    	{
+		    	background-color: #CEF0FF;
+		    	
+		    	box-shadow: 0px 0px 2px 1px #62D0FF;
+	    	}
+	    	.readyMedium
+	    	{
+		    	background-color: #8EB4E6;
+		    	
+		    	box-shadow: 0px 0px 3px 1px #2F74D0;
+	    	}
+	    	
+	    	.readyLong
+	    	{
+		    	background-color: #2F74D0;
+		    	
+		    	box-shadow: 0px 0px 2px 1px #3923D6;
+	    	}
+	    	
+	    	
+	    	
+	    	.closer
+	    	{
+		    	background-color: #CEF0FF;
+		    	
+		    	box-shadow: 0px 0px 2px 1px #62D0FF;
+	    	}
+	    	.closerMedium
+	    	{
+		    	background-color: #8EB4E6;
+		    	
+		    	box-shadow: 0px 0px 2px 1px #2F74D0;
+	    	}
+	    	
+	    	.closerLong
+	    	{
+		    	background-color: #2F74D0;
+		    	
+		    	box-shadow: 0px 0px 2px 1px #3923D6;
+	    	}
+	    	
+	    	
+	    	
+	    	.incall
+	    	{
+		    	background-color: #FFDBFB;
+		    	
+		    	box-shadow: 0px 0px 2px 1px #FEA9F3;
+	    	}
+	    	
+	    	.incallMedium
+	    	{
+		    	background-color: #E29BFD;
+		    	
+		    	box-shadow: 0px 0px 2px 1px #D568FD;
+	    	}
+	    	
+	    	.incallLong
+	    	{
+		    	background-color: #DD75DD;
+		    	
+		    	box-shadow: 0px 0px 2px 1px #872187;
+	    	}
+	    	
+	    	.paused
+	    	{
+		    	background-color: #FFF2D2;
+		    	
+		    	box-shadow: 0px 0px 2px 1px #FFD062;
+	    	}
+	    	
+	    	.pausedMedium
+	    	{
+		    	background-color: #FFD9B7;
+		    	
+		    	box-shadow: 0px 0px 2px 1px #FFA04A;
+	    	}
+	    	
+	    	.pausedLong
+	    	{
+		    	background-color: #FFBB7D;
+		    	
+		    	box-shadow: 0px 0px 2px 1px #FFA04A;
+	    	}
+	    	
+	    	.dispo
+	    	{
+		    	background-color: red;
+		    	
+		    	box-shadow: 0px 0px 2px 1px red;
+	    	}
+	    	
+	    	.queue
+	    	{
+		    	background-color: #D6F8DE;
+		    	
+		    	box-shadow: 0px 0px 2px 1px #7CEB98;
+	    	}
+	    	
+	    	.dead
+	    	{
+		    	background-color: black;
+		    	
+		    	box-shadow: 0px 0px 2px 1px black;
+	    	}
+
+	    
+	    	.gab
+	    	{
+		    	background-color: #F2FFFE;
+		    	height: 100%;
+		    	padding: 5px;
+		    	margin: 5px;
+		    	
+		    	/* CSS 3 */
+		    	border-radius: 10px;
+		    	
+	    	}
+
+	    
+	    	.gbs
+	    	{
+		    	background-color: #EAFFEF;
+		    	height: 100%;
+		    	padding: 5px;
+		    	margin: 5px;
+		    	
+		    	/* CSS 3 */
+		    	border-radius: 10px;
+		    	
+	    	}
+
+	    
+	    	.burton
+	    	{
+		    	background-color: #FFF1E6;
+		    	height: 100%;
+		    	padding: 5px;
+		    	margin: 5px;
+		    	
+		    	/* CSS 3 */
+		    	border-radius: 10px;
+		    	
+	    	}
+	    
+		</STYLE>
+		
+	</HEAD>
+	<BODY>
+		
+		<div style="width: 1005px; float: left;" class="gab">
+			<h1>Internal</h1>
+			
+			<div class="campaign" id="INTERNAL">
+				Loading...
+			</div>	
+		</div>
+		
+		
+		<div style="width: 170px; float: left;" class="gab">
+			<h1>GAB-3</h1>
+			
+			<div class="campaign" id="GAB-3">
+				Loading...
+			</div>	
+		</div>
+		
+				
+		<div style="width: 170px; float: left;" class="gbs">
+			<h1>GBS-1</h1>
+			
+			<div class="campaign" id="GBS-1">
+				Loading...
+			</div>	
+		</div>
+		
+		<!--
+		<div style="width: 670px; float: left;" class="gbs">
+			<h1>GBS-1</h1>
+			
+			<div class="campaign" id="GBS-1">
+				Loading...
+			</div>	
+		</div>
+		-->
+				
+		<div style="width: 670px; float: left;" class="burton">
+			<h1>BURTON-1</h1>
+			
+			<div class="campaign" id="BURTON1">
+				Loading...
+			</div>	
+		</div>
+		
+						
+	</BODY>
+</HTML>

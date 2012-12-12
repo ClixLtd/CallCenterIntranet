@@ -13,10 +13,10 @@
 namespace Fuel\Core;
 
 /**
- * Pagination class tests
+ * Request class tests
  *
  * @group Core
- * @group Pagination
+ * @group Request
  */
 class Test_Pagination extends TestCase
 {

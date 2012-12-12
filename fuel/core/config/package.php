@@ -29,7 +29,6 @@ return array(
 	 */
 	'sources' => array(
 		'github.com/fuel-packages',
-		'github.com/moos3',
 	),
 
 );

@@ -1,0 +1,399 @@
+<HTML>
+	<HEAD>
+		<TITLE>Wallboard</TITLE>
+		
+		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jquery-1.5.1.min.js"></script>
+		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jqtouch.js"></script>
+		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jqtouch-jquery.min.js"></script>
+		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jquery.circleval.js"></script>
+		<script>
+		
+			var savedStats = {};
+			
+			var circleColours = {
+				'INTERNAL' : {
+					'inner' : '#CCCCCC',
+					'outer' : '#111111',
+					'text'	: '#111111',
+				},
+				'HQ' : {
+					'inner' : '#a2cde9',
+					'outer' : '#426097',
+					'text'	: '#426097',
+				},
+				'RESOLVE' : {
+					'inner' : '#eeae5b',
+					'outer' : '#c28212',
+					'text'	: '#c28212',
+				},
+				'PCC' : {
+					'inner' : '#c3e5b0',
+					'outer' : '#1b6b0d',
+					'text'	: '#1b6b0d',
+				},
+				'RJ5' : {
+					'inner' : '#c3e5b0',
+					'outer' : '#1b6b0d',
+					'text'	: '#1b6b0d',
+				},
+				'SIXELEVEN' : {
+					'inner' : '#c3e5b0',
+					'outer' : '#1b6b0d',
+					'text'	: '#1b6b0d',
+				},
+				'SO' : {
+					'inner' : '#c3e5b0',
+					'outer' : '#1b6b0d',
+					'text'	: '#1b6b0d',
+				},
+				'SMS' : {
+					'inner' : '#eeae5b',
+					'outer' : '#c28212',
+					'text'	: '#c28212',
+				},
+			};
+
+			$.jQTouch({
+			    icon: 'jqtouch.png',
+			    statusBar: 'black-translucent',
+			    preloadImages: []
+			});
+			
+			function updateJson()
+			{
+			
+
+			
+			
+				$.getJSON('https://intranet.gregsonandbrooke.co.uk/dialler/api/mobile_wallboard.json', function(data) {
+					
+					
+					
+					$('.circleValue').each(function() {
+						
+						var shortcode = $(this).attr('id');
+						
+						// Get new referral stats
+						var newStats = data[shortcode]['referrals']+"-"+data[shortcode]['pack_out'];
+						
+						// Check if the stats have changed
+						if (newStats != savedStats[shortcode])
+						{
+							$(this).html(data[shortcode]['pack_out']);
+							$(this).circleval({
+								'speed' : 1,
+								'increment' : 3,
+								'inner' : circleColours[shortcode]['inner'],
+								'outer' : circleColours[shortcode]['outer'],
+								'text'	: circleColours[shortcode]['text'],
+								'specialText' : data[shortcode]['referrals'],
+							});
+							
+							// Update saved stats
+							savedStats[shortcode] = newStats;
+						}
+
+						
+					});
+					
+					
+					$('.totalVal').each(function() {
+						var shortcode = $(this).attr('id');
+						$(this).html('&pound;' + data[shortcode]['pack_out_value']);
+					});
+					
+					$('.averageDI').each(function() {
+						var shortcode = $(this).attr('id');
+						$(this).html('&pound;' + data[shortcode]['di']);
+					});
+										
+					
+					$('#weekreferrals').html(data['this_week']['referrals']);
+					$('#weekpackout').html(data['this_week']['pack_out']);
+					$('#weekvalue').html('&pound;' + data['this_week']['pack_out_value']);
+					
+					$('#thismonthreferrals').html(data['this_month']['referrals']);
+					$('#thismonthpackout').html(data['this_month']['pack_out']);
+					$('#thismonthvalue').html('&pound;' + data['this_month']['pack_out_value']);
+					
+					$('#lastmonthreferrals').html(data['last_month']['referrals']);
+					$('#lastmonthpackout').html(data['last_month']['pack_out']);
+					$('#lastmonthvalue').html('&pound;' + data['last_month']['pack_out_value']);
+					
+					
+					
+				});
+			}
+
+			$(document).ready(function(){
+				
+				// Detect swipes on the circle layer
+		
+				$('#scrollArea').swipe(function(evt, data) {
+				
+					if (data.direction == 'left')
+					{
+						$(this).animate({scrollLeft: '320px'}, 800);
+					}
+					else
+					{
+						$(this).animate({scrollLeft: '0px'}, 800);
+					}
+				
+                });
+			
+								
+				
+				updateJson()
+				
+				var tInverval = setInterval(function() {
+					updateJson();
+				}, 15000);
+				
+			});
+			
+
+	    </script>
+	
+		<STYLE>
+			
+			body
+			{
+				margin: 0px;
+				padding: 0px;
+				overflow: hidden;
+			}
+		
+			
+			.minihold
+			{
+				height: 5px;
+				display: block;
+			}
+		
+			.title
+			{
+				display: block;
+				text-align: center;
+				font-family: verdana;
+				font-weight: bold;
+				font-size: 18px;
+				color: #777;
+				height: 40px;
+				line-height: 40px;
+				border-bottom: 1px #DDD solid;
+			}
+			
+			#scrollArea
+			{
+				width: 320px;
+				overflow: hidden;
+			}
+			
+			.statHolder
+			{
+				border-bottom: 1px #DDD solid;
+				background-color: #F9F9F9;
+				
+				width: 750px;
+			}
+			
+			.circleValue
+			{
+				height: 90px;
+				padding-top: 10px;
+				padding-bottom: 10px;
+			}
+		
+			.bluebg { background-color: #a2cde9; border-right: 1px white solid; }
+			.orangebg { background-color: #eeae5b; }
+			.greenbg { background-color: #c3e5b0; border-left: 1px white solid; }
+			.floatLeft { float: left; }
+			.thirdLeft { width: 106px; border-right: 1px #F9F9F9 solid; }
+			.thirdLeftStat { width: 106px; border-right: 1px #DDD solid; }
+			.third { width: 106px;  }
+			.thirdRight { width: 106px; border-left: 1px #F9F9F9 solid; }
+			.thirdRightStat { width: 106px; border-left: 1px #DDD solid; }
+			
+			.stat
+			{
+				display: block;
+				text-align: center;
+				font-family: verdana;
+				font-weight: bold;
+				font-size: 12px;
+				color: #777;
+				height: 30px;
+				line-height: 30px;
+			}
+			
+			
+			.statTitle
+			{
+				display: block;
+				text-align: center;
+				font-family: verdana;
+				font-weight: bold;
+				font-size: 10px;
+				color: #777;
+				height: 15px;
+				line-height: 15px;
+			}
+			
+			.entry
+			{
+				margin-top: 10px;
+				height: 40px;
+				text-align: center;
+				font-family: verdana;
+				font-size: 11px;
+				color: #777;
+			}
+				.entry .etitle
+				{
+					float: left;
+					width: 107px;
+					line-height: 30px;
+					text-align: center;
+					font-weight: bold;
+				}
+				.entry .info
+				{
+					float: left;
+					width: 213px;
+					height: 40px;
+					line-height: 15px;
+					text-align: center;
+				}
+					.entry .info .referrals, .entry .info .pack_out
+					{
+						width: 106px;
+						float: left;
+						height: 15px;
+						line-height: 15px;
+						text-align: center;
+					}
+					
+					.entry .info .referrals
+					{
+						border-right: #EEE 1px solid;
+						width: 106px;
+					}
+					
+					
+					
+					.entry .info .value
+					{
+						border-top: #EEE 1px solid;
+						width: 213px;
+						float: left;
+						height: 25px;
+						line-height: 25px;
+						text-align: center;
+					}
+		</STYLE>
+		
+	</HEAD>
+	<BODY>
+		
+		<div id="holder">
+			<div class="minihold">
+				<div class="minihold bluebg floatLeft third"></div>
+				<div class="minihold orangebg floatLeft third"></div>
+				<div class="minihold greenbg floatLeft third"></div>
+			</div>
+			<div class="title">
+				Gregson and Brooke
+			</div>
+			
+			<div id="scrollArea">
+				
+				<div class="statHolder">
+					<div class="statTitle thirdLeftStat" style="float: left;">INTERNAL</div>
+					<div class="statTitle thirdLeftStat" style="float: left;">HQ</div>
+					<div class="statTitle thirdRightStat" style="float: left;" id="PCC">PCC</div>
+					<div class="statTitle third" style="float: left;" id="RESOLVE">RESOLVE</div>
+					
+					<!-- Externals -->
+					<div class="statTitle thirdRightStat" style="float: left;" id="RJ5">RJ5</div>
+					<div class="statTitle thirdRightStat" style="float: left;" id="SIXELEVEN">SIXELEVEN</div>
+					<div class="statTitle thirdRightStat" style="float: left;" id="SO">SO</div>
+					
+					<br style="clear: both;" />
+				</div>
+				
+				<div class="statHolder">
+					<div class="circleValueBlue circleValue thirdLeft" style="float: left;" id="INTERNAL"></div>
+					<div class="circleValueBlue circleValue thirdLeft" style="float: left;" id="HQ"></div>
+					<div class="circleValueGreen circleValue thirdRight" style="float: left;" id="PCC"></div>
+					<div class="circleValueOrange circleValue third" style="float: left;" id="RESOLVE"></div>
+					
+					<!-- Externals -->
+					<div class="circleValueGreen circleValue thirdRight" style="float: left;" id="RJ5"></div>
+					<div class="circleValueGreen circleValue thirdRight" style="float: left;" id="SIXELEVEN"></div>
+					<div class="circleValueGreen circleValue thirdRight" style="float: left;" id="SO"></div>
+					
+					<br style="clear: both;" />
+				</div>
+				<div class="statHolder">
+					<div class="stat thirdLeftStat totalVal" style="float: left;" id="INTERNAL">&pound;0.00</div>
+					<div class="stat thirdLeftStat totalVal" style="float: left;" id="HQ">&pound;0.00</div>
+					<div class="stat thirdRightStat totalVal" style="float: left;" id="PCC">&pound;0.00</div>
+					<div class="stat third totalVal" style="float: left;" id="RESOLVE">&pound;0.00</div>
+					
+					<!-- Externals -->
+					<div class="stat thirdRightStat totalVal" style="float: left;" id="RJ5">&pound;0.00</div>
+					<div class="stat thirdRightStat totalVal" style="float: left;" id="SIXELEVEN">&pound;0.00</div>
+					<div class="stat thirdRightStat totalVal" style="float: left;" id="SO">&pound;0.00</div>
+					
+					<br style="clear: both;" />
+				</div>
+				<div class="statHolder">
+					<div class="stat thirdLeftStat averageDI" style="float: left;" id="INTERNAL">&pound;0.00</div>
+					<div class="stat thirdLeftStat averageDI" style="float: left;" id="HQ">&pound;0.00</div>
+					<div class="stat thirdRightStat averageDI" style="float: left;" id="PCC">&pound;0.00</div>
+					<div class="stat third averageDI" style="float: left;" id="RESOLVE">&pound;0.00</div>
+					
+					<!-- Externals -->
+					<div class="stat thirdRightStat averageDI" style="float: left;" id="RJ5">&pound;0.00</div>
+					<div class="stat thirdRightStat averageDI" style="float: left;" id="SIXELEVEN">&pound;0.00</div>
+					<div class="stat thirdRightStat averageDI" style="float: left;" id="SO">&pound;0.00</div>
+					
+					<br style="clear: both;" />
+				</div>
+			
+			</div>
+			
+			<div class="entry">
+				<div class="etitle">Week</div>
+				<div class="info">
+					<div class="referrals" id="weekreferrals">0</div>
+					<div class="pack_out" id="weekpackout">0</div>
+					<div class="value" id="weekvalue">&pound;0.00</div>
+				</div>
+			</div>
+			<div class="entry">
+				<div class="etitle">This Month</div>
+				<div class="info">
+					<div class="referrals" id="thismonthreferrals">0</div>
+					<div class="pack_out" id="thismonthpackout">0</div>
+					<div class="value" id="thismonthvalue">&pound;0.00</div>
+				</div>
+			</div>
+			<div class="entry">
+				<div class="etitle">Last Month</div>
+				<div class="info">
+					<div class="referrals" id="lastmonthreferrals">0</div>
+					<div class="pack_out" id="lastmonthpackout">0</div>
+					<div class="value" id="lastmonthvalue">&pound;0.00</div>
+				</div>
+			</div>
+			<div class="minihold">
+				<div class="minihold bluebg floatLeft third"></div>
+				<div class="minihold orangebg floatLeft third"></div>
+				<div class="minihold greenbg floatLeft third"></div>
+			</div>
+		</div>
+		
+	</BODY>
+</HTML>

@@ -98,9 +98,9 @@ return array(
 	 * Fuel::L_INFO
 	 * Fuel::L_ALL
 	 */
-	'log_threshold'    => Fuel::L_WARNING,
+	'log_threshold'    => Fuel::L_DEBUG,
 	'log_path'         => APPPATH.'logs/',
-	'log_date_format'  => 'Y-m-d H:i:s',
+	'log_date_format'  => 'H:i:s',
 
 	/**
 	 * Security settings
@@ -212,6 +212,17 @@ return array(
 		'packages'  => array(
 			'orm',
 			'auth',
+			'subpackage',
+			'printmanager',
+			'goautodial',
+			'simple_html_dom',
+			'email',
+			'massuser',
+			'sexyticket',
+			'reports',
+			'ppi-api',
+			'pdf',
+			'crm',
 		),
 
 		/**

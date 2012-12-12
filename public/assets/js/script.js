@@ -4,7 +4,7 @@ $(function () {
 	$('#dateRangeDisposition').click(
 		function() {
 			
-			var url = '/reports/disposition';
+			var url = '/reports/dispositions';
 			
 			if ( $('select[name=center] option:selected').val() && $('select[name=center] option:selected').val() != 'ALL') {
 				url = url + '/center/' + $('select[name=center] option:selected').val();
@@ -18,8 +18,35 @@ $(function () {
 				url = url + '/' + $('#enddate').val();
 			}
 		
+			disposition_url = url+".json";
 			
-			window.location = url;
+			load_dispositions();
+			
+			//window.location = url;
+		}
+	);
+	
+	
+	
+	
+	$('#dateRangeCommission').click(
+		function() {
+			
+			var url = '/reports/commission';
+			
+			if ($('#startdate').val() != '') {
+				url = url + '/' + $('#startdate').val();
+			}
+			
+			if ($('#enddate').val() != '') {
+				url = url + '/' + $('#enddate').val();
+			}
+		
+			disposition_url = url+".json";
+			
+			load_dispositions();
+			
+			//window.location = url;
 		}
 	);
 
@@ -48,7 +75,10 @@ $(function () {
 
 	// jQuery DateInput
 	$('.datepicker').datepick({ pickerClass: 'jq-datepicker' });
-
+	
+	$('.datetimepicker').datetimepicker();
+	
+	
 	// jQuery Data Visualize
 	$('table.data').each(function() {
 		var chartWidth = $(this).parent().width()*0.90; // Set chart width to 90% of its parent

@@ -199,7 +199,7 @@ class Auth_Login_SimpleAuth extends \Auth_Login_Driver
 	 * @param   Array
 	 * @return  bool
 	 */
-	public function create_user($username, $name, $password, $email, $center, $group = 0, Array $profile_fields = array())
+	public function create_user($username, $name, $password, $email, $group = 0, Array $profile_fields = array())
 	{
 		$password = trim($password);
 		$email = filter_var(trim($email), FILTER_VALIDATE_EMAIL);
@@ -232,7 +232,6 @@ class Auth_Login_SimpleAuth extends \Auth_Login_Driver
 			'name'			  => (string) $name,
 			'password'        => $this->hash_password((string) $password),
 			'email'           => $email,
-			'call_center_id'  => (int) $center,
 			'group'           => (int) $group,
 			'profile_fields'  => serialize($profile_fields),
 			'created_at'      => \Date::forge()->get_timestamp()
@@ -240,8 +239,16 @@ class Auth_Login_SimpleAuth extends \Auth_Login_Driver
 		$result = \DB::insert(\Config::get('simpleauth.table_name'))
 			->set($user)
 			->execute(\Config::get('simpleauth.db_connection'));
-
-		return ($result[1] > 0) ? $result[0] : false;
+		
+		if (isset($result[1]))
+		{
+			return ($result[1] > 0) ? $result[0] : false;
+		}
+		else
+		{
+			return false;
+		}
+		
 	}
 
 	/**

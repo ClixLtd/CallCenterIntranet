@@ -1,5 +1,142 @@
 @charset "utf-8";
 
+
+
+/* Start New Disposition Report Styles */
+
+#dispoMain
+{
+	float: left;
+	margin-left: 20px;
+}
+
+#dispoMenu
+{
+	border-radius: 10px;
+	display: block;
+	overflow: hidden;
+	width: 120px;
+	background-color: #999;
+	
+	float: left;
+}
+
+	#dispoMenu ul
+	{
+		top: 0px !important;
+		padding: 0px !important;
+		margin: 0px !important;
+		background-color: #999 !important;
+		list-style: none !important;
+		list-style-type: none !important;
+		width: 120px;
+		
+		display: block;
+	}
+	
+		#dispoMenu ul li
+		{
+			top: 0px !important;
+			background-image: none !important;
+			margin: 0px !important;
+			padding: 5px 5px 0px 5px !important;
+		}
+		
+		#dispoMenu ul li:last-child
+		{
+			padding: 5px 5px 5px 5px !important;
+		}
+		
+			#dispoMenu ul li a
+			{
+				color: #CCC;
+				text-decoration: none;
+				text-align: center;
+				font-size: 10px;
+				
+				text-transform: uppercase;
+				
+				background-color: #777;
+				display: block;
+				height: 98px;
+				width: 98px;
+				padding: 5px;
+				border: #777 1px solid;
+				
+				border-radius: 8px;
+				
+				box-shadow: 0px 0px 2px #333;
+				text-shadow: 1px 1px 1px black;
+			}
+		
+			#dispoMenu ul li a:hover, #dispoMenu ul li a.current
+			{
+				color: #FFF;
+				background-color: #AAA;
+				border: #BBB 1px solid;
+				box-shadow: 0px 0px 2px #000;
+			}
+
+
+
+/* End New Disposition Report Styles */
+
+
+
+
+
+.dispositionName
+{
+	cursor: help;
+}
+
+#button-list
+{
+	list-style: none !important;
+}
+
+#creditorList
+{
+	margin: 0px;
+	padding: 0px;
+}
+
+
+.flotChart > div.legend > table, 
+.flotChart > div.legend > table tr, 
+.flotChart > div.legend > table tr td, 
+.flotChart > div.legend > table tr th {
+  width: auto !important;
+  height: auto !important;
+  margin: 0px !important;
+  padding: 0px !important;
+  background-color: transparent !important;
+  border: 0px !important;
+}
+
+.flotChart > div.legend > table tr td {
+  padding: 5px !important;
+}
+
+
+
+#conversionRatioChart > div.legend > table, 
+#conversionRatioChart > div.legend > table tr, 
+#conversionRatioChart > div.legend > table tr td, 
+#conversionRatioChart > div.legend > table tr th {
+  width: auto !important;
+  height: auto !important;
+  margin: 0px !important;
+  padding: 0px !important;
+  background-color: transparent !important;
+  border: 0px !important;
+}
+
+#conversionRatioChart > div.legend > table tr td {
+  padding: 5px !important;
+}
+
+
 html, body, div, span, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp,
@@ -30,6 +167,18 @@ input, select { vertical-align: middle; }
 pre, code, kbd, samp { font-family: monospace, sans-serif; }
 
 html { overflow-y: scroll; }
+
+
+#loading_data
+{
+	width: 330px;
+	margin: 0px auto;
+	font-weight: bold;
+	line-height: 30px;
+	text-align: center;
+	display: none;
+}
+
 
 nav ul, nav li { margin: 0; list-style:none; list-style-image: none; }
 small { font-size: 85%; }
