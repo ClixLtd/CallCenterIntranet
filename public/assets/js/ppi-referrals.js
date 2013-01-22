@@ -1,5 +1,84 @@
 $(function () {
 	
+	
+	
+	$('#addNote').click(function() {
+	   
+	   var clientID = $(this).attr('rel');
+	   
+	   var $newDialog = $('<div><p>Please add your note in the box below.</p><form id="addNoteForm" method="post" action="/crm/add_note/" style="margin: 0px; padding: 0px;"><input type="hidden" name="clientID" value="' + clientID + '"><p><textarea name="note" style="margin-top: 5px;width: 460px; height: 140px;"></textarea></p></form></div>');
+	
+	   $newDialog.dialog( { 
+	       autoOpen: false, 
+	       modal: true, 
+	       resizable: false,
+	       width: 500,
+	       height: 300,
+	       title: "Add a Note!",
+	       buttons: 
+	           [ 
+	               { 
+	                   text: "Save", 
+	                   click: function() { 
+	                       $( '#addNoteForm' ).submit(); 
+	                   } 
+	               },
+	               { 
+	                   text: "Cancel", 
+	                   click: function() { 
+	                       $( this ).dialog( "close" ); 
+	                   } 
+	               }
+	           ] 
+	       });
+	
+	   $newDialog.dialog( "open" );
+	   
+	});
+	
+	
+	$('.reprintPack').click(function() {
+	
+	   var clientID = $(this).attr('rel');
+	
+	   var url = '/crm/ppi/reprint_pack/' + clientID + '/';
+	   $("#print_pack_image_"+clientID).attr('src', "/assets/img/lightspinner.gif");
+	   $.getJSON(url, function(data) {
+	       if (data['status'] == "done")
+	       {
+    	       alert("Pack has been sent to the printer, scheduled on " + data['schedule'] + '.');
+    	       $("#print_pack_image_"+clientID).attr('src', "/assets/img/icons/print.gif");
+	       }
+	   });
+	});
+	
+	
+	$('.packReturned').click(function() {
+	
+	   var clientID = $(this).attr('rel');
+	
+	   var url = '/crm/ppi/pack_received/' + clientID + '/';
+	   $("#pack_returned_image_"+clientID).attr('src', "/assets/img/lightspinner.gif");
+	   $.getJSON(url, function(data) {
+	       if (data['status'] == "done")
+	       {
+    	       location.reload();
+	       }
+	   });
+	});
+	
+	
+	$('#clientIDButton').click(function() {
+    	var url = '/crm/view_client/' + $("#clientID").val() + '/';
+    	$(location).attr('href', url);
+    	
+    	return false;
+	});
+	
+	
+	
+	
+	
 	$('#findReferralForm').submit(function() {
 		if ($('#referralID').val().length > 0)
 		{
@@ -21,11 +100,18 @@ $(function () {
 	$('#deadClientButton').click(function() {
 		
 		$.post('/crm/ppi/dead_client/'+referralID+'.json',
-		{ reasonID: $('#deadClientReason').val() }, 
+		$('#referralDetails').serialize()+'&'+$('#creditorList').serialize()+'&'+$('#deadClientForm').serialize(), 
 		function(data){
 			if (data['status'] == 'SUCCESS')
 			{
-				location.reload();
+			    if (data['disposition'] == 3 || data['disposition'] == 4)
+			    {
+    			    $(location).attr('href','/crm/ppi/referrals/');
+			    }
+			    else
+			    {
+    			    $(location).attr('href','/crm/ppi/referral/'+data['referralID']);
+			    }
 			}
 		});
 		
@@ -33,16 +119,19 @@ $(function () {
 	
 	$('#sendPackButton').click(function() {
 		
+		$('#hideButtonLoading').show();
+		
 		$.post('/crm/ppi/create_client/'+referralID+'.json',
 		$('#referralDetails').serialize()+'&'+$('#creditorList').serialize(), 
 		function(data){
 			if (data['status'] == 'SUCCESS')
 			{
-				location.reload();
+				$(location).attr('href','/crm/ppi/referral/'+data['referralID']);
 			}
 			else
 			{
 				alert('Packing out Client has failed - Please contact the IT department.');
+				$('#hideButtonLoading').hide();
 			}
 		});
 		
@@ -55,7 +144,7 @@ $(function () {
 		function(data){
 			if (data['status'] == 'SUCCESS')
 			{
-				alert('Call Back for this client has been set!');
+				alert('Call Back for this referral has been set! Referral ID is: '+data['referralID'] );
 				$(location).attr('href','/crm/ppi/referrals/');
 			}
 		});
@@ -64,10 +153,13 @@ $(function () {
 	
 	$('#drReferralButton').click(function() {
 		
-		$.getJSON("/crm/ppi/create_debtsolv_referral/"+referralID+".json", function(json) {
-			alert("Client has been transferred to Debtsolv, ClientID is : " + json['clientID']);
-			location.reload();
+		$.post("/crm/ppi/create_debtsolv_referral/"+referralID+".json",
+		$('#referralDetails').serialize()+'&'+$('#creditorList').serialize()+'&'+$('#deadClientForm').serialize(), 
+		function(data){
+			alert("Client has been transferred to Debtsolv, ClientID is : " + data['clientID']);
+			$(location).attr('href','/crm/ppi/referral/'+data['referralID']);
 		});
+		
 		
 	});
 	

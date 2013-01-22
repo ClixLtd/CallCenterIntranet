@@ -18,7 +18,10 @@
 				
 				$thisUser = \Model_User::find($user_id);
 				
-				\Log::write('Action', 'Visit to page '.\Uri::string().' by '.$thisUser->name, 'Del_Spam');
+				if ($segments != 'userlogin')
+				{
+					\Log::write('Action', 'Visit to page '.\Uri::string().' by '.$thisUser->name, 'Del_Spam');
+				}
 				
 				$this->current_user = Model_User::find($user_id);
 			

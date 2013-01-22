@@ -16,10 +16,16 @@ class Queue
 		$new->tray_id = $tray;
 		
 		$new->save();
+		
+		\Log::write('PRINTMANAGER', 'Added the file '.$filename. ' to the print queue for '.$scheduled);
+
+		
 	}
 	
 	public static function printItem($filename, $printerName="canonsales", $tray="Tray1")
 	{
+	   date_default_timezone_set('Europe/London');
+	   \Log::write('PRINTMANAGER', 'Now printing the file '.$filename. ' on printer named '.$printerName);
 		echo exec('lpr -P '.$printerName.' -U intranet -o media='.$tray.' '.$filename);
 	}
 	

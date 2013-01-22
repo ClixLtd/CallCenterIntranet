@@ -1,15 +1,15 @@
 <div style="float: right;">
+<input type="text" class="datepicker" name="startdate" id="startdate" rel="tooltip" title="Start Date" value="<?php echo (!is_null($start_date)) ? $start_date : "" ; ?>">
+<input type="text" class="datepicker" name="enddate" id="enddate" rel="tooltip" title="End Date" value="<?php echo (!is_null($end_date)) ? $end_date : "" ; ?>">
+<a href='#' class="button" id="dateRangeDisposition">View Date Range</a><br />
 <?php if($view_all): ?>
-<select name="center" rel="tooltip" title="Call Center">
-	<option value="ALL">All Centers</option>
+<select name="center" rel="tooltip" title="Call Center" class="cd-dropdown cd-select" id="center" >
+	<option value="-1">All Centers</option>
 	<?php foreach($all_call_centers AS $cc): ?>
 	<option value="<?php echo $cc->shortcode; ?>" <?php echo ($cc->shortcode == $center) ? "SELECTED" : ""; ?>><?php echo $cc->title; ?></option>
 	<?php endforeach; ?>
 </select>
 <?php endif; ?>
-<input type="text" class="datepicker" name="startdate" id="startdate" rel="tooltip" title="Start Date" value="<?php echo (!is_null($start_date)) ? $start_date : "" ; ?>">
-<input type="text" class="datepicker" name="enddate" id="enddate" rel="tooltip" title="End Date" value="<?php echo (!is_null($end_date)) ? $end_date : "" ; ?>">
-<a href='#' class="button" id="dateRangeDisposition">View Date Range</a>
 </div>
 
 <article class="full-block clearfix">
@@ -60,7 +60,17 @@
 								<td><div id="referral_value"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
 							</tr>
 							<tr>
-								<td><b>Pack Out</b></td>
+								<td><b>Pack Out (DR)</b></td>
+								<td><div id="dr_pack_out_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+								<td><div id="dr_pack_out_value"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+							</tr>
+							<tr>
+								<td><b>Pack Out (DMPLUS)</b></td>
+								<td><div id="dmplus_pack_out_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+								<td><div id="dmplus_pack_out_value"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+							</tr>
+							<tr>
+								<td><b>Total Pack Out</b></td>
 								<td><div id="pack_out_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
 								<td><div id="pack_out_value"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
 							</tr>
@@ -168,10 +178,14 @@
 					
 					$('#referral_count').html(json['totals']['referrals']['count']);
 					$('#pack_out_count').html(json['totals']['pack_outs']['count']);
+					$('#dr_pack_out_count').html(json['totals']['dr_pack_outs']['count']);
+					$('#dmplus_pack_out_count').html(json['totals']['dmplus_pack_outs']['count']);
 					$('#pack_in_count').html(json['totals']['pack_ins']['count']);
 					
 					$('#referral_value').html(json['totals']['referrals']['value']);
 					$('#pack_out_value').html(json['totals']['pack_outs']['value']);
+					$('#dr_pack_out_value').html(json['totals']['dr_pack_outs']['value']);
+					$('#dmplus_pack_out_value').html(json['totals']['dmplus_pack_outs']['value']);
 					$('#pack_in_value').html(json['totals']['pack_ins']['value']);
 					
 					$('#packin_table').dataTable(json['pack_ins']);

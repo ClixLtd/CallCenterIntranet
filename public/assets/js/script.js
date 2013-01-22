@@ -6,8 +6,11 @@ $(function () {
 			
 			var url = '/reports/dispositions';
 			
-			if ( $('select[name=center] option:selected').val() && $('select[name=center] option:selected').val() != 'ALL') {
-				url = url + '/center/' + $('select[name=center] option:selected').val();
+			var centerName = $('input[name=center]').val();
+			
+			
+			if ( centerName && centerName != '-1') {
+				url = url + '/center/' + centerName;
 			}
 			
 			if ($('#startdate').val() != '') {
@@ -26,6 +29,12 @@ $(function () {
 		}
 	);
 	
+	
+	
+	$( '.cd-dropdown' ).dropdown({
+    	gutter : 5,
+    	delay : 20,
+	});
 	
 	
 	

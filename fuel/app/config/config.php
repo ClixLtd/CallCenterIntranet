@@ -63,7 +63,7 @@ return array(
 
 	'errors'  => array(
 		// Which errors should we show, but continue execution?
-		'continue_on'  => array(E_NOTICE, E_WARNING, E_DEPRECATED, E_STRICT),
+		'continue_on'  => array(E_NOTICE, E_WARNING, E_DEPRECATED, E_STRICT, E_ERROR),
 		// How many errors should we show before we stop showing them? (prevents out-of-memory errors)
 		'throttle'     => 10,
 		// Should notices from Error::notice() be shown?
@@ -191,6 +191,10 @@ return array(
 	'module_paths' => array(
 		//APPPATH.'modules'.DS
 	),
+	
+	'package_paths' => array(
+		PKGPATH,
+	),
 
 
 	/**************************************************************************/
@@ -223,6 +227,7 @@ return array(
 			'ppi-api',
 			'pdf',
 			'crm',
+			'report',
 		),
 
 		/**

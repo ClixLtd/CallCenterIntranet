@@ -52,7 +52,37 @@
 		
 		
 		
-		
+		public function submit_ticket($subject=null, $message=null, $department=1, $priority=3)
+		{
+    		date_default_timezone_set('Europe/London');
+    		
+    		
+    		$submitUrl = "http://www.gregsonandbrooke.co.uk/support/open.php";
+    		
+    		$openTicket = array(
+    		  'name'      => 'A.D.A.M.',
+    		  'email'     => 'a.d.a.m@gregsonandbrooke.co.uk',
+    		  'phone'     => '01204860900',
+    		  'phone_ext' => '4000',
+    		  'topicId'   => $department,
+    		  'subject'   => $subject,
+    		  'message'   => $message,
+    		  'pri'       => $priority,
+    		);
+    		
+    		
+    		$ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $submitUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_POST, true);
+    		curl_setopt($ch, CURLOPT_POSTFIELDS, $openTicket);
+            $output = curl_exec($ch);
+            $info = curl_getinfo($ch);
+            curl_close($ch);
+            
+            \Log::write('SUPPORT', "Support ticket has been submitted with the title '".$subject."'");
+    		
+		}
 		
 		
 		public function daily_stats()
@@ -135,7 +165,10 @@
 		}
 		
 		
-		
+		public function sorry_message()
+		{
+    		Adam::send_push_message("Sorry for the constant 'Lack of Leads' messages. This has been fixed and I promise I will not keep you awake all night! Sorry!");
+		}
 		
 		
 		public function get_tomorrow_list_stats($campaign=null, $dialler=null)
@@ -325,8 +358,11 @@
 			
 			
 			$get_work_hours = Adam::in_work_hours();
-			if ( !is_null($get_work_hours) )
+			if ( is_null($get_work_hours) )
 			{
+				
+				
+				/*
 				$current_date_time = strtotime("NOW");
 				if ( $current_date_time >= ((int)$get_work_hours['start']) && $current_date_time <= ((int)$get_work_hours['start']+90) )
 				{
@@ -360,18 +396,20 @@
 						$adam_announcement->save();
 					}
 				}
-				
+				*/
 				
 				
 				$minute_message = "";
 				
 				$minute_message .= @Adam::guess_dial_rate('GAB-1', TRUE)."\n";
+				$minute_message .= @Adam::guess_dial_rate('GAB2013', TRUE)."\n";
 				$minute_message .= @Adam::guess_dial_rate('GBS-1', TRUE)."\n";
 				$minute_message .= @Adam::guess_dial_rate('GAB-3', TRUE)."\n";
 				$minute_message .= @Adam::guess_dial_rate('INTERNAL', TRUE)."\n";
 				
 				//@Adam::check_dialable_leads('GAB-1');
 				@Adam::check_dialable_leads('GBS-1');
+				@Adam::check_dialable_leads('GBS2013');
 				@Adam::check_dialable_leads('GAB-3');
 				@Adam::check_dialable_leads('INTERNAL');
 				
@@ -385,9 +423,22 @@
 				@Adam::check_dialable_leads('SMS-1', "resolvedialler");
 				
 				
+				
+				
+				// gipltd
+				
+				$minute_message .= @Adam::gipltd_guess_dial_rate('UKCam', TRUE, "gipltd")."\n";
+				$minute_message .= @Adam::gipltd_guess_dial_rate('Training', TRUE, "gipltd")."\n";
+				$minute_message .= @Adam::gipltd_guess_dial_rate('INSURANC', TRUE, "gipltd")."\n";
+				$minute_message .= @Adam::gipltd_guess_dial_rate('Inbound', TRUE, "gipltd")."\n";
+				$minute_message .= @Adam::gipltd_guess_dial_rate('clixtest', TRUE, "gipltd")."\n";
+				
+				
+				
+				
 				// Monitor the External diallers
-				$minute_message .= @Adam::guess_dial_rate('UK', TRUE, "rj5")."\n";
-				@Adam::check_dialable_leads('UK', "rj5");
+				//$minute_message .= @Adam::guess_dial_rate('UK', TRUE, "rj5")."\n";
+				//@Adam::check_dialable_leads('UK', "rj5");
 				
 				// Monitor the PCC dialler
 				//$minute_message .= @Adam::guess_dial_rate('DIGOS-1', TRUE, "pccdialler")."\n";
@@ -399,6 +450,8 @@
 					));
 				$adam_message->save();
 			
+				
+			
 			}
 			else
 			{
@@ -406,16 +459,22 @@
 			}
 			
 			
+			@Adam::log_minute_stats('INTERNAL');
 			@Adam::log_minute_stats('GAB-1');
 			@Adam::log_minute_stats('GBS-1');
 			@Adam::log_minute_stats('GAB-3');
 			@Adam::log_minute_stats('GAB-LIVE');
 			@Adam::log_minute_stats('BURTON1', TRUE, "resolvedialler");
 			@Adam::log_minute_stats('SMS-1', TRUE, "resolvedialler");
-			@Adam::log_minute_stats('UK', TRUE, "rj5");
-				
+			//@Adam::log_minute_stats('UK', TRUE, "rj5");
 				
 			
+			// gipltd
+			@Adam::gipltd_log_minute_stats('UKCam');
+			@Adam::gipltd_log_minute_stats('Training');
+			@Adam::gipltd_log_minute_stats('INSURANC');
+			@Adam::gipltd_log_minute_stats('Inbound');
+			@Adam::gipltd_log_minute_stats('clixtest');
 			
 			
 		}
@@ -977,7 +1036,9 @@ Gregson and Brooke.');
 				$open = TRUE;
 			}
 			
-			return (!$open) ? null : $current_schedule;
+			//return (!$open) ? null : $current_schedule;
+			
+			return null;
 						
 		}
 		
@@ -995,13 +1056,38 @@ Gregson and Brooke.');
 			
 			$campaign_stats = \Goautodial\Model_Vicidial_Campaign_Stats::find(null,array(),$connection)->where('campaign_id', $campaign_id)->get_one();
 			
-			print_r($campaign_stats);
-			
 			
 			$delete_early = \DB::query('DELETE FROM dialler_campaign_calls WHERE campaign="'+$campaign_id+'" DATE(date) < "'+date("Y-m-d H:i-s", strtotime("1 week ago"))+'";');
 
 			$add_current = \Model_Dialler_Campaign_Call::forge(array(
 				'campaign' => $campaign_id,
+				'calls_made' => (int)$campaign_stats->calls_onemin,
+				'calls_answered' => (int)$campaign_stats->answers_onemin,
+				'date' => date("Y-m-d H:i-s")
+			));
+			
+			$add_current->save();
+			
+			
+		}
+		
+		
+		
+		//gipltd
+		public function gipltd_log_minute_stats($campaign_id, $set_dialler=FALSE, $connection=null)
+		{
+			
+			date_default_timezone_set('Europe/London');
+			
+			$connection = (is_null($connection)) ? "gipltd" : $connection;
+			
+			$campaign_stats = \Goautodial\Model_Vicidial_Campaign_Stats_Gipltd::find(null,array(),$connection)->where('campaign_id', $campaign_id)->get_one();
+			
+			
+			$delete_early = \DB::query('DELETE FROM dialler_campaign_calls WHERE campaign="'."GIPLTD_".$campaign_id.'" DATE(date) < "'+date("Y-m-d H:i-s", strtotime("1 week ago"))+'";');
+
+			$add_current = \Model_Dialler_Campaign_Call::forge(array(
+				'campaign' => "GIPLTD_".$campaign_id,
 				'calls_made' => (int)$campaign_stats->calls_onemin,
 				'calls_answered' => (int)$campaign_stats->answers_onemin,
 				'date' => date("Y-m-d H:i-s")
@@ -1112,6 +1198,110 @@ Gregson and Brooke.');
 		}
 		
 		
+		
+		
+		
+		
+		// gipltd
+		public function gipltd_guess_dial_rate($campaign_id, $set_dialler=FALSE, $connection=null)
+		{
+		
+			print "\n";
+			
+			$calls = 0;
+			$answers = 0;
+			$drops = 0;
+			
+			
+			// Get the current stats for this campaign from the dialler
+			$campaign_stats = \Goautodial\Model_Vicidial_Campaign_Stats_Gipltd::find(null,array(),$connection)->where('campaign_id', $campaign_id)->get_one();
+			
+			// Check that the campaign has actually been making calls
+			if ($campaign_stats->calls_onemin > 0)
+			{
+				// Find an average of the calls, answers and drops that our campaign has had over the last 30, 15 and 1 minute(s)
+				$calls = ((((int)$campaign_stats->calls_halfhour/2) + ((int)$campaign_stats->calls_fivemin*3) + ((int)$campaign_stats->calls_onemin*15))/3);
+				$answers = ((((int)$campaign_stats->answers_halfhour/2) + ((int)$campaign_stats->answers_fivemin*3) + ((int)$campaign_stats->answers_onemin*15))/3);
+				$drops = ((((int)$campaign_stats->drops_halfhour/2) + ((int)$campaign_stats->drops_fivemin*3) + ((int)$campaign_stats->drops_onemin*15))/3);
+				
+				// Work out the best dial rate to keep up the averages above without dropping calls
+				$dial_rate = (((int)$answers+(int)$drops) == 0) ? FALSE : ((int)$calls/((int)$answers+(int)$drops));
+				
+				// Find the drop rate this campaign is running at for the the duration of the day
+				$drop_rate = ($campaign_stats->answers_today == 0) ? 0 : ( ( $campaign_stats->drops_today / $campaign_stats->answers_today ) * 100 );
+				
+				
+				
+				if ($dial_rate == 0)
+				{
+					$dial_rate = 0.5;
+				}
+				
+				// Reduce the dial rate based on the current drop rate to try and bring us under the limit quicker.
+				if ($drop_rate > 4)
+				{
+					$dial_rate = ($dial_rate * 0.5);
+				}
+				else if ($drop_rate >= 3)
+				{
+					$dial_rate = ($dial_rate * 0.7);
+				} 
+				else if ($drop_rate < 2)
+				{
+					$dial_rate = ($dial_rate * 2.5);
+				}
+				
+				$campaign_stats->differential_onemin . "\n";
+				$required_channels = ($dial_rate*($campaign_stats->differential_onemin*1.8));
+				
+				
+				$channels = ($connection=="rj5") ? 96 : 250;
+				
+				if ($required_channels > $channels)
+				{
+					$dial_rate = $channels/($campaign_stats->differential_onemin*1.8);
+				}
+
+				$campaign = \Goautodial\Model_Vicidial_Campaigns_Gipltd::find($campaign_id,array(),$connection);
+				
+				$campaign->auto_dial_level = number_format($dial_rate,3,'.','');
+				$campaign->save();
+				
+				print $message = $campaign_id . " Dial rate set to: " . number_format($dial_rate,3,'.','');
+	
+				print "\nCalls: ".($calls*2)." Answers: ".($answers*2). " Drops: ".($drops*2)."\n";
+				
+			}
+			else
+			{
+			
+				if ($campaign_stats->agents_average_onemin > 0)
+				{
+					$campaign = \Goautodial\Model_Vicidial_Campaigns_Gipltd::find($campaign_id,array(),$connection);
+				
+					$campaign->auto_dial_level = number_format(1,3,'.','');
+					$campaign->save();
+					
+					print $message = $campaign_id . " set to 1.";
+					print "\n";
+				}
+				else
+				{
+					print $message = "No agents in " . $campaign_id;
+					print "\n";
+				}
+			}
+			
+			
+			@ob_flush();
+			
+			return $message;
+			
+		}
+		
+		
+		
+		
 		public function set_campaign_rate($campaign_id, $dial_rate)
 		{
 			$campaign = \Goautodial\Model_Vicidial_Campaigns::find($campaign_id);
@@ -1120,6 +1310,6 @@ Gregson and Brooke.');
 			
 			$campaign->save();
 		}
-		
+				
 		
 	}

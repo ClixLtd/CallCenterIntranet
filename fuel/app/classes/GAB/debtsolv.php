@@ -825,6 +825,8 @@ class Debtsolv {
 	{
 		$list_ids = (is_array($dialler_list_id)) ? implode("', '", $dialler_list_id) : $dialler_list_id;
 		
+		
+		
 		$results = \DB::query("SELECT CLD.ClientID AS 'Leadpool ID'
 		  ,D_CPD.ClientID AS ClientID
 	      ,(CD.Forename + ' ' + CD.Surname) AS Name
@@ -867,14 +869,15 @@ class Debtsolv {
 	  LEFT JOIN
 	    Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
 	  WHERE 
-	  	TCR.[Description] NOT IN ('Referred')
-	    AND LSO.[Reference] IN ('".$list_ids."')
+	      LSO.[Reference] IN ('".$list_ids."')
 		AND NOT ((D_CPD.InitialAgreedAmount is null OR D_CPD.InitialAgreedAmount <= 0) AND CC.ContactResult = 1500)
 	  ORDER BY
 		CLD.LeadRef2
 	    ,TCR.[Description]
 	    ,Product
 	    ,CLD.DateCreated DESC")->cached(900)->execute(static::$_connection);
+		
+		
 		
 		
 		return $results;

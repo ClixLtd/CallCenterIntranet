@@ -62,8 +62,10 @@ return array(
 		 40   => array('name' => 'Legal', 'roles' => array()),
 		 
 		 
+		 50   => array('name' => 'CDS', 'roles' =>array('ppi')),
 		 
-		 65   => array('name' => 'External Support Rep', 'roles' => array('telesales_manager', 'area_manager')),
+		 
+		 65   => array('name' => 'External Support Rep', 'roles' => array('telesales_manager', 'area_manager', 'ppi')),
 		 
 		 69   => array('name' => 'Telesales Manager', 'roles' => array('telesales_manager', 'ppi')),
 		 
@@ -77,7 +79,7 @@ return array(
 		 
 		 80   => array('name' => 'Director', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi')),
 		 
-		 96   => array('name' => 'Database Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier')),
+		 96   => array('name' => 'Database Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi')),
 		 
 		 97   => array('name' => 'Dialler Manager', 'roles' => array()),
 		 

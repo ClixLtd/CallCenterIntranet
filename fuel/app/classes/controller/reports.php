@@ -930,7 +930,16 @@ class Controller_Reports extends Controller_BaseHybrid
 			      	WHERE
 			      		QuestionID = 10001
 			      		AND ClientID = D_CLD.Client_ID
-			      ) AS 'Delivery'
+			      ) AS 'Delivery',
+			      (
+			      	SELECT Top (1)
+			      		ResponseVal
+			      	FROM
+			      		Debtsolv.dbo.Client_CustomQuestionResponses
+			      	WHERE
+			      		QuestionID = 10007
+			      		AND ClientID = D_CLD.Client_ID
+			      ) AS 'ProductType'
 			      ,CONVERT(varchar, CLD.DateCreated, 120) AS 'Referred Date'
 			      ,CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
 			      ,CASE
@@ -1030,7 +1039,16 @@ class Controller_Reports extends Controller_BaseHybrid
 			      	WHERE
 			      		QuestionID = 10001
 			      		AND ClientID = D_CLD.Client_ID
-			      ) AS 'Delivery'
+			      ) AS 'Delivery',
+			      (
+			      	SELECT Top (1)
+			      		ResponseVal
+			      	FROM
+			      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
+			      	WHERE
+			      		QuestionID = 10007
+			      		AND ClientID = D_CLD.Client_ID
+			      ) AS 'ProductType'
 			      ,CONVERT(varchar, CLD.DateCreated, 120) AS 'Referred Date'
 			      ,CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
 			      ,CASE
@@ -1098,6 +1116,14 @@ class Controller_Reports extends Controller_BaseHybrid
 						'count' => 0,
 						'value' => 0,
 					),
+					'dr_pack_outs' => array(
+						'count' => 0,
+						'value' => 0,
+					),
+					'dmplus_pack_outs' => array(
+						'count' => 0,
+						'value' => 0,
+					),
 					'pack_ins' => array(
 						'count' => 0,
 						'value' => 0,
@@ -1132,6 +1158,25 @@ class Controller_Reports extends Controller_BaseHybrid
 						
 						if ( strtotime($result['Referred Date']) >= strtotime($start_date . " 00:00:00") && strtotime($result['Referred Date']) <= strtotime($end_date. " 23:59:59") )
 						{
+						  
+						  $pdtype = "";
+						  
+						  switch ($result['ProductType']) {
+						  
+						      CASE 0:
+						          $pdtype = "DR";
+						          break;
+						      CASE 1:
+						          $pdtype = "DMPLUS";
+						          break;
+						      CASE 2:
+						          $pdtype = "PPI";
+						          break;
+						      DEFAULT:
+						          $pdtype = "";
+						          break;
+						  }
+						
 							$result_parse[] = array(
 								$result['ClientID'],
 								$result['Dialler Lead ID'],
@@ -1143,6 +1188,7 @@ class Controller_Reports extends Controller_BaseHybrid
 								'<div class="dispositionName">'.$result['Description'].'</div>',
 								$result['DI'],
 								$result['Delivery'],
+								$pdtype,
 								date("d-m-y", strtotime($result['Referred Date'])),
 								date("d-m-y H:i", strtotime($result['Last Contact Date'])),
 								($result['Call Back Date']<>" ") ? date("d-m-y", strtotime($result['Call Back Date'])) : "",
@@ -1155,6 +1201,29 @@ class Controller_Reports extends Controller_BaseHybrid
 						
 						if ($result['Description'] == "Lead Completed")
 						{
+    				      
+    				      $pdtype = "";
+						  
+						  switch ($result['ProductType']) {
+						  
+						      CASE 0:
+						          $pdtype = "DR";
+						          $totals['dr_pack_outs']['count']++;
+						          $totals['dr_pack_outs']['value']=$totals['dr_pack_outs']['value']+$result['DI'];
+						          break;
+						      CASE 1:
+						          $pdtype = "DMPLUS";
+						          $totals['dmplus_pack_outs']['count']++;
+						          $totals['dmplus_pack_outs']['value']=$totals['dmplus_pack_outs']['value']+$result['DI'];
+						          break;
+						      CASE 2:
+						          $pdtype = "PPI";
+						          break;
+						      DEFAULT:
+						          $pdtype = "";
+						          break;
+						  }
+						
 							$po_result_parse[] = array(
 								$result['ClientID'],
 								$result['Dialler Lead ID'],
@@ -1165,6 +1234,7 @@ class Controller_Reports extends Controller_BaseHybrid
 								$result['Consolidator'],
 								$result['DI'],
 								$result['Delivery'],
+								$pdtype,
 								date("d-m-y", strtotime($result['Referred Date'])),
 							);
 							$totals['pack_outs']['count']++;
@@ -1224,7 +1294,7 @@ class Controller_Reports extends Controller_BaseHybrid
 				      ,D_CPD.InitialAgreedAmount / 100 AS DI
 				      ,(
 				      	SELECT Top (1)
-				      		ResponseText
+				      		ResponseVal
 				      	FROM
 				      		Debtsolv.dbo.Client_CustomQuestionResponses
 				      	WHERE
@@ -1446,6 +1516,8 @@ class Controller_Reports extends Controller_BaseHybrid
 				
 				$totals['referrals']['value'] = number_format($totals['referrals']['value'],2);
 				$totals['pack_outs']['value'] = number_format($totals['pack_outs']['value'],2);
+				$totals['dr_pack_outs']['value'] = number_format($totals['dr_pack_outs']['value'],2);
+				$totals['dmplus_pack_outs']['value'] = number_format($totals['dmplus_pack_outs']['value'],2);
 				$totals['pack_ins']['value'] = number_format($totals['pack_ins']['value'],2);
 				
 				return(array(
@@ -1556,6 +1628,10 @@ class Controller_Reports extends Controller_BaseHybrid
 							),
 							array(
 								"sTitle"    => "Delivery",
+								"sType"		=> "string",
+							),
+							array(
+								"sTitle"    => "Product",
 								"sType"		=> "string",
 							),
 							array(
@@ -1678,6 +1754,10 @@ class Controller_Reports extends Controller_BaseHybrid
 							),
 							array(
 								"sTitle"    => "Delivery",
+								"sType"		=> "string",
+							),
+							array(
+								"sTitle"    => "Product",
 								"sType"		=> "string",
 							),
 							array(

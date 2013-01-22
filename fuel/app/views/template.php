@@ -27,6 +27,9 @@
 	<?php echo Asset::css('jquery.fileinput.css'); ?>
 	<?php echo Asset::css('jquery.fullcalendar.css'); ?>
 	<?php echo Asset::css('jquery.visualize.css'); ?>
+	<?php echo Asset::css('dropdown.css'); ?>
+	
+	
 	<?php echo Asset::js('jquery/jquery.datatables.js'); ?>
 	<?php echo Asset::js('jquery/jquery.datatables.datesort.js'); ?>
 	
@@ -45,6 +48,16 @@
 
 <!-- Add class .fixed for fixed layout. You would need also edit CSS file for width -->
 <body>
+
+
+<div id="hideButtonLoading" style="display: none; position: fixed; top: 0px; left: 0px; height: 100%; width: 100%; z-index: 999; background-color: white; background-color: RGBA(255,255,255,0.4);">
+
+    <div id="textArea" style="text-align: center; position:fixed; width: 500px; height: 85px; top: 50%; left: 50%; background-color: #95bcd8; margin-left: -250px; margin-top: -50px; border-radius: 20px; -webkit-border-radius: 20px; -moz-border-radius: 20px; background-color: RGBA(149,188,216,0.5); box-shadow: 0px 0px 5px 1px RGBA(67,98,112,0.6); padding-top: 20px;">
+        <?php echo Asset::img('lightspinner.gif'); ?><br />
+        <b style="font-size: 18px; line-height: 38px;">Please Wait...</b>
+    </div>
+
+</div>
 
 	<!-- Fixed Layout Wrapper -->
 	<div class="fixed-wraper">
@@ -89,6 +102,7 @@
 					<a href="/reports" title="" class="logs">Reports</a>
 					<ul>
 						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('reports/disposition', 'Disposition Report'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('crm/reports/ppi/disposition', 'PPI Disposition Report'); ?></li><?php endif; ?>
 						<?php if (Auth::has_access('reports.commission')): ?><li><?php echo Html::anchor('reports/commission', 'Commission Report'); ?></li><?php endif; ?>
 						<?php if (Auth::has_access('reports.supplier')): ?><li><?php echo Html::anchor('reports/supplier', 'Supplier Reports'); ?></li><?php endif; ?>
 						<?php if (Auth::has_access('reports.best_solutions')): ?><li><?php echo Html::anchor('reports/best_solutions', 'Best Solutions Report'); ?></li><?php endif; ?>
@@ -102,6 +116,17 @@
 					<a href="" title="" class="projects">PPI Database</a>
 					<ul>
 						<?php if (Auth::has_access('ppi.referrals')): ?><li><?php echo Html::anchor('crm/ppi/referrals', 'Referrals'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('ppi.referrals')): ?><li><?php echo Html::anchor('crm/ppi/create', 'Create Referral'); ?></li><?php endif; ?>
+					</ul>
+				</li>
+				<?php endif; ?>
+				
+				<?php if (Auth::has_access('ppi.menu')): ?>
+				<li>
+					<a href="" title="" class="projects">Client Database</a>
+					<ul>
+						<?php if (Auth::has_access('ppi.menu')): ?><li><?php echo Html::anchor('crm', 'Find Client'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('ppi.menu')): ?><li><?php echo Html::anchor('crm/reports/ppi/chase', 'Client Chase List'); ?></li><?php endif; ?>
 					</ul>
 				</li>
 				<?php endif; ?>
@@ -152,7 +177,16 @@
 				
 				<?php if (Auth::has_access('user.menu')): ?>
 				<li>
-					<a href="/users" title="" class="logs">Users</a>
+					<a href="/users" title="" class="logs">Calendar</a>
+					<ul>
+						<?php if (Auth::has_access('user.view')): ?><li><?php echo Html::anchor('calendar/view', 'View Calendar'); ?></li><?php endif; ?>
+					</ul>
+				</li>
+				<?php endif; ?>
+				
+				<?php if (Auth::has_access('user.menu')): ?>
+				<li>
+					<a href="/users" title="" class="logs">Staff</a>
 					<ul>
 						<?php if (Auth::has_access('user.view')): ?><li><?php echo Html::anchor('user/view', 'User List'); ?></li><?php endif; ?>
 					</ul>
@@ -226,6 +260,7 @@
 	<?php echo Asset::js('jquery/excanvas.js'); ?>
 	<?php echo Asset::js('jquery/jquery.visualize.js'); ?>
 	<?php echo Asset::js('jquery/jquery.visualize.tooltip.js'); ?>
+	<?php echo Asset::js('jquery/jquery.dropdown.js'); ?>
 	<?php echo Asset::js('script.js'); ?>
 	
 </body>

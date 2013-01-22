@@ -56,4 +56,13 @@ return array(
 			'password'   => '1234',
 		),
 	),
+	'gipltd' => array(
+		'type'       => 'pdo',
+		'table_prefix' => '',
+		'connection'  => array(
+			'dsn'        => 'mysql:host=1.22.173.18;dbname=asterisk',
+			'username'   => 'cron',
+			'password'   => '1234',
+		),
+	),
 );

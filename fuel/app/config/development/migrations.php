@@ -55,6 +55,7 @@ return array(
 				46 => '048_create_printmanager_trays',
 				47 => '049_create_printmanager_queues',
 				48 => '050_add_api_key_to_call_centers',
+				49 => '051_create_calendar_holidays',
 			),
 		),
 		'module' => 
@@ -62,8 +63,15 @@ return array(
 		),
 		'package' => 
 		array(
-			'printmanager' => 
+			'crm' => 
 			array(
+				0 => '001_create_crm_client_details',
+				1 => '002_create_crm_client_access_log',
+				2 => '003_create_crm_type_client_status',
+				3 => '004_create_crm_type_countries',
+				4 => '005_create_crm_client_products',
+				5 => '006_drop_crm_client_access_log',
+				6 => '007_alter_crm_client_details_add_created',
 			),
 			'sexyticket' => 
 			array(
@@ -81,6 +89,11 @@ return array(
 				1 => '002_create_crm_company_groups',
 				2 => '003_alter_crm_companies',
 				3 => '004_alter_crm_companies_add_sales_email',
+			),
+			'crm_creditor' => 
+			array(
+				0 => '001_create_crm_creditors',
+				1 => '002_create_crm_creditors_contact',
 			),
 			'crm_letter' => 
 			array(
@@ -105,6 +118,7 @@ return array(
 				5 => '006_create_crm_type_ppi_claim_status',
 				6 => '007_create_crm_type_ppi_refund_method',
 				7 => '008_alter_crm_ppi_clients_add_packs',
+				8 => '009_alter_crm_ppi_claims_add_account_info',
 			),
 			'crm_product' => 
 			array(
