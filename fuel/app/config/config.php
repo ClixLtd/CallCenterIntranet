@@ -222,7 +222,6 @@ return array(
 			'simple_html_dom',
 			'email',
 			'massuser',
-			'sexyticket',
 			'reports',
 			'ppi-api',
 			'pdf',

@@ -57,6 +57,9 @@ return array(
 		 
 		 
 		 10   => array('name' => 'Telesales', 'roles' => array()),
+		 
+		 11   => array('name' => 'Queen Bee', 'roles' => array('ppi', 'ppireports')),
+		 
 		 15   => array('name' => 'Consolidator', 'roles' => array('ppi')),
 		 30   => array('name' => 'Admin', 'roles' => array()),
 		 40   => array('name' => 'Legal', 'roles' => array()),
@@ -64,6 +67,8 @@ return array(
 		 
 		 50   => array('name' => 'CDS', 'roles' =>array('ppi')),
 		 
+		 
+		 61   => array('name' => 'Manager', 'roles' => array('manager')),
 		 
 		 65   => array('name' => 'External Support Rep', 'roles' => array('telesales_manager', 'area_manager', 'ppi')),
 		 
@@ -97,11 +102,11 @@ return array(
 	'roles' => array(
 		 
 		 'introducer' => array(
-		 	'reports' => array('menu','disposition'),
+		 	'reports' => array('menu','disposition', 'ppi'),
 		 ),
 		 
 		 'supplier' => array(
-		 	'reports' => array('menu','supplier'),
+		 	'reports' => array('menu','supplier', 'ppi'),
 		 ),
 		 
 		 'best_solution' => array(
@@ -113,20 +118,26 @@ return array(
 		 ),
 		 
 		 'telesales_manager' => array(
-		 	'reports' => array('menu','disposition','all_centers'),
+		 	'reports' => array('menu','disposition','all_centers', 'ppi'),
 		 ),
 		 
 		 'manager' => array(
-		 	'reports' => array(),
+		 	'reports' => array('menu', 'disposition', 'all_centers'),
 		 ),
 		 
 		 'area_manager' => array(
-		 	'reports' => array('all_centers','commission'),
+		 	'reports' => array('all_centers','commission', 'ppi'),
 		 ),
 		 
 		 
 		 'ppi' => array(
 		 	'ppi' => array('menu','referrals'),
+		 	'reports' => array('menu','ppi'),
+		 ),
+		 
+		 
+		 'ppireports' => array(
+		 	'reports' => array('menu','ppi','all_centers'),
 		 ),
 		 
 		 'superuser' => true,

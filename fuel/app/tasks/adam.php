@@ -111,8 +111,8 @@
 					'value' => number_format((float)str_replace(",","",$all_day_stats['totals']['pack_ins']['value']),2),
 				),
 				'paid' => array(
-					'total' => "?",
-					'value' => "?",
+					'total' => ($all_day_stats['totals']['paid']['count']),
+					'value' => number_format((float)str_replace(",","",$all_day_stats['totals']['paid']['value']),2),
 				),
 			);
 
@@ -488,6 +488,9 @@
 		{
 			
 			Adam::check_no_contacts();
+			
+			Adam::get_first_payment_date();
+			
 			
 		}
 		
@@ -1309,6 +1312,98 @@ Gregson and Brooke.');
 			$campaign->auto_dial_level = $dial_rate;
 			
 			$campaign->save();
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		public function get_first_payment_date($date=null, $office='GAB')
+		{
+		
+    		$debtsolv = ($office == "GAB") ? "Debtsolv.dbo" : "BS_Debtsolv_DM.dbo";
+				    
+		    $chosenDate = (is_null($date)) ? date('Y-m-d') : date('Y-m-d', strtotime($date));
+    		// Find a list of all payments from today that do not already have a first payment
+    		$todayPayments = \DB::query("   SELECT 
+                                                D_PA.ClientID
+                                              , D_CPD.NormalExpectedPayment AS DI
+                                              , (SELECT SUM(AmountIn) FROM ".$debtsolv.".Payment_Account WHERE ClientID = D_PA.ClientID) AS TotalPaid
+                                            FROM 
+                                              ".$debtsolv.".Payment_Account AS D_PA
+                                            LEFT JOIN
+                                              Dialler.dbo.client_dates AS D_CD ON D_CD.ClientID = D_PA.ClientID
+                                            LEFT JOIN
+                                              ".$debtsolv.".Client_PaymentData AS D_CPD ON D_CPD.ClientID = D_PA.ClientID
+                                            WHERE
+                                              D_PA.AmountIn > 0
+                                              AND ISNULL(D_CD.FirstPaymentDate, '') = ''
+                                              AND ISNULL(D_CD.Office, '') <> '" . $office . "'
+                                            ORDER BY
+                                              D_PA.TransactionDate DESC")->execute('debtsolv');
+                                              
+                                       
+    		
+    		// Loop through all payments and check if a first payment has been made
+    		foreach ($todayPayments AS $paymentDetails)
+    		{
+        		if ($paymentDetails['TotalPaid'] >= $paymentDetails['DI'])
+        		{
+            		
+            		// If a first payment has been made add the date to the first payment list
+            		
+            		$clientID = $paymentDetails['ClientID'];
+            		$di = $paymentDetails['DI'];
+            		
+            		$totalPayments = \DB::query("   SELECT
+                                                        D_PA.AmountIn AS Paid
+                                                      , D_PA.TransactionDate
+                                                    FROM
+                                                      ".$debtsolv.".Payment_Account AS D_PA
+                                                    WHERE 
+                                                      D_PA.ClientID = " . $clientID . "
+                                                      AND D_PA.AmountIn > 0
+                                                    ORDER BY
+                                                      D_PA.TransactionDate ASC")->execute('debtsolv');
+            		
+            		if ($di == 0)
+            		{
+                		// Commented out ticket system as we shouldn't need it!
+                		//Adam::submit_ticket("Incorrect DI Value", "I have found a client in Debtsolv with a DI value of £0. The Client ID is " . $clientID);
+            		}
+            		else
+            		{
+                		$firstPaymentDate = null;
+                		$runningTotal = 0;
+                		foreach ($totalPayments AS $payment)
+                		{
+                    		$runningTotal = $runningTotal + $payment['Paid'];
+                    		if ($runningTotal >= $di AND is_null($firstPaymentDate))
+                    		{
+                        		$firstPaymentDate = date('Y-m-d', strtotime($payment['TransactionDate']));
+                    		}
+                		}
+                		
+                		
+                		$result = @\DB::query("INSERT INTO Dialler.dbo.client_dates (ClientID, FirstPaymentDate, Office) VALUES (".$clientID.", '".$firstPaymentDate."', '".$office."')")->execute('debtsolv');
+                		
+                		print "Client ID " . $clientID . " first DI of £" . number_format(($di/100),2) . " paid on " . $firstPaymentDate . "\n";
+            		}
+            		
+        		}
+        		else
+        		{
+            		// Client hasn't quite made a first payment yet
+        		}
+        		
+        		
+        		
+    		}
+        		\Log::write('ADAM', "First Payment Table updated");
+    		
 		}
 				
 		

@@ -25,7 +25,7 @@
 					<li><a href="#referrals">Referrals</a></li>
 					<li><a href="#packouts">Pack Outs</a></li>
 					<li><a href="#packins">Pack Ins</a></li>
-					<!--<li><a href="#payments">Payments</a></li>-->
+					<li><a href="#payments">Payments</a></li>
 				</ul>
 			</nav>
 			
@@ -80,9 +80,9 @@
 								<td><div id="pack_in_value"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
 							</tr>
 							<tr>
-								<td><b>Payments</b></td>
-								<td><div id="supplier_payments_available"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
-								<td><div id="supplier_payments_available"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+								<td><b>First Payments</b></td>
+								<td><div id="paid_in_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+								<td><div id="paid_in_value"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
 							</tr>
 						</tbody>
 					</table>
@@ -122,6 +122,13 @@
 			<article class="full-block">
 				<h3>Referrals</h3>
 				<table id="packin_table" width="100%"></table>
+			</article>
+		</div>
+		
+		<div class="tab" id="payments">
+			<article class="full-block">
+				<h3>First Payments</h3>
+				<table id="payments_table" width="100%"></table>
 			</article>
 		</div>
 	
@@ -181,19 +188,23 @@
 					$('#dr_pack_out_count').html(json['totals']['dr_pack_outs']['count']);
 					$('#dmplus_pack_out_count').html(json['totals']['dmplus_pack_outs']['count']);
 					$('#pack_in_count').html(json['totals']['pack_ins']['count']);
+					$('#paid_in_count').html(json['totals']['paid']['count']);
 					
 					$('#referral_value').html(json['totals']['referrals']['value']);
 					$('#pack_out_value').html(json['totals']['pack_outs']['value']);
 					$('#dr_pack_out_value').html(json['totals']['dr_pack_outs']['value']);
 					$('#dmplus_pack_out_value').html(json['totals']['dmplus_pack_outs']['value']);
 					$('#pack_in_value').html(json['totals']['pack_ins']['value']);
+					$('#paid_in_value').html(json['totals']['paid']['value']);
 					
 					$('#packin_table').dataTable(json['pack_ins']);
 					$('#packout_table').dataTable(json['pack_outs']);
 					$('#referral_table').dataTable(json['referrals']);
 					$('#nocontacts_table').dataTable(json['no_contacts']);
+					$('#payments_table').dataTable(json['paid']);
 					$('#loading_data').fadeOut();
 					
+					$('#payments_table').css("width","100%");
 					$('#referral_table').css("width","100%");
 					$('#packout_table').css("width","100%");
 					$('#packin_table').css("width","100%");
