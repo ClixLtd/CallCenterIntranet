@@ -1,5 +1,4 @@
 $(function () {
-	
   
 	$('#PPI-Stage-Search').change(function()
   {

@@ -28,7 +28,20 @@ $(function () {
 			//window.location = url;
 		}
 	);
-	
+  
+  $("#Edit-Client-Details").click(function()
+  {
+    $(".Client-Edit-Input").removeAttr('readonly');
+    $(".Client-Edit-Input").css('box-shadow', '0px 0px 2px #333');
+    $("#saveClientDetails").show();
+  });
+  
+  $("#Edit-Partner-Details").click(function()
+  {
+    $(".Partner-Edit-Input").removeAttr('readonly');
+    $(".Partner-Edit-Input").css('box-shadow', '0px 0px 2px #333');
+    $("#savePartnerDetails").show();
+  });
 	
 	
 	$( '.cd-dropdown' ).dropdown({
