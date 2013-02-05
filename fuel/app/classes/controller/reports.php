@@ -921,7 +921,7 @@ class Controller_Reports extends Controller_BaseHybrid
 			      
 			      ,TCR.[Description]
 			      ,ISNULL(DI_REF.product,'DR') AS Product
-			      ,D_CPD.InitialAgreedAmount / 100 AS DI,
+			      ,D_CPD.NormalExpectedPayment / 100 AS DI,
 			      (
 			      	SELECT Top (1)
 			      		ResponseText
@@ -975,7 +975,7 @@ class Controller_Reports extends Controller_BaseHybrid
 			  	Dialler.dbo.referrals AS DI_REF ON CLD.ClientID = DI_REF.leadpool_id
 			  WHERE
 			    ". $disposition_duration ."
-				AND NOT ((D_CPD.InitialAgreedAmount is null OR D_CPD.InitialAgreedAmount <= 0) AND CC.ContactResult = 1500)
+				AND NOT ((D_CPD.InitialAgreedAmount is null OR D_CPD.NormalExpectedPayment <= 0) AND CC.ContactResult = 1500)
 			    ". $call_center_choice ."
 			    AND ISNULL(DI_REF.product,'DR') = 'DR'
 			  ORDER BY
@@ -1030,7 +1030,7 @@ class Controller_Reports extends Controller_BaseHybrid
 			      
 			      ,TCR.[Description]
 			      ,ISNULL(DI_REF.product,'DR') AS Product
-			      ,D_CPD.InitialAgreedAmount / 100 AS DI,
+			      ,D_CPD.NormalExpectedPayment / 100 AS DI,
 			      (
 			      	SELECT Top (1)
 			      		ResponseText
@@ -1084,7 +1084,7 @@ class Controller_Reports extends Controller_BaseHybrid
 			  	Dialler.dbo.referrals AS DI_REF ON CLD.ClientID = DI_REF.leadpool_id
 			  WHERE
 			    ". $disposition_duration ."
-				AND NOT ((D_CPD.InitialAgreedAmount is null OR D_CPD.InitialAgreedAmount <= 0) AND CC.ContactResult = 1500)
+				AND NOT ((D_CPD.InitialAgreedAmount is null OR D_CPD.NormalExpectedPayment <= 0) AND CC.ContactResult = 1500)
 			    ". $call_center_choice ."
 			    AND ISNULL(DI_REF.product,'DR') = 'DR'
 			  ORDER BY
@@ -1128,6 +1128,10 @@ class Controller_Reports extends Controller_BaseHybrid
 						'count' => 0,
 						'value' => 0,
 					),
+					'paid' => array(
+						'count' => 0,
+						'value' => 0,
+					),
 				);
 				$result_parse = array();
 				$lost_parse = array();
@@ -1161,18 +1165,18 @@ class Controller_Reports extends Controller_BaseHybrid
 						  
 						  $pdtype = "";
 						  
-						  switch ($result['ProductType']) {
+						  switch ((string)$result['ProductType']) {
 						  
-						      CASE 0:
+						      CASE '0':
 						          $pdtype = "DR";
 						          break;
-						      CASE 1:
+						      CASE '1':
 						          $pdtype = "DMPLUS";
 						          break;
-						      CASE 2:
+						      CASE '2':
 						          $pdtype = "PPI";
 						          break;
-						      DEFAULT:
+						      CASE '':
 						          $pdtype = "";
 						          break;
 						  }
@@ -1204,19 +1208,19 @@ class Controller_Reports extends Controller_BaseHybrid
     				      
     				      $pdtype = "";
 						  
-						  switch ($result['ProductType']) {
+						  switch ((string)$result['ProductType']) {
 						  
-						      CASE 0:
+						      CASE '0':
 						          $pdtype = "DR";
 						          $totals['dr_pack_outs']['count']++;
 						          $totals['dr_pack_outs']['value']=$totals['dr_pack_outs']['value']+$result['DI'];
 						          break;
-						      CASE 1:
+						      CASE '1':
 						          $pdtype = "DMPLUS";
 						          $totals['dmplus_pack_outs']['count']++;
 						          $totals['dmplus_pack_outs']['value']=$totals['dmplus_pack_outs']['value']+$result['DI'];
 						          break;
-						      CASE 2:
+						      CASE '2':
 						          $pdtype = "PPI";
 						          break;
 						      DEFAULT:
@@ -1291,7 +1295,7 @@ class Controller_Reports extends Controller_BaseHybrid
 				         ELSE
 				           ''
 				         END AS Product
-				      ,D_CPD.InitialAgreedAmount / 100 AS DI
+				      ,D_CPD.NormalExpectedPayment / 100 AS DI
 				      ,(
 				      	SELECT Top (1)
 				      		ResponseVal
@@ -1334,6 +1338,7 @@ class Controller_Reports extends Controller_BaseHybrid
 				  	". $pack_in_duration ."
 				  	". $call_center_choice ."
 				  	AND D_U.Undersigned <> 'FAB Admin'
+				  	AND D_CPD.NormalExpectedPayment > 0
 				  ORDER BY
 					CLD.LeadRef2
 				    ,TCR.[Description]
@@ -1389,7 +1394,7 @@ class Controller_Reports extends Controller_BaseHybrid
 				         ELSE
 				           ''
 				         END AS Product
-				      ,D_CPD.InitialAgreedAmount / 100 AS DI
+				      ,D_CPD.NormalExpectedPayment / 100 AS DI
 				      ,(
 				      	SELECT Top (1)
 				      		ResponseText
@@ -1432,6 +1437,7 @@ class Controller_Reports extends Controller_BaseHybrid
 				  	". $pack_in_duration ."
 				  	". $call_center_choice ."
 				  	AND D_U.Undersigned <> 'FAB Admin'
+				  	AND D_CPD.NormalExpectedPayment > 0
 				  ORDER BY
 					CLD.LeadRef2
 				    ,TCR.[Description]
@@ -1478,36 +1484,240 @@ class Controller_Reports extends Controller_BaseHybrid
 				}
 				
 				
+				$paid_duration = "(D_CD.FirstPaymentDate >= '". date('Y-m-d', strtotime($start_date)) ."' AND D_CD.FirstPaymentDate <= '". date('Y-m-d', strtotime($end_date)) ."') ";
 				
-				/*
-				$paid_results = \DB::query("SELECT 
-					CLD.LeadPoolReference AS 'Leadpool ID'
-					, LSO.Reference
-					, PA.ClientID AS ClientID
-					, CLD.LeadRef AS 'Dialler Lead ID'
-					, LSO.Description AS 'Lead Source'
-					, (CD.Forename + ' ' + CD.Surname) AS Name
-					, SUM(AmountIn)/100 AS 'Total Payments'
-					, COUNT(AmountIn) AS 'Number of Payments'
-				FROM
-					Debtsolv.dbo.Payment_Account AS PA
-				LEFT JOIN 
-					Debtsolv.dbo.Client_Contact AS CD ON PA.ClientID=CD.ID
-				LEFT JOIN
-					Debtsolv.dbo.Client_LeadData AS CLD ON PA.ClientID=CLD.Client_ID
-				LEFT JOIN
-					LeadPool_DM.dbo.Client_LeadDetails AS CLDe ON CLD.LeadPoolReference=CLDe.ClientID
-				LEFT JOIN
-					LeadPool_DM.dbo.LeadBatch AS LBA ON CLDe.LeadBatchID = LBA.ID
-				LEFT JOIN
-					LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
-				WHERE
-					". $pack_in_duration ."
-				  	". $call_center_choice ."
-					AND PA.AmountIn > 0
-				GROUP BY PA.ClientID, CD.Forename, CD.Surname, CLD.LeadPoolReference, LSO.Description, LSO.Reference;")->cached(300)->execute('debtsolv');
-
-				*/
+								
+				$paid_reports1 = \DB::query("SELECT
+                                                D_CD.ClientID
+                                              , (CD.Forename + ' ' + CD.Surname) AS Name
+                                              , LSO.[Description] AS 'Lead Source'
+											  , CLD.LeadRef2 AS Office
+											  , CASE
+                            				      		WHEN
+                            				      			DI_REF.full_name = ' '
+                            				      		THEN
+                            				      			'NONE'
+                            				      		ELSE
+                            				      			ISNULL(DI_REF.full_name,D_U.Undersigned)
+                            				      		END AS 'Telesales Agent'
+                            				      						  ,ISNULL((
+                            				        SELECT Top (1)
+                            				          Undersigned
+                            				        FROM
+                            				          Debtsolv.dbo.Users AS D_URS
+                            				        LEFT JOIN
+                            				          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+                            				        WHERE
+                            				          D_CLD.LeadPoolReference = CLD.ClientID
+                            				      ),(SELECT Top (1)
+                            				      	  Undersigned
+                            				      	FROM
+                            				      	  Debtsolv.dbo.Users AS DURS
+                            				      	LEFT JOIN
+                            				      	  Leadpool_DM.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
+                            				      	WHERE
+                            				      	  CCA.CampaignContactID = CC.ID
+                            				      	ORDER BY
+                            				      	  CCA.AccessDate DESC)) AS 'Consolidator'
+                                                                          , D_CPD.NormalExpectedPayment/100 AS DI
+                                                                          ,(
+                            			      	SELECT Top (1)
+                            			      		ResponseVal
+                            			      	FROM
+                            			      		Debtsolv.dbo.Client_CustomQuestionResponses
+                            			      	WHERE
+                            			      		QuestionID = 10007
+                            			      		AND ClientID = D_CLD.Client_ID
+                            			      ) AS 'ProductType'
+                                              ,CONVERT(varchar, CLD.DateCreated, 120) AS 'Referred Date'
+                                              ,CONVERT(varchar, D_CLD.DatePackReceived, 105) AS 'Pack In Date'
+                                              , D_CD.FirstPaymentDate
+                                            FROM
+                                              Dialler.dbo.client_dates AS D_CD
+                                            LEFT JOIN
+                                              Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CPD.ClientID=D_CD.ClientID
+                                            LEFT JOIN
+                                              Debtsolv.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
+                                            LEFT JOIN
+                                              Dialler.dbo.referrals AS DI_REF ON D_CLD.LeadPoolReference = DI_REF.leadpool_id
+                                            LEFT JOIN
+                                              LeadPool_DM.dbo.Client_LeadDetails AS CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+                                            LEFT JOIN
+                                              LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
+                                            LEFT JOIN
+                                              LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+                                            LEFT JOIN
+                                              LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+				  LEFT JOIN
+				    LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+				  LEFT JOIN
+				    Debtsolv.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+                                            WHERE
+                                              " . $paid_duration . "
+                                              ". $call_center_choice ."
+                                              AND D_CD.Office = 'GAB'
+				")->cached(300)->execute('debtsolv');				
+				
+				
+				
+				
+				$paid_reports2 = \DB::query("SELECT
+                                                D_CD.ClientID
+                                              , (CD.Forename + ' ' + CD.Surname) AS Name
+                                              , LSO.[Description] AS 'Lead Source'
+											  , CLD.LeadRef2 AS Office
+											  , CASE
+                            				      		WHEN
+                            				      			DI_REF.full_name = ' '
+                            				      		THEN
+                            				      			'NONE'
+                            				      		ELSE
+                            				      			ISNULL(DI_REF.full_name,D_U.Undersigned)
+                            				      		END AS 'Telesales Agent'
+                            				      						  ,ISNULL((
+                            				        SELECT Top (1)
+                            				          Undersigned
+                            				        FROM
+                            				          BS_Debtsolv_DM.dbo.Users AS D_URS
+                            				        LEFT JOIN
+                            				          BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+                            				        WHERE
+                            				          D_CLD.LeadPoolReference = CLD.ClientID
+                            				      ),(SELECT Top (1)
+                            				      	  Undersigned
+                            				      	FROM
+                            				      	  BS_Debtsolv_DM.dbo.Users AS DURS
+                            				      	LEFT JOIN
+                            				      	  BS_Leadpool_DM.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
+                            				      	WHERE
+                            				      	  CCA.CampaignContactID = CC.ID
+                            				      	ORDER BY
+                            				      	  CCA.AccessDate DESC)) AS 'Consolidator'
+                                                                          , D_CPD.NormalExpectedPayment/100 AS DI
+                                                                          ,(
+                            			      	SELECT Top (1)
+                            			      		ResponseVal
+                            			      	FROM
+                            			      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
+                            			      	WHERE
+                            			      		QuestionID = 10007
+                            			      		AND ClientID = D_CLD.Client_ID
+                            			      ) AS 'ProductType'
+                                              ,CONVERT(varchar, CLD.DateCreated, 120) AS 'Referred Date'
+                                              ,CONVERT(varchar, D_CLD.DatePackReceived, 105) AS 'Pack In Date'
+                                              , D_CD.FirstPaymentDate
+                                            FROM
+                                              Dialler.dbo.client_dates AS D_CD
+                                            LEFT JOIN
+                                              BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON D_CD.ClientID=D_CPD.ClientID
+                                            LEFT JOIN
+                                              BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON D_CLD.Client_ID = D_CD.ClientID
+                                            LEFT JOIN
+                                              Dialler.dbo.referrals AS DI_REF ON D_CLD.LeadPoolReference = DI_REF.leadpool_id
+                                            LEFT JOIN
+                                              BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD ON D_CLD.LeadPoolReference = CLD.ClientID
+                                            LEFT JOIN
+                                              BS_LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
+                                            LEFT JOIN
+                                              BS_LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+                                            LEFT JOIN
+                                              BS_LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+				  LEFT JOIN
+				    BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+				  LEFT JOIN
+				    BS_Debtsolv_DM.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+                                            WHERE
+                                              " . $paid_duration . "
+                                              ". $call_center_choice ."
+                                              AND D_CD.Office = 'RESOLVE'
+				")->cached(300)->execute('debtsolv');
+				
+				
+				
+				
+				
+				
+				
+				$all_paid = array();
+				foreach ($paid_reports1 AS $paid)
+				{
+				
+				    $pdtype = "";
+						  
+    				  switch ((string)$paid['ProductType']) {
+    				  
+    				      CASE '0':
+    				          $pdtype = "DR";
+    				          break;
+    				      CASE '1':
+    				          $pdtype = "DMPLUS";
+    				          break;
+    				      CASE '2':
+    				          $pdtype = "PPI";
+    				          break;
+    				      CASE '':
+    				          $pdtype = "";
+    				          break;
+    				  }
+				
+				
+				    $all_paid[] = array(
+				        $paid['ClientID'],
+				        $paid['Name'],
+				        $paid['Lead Source'],
+				        $paid['Office'],
+				        $paid['Telesales Agent'],
+				        $paid['Consolidator'],
+				        $paid['DI'],
+				        $pdtype,
+				        date("d-m-y", strtotime($paid['Referred Date'])),
+				        date("d-m-y", strtotime($paid['Pack In Date'])),
+				        date("d-m-y", strtotime($paid['FirstPaymentDate'])),
+				    );
+				
+    				$totals['paid']['count']++;
+					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
+				}
+				
+				foreach ($paid_reports2 AS $paid)
+				{
+				
+				    $pdtype = "";
+						  
+    				  switch ((string)$paid['ProductType']) {
+    				  
+    				      CASE '0':
+    				          $pdtype = "DR";
+    				          break;
+    				      CASE '1':
+    				          $pdtype = "DMPLUS";
+    				          break;
+    				      CASE '2':
+    				          $pdtype = "PPI";
+    				          break;
+    				      CASE '':
+    				          $pdtype = "";
+    				          break;
+    				  }
+				
+				
+				    $all_paid[] = array(
+				        $paid['ClientID'],
+				        $paid['Name'],
+				        $paid['Lead Source'],
+				        $paid['Office'],
+				        $paid['Telesales Agent'],
+				        $paid['Consolidator'],
+				        $paid['DI'],
+				        $pdtype,
+				        date("d-m-y", strtotime($paid['Referred Date'])),
+				        date("d-m-y", strtotime($paid['Pack In Date'])),
+				        date("d-m-y", strtotime($paid['FirstPaymentDate'])),
+				    );
+				
+    				$totals['paid']['count']++;
+					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
+				}
 				
 				
 				
@@ -1519,11 +1729,72 @@ class Controller_Reports extends Controller_BaseHybrid
 				$totals['dr_pack_outs']['value'] = number_format($totals['dr_pack_outs']['value'],2);
 				$totals['dmplus_pack_outs']['value'] = number_format($totals['dmplus_pack_outs']['value'],2);
 				$totals['pack_ins']['value'] = number_format($totals['pack_ins']['value'],2);
+				$totals['paid']['value'] = number_format($totals['paid']['value'],2);
 				
 				return(array(
 	            	'status' => 'SUCCESS',
 	            	'totals' => $totals,
 	            	//'paid_test' => $paid_results,
+	            	
+	            	'paid' => array(
+	            	    "aaData" => $all_paid,
+	            	    "bPaginate" => false,
+		            	"bDestroy" => true,
+		            	"bProcessing" => true,
+		            	"aoColumnDefs" => array(
+							array(
+								"iDataSort" => 2,
+								"asSorting" => array("asc"),
+								"aTargets" => array(0),
+							),
+						),
+						"aoColumns" => array(
+						    array(
+								"sTitle" => "Client ID", 
+								"bSortable" => false,
+							),
+							array(
+								"sTitle"    => "Name",
+								"sType"		=> "string",
+							),
+							array(
+								"sTitle"    => "Lead Source",
+								"sType"		=> "string",
+							),
+							array(
+								"sTitle"    => "Office",
+								"sType"		=> "string",
+							),
+							array(
+								"sTitle"    => "Telesales",
+								"sType"		=> "string",
+							),
+							array(
+								"sTitle"    => "Consolidator",
+								"sType"		=> "string",
+							),
+							array(
+								"sTitle"    => "DI",
+								"sType"		=> "numeric",
+							),
+							array(
+								"sTitle"    => "Product",
+								"sType"		=> "string",
+							),
+							array(
+								"sTitle"    => "Referred",
+								"sType"		=> "date-uk",
+							),
+							array(
+								"sTitle"    => "Pack In",
+								"sType"		=> "date-uk",
+							),
+							array(
+								"sTitle"    => "First Payment",
+								"sType"		=> "date-uk",
+							),
+						),
+	            	),
 	            	
 	            	'no_contacts' => array(
 		            	"aaData" => $lost_parse,

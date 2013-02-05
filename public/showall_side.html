@@ -6,6 +6,8 @@
 		
 		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jquery-1.5.1.min.js"></script>
 		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jquery.circleval.js"></script>
+		
+		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jquery.servercircle.js"></script>
 		<script>
 		
 			var internalref = "xxx";
@@ -19,7 +21,8 @@
 			
 			function updateJson()
 			{
-				$.getJSON('https://intranet.gregsonandbrooke.co.uk/dialler/api/mobile_wallboard.json', function(data) {
+			
+							$.getJSON('https://intranet.gregsonandbrooke.co.uk/dialler/api/mobile_wallboard.json', function(data) {
 					
 					
 					$('#internalval').html('&pound;' + data['INTERNAL']['pack_out_value']);
@@ -322,6 +325,9 @@
 	<BODY>
 		
 		<div id="holder"><center>
+		
+			
+			
 			<h3>INTERNAL</h3>
 			<div class="circleValueBlueish circleValue" id="internalkey"></div><br />
 			<h3>RESOLVE</h3>

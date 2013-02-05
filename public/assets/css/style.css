@@ -102,6 +102,7 @@
 }
 
 
+
 .flotChart > div.legend > table, 
 .flotChart > div.legend > table tr, 
 .flotChart > div.legend > table tr td, 
@@ -110,14 +111,22 @@
   height: auto !important;
   margin: 0px !important;
   padding: 0px !important;
-  background-color: transparent !important;
+  background-color: white !important;
+  background-color: RGBA(255,255,255,0.2) !important;
   border: 0px !important;
+  text-align: left;
 }
 
 .flotChart > div.legend > table tr td {
   padding: 5px !important;
 }
 
+
+.flotChart > div.legend > table
+{
+    text-align: left;
+    border: #DDD 1px solid !important;
+}
 
 
 #conversionRatioChart > div.legend > table, 
