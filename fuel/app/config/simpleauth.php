@@ -132,7 +132,7 @@ return array(
 		 
 		 'ppi' => array(
 		 	'ppi' => array('menu','referrals'),
-		 	'reports' => array('menu','ppi'),
+		 	'reports' => array('menu','ppi', 'all_centers'),
 		 ),
 		 
 		 

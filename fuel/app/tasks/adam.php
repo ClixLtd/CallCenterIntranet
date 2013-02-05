@@ -908,8 +908,11 @@ Gregson and Brooke.');
 				
 				if ($previous_alerts->count() == 0)
 				{
+				    $sendMessage = static::$emergency_introductions[rand(0,count(static::$emergency_introductions)-1)]."There are less than 5 minutes worth of leads left in the ".$campaign_id." campaign on ".$dialler.". ".$message;
 					//$message = @Adam::pick_best_lists($campaign_id, $dialler);
-					Adam::send_push_message(static::$emergency_introductions[rand(0,count(static::$emergency_introductions)-1)]."There are less than 5 minutes worth of leads left in the ".$campaign_id." campaign on ".$dialler.". ".$message);
+					Adam::send_push_message($sendMessage);
+					Adam::submit_ticket("LEADS ALERT - ".$dialler, $sendMessage, 10, 5);
+					
 					
 					$adam_announcement = \Model_Adam_Announcement::forge(array(
 						'campaign' => $campaign_id,
@@ -928,8 +931,10 @@ Gregson and Brooke.');
 				
 				if ($previous_alerts->count() == 0)
 				{
+				    $sendMessage = static::$moderate_introductions[rand(0,count(static::$moderate_introductions)-1)]."There are less than 15 minutes worth of leads left in the ".$campaign_id." campaign on ".$dialler.". ".$message;
 					//$message = @Adam::pick_best_lists($campaign_id, $dialler);
-					Adam::send_push_message(static::$moderate_introductions[rand(0,count(static::$moderate_introductions)-1)]."There are less than 15 minutes worth of leads left in the ".$campaign_id." campaign on ".$dialler.". ".$message);
+					Adam::send_push_message($sendMessage);
+					Adam::submit_ticket("LEADS WARNING - ".$dialler, $sendMessage, 10, 4);
 					
 					$adam_announcement = \Model_Adam_Announcement::forge(array(
 						'campaign' => $campaign_id,
@@ -948,8 +953,10 @@ Gregson and Brooke.');
 				
 				if ($previous_alerts->count() == 0)
 				{
+				    $sendMessage = static::$casual_introductions[rand(0,count(static::$casual_introductions)-1)]."There are less than 30 minutes worth of leads left in the ".$campaign_id." campaign on ".$dialler.". ".$message;
 					//$message = @Adam::pick_best_lists($campaign_id, $dialler);
-					Adam::send_push_message(static::$casual_introductions[rand(0,count(static::$casual_introductions)-1)]."There are less than 30 minutes worth of leads left in the ".$campaign_id." campaign on ".$dialler.". ".$message);
+					Adam::send_push_message($sendMessage);
+					Adam::submit_ticket("LEADS ALERT - ".$dialler, $sendMessage, 10, 3);
 					
 					$adam_announcement = \Model_Adam_Announcement::forge(array(
 						'campaign' => $campaign_id,

@@ -10,6 +10,11 @@ return array(
 	'dialler/campaign/liveview/(:string)' => 'dialler/campaign/liveview/$1',
 	
 	
+	'heartbeat/server_stats/(:string)/:showtime' => 'heartbeat/server_stats/$1',
+	'heartbeat/server_stats/(:string)' => 'heartbeat/server_stats/$1',
+	
+	
+	
 	'reports/disposition/center/:center/:startdate/:enddate' => 'reports/disposition',
 	'reports/disposition/center/:center/:startdate' => 'reports/disposition',
 	'reports/disposition/center/:center' => 'reports/disposition',

@@ -164,7 +164,7 @@
 				<li>
 					<a href="/reports" title="" class="logs">Support</a>
 					<ul>
-						<?php if (Auth::has_access('support.heartbeat_monitor')): ?><li><?php echo Html::anchor('heartbeat/monitor', 'Heartbeat Monitor'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('support.heartbeat_monitor')): ?><li><?php echo Html::anchor('statistics/servers', 'Heartbeat Monitor'); ?></li><?php endif; ?>
 						<?php if (Auth::has_access('support.knowledge_base')): ?><li><?php echo Html::anchor('ss', 'Knowledge Base'); ?></li><?php endif; ?>
 						<?php if (Auth::has_access('support.create_ticket')): ?><li><?php echo Html::anchor('help/ticket/create', 'Create Ticket'); ?></li><?php endif; ?>
 						<?php if (Auth::has_access('support.view_tickets')): ?><li><?php echo Html::anchor('help/ticket/index', 'View Tickets'); ?></li><?php endif; ?>
