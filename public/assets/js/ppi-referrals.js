@@ -1,6 +1,33 @@
 $(function () {
 	
-	
+  
+	$('#PPI-Stage-Search').change(function()
+  {
+    $.getJSON('/crm/ppi/stage_statues_list/' + $(this).val(), function(data)
+    {
+      var options = '';
+      var selected = '';
+      
+      options += '<option value="-1">-- Select Stage Status --</option>';
+      
+      for(i = 0; i < data.length; i++)
+      {
+        if($("#PPI-Stage-Status-Selected").val() == data[i].id)
+        {
+          selected = ' SELECTED';
+        }
+        
+        options += '<option value="' + data[i].id + '" ' + selected + '>' + data[i].description + '</option>';
+      }
+      
+      $('select#PPI-Stage-Status-Search').html(options);
+    });
+  });
+  
+  $("#PPI-Stage-Status-Search").change(function()
+  {
+    $("#PPI-Stage-Status-Selected").val($("#PPI-Stage-Status-Search").val());
+  })
 	
 	$('#addNote').click(function() {
 	   
@@ -35,7 +62,46 @@ $(function () {
 	   $newDialog.dialog( "open" );
 	   
 	});
+  
+  // -- Add a new Correspondance
+  // ---------------------------
+  
+  $('#addPPICorrespondence').click(function()
+  {
+    var clientID = $(this).attr('rel');
+    //var $newDialog = $('<div><form id="addPPICorrespondenceFrom" method="post" action="/crm/ppi/add_claim/" style="margin: 0px; padding: 0px;"><input type="hidden" name="clientID" value="' + clientID + '"><p>Disposision</p><select name="PPI_Disposition" style="width:460px;"><option value="-1">-- Select --</option>' + dispositionList() + '</select></form></div>');
+    
+    $('#Correspondence-Dialog').dialog( { 
+     autoOpen: false, 
+     modal: true, 
+     resizable: false,
+     width: 510,
+     height: 330,
+     title: "Add a Correspondance!",
+     buttons: 
+       [ 
+           { 
+               text: "Save", 
+               click: function() {
+                   $( '#addPPICorrespondenceForm' ).submit(); 
+               } 
+           },
+           { 
+               text: "Cancel", 
+               click: function() { 
+                   $( this ).dialog( "close" ); 
+               } 
+           }
+       ] 
+     });
 	
+	   $('#Correspondence-Dialog').dialog( "open" );
+  });
+  
+  // -- PPI Pack In Check List
+  // -------------------------
+  
+  
 	
 	$('.reprintPack').click(function() {
 	
@@ -59,13 +125,53 @@ $(function () {
 	
 	   var url = '/crm/ppi/pack_received/' + clientID + '/';
 	   $("#pack_returned_image_"+clientID).attr('src', "/assets/img/lightspinner.gif");
-	   $.getJSON(url, function(data) {
+	   
+     $.getJSON(url, function(data) {
 	       if (data['status'] == "done")
 	       {
-    	       location.reload();
+	         
+	         $("#PPI-Packin-Check-Dialog").dialog(
+           {
+             autoOpen: false, 
+    	       modal: true, 
+    	       resizable: false,
+    	       width: 500,
+    	       height: 400,
+    	       title: "Pack Document Checklist!",
+             /*
+             open: function()
+             {
+               $('#PPI-Packin-Check-Dialog').load('/crm/reports/ppi/chase');
+             },
+             */
+    	       buttons: 
+    	           [ 
+    	               { 
+    	                   text: "Save", 
+    	                   click: function() { 
+    	                       $( '#ppiPackInCheckListForm' ).submit();
+    	                   } 
+    	               },
+    	               { 
+    	                   text: "Cancel", 
+    	                   click: function() { 
+    	                       $( this ).dialog( "close" );
+                             location.reload(); 
+    	                   } 
+    	               }
+    	           ] 
+    	       });
+             
+             $("#PPI-Packin-Check-Dialog").dialog('open');
+             
 	       }
 	   });
 	});
+  
+  function packDocumentCheckList()
+  {
+    
+  }
 	
 	
 	$('#clientIDButton').click(function() {
@@ -166,8 +272,7 @@ $(function () {
 	
 	$('#addCreditorButton').click(function() {
 		add_creditor();
-	});
-	
+	});  
 	
 	
 	function add_creditor()
@@ -175,10 +280,49 @@ $(function () {
 		$newCreditor = $("<div style='margin-bottom: 20px;' class='clearfix'></div>").html('<div class="row-fluid"><div class="span12"><select class="large" name="creditor_'+creditorCurrent+'_choice" id="creditor_'+creditorCurrent+'_choice"><option id="0">-- Unknown Creditor</option>'+creditorSelectBox+'</select></div></div><div class="clearfix"></div><div class="row-fluid" style="margin-top: 10px;"><div class="half-block"><input type="text" class="large" name="creditor_'+creditorCurrent+'_account_number" placeholder="Account Number"></div><div class="half-block clearrm"><input type="text" class="large" name="creditor_'+creditorCurrent+'_sort_code" placeholder="Sort Code"></div></div><div class="clearfix"></div><div class="row-fluid" style="margin-top: 10px;"><div class="half-block"></div><div class="half-block clearrm"><input type="text" class="large" placeholder="Value of Debt" name="creditor_'+creditorCurrent+'_value"></div></div><div class="clearfix"></div>');
 		
 		$('#creditorList').append($newCreditor);
+    $('#saveNewCreditor').show();
 
 		creditorCurrent++;
 	
 	
 	}
+  
+  function dispositionList()
+  {
+    // -- Return a list of Dispositions
+    // --------------------------------
+    var output = [];
+    
+    $.ajax({
+      url: '/crm/referrals/listdispositions/',
+      dataType: 'json',
+      success: function(data)
+      {
+        if(data)
+        {
+          output.push('hello');
+          // -- loop through and make options
+          // --------------------------------
+          //$.each(data, function(key, val)
+         // {
+            //output.push('<option value="' + val['id'] + '">' + val['description'] + '</option>');
+          //  output.push('Hello');
+          //});
+        }
+      }
+    });
+    
+    return output;
+  }
+  
+  
+  function returnCreditorListSelect()
+  {
+    // -- Return a list of creditors in a select option
+    // ------------------------------------------------
+    //$.ajax(
+    //  url: '/crm/creditor/creditorlist/',
+    //  );
+  }
 	
 });
