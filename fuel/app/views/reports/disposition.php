@@ -225,6 +225,56 @@
 					$('[rel=tooltip], #main-nav span, .loader').tipsy({gravity:'s', fade:true});
 					
 					
+					
+					
+					$('.no-office-resolve').each(function(index) {
+						
+						var $thisOfficeSelect = $(this);
+						var debtSolveID = $(this).attr('id');
+					
+						$newCenterList = $('<select />');
+						
+						$newCenterList.append($("<option/>", {
+					        value: '-',
+					        text: 'Choose a Center...'
+					    }));
+					    
+						<?php foreach($all_call_centers AS $cc): ?>
+						$newCenterList.append($("<option/>", {
+					        value: '<?php echo $cc->shortcode; ?>',
+					        text: '<?php echo $cc->title; ?>'
+					    }));
+						<?php endforeach; ?>
+												
+						$newCenterList.change(function() {
+							var thisOffice = $(this).val();
+							if (confirm("Really change lead " + debtSolveID + " to " + $(this).val() + "?"))
+							{
+							
+								
+								$.ajax({
+									"url" : '/reports/change_resolve_office/'+debtSolveID+'/'+thisOffice+'.json',
+									"success": function ( json ) {
+										if (json['result'] == 'FAIL') {
+											alert(json['message']);
+										} else {
+											$thisOfficeSelect.html(thisOffice);
+										}
+									}
+								});
+
+							
+							}
+						});
+						
+						$thisOfficeSelect.html($newCenterList);
+					});
+
+					
+					
+					
+					
+					
 					$('.no-office').each(function(index) {
 						
 						var $thisOfficeSelect = $(this);

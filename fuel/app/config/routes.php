@@ -5,6 +5,7 @@ return array(
 	
 	
 	'reports/change_office/:lead/:office' => 'reports/change_office',
+	'reports/change_resolve_office/:lead/:office' => 'reports/change_resolve_office',
 	
 	'dialler/campaign/liveview/(:string)/:showtime' => 'dialler/campaign/liveview/$1',
 	'dialler/campaign/liveview/(:string)' => 'dialler/campaign/liveview/$1',
