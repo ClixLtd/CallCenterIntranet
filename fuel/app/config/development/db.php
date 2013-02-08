@@ -8,7 +8,7 @@ return array(
 		'connection'  => array(
 			'dsn'        => 'mysql:host=127.0.0.1;dbname=gab_intranet',
 			'username'   => 'root',
-			'password'   => '',
+			'password'   => 'Wvts231ct6D',
 		),
 	),
 	'debtsolv' => array(

@@ -125,6 +125,107 @@ class Debtsolv {
 	
 	
 	
+	
+		public static function change_center_resolve($ds_lead_id, $new_center)
+	{
+		$success = FALSE;
+		$message = "";
+		
+		// Check lead exists in Leadpool
+		$leadpool = \DB::query("
+			SELECT
+				  ClientID
+				, LeadBatchID
+				, LeadRef
+				, LeadRef2
+				, CONVERT(datetime, DateCreated, 120) AS DateCreated
+			FROM
+				BS_Leadpool_DM.dbo.Client_LeadDetails
+			WHERE
+				ClientID = ".$ds_lead_id."
+		")->cached(0)->execute(static::$_connection);
+		
+		// Change LeadRef2
+		
+		if ($leadpool->count() > 0)
+		{
+			\DB::query("UPDATE BS_Leadpool_DM.dbo.Client_LeadDetails SET LeadRef2='".$new_center."' WHERE ClientID=".$ds_lead_id)->execute(static::$_connection);
+			
+			$referral_table = \DB::query("
+				SELECT
+					  id
+					, list_id
+					, lead_id
+					, leadpool_id
+					, list_name
+					, short_code
+					, user_login
+					, full_name
+					, referral_date
+					, product
+				FROM
+					Dialler.dbo.referrals
+				WHERE
+					leadpool_id = ".$ds_lead_id."
+			")->execute(static::$_connection);
+			
+			$our_referral = $leadpool->as_array();
+			
+			$success = TRUE;
+			$message = "";
+			
+			if ($referral_table->count() > 0)
+			{
+				// Update the entry
+				\DB::query("UPDATE Dialler.dbo.referrals SET short_code='".$new_center."', referral_date='".$our_referral[0]['DateCreated']."' WHERE leadpool_id = ".$ds_lead_id."")->execute(static::$_connection);
+			}
+			else
+			{
+				// Create a new entry
+				\DB::query("INSERT INTO Dialler.dbo.referrals
+					( list_id
+					,lead_id
+					,leadpool_id
+					,list_name
+					,short_code
+					,user_login
+					,full_name
+					,referral_date
+					,product)
+					VALUES
+					( ''
+					, ''
+					, " . $ds_lead_id . "
+					, ''
+					, '" . $new_center . "'
+					, ''
+					, ''
+					, '".$our_referral[0]['DateCreated']."'
+					, 'DR')")->execute(static::$_connection);
+			}
+			
+			\Cache::delete_all("disposition.report/");
+			
+		}
+		else
+		{
+			$success = FALSE;
+			$message = "Leadpool ID not found!";
+		}
+		
+		return array(
+			"success" => $success,
+			"message" => $message,
+		);
+		
+	}
+
+	
+	
+	
+	
+	
+	
 	// Start New Debtsolv Referral table functions
 	
 	public static function get_referrals($centers=null, $start_date=null, $end_date=null, $cache=0)

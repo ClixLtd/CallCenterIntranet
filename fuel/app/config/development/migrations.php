@@ -72,6 +72,7 @@ return array(
 				4 => '005_create_crm_client_products',
 				5 => '006_drop_crm_client_access_log',
 				6 => '007_alter_crm_client_details_add_created',
+				7 => '008_create_crm_client_partner_details',
 			),
 			'sexyticket' => 
 			array(
@@ -79,6 +80,14 @@ return array(
 				1 => '002_create_sexy_ticket_topics',
 				2 => '003_create_sexy_ticket_tickets',
 				3 => '004_create_sexy_ticket_priorities',
+			),
+			'messages' => 
+			array(
+				0 => '001_create_database_messages_message',
+				1 => '002_create_database_messages_contact',
+				2 => '003_create_database_messages_type_message',
+				3 => '004_create_database_messages_viewable_groups',
+				4 => '005_create_database_messages_viewable_groups_messages',
 			),
 		),
 		'subpackage' => 

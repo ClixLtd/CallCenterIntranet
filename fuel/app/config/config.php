@@ -228,6 +228,7 @@ return array(
 			'pdf',
 			'crm',
 			'report',
+			'messages',
 		),
 
 		/**

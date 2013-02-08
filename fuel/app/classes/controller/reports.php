@@ -797,7 +797,19 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	
 	
+	public function get_change_resolve_office()
+	{
 	
+		$result = \GAB\Debtsolv::change_center_resolve(
+			$this->param('lead'), 
+			$this->param('office')
+		);
+	
+		$this->response(array(
+			'result' => ($result['success']) ? 'success' : 'FAIL',
+			'message' => $result['message'],
+		));
+	}
 	
 	
 	
@@ -995,7 +1007,7 @@ class Controller_Reports extends Controller_BaseHybrid
 			      ,CASE WHEN
 			      	ISNULL(DI_REF.short_code,'<None>') = '<None>'
 			       THEN
-			       	('<span id='''+CONVERT(varchar,CLD.ClientID)+''' class=''no-office''></span>')
+			       	('<span id='''+CONVERT(varchar,CLD.ClientID)+''' class=''no-office-resolve''></span>')
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
