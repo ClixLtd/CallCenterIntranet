@@ -88,6 +88,7 @@ return array(
 				2 => '003_create_database_messages_type_message',
 				3 => '004_create_database_messages_viewable_groups',
 				4 => '005_create_database_messages_viewable_groups_messages',
+				5 => '006_create_database_messages_contact_message_read',
 			),
 		),
 		'subpackage' => 
