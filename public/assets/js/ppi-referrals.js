@@ -1,5 +1,38 @@
 $(function () {
   
+  $('#createCliamsButton').click(function()
+  {
+    var clientID = $(this).attr('rel');
+    
+    var newDialog = $("#Create-Claims-Dialog").dialog();
+    
+    newDialog.dialog( { 
+	       autoOpen: false, 
+	       modal: true, 
+	       resizable: false,
+	       width: 735,
+	       height: 500,
+	       title: "Create Claims",
+	       buttons: 
+	           [ 
+	               { 
+	                   text: "Create", 
+	                   click: function() { 
+	                       $( '#addClaimsForm' ).submit(); 
+	                   } 
+	               },
+	               { 
+	                   text: "Cancel", 
+	                   click: function() { 
+	                       $( this ).dialog( "close" );
+	                   } 
+	               }
+	           ] 
+	       });
+	
+	   newDialog.dialog( "open" );
+  });
+  
 	$('#PPI-Stage-Search').change(function()
   {
     $.getJSON('/crm/ppi/stage_statues_list/' + $(this).val(), function(data)
