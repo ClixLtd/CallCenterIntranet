@@ -19,6 +19,7 @@
 		'Goautodial\\Model_Vicidial_Live_Agents' => __DIR__.'/models/vicidial_live_agents.php',
 		'Goautodial\\Model_Vicidial_Auto_Calls' => __DIR__.'/models/vicidial_auto_calls.php',
 		'Goautodial\\Model_Vicidial_Campaign_Stats' => __DIR__.'/models/vicidial_campaign_stats.php',
+		'Goautodial\\Model_Vicidial_Campaign_Stats_Gipltd' => __DIR__.'/models/vicidial_campaign_stats_gipltd.php',
 		'Goautodial\\Model_Vicidial_Closer_Log' => __DIR__.'/models/vicidial_closer_log.php',
 		'Goautodial\\Model_Vicidial_Campaigns' => __DIR__.'/models/vicidial_campaigns.php',
 		'Goautodial\\Model_Vicidial_Users' => __DIR__.'/models/vicidial_users.php',
