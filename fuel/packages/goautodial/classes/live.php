@@ -30,7 +30,7 @@
 			{
 				if ($campaign == "INTERNAL")
 				{
-					$live_agents->where('campaign_id', 'IN', array($campaign, "SENIORS"));
+					$live_agents->where('campaign_id', 'IN', array($campaign, "SENIORS", "GAB-1", "OPT-IN", "GBS-1"));
 				}
 				else
 				{

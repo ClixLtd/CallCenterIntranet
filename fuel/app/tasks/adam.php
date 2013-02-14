@@ -337,6 +337,7 @@
 			// Run List stat checker
 			@Adam::get_tomorrow_list_stats("GAB-1", "gabdialler");
 			@Adam::get_tomorrow_list_stats("GBS-1", "gabdialler");
+			@Adam::get_tomorrow_list_stats("OPT-IN", "gabdialler");
 			@Adam::get_tomorrow_list_stats("BURTON1", "resolvedialler");
 			@Adam::get_tomorrow_list_stats("SMS-1", "resolvedialler");
 
@@ -404,11 +405,13 @@
 				$minute_message .= @Adam::guess_dial_rate('GAB-1', TRUE)."\n";
 				$minute_message .= @Adam::guess_dial_rate('GAB2013', TRUE)."\n";
 				$minute_message .= @Adam::guess_dial_rate('GBS-1', TRUE)."\n";
+				$minute_message .= @Adam::guess_dial_rate('OPT-IN', TRUE)."\n";
 				$minute_message .= @Adam::guess_dial_rate('GAB-3', TRUE)."\n";
 				$minute_message .= @Adam::guess_dial_rate('INTERNAL', TRUE)."\n";
 				
 				//@Adam::check_dialable_leads('GAB-1');
 				@Adam::check_dialable_leads('GBS-1');
+				@Adam::check_dialable_leads('OPT-IN');
 				@Adam::check_dialable_leads('GBS2013');
 				@Adam::check_dialable_leads('GAB-3');
 				@Adam::check_dialable_leads('INTERNAL');
@@ -462,6 +465,7 @@
 			@Adam::log_minute_stats('INTERNAL');
 			@Adam::log_minute_stats('GAB-1');
 			@Adam::log_minute_stats('GBS-1');
+			@Adam::log_minute_stats('OPT-IN');
 			@Adam::log_minute_stats('GAB-3');
 			@Adam::log_minute_stats('GAB-LIVE');
 			@Adam::log_minute_stats('BURTON1', TRUE, "resolvedialler");
