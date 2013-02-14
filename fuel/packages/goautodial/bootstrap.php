@@ -22,5 +22,6 @@
 		'Goautodial\\Model_Vicidial_Campaign_Stats_Gipltd' => __DIR__.'/models/vicidial_campaign_stats_gipltd.php',
 		'Goautodial\\Model_Vicidial_Closer_Log' => __DIR__.'/models/vicidial_closer_log.php',
 		'Goautodial\\Model_Vicidial_Campaigns' => __DIR__.'/models/vicidial_campaigns.php',
+		'Goautodial\\Model_Vicidial_Campaigns_Gipltd' => __DIR__.'/models/vicidial_campaigns_gipltd.php',
 		'Goautodial\\Model_Vicidial_Users' => __DIR__.'/models/vicidial_users.php',
 	));
