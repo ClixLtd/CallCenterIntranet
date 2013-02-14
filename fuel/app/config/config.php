@@ -221,7 +221,7 @@ return array(
 			'goautodial',
 			'simple_html_dom',
 			'email',
-			'massuser',
+			#'massuser',
 			#'sexyticket',
 			'reports',
 			'ppi-api',
