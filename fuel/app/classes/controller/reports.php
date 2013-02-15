@@ -124,6 +124,15 @@ class Controller_Reports extends Controller_BaseHybrid
     	    );
     	}
     	
+    	// Sory the array by points
+    	$sort = array();
+    	foreach ($sendArray AS $key => $row)
+    	{
+            $sort[$key] = $row['points'];
+    	}
+    	
+    	array_multisort($sort, SORT_DESC, $sendArray);
+    	
     	return $sendArray;
     	    	
 	}
