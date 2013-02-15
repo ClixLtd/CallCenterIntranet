@@ -10,6 +10,8 @@
 			<th>Dialler id</th>
 			<th>Debtsolv id</th>
 			<th>Network id</th>
+			<th>Department</th>
+			<th>Center</th>
 			<th>Active</th>
 			<th></th>
 		</tr>
@@ -23,6 +25,8 @@
 			<td><?php echo $staff->dialler_id; ?></td>
 			<td><?php echo $staff->debtsolv_id; ?></td>
 			<td><?php echo $staff->network_id; ?></td>
+			<td><?php echo $staff->department_id; ?></td>
+			<td><?php echo $staff->center_id; ?></td>
 			<td><?php echo $staff->active; ?></td>
 			<td>
 				<?php echo Html::anchor('staff/view/'.$staff->id, 'View'); ?> |
