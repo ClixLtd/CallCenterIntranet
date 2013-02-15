@@ -81,8 +81,13 @@ class Controller_Reports extends Controller_BaseHybrid
     	
     	foreach ($reportArray AS $key=>$items)
     	{
+    	    $staffDetails = Model_Staff::query()->where('dialler_id', $key)->get_one();
+    	    
+    	    $reportArray[$key]['name'] = $staffDetails->first_name . " " . $staffDetails->last_name;
         	$reportArray[$key]['conversionRate'] = number_format((($items['packOuts'] / $items['referrals']) * 100), 2);
         	$reportArray[$key]['points'] = ($items['packOuts'] * 2) + ($items['referrals']);
+        	
+        	$reportArray[$key]['commission'] = ($items['packOuts'] * 2.5);
     	}
     	
     	
