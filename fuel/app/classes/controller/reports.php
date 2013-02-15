@@ -52,7 +52,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	$reportArray = array();
     	foreach ($reportResults AS $result)
     	{
-    	    if (isset($reportArray[$result['user_login']]))
+    	    if ( isset($reportArray[$result['user_login']]) )
     	    {
         	    $reportArray[$result['user_login']]['referrals']++;
     	    }
@@ -63,7 +63,7 @@ class Controller_Reports extends Controller_BaseHybrid
                     'packOuts' => 0,
                 );
                 
-                $reportArray[$result['user_login']] = $single_result;
+                $reportArray[$result['user_login']] = $singleResult;
     	    }
         	
         	
