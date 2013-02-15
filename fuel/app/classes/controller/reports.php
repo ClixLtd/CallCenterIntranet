@@ -27,7 +27,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	    foreach ($staff AS $member)
 	    {
 	        $inListCount++;
-    	    $inList .= "'" . $member->debtsolv_id . "'";
+    	    $inList .= "'" . $member->dialler_id . "'";
     	    
     	    if ($inListCount < $totalStaff)
     	    {
