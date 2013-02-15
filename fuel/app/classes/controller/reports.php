@@ -76,6 +76,17 @@ class Controller_Reports extends Controller_BaseHybrid
         	
     	}
     	
+    	
+    	// Work out points, conversion rate and P/O bonus
+    	
+    	foreach ($reportArray AS $key=>$items)
+    	{
+        	$reportArray[$key]['conversionRate'] = number_format((($items['packOuts'] / $items['referrals']) * 100), 2);
+        	$reportArray[$key]['points'] = ($items['packOuts'] * 2) + ($items['referrals']);
+    	}
+    	
+    	
+    	
     	print_r($reportArray);
     	
     	//print_r($reportQuery);
