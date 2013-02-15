@@ -1,5 +1,5 @@
 <?php
-class Controller_Staff_Department extends Controller_Template 
+class Controller_Staff_Department extends Controller_Base 
 {
 
 	public function action_index()
