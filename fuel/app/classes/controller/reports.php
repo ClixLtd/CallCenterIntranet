@@ -36,14 +36,18 @@ class Controller_Reports extends Controller_BaseHybrid
 	    }
     	
     	// Select all the required details from Debtsolv.
-    	$reportQuery = "SELECT [leadpool_id]
-                              ,[short_code]
-                              ,[user_login]
-                              ,[referral_date]
-                          FROM [Dialler].[dbo].[referrals]
-                          WHERE user_login IN ('lnichol', 'pwan', 'rellis', 'zbloch')
-                              AND CONVERT(date, referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
-                              AND CONVERT(date, referral_date, 105) <= '" . date('Y-m-d', $endDate) . "'";
+    	$reportQuery = "SELECT  DR.leadpool_id
+                              , DR.short_code
+                              , DR.user_login
+                              , TCR.[Description]
+                              , DR.referral_date
+                          FROM Dialler.dbo.referrals AS DR
+                          LEFT JOIN LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
+                          LEFT JOIN LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+                          LEFT JOIN LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                          WHERE DR.user_login IN ('lnichol', 'pwan', 'rellis', 'zbloch')
+                              AND CONVERT(date, DR.referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
+                              AND CONVERT(date, DR.referral_date, 105) <= '" . date('Y-m-d', $endDate) . "'";
     	
     	
     	// Loop through the results and create the report
@@ -55,12 +59,13 @@ class Controller_Reports extends Controller_BaseHybrid
     	    if ( isset($reportArray[$result['user_login']]) )
     	    {
         	    $reportArray[$result['user_login']]['referrals']++;
+        	    $reportArray[$result['user_login']]['packOuts'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['referrals']+1 : $reportArray[$result['user_login']]['referrals'];
     	    }
     	    else
     	    {
                 $singleResult = array(
                     'referrals' => 1,
-                    'packOuts' => 0,
+                    'packOuts' => ($result['Description'] == "Lead Completed") ? 1 : 0,
                 );
                 
                 $reportArray[$result['user_login']] = $singleResult;
@@ -72,6 +77,8 @@ class Controller_Reports extends Controller_BaseHybrid
     	}
     	
     	print_r($reportArray);
+    	
+    	//print_r($reportQuery);
     	
 	}
 	
