@@ -143,7 +143,10 @@ class Controller_Reports extends Controller_BaseHybrid
     	
     	$reportArray = Controller_Reports::generate_telesales_report();
     	
-    	print_r($reportArray);
+    	$this->template->title = 'Reports &raquo; Telesales';
+		$this->template->content = View::forge('reports/telesales', array(
+			'results' => $reportArray,
+		));	
     	
 	}
 	
