@@ -13,7 +13,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	public static function generate_telesales_report()
 	{
 	   
-	    $startDate = strtotime("1st day of this month");
+	    $startDate = strtotime("1st February 2013");
 	    $endDate = strtotime("Today");
 	   
 	    // Get a list of debtsolv_id names for active users
