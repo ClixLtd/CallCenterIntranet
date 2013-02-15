@@ -10,8 +10,47 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	
 	
+	public static function generate_telesales_report()
+	{
+	
+	    // Get a list of debtsolv_id names for active users
+	    $staff = Model_Staff::query()->where('active', 1);
+	    $totalStaff = $staff->count();
+	    $staff = $staff->get();
+	    
+	    // Convert the active users into a list ready for the "IN" query
+	    $inList = "";
+	    $inListCount = 0;
+	    foreach ($staff AS $member)
+	    {
+	        $inListCount++;
+    	    $inList .= "'" . $member->debtsolv_id . "'";
+    	    
+    	    if ($inListCount < $totalStaff)
+    	    {
+        	    $inList .= ",";
+    	    }
+	    }
+    	
+    	// Select all the required details from Debtsolv.
+    	$reportQuery = "SELECT [leadpool_id]
+                              ,[short_code]
+                              ,[user_login]
+                              ,[referral_date]
+                          FROM [Dialler].[dbo].[referrals]
+                          WHERE user_login IN (".$inList.")";
+    	
+    	print_r($reportQuery);
+    	
+	}
 	
 	
+	public static function action_telesales_report()
+	{
+    	
+    	Controller_Reports::generate_telesales_report();
+    	
+	}
 	
 	
 	

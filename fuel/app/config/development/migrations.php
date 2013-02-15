@@ -56,6 +56,7 @@ return array(
 				47 => '049_create_printmanager_queues',
 				48 => '050_add_api_key_to_call_centers',
 				49 => '051_create_calendar_holidays',
+				50 => '052_create_staffs',
 			),
 		),
 		'module' => 
