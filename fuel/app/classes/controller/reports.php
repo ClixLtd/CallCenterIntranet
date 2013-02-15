@@ -94,7 +94,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	
     	print_r($reportArray);
     	
-    	//print_r($reportQuery);
+    	print_r($reportQuery);
     	
 	}
 	
