@@ -138,7 +138,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	}
 	
 	
-	public static function action_telesales_report()
+	public function action_telesales_report()
 	{
     	
     	$reportArray = Controller_Reports::generate_telesales_report();
