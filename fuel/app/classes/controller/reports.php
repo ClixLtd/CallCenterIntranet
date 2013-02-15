@@ -45,7 +45,7 @@ class Controller_Reports extends Controller_BaseHybrid
                           LEFT JOIN LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
                           LEFT JOIN LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
                           LEFT JOIN LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
-                          WHERE DR.user_login IN ('lnichol', 'pwan', 'rellis', 'zbloch')
+                          WHERE DR.user_login IN (" . $inList . ")
                               AND CONVERT(date, DR.referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
                               AND CONVERT(date, DR.referral_date, 105) <= '" . date('Y-m-d', $endDate) . "'";
     	
