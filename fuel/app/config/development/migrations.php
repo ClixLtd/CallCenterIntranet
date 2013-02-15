@@ -57,6 +57,9 @@ return array(
 				48 => '050_add_api_key_to_call_centers',
 				49 => '051_create_calendar_holidays',
 				50 => '052_create_staffs',
+				51 => '053_create_staff_departments',
+				52 => '054_add_center_id_to_staff',
+				53 => '055_add_department_id_to_staff',
 			),
 		),
 		'module' => 

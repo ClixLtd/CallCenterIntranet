@@ -29,5 +29,12 @@ class Model_Staff extends Model
 			'mysql_timestamp' => false,
 		),
 	);
+	
+	public static function validate($factory)
+	{
+		$val = Validation::forge($factory);
+
+		return $val;
+	}
 
 }
