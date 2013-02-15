@@ -13,8 +13,8 @@ class Controller_Reports extends Controller_BaseHybrid
 	public static function generate_telesales_report()
 	{
 	   
-	    $startDate = strtotime("11th February 2013");
-	    $endDate = strtotime("15th February 2013");
+	    $startDate = strtotime("1st day of this month");
+	    $endDate = strtotime("Today");
 	   
 	    // Get a list of debtsolv_id names for active users
 	    $staff = Model_Staff::query()->where('active', 1);
@@ -94,10 +94,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	
     	foreach ($reportArray AS $key=>$items)
     	{
-    	    $staffDetails = Model_Staff::query()->where('dialler_id', $key)->get_one();
-    	    
-    	    $reportArray[$key]['name'] = $staffDetails->first_name . " " . $staffDetails->last_name;
-        	$reportArray[$key]['conversionRate'] = number_format((($items['packOuts'] / $items['referrals']) * 100), 2);
+        	$reportArray[$key]['conversionRate'] = (($items['packOuts'] / $items['referrals']) * 100);
         	$reportArray[$key]['points'] = ($items['packOuts'] * 2) + ($items['referrals']);
         	
         	$reportArray[$key]['commission'] = ($items['packOuts'] * 2.5);
@@ -113,17 +110,31 @@ class Controller_Reports extends Controller_BaseHybrid
     	}
     	
     	
-    	print_r($reportArray);
+    	// Last but not least. Create a nice array to return
+    	$sendArray = array();
+    	foreach ($staff AS $member)
+    	{
+    	    $sendArray[] = array(
+    	       'name'           => $member->first_name . " " . $member->last_name,
+    	       'referrals'      => isset($reportArray[$member->dialler_id]['referrals']) ? $reportArray[$member->dialler_id]['referrals'] : 0,
+    	       'packouts'       => isset($reportArray[$member->dialler_id]['packOuts']) ? $reportArray[$member->dialler_id]['packOuts'] : 0,
+    	       'conversionrate' => isset($reportArray[$member->dialler_id]['conversionRate']) ? $reportArray[$member->dialler_id]['conversionRate'] : 0,
+    	       'points'         => isset($reportArray[$member->dialler_id]['points']) ? $reportArray[$member->dialler_id]['points'] : 0,
+    	       'commission'     => isset($reportArray[$member->dialler_id]['commission']) ? number_format($reportArray[$member->dialler_id]['commission'], 2) : 0.00,
+    	    );
+    	}
     	
-    	print_r($paymentsQuery);
-    	
+    	return $sendArray;
+    	    	
 	}
 	
 	
 	public static function action_telesales_report()
 	{
     	
-    	Controller_Reports::generate_telesales_report();
+    	$reportArray = Controller_Reports::generate_telesales_report();
+    	
+    	print_r($reportArray);
     	
 	}
 	
