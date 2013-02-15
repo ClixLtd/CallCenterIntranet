@@ -12,7 +12,10 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	public static function generate_telesales_report()
 	{
-	
+	   
+	    $startDate = strtotime("01/02/2013");
+	    $endDate = strtotime("08/02/2013");
+	   
 	    // Get a list of debtsolv_id names for active users
 	    $staff = Model_Staff::query()->where('active', 1);
 	    $totalStaff = $staff->count();
@@ -38,9 +41,37 @@ class Controller_Reports extends Controller_BaseHybrid
                               ,[user_login]
                               ,[referral_date]
                           FROM [Dialler].[dbo].[referrals]
-                          WHERE user_login IN (".$inList.")";
+                          WHERE user_login IN ('lnichol', 'pwan', 'rellis', 'zbloch')
+                              AND CONVERT(date, referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
+                              AND CONVERT(date, referral_date, 105) <= '" . date('Y-m-d', $endDate) . "'";
     	
-    	print_r($reportQuery);
+    	
+    	// Loop through the results and create the report
+    	$reportResults = DB::query($reportQuery)->cached(3600)->execute('debtsolv');
+    	
+    	$reportArray = array();
+    	foreach ($reportResults AS $result)
+    	{
+    	    if (isset($reportArray[$result['user_login']])
+    	    {
+        	    $reportArray[$result['user_login']]['referrals']++;
+    	    }
+    	    else
+    	    {
+                $singleResult = array(
+                    'referrals' => 1,
+                    'packOuts' => 0,
+                );
+                
+                $reportArray[$result['user_login']] = $single_result;
+    	    }
+        	
+        	
+        	
+        	
+    	}
+    	
+    	print_r($reportArray);
     	
 	}
 	
