@@ -65,20 +65,9 @@ class Controller_Reports extends Controller_BaseHybrid
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . date('Y-m-d', $endDate) . "'";
     	
     	
-    	/* Tables to get DI - D_CPD.NormalExpectedPayment
-    	
-        LEFT JOIN
-            Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
-        LEFT JOIN
-            Debtsolv.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
-        LEFT JOIN
-            Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
-    	
-    	*/
-    	
-    	
     	// Loop through the results and create the report
-    	$reportResults = DB::query($reportQuery)->cached(3600)->execute('debtsolv');
+    	$reportResults = DB::query($reportQuery)->cached(60)->execute('debtsolv');
+    	$paymentsResults = DB::query($paymentsQuery)->cached(60)->execute('debtsolv');
     	
     	$reportArray = array();
     	foreach ($reportResults AS $result)
@@ -97,10 +86,7 @@ class Controller_Reports extends Controller_BaseHybrid
                 
                 $reportArray[$result['user_login']] = $singleResult;
     	    }
-        	
-        	
-        	
-        	
+
     	}
     	
     	
@@ -117,6 +103,14 @@ class Controller_Reports extends Controller_BaseHybrid
         	$reportArray[$key]['commission'] = ($items['packOuts'] * 2.5);
     	}
     	
+    	// Finally look through the first payments and create the comissions
+    	$paymentArray = array();
+    	foreach ($paymentsResults AS $payment)
+    	{
+    	
+    	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ($payment['DI']/1000) : ($payment['DI']/1000);
+    	
+    	}
     	
     	
     	print_r($reportArray);
