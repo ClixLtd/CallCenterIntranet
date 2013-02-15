@@ -6,7 +6,7 @@ class Add_department_id_to_staff
 {
 	public function up()
 	{
-		\DBUtil::add_fields('staff', array(
+		\DBUtil::add_fields('staffs', array(
 			'department_id' => array('constraint' => 11, 'type' => 'int'),
 
 		));	
@@ -14,7 +14,7 @@ class Add_department_id_to_staff
 
 	public function down()
 	{
-		\DBUtil::drop_fields('staff', array(
+		\DBUtil::drop_fields('staffs', array(
 			'department_id'
     
 		));
