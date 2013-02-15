@@ -13,8 +13,8 @@ class Controller_Reports extends Controller_BaseHybrid
 	public static function generate_telesales_report()
 	{
 	   
-	    $startDate = strtotime("01/02/2013");
-	    $endDate = strtotime("08/02/2013");
+	    $startDate = strtotime("11/02/2013");
+	    $endDate = strtotime("15/02/2013");
 	   
 	    // Get a list of debtsolv_id names for active users
 	    $staff = Model_Staff::query()->where('active', 1);
