@@ -59,7 +59,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	    if ( isset($reportArray[$result['user_login']]) )
     	    {
         	    $reportArray[$result['user_login']]['referrals']++;
-        	    $reportArray[$result['user_login']]['packOuts'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['referrals']+1 : $reportArray[$result['user_login']]['referrals'];
+        	    $reportArray[$result['user_login']]['packOuts'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['packOuts']+1 : $reportArray[$result['user_login']]['packOuts'];
     	    }
     	    else
     	    {
