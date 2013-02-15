@@ -50,6 +50,33 @@ class Controller_Reports extends Controller_BaseHybrid
                               AND CONVERT(date, DR.referral_date, 105) <= '" . date('Y-m-d', $endDate) . "'";
     	
     	
+    	// Find all the paid clients for this date range
+    	$paymentsQuery = "SELECT  D_CD.ClientID
+                                , D_CD.FirstPaymentDate
+                                , D_CPD.NormalExpectedPayment AS DI
+                                , D_CLD.LeadPoolReference AS LeadpoolID
+                                , D_R.user_login
+                          FROM [Dialler].[dbo].[client_dates] AS D_CD
+                          LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CD.ClientID = D_CPD.ClientID
+                          LEFT JOIN Debtsolv.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
+                          LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
+                          WHERE D_R.user_login IN (" . $inList . ")
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . date('Y-m-d', $startDate) . "'
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . date('Y-m-d', $endDate) . "'";
+    	
+    	
+    	/* Tables to get DI - D_CPD.NormalExpectedPayment
+    	
+        LEFT JOIN
+            Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+        LEFT JOIN
+            Debtsolv.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+        LEFT JOIN
+            Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+    	
+    	*/
+    	
+    	
     	// Loop through the results and create the report
     	$reportResults = DB::query($reportQuery)->cached(3600)->execute('debtsolv');
     	
@@ -94,7 +121,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	
     	print_r($reportArray);
     	
-    	print_r($reportQuery);
+    	print_r($paymentsQuery);
     	
 	}
 	
