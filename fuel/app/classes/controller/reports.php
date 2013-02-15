@@ -118,7 +118,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	       'name'           => $member->first_name . " " . $member->last_name,
     	       'referrals'      => isset($reportArray[$member->dialler_id]['referrals']) ? $reportArray[$member->dialler_id]['referrals'] : 0,
     	       'packouts'       => isset($reportArray[$member->dialler_id]['packOuts']) ? $reportArray[$member->dialler_id]['packOuts'] : 0,
-    	       'conversionrate' => isset($reportArray[$member->dialler_id]['conversionRate']) ? $reportArray[$member->dialler_id]['conversionRate'] : 0,
+    	       'conversionrate' => isset($reportArray[$member->dialler_id]['conversionRate']) ? number_format($reportArray[$member->dialler_id]['conversionRate'],2) : 0,
     	       'points'         => isset($reportArray[$member->dialler_id]['points']) ? $reportArray[$member->dialler_id]['points'] : 0,
     	       'commission'     => isset($reportArray[$member->dialler_id]['commission']) ? number_format($reportArray[$member->dialler_id]['commission'], 2) : 0.00,
     	    );
