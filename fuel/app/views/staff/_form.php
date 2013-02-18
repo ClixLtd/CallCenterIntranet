@@ -93,9 +93,13 @@
 
 			<div class="input">
 			
+			<?php
+    			$staff_active = (isset($staff)) ? $staff->active : 1;
+			?>
+			
 			<select name="active">
-    			<option value="1" <?php if ($staff->active == 1) { echo "SELECTED"; } ?>>Active</option>
-    			<option value="0" <?php if ($staff->active == 0) { echo "SELECTED"; } ?>>Disabled</option>
+    			<option value="1" <?php if ($staff_active == 1) { echo "SELECTED"; } ?>>Active</option>
+    			<option value="0" <?php if ($staff_active == 0) { echo "SELECTED"; } ?>>Disabled</option>
 			</select>
 			
 
