@@ -59,7 +59,10 @@
     			
     			<select name="department_id">
     			    <?php foreach ($departments AS $department): ?>
-    			    <option value="<?php echo $department->id; ?>" <?php if ($staff->department_id == $department->id) { echo "SELECTED"; } ?>><?php echo $department->title; ?></option>
+    			    <?php 
+        			    $staff_department_id = (isset($staff)) ? $staff->department_id : '';
+    			    ?>
+    			    <option value="<?php echo $department->id; ?>" <?php if ($staff_department_id == $department->id) { echo "SELECTED"; } ?>><?php echo $department->title; ?></option>
     			    <?php endforeach; ?>
     			</select>
 
@@ -73,7 +76,10 @@
     			
     			<select name="center_id">
     			    <?php foreach ($centers AS $center): ?>
-    			    <option value="<?php echo $center->id; ?>" <?php if ($staff->center_id == $center->id) { echo "SELECTED"; } ?>><?php echo $center->title; ?></option>
+    			    <?php 
+        			    $staff_center_id = (isset($staff)) ? $staff->center_id : '';
+    			    ?>
+    			    <option value="<?php echo $center->id; ?>" <?php if ($staff_center_id == $center->id) { echo "SELECTED"; } ?>><?php echo $center->title; ?></option>
     			    <?php endforeach; ?>
     			</select>
 
