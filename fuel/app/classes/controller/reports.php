@@ -17,7 +17,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	    $endDate = strtotime("Today");
 	   
 	    // Get a list of debtsolv_id names for active users
-	    $staff = Model_Staff::query()->where( 'active', 1)->and_where('department_id', 1);
+	    $staff = Model_Staff::query()->where( 'active', 1)->where('department_id', 1);
 	    $totalStaff = $staff->count();
 	    $staff = $staff->get();
 	    
