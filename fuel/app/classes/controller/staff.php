@@ -59,6 +59,12 @@ class Controller_Staff extends Controller_Base
 			}
 		}
 
+		$departments = Model_Staff_Department::find('all');
+		$centers = Model_Call_Center::find('all');
+		
+		$this->template->set_global('departments', $departments, false);
+		$this->template->set_global('centers', $centers, false);
+
 		$this->template->title = "Staffs";
 		$this->template->content = View::forge('staff/create');
 
