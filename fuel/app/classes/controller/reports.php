@@ -52,6 +52,18 @@ class Controller_Reports extends Controller_BaseHybrid
                               AND CONVERT(date, DR.referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
                               AND CONVERT(date, DR.referral_date, 105) <= '" . date('Y-m-d', $endDate) . "'";
     	
+    	$reportQueryResolve = "SELECT  DR.leadpool_id
+                      , DR.short_code
+                      , DR.user_login
+                      , TCR.[Description]
+                      , DR.referral_date
+                  FROM Dialler.dbo.referrals AS DR
+                  LEFT JOIN BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
+                  LEFT JOIN BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+                  LEFT JOIN BS_LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                  WHERE DR.user_login IN (" . $inList . ")
+                      AND CONVERT(date, DR.referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
+                      AND CONVERT(date, DR.referral_date, 105) <= '" . date('Y-m-d', $endDate) . "'";
     	
     	// Find all the paid clients for this date range
     	$paymentsQuery = "SELECT  D_CD.ClientID
@@ -82,9 +94,21 @@ class Controller_Reports extends Controller_BaseHybrid
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . date('Y-m-d', $endDate) . "'";
     	
     	// Loop through the results and create the report
-    	$reportResults = DB::query($reportQuery)->cached(60)->execute('debtsolv');
+    	$reportResultsGAB = DB::query($reportQuery)->cached(60)->execute('debtsolv');
+    	$reportResultsResolve = DB::query($reportQuery)->cached(60)->execute('debtsolv');
     	$paymentsResults = DB::query($paymentsQuery)->cached(60)->execute('debtsolv');
     	$paymentsResultsResolve = DB::query($paymentsQueryResolve)->cached(60)->execute('debtsolv');
+    	
+    	
+    	$reportResults = array();
+    	foreach ($reportResultsGAB AS $result)
+    	{
+        	$reportResults[] = $result;
+    	}
+    	foreach ($reportResultsResolve AS $result)
+    	{
+        	$reportResults[] = $result;
+    	}
     	
     	$reportArray = array();
     	foreach ($reportResults AS $result)
