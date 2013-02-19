@@ -34,6 +34,9 @@ class Controller_Reports extends Controller_BaseHybrid
         	    $inList .= ",";
     	    }
 	    }
+	    
+	    
+	    
     	
     	// Select all the required details from Debtsolv.
     	$reportQuery = "SELECT  DR.leadpool_id
@@ -64,10 +67,24 @@ class Controller_Reports extends Controller_BaseHybrid
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . date('Y-m-d', $startDate) . "'
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . date('Y-m-d', $endDate) . "'";
     	
+    	// Find all the paid clients for this date range
+    	$paymentsQueryResolve = "SELECT  D_CD.ClientID
+                                , D_CD.FirstPaymentDate
+                                , D_CPD.NormalExpectedPayment AS DI
+                                , D_CLD.LeadPoolReference AS LeadpoolID
+                                , D_R.user_login
+                          FROM [Dialler].[dbo].[client_dates] AS D_CD
+                          LEFT JOIN BS_Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CD.ClientID = D_CPD.ClientID
+                          LEFT JOIN BS_Debtsolv.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
+                          LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
+                          WHERE D_R.user_login IN (" . $inList . ")
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . date('Y-m-d', $startDate) . "'
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . date('Y-m-d', $endDate) . "'";
     	
     	// Loop through the results and create the report
     	$reportResults = DB::query($reportQuery)->cached(60)->execute('debtsolv');
     	$paymentsResults = DB::query($paymentsQuery)->cached(60)->execute('debtsolv');
+    	$paymentsResultsResolve = DB::query($paymentsQueryResolve)->cached(60)->execute('debtsolv');
     	
     	$reportArray = array();
     	foreach ($reportResults AS $result)
@@ -101,12 +118,15 @@ class Controller_Reports extends Controller_BaseHybrid
     	}
     	
     	// Finally look through the first payments and create the comissions
-    	$paymentArray = array();
     	foreach ($paymentsResults AS $payment)
     	{
-    	
     	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ($payment['DI']/1000) : ($payment['DI']/1000);
+    	}
     	
+    	// Finally look through the first payments and create the comissions
+    	foreach ($paymentsResultsResolve AS $payment)
+    	{
+    	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ($payment['DI']/1000) : ($payment['DI']/1000);
     	}
     	
     	
