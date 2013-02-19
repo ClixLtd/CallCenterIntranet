@@ -95,7 +95,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	
     	// Loop through the results and create the report
     	$reportResultsGAB = DB::query($reportQuery)->cached(60)->execute('debtsolv');
-    	$reportResultsResolve = DB::query($reportQuery)->cached(60)->execute('debtsolv');
+    	$reportResultsResolve = DB::query($reportQueryResolve)->cached(60)->execute('debtsolv');
     	$paymentsResults = DB::query($paymentsQuery)->cached(60)->execute('debtsolv');
     	$paymentsResultsResolve = DB::query($paymentsQueryResolve)->cached(60)->execute('debtsolv');
     	
