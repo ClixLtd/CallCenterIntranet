@@ -495,6 +495,8 @@
 			
 			Adam::get_first_payment_date();
 			
+			Adam::get_first_payment_date(null, 'RESOLVE');
+			
 			
 		}
 		
