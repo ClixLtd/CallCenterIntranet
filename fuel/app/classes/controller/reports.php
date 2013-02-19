@@ -74,8 +74,8 @@ class Controller_Reports extends Controller_BaseHybrid
                                 , D_CLD.LeadPoolReference AS LeadpoolID
                                 , D_R.user_login
                           FROM [Dialler].[dbo].[client_dates] AS D_CD
-                          LEFT JOIN BS_Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CD.ClientID = D_CPD.ClientID
-                          LEFT JOIN BS_Debtsolv.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
+                          LEFT JOIN BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON D_CD.ClientID = D_CPD.ClientID
+                          LEFT JOIN BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . date('Y-m-d', $startDate) . "'
