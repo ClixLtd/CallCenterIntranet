@@ -409,7 +409,7 @@
 				$minute_message .= @Adam::guess_dial_rate('GAB-3', TRUE)."\n";
 				$minute_message .= @Adam::guess_dial_rate('INTERNAL', TRUE)."\n";
 				
-				//@Adam::check_dialable_leads('GAB-1');
+				@Adam::check_dialable_leads('GAB-1');
 				@Adam::check_dialable_leads('GBS-1');
 				@Adam::check_dialable_leads('OPT-IN');
 				@Adam::check_dialable_leads('GBS2013');
