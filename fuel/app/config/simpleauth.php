@@ -70,21 +70,21 @@ return array(
 		 
 		 61   => array('name' => 'Manager', 'roles' => array('manager')),
 		 
-		 65   => array('name' => 'External Support Rep', 'roles' => array('telesales_manager', 'area_manager', 'ppi')),
+		 65   => array('name' => 'External Support Rep', 'roles' => array('telesales_manager', 'area_manager', 'ppi', 'ppireports')),
 		 
-		 69   => array('name' => 'Telesales Manager', 'roles' => array('telesales_manager', 'ppi')),
+		 69   => array('name' => 'Telesales Manager', 'roles' => array('telesales_manager', 'ppi', 'ppireports')),
 		 
-		 70   => array('name' => 'Sales Manager', 'roles' => array('telesales_manager', 'ppi')),
+		 70   => array('name' => 'Sales Manager', 'roles' => array('telesales_manager', 'ppi', 'ppireports')),
 		 
-		 72   => array('name' => 'Super Sales Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'ppi')),
+		 72   => array('name' => 'Super Sales Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'ppi', 'ppireports')),
 		 
-		 73   => array('name' => 'Manager', 'roles' => array('telesales_manager', 'manager', 'ppi')),
+		 73   => array('name' => 'Manager', 'roles' => array('telesales_manager', 'manager', 'ppi', 'ppireports')),
 		 
-		 75	  => array('name' => 'Area Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi')),
+		 75	  => array('name' => 'Area Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi', 'ppireports')),
 		 
-		 80   => array('name' => 'Director', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi')),
+		 80   => array('name' => 'Director', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi', 'ppireports')),
 		 
-		 96   => array('name' => 'Database Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi')),
+		 96   => array('name' => 'Database Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi', 'ppireports')),
 		 
 		 97   => array('name' => 'Dialler Manager', 'roles' => array()),
 		 
@@ -132,7 +132,6 @@ return array(
 		 
 		 'ppi' => array(
 		 	'ppi' => array('menu','referrals'),
-		 	'reports' => array('menu','ppi', 'all_centers'),
 		 ),
 		 
 		 
