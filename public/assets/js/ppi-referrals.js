@@ -1,5 +1,23 @@
 $(function () {
   
+  $("#cancelPPIClient").click(function()
+  {
+    if(confirm('Are you sure you want to cancel this client?') == true)
+    {
+      $.getJSON('/crm/ppi/cancel_client/' + $(this).attr('rel'), function(data)
+      {
+        if(data['status'] == 'SUCCESS')
+        {
+          alert('Client PPI account has been canceled');
+        }
+      });
+    }
+    else
+    {
+      return;
+    }
+  })
+  
   $('#createCliamsButton').click(function()
   {
     var clientID = $(this).attr('rel');
@@ -10,7 +28,7 @@ $(function () {
 	       autoOpen: false, 
 	       modal: true, 
 	       resizable: false,
-	       width: 735,
+	       width: 800,
 	       height: 500,
 	       title: "Create Claims",
 	       buttons: 
