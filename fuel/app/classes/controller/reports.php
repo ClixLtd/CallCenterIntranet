@@ -30,7 +30,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	    $startDate = strtotime("1st February 2013");
 	    $endDate = strtotime("Today");
 	   
-	    $call_center = Model_Call_Center::query()->where('shortcode', $center)->get();
+	    $call_center = Model_Call_Center::query()->where('shortcode', $center)->get_one();
 	    
 	    // Get a list of debtsolv_id names for active users
 	    $staff = Model_Staff::query()->where( 'active', 1)->where('department_id', 1);
