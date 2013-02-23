@@ -10,9 +10,23 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	
 	
-	public static function generate_telesales_report()
+	public static function generate_telesales_report($center=null)
 	{
-	   
+	
+	    // Pull in the values required for all centers
+	    $_allValues = Model_Telesales_Report_Value::find('all');
+	    $centerValues = array();
+	    
+	    foreach ($_allValues AS $value)
+	    {
+    	    $centerValues[$value->center_id] = array(
+    	        'referral' => $value->referral_points,
+    	        'pack_out' => $value->pack_out_points,
+    	        'di_point' => $value->di_pound_point,
+    	    );
+	    }
+	
+	    // Set the start and end dates
 	    $startDate = strtotime("1st February 2013");
 	    $endDate = strtotime("Today");
 	   
@@ -34,8 +48,6 @@ class Controller_Reports extends Controller_BaseHybrid
         	    $inList .= ",";
     	    }
 	    }
-	    
-	    
 	    
     	
     	// Select all the required details from Debtsolv.
@@ -162,12 +174,15 @@ class Controller_Reports extends Controller_BaseHybrid
     	$sendArray = array();
     	foreach ($staff AS $member)
     	{
+    	    
+    	    $centerValue = $centerValues[$member->center_id];
+    	    
     	    $sendArray[] = array(
     	       'name'           => $member->first_name . " " . $member->last_name,
     	       'referrals'      => isset($reportArray[$member->dialler_id]['referrals']) ? $reportArray[$member->dialler_id]['referrals'] : 0,
     	       'packouts'       => isset($reportArray[$member->dialler_id]['packOuts']) ? $reportArray[$member->dialler_id]['packOuts'] : 0,
     	       'conversionrate' => isset($reportArray[$member->dialler_id]['conversionRate']) ? number_format($reportArray[$member->dialler_id]['conversionRate'],2) : 0,
-    	       'points'         => isset($reportArray[$member->dialler_id]['points']) ? $reportArray[$member->dialler_id]['points'] : 0,
+    	       'points'         => ($reportArray[$member->dialler_id]['referrals'] * $centerValue['referral']),
     	       'commission'     => isset($reportArray[$member->dialler_id]['commission']) ? number_format($reportArray[$member->dialler_id]['commission'], 2) : 0.00,
     	    );
     	}
