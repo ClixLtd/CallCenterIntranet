@@ -60,6 +60,7 @@ return array(
 				51 => '053_create_staff_departments',
 				52 => '054_add_center_id_to_staff',
 				53 => '055_add_department_id_to_staff',
+				54 => '056_create_telesales_report_values',
 			),
 		),
 		'module' => 
