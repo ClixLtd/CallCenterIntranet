@@ -61,7 +61,8 @@ class Controller_Reports extends Controller_BaseHybrid
                           LEFT JOIN LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
                           LEFT JOIN LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
                           LEFT JOIN LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
-                          LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON CLD.Client_ID = D_CPD.ClientID
+                          LEFT JOIN Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+                          LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
                           WHERE DR.user_login IN (" . $inList . ")
                               AND DR.short_code IN ('GAB','GBS')
                               AND CONVERT(date, DR.referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
@@ -77,7 +78,8 @@ class Controller_Reports extends Controller_BaseHybrid
                   LEFT JOIN BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
                   LEFT JOIN BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
                   LEFT JOIN BS_LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
-                  LEFT JOIN BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON CLD.Client_ID = D_CPD.ClientID
+                  LEFT JOIN BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+                  LEFT JOIN BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
                   WHERE DR.user_login IN (" . $inList . ")
                       AND DR.short_code IN ('RESOLVE')
                       AND CONVERT(date, DR.referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
