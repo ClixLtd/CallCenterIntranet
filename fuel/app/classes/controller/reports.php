@@ -213,15 +213,20 @@ class Controller_Reports extends Controller_BaseHybrid
     	    	
 	}
 	
+	public function get_get_telesales_report($center=null)
+	{
+    	$reportArray = Controller_Reports::generate_telesales_report($center);
+    	return $this->response(array(
+    	    'report' => $reportArray,
+    	));
+	}
 	
 	public function action_telesales_report($center=null)
 	{
     	
-    	$reportArray = Controller_Reports::generate_telesales_report($center);
-    	
     	$this->template->title = 'Reports &raquo; Telesales';
 		$this->template->content = View::forge('reports/telesales', array(
-			'results' => $reportArray,
+			'url' => '/reports/get_telesales_report/'.$center.'.json',
 		));	
     	
 	}
