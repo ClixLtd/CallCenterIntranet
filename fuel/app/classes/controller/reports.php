@@ -148,6 +148,7 @@ class Controller_Reports extends Controller_BaseHybrid
 
     	}
     	
+    	print_r($reportArray);
     	
     	// Work out points, conversion rate and P/O bonus
     	
