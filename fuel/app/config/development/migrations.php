@@ -78,6 +78,7 @@ return array(
 				5 => '006_drop_crm_client_access_log',
 				6 => '007_alter_crm_client_details_add_created',
 				7 => '008_create_crm_client_partner_details',
+				8 => '009_alter_crm_client_partner_detailsautoid',
 			),
 			'sexyticket' => 
 			array(
@@ -134,6 +135,12 @@ return array(
 				6 => '007_create_crm_type_ppi_refund_method',
 				7 => '008_alter_crm_ppi_clients_add_packs',
 				8 => '009_alter_crm_ppi_claims_add_account_info',
+				9 => '010_alter_crm_type_ppi_claim_status_change_name',
+				10 => '011_alter_crm_ppi_correspondence_addfields',
+				11 => '012_alter_crm_ppi_clients_packout_fields',
+				12 => '013_alter_crm_ppi_correspondence_changenotes',
+				13 => '014_alter_crm_ppi_claims_addedsignatory',
+				14 => '015_alter_crm_ppi_clients_addpartner',
 			),
 			'crm_product' => 
 			array(
