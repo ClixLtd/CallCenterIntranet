@@ -175,7 +175,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	foreach ($staff AS $member)
     	{
     	    
-    	    $centerValue = $centerValues[$member->center_id];
+    	    $centerValue = (is_null($center)) ? $centerValues[0] : $centerValues[$member->center_id];
     	    
     	    $sendArray[] = array(
     	       'name'           => $member->first_name . " " . $member->last_name,
@@ -201,10 +201,10 @@ class Controller_Reports extends Controller_BaseHybrid
 	}
 	
 	
-	public function action_telesales_report()
+	public function action_telesales_report($center=null)
 	{
     	
-    	$reportArray = Controller_Reports::generate_telesales_report();
+    	$reportArray = Controller_Reports::generate_telesales_report($center);
     	
     	$this->template->title = 'Reports &raquo; Telesales';
 		$this->template->content = View::forge('reports/telesales', array(
