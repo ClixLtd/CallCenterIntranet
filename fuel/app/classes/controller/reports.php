@@ -132,12 +132,14 @@ class Controller_Reports extends Controller_BaseHybrid
     	    if ( isset($reportArray[$result['user_login']]) )
     	    {
         	    $reportArray[$result['user_login']]['referrals']++;
+        	    $reportArray[$result['user_login']]['totalDI'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['totalDI'] + $result['DI'] : 0;
         	    $reportArray[$result['user_login']]['packOuts'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['packOuts']+1 : $reportArray[$result['user_login']]['packOuts'];
     	    }
     	    else
     	    {
                 $singleResult = array(
                     'referrals' => 1,
+                    'totalDI' => ($result['Description'] == "Lead Completed") ? $result['DI'] : 0,
                     'packOuts' => ($result['Description'] == "Lead Completed") ? 1 : 0,
                 );
                 
@@ -182,7 +184,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	       'referrals'      => isset($reportArray[$member->dialler_id]['referrals']) ? $reportArray[$member->dialler_id]['referrals'] : 0,
     	       'packouts'       => isset($reportArray[$member->dialler_id]['packOuts']) ? $reportArray[$member->dialler_id]['packOuts'] : 0,
     	       'conversionrate' => isset($reportArray[$member->dialler_id]['conversionRate']) ? number_format($reportArray[$member->dialler_id]['conversionRate'],2) : 0,
-    	       'points'         => ($reportArray[$member->dialler_id]['referrals'] * $centerValue['referral']) + ($reportArray[$member->dialler_id]['packOuts'] * $centerValue['pack_out']),
+    	       'points'         => ($reportArray[$member->dialler_id]['referrals'] * $centerValue['referral']) + ($reportArray[$member->dialler_id]['packOuts'] * $centerValue['pack_out']) + ($reportArray[$member->dialler_id]['totalDI'] * $centerValue['di_point']),
     	       'commission'     => isset($reportArray[$member->dialler_id]['commission']) ? number_format($reportArray[$member->dialler_id]['commission'], 2) : 0.00,
     	    );
     	}
