@@ -55,7 +55,7 @@ class Controller_Reports extends Controller_BaseHybrid
                               , DR.short_code
                               , DR.user_login
                               , TCR.[Description]
-                              , D_CLD.LeadPoolReference AS LeadpoolID
+                              , D_CPD.NormalExpectedPayment AS DI
                               , DR.referral_date
                           FROM Dialler.dbo.referrals AS DR
                           LEFT JOIN LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
@@ -71,7 +71,7 @@ class Controller_Reports extends Controller_BaseHybrid
                       , DR.short_code
                       , DR.user_login
                       , TCR.[Description]
-                      , D_CLD.LeadPoolReference AS LeadpoolID
+                      , D_CPD.NormalExpectedPayment AS DI
                       , DR.referral_date
                   FROM Dialler.dbo.referrals AS DR
                   LEFT JOIN BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
