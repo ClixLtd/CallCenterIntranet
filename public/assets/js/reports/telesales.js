@@ -10,7 +10,7 @@ $(function () {
         $('<ul/>', {
             'class': 'my-new-list',
             html: items.join('')
-        }).appendTo('telesalesList');
+        }).appendTo('#telesalesList');
     });
 
 });
