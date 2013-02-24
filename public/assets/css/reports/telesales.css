@@ -37,6 +37,7 @@
         
         .allTelesales ul.titles
         {
+            padding: 0px !important;
             background-color: #BBBBBB;
             font-weight: bold;
             text-shadow: 1px 1px 1px RGBA(255,255,255,0.5);
@@ -105,7 +106,8 @@
                         
                         .allTelesales ul li.subDetails ul li ul li:first-child
                         {
-                            width: 12%;
+                            padding-left: 1%;
+                            width: 11%;
                         }
                         
                         .allTelesales ul li.subDetails ul li ul.alt1
