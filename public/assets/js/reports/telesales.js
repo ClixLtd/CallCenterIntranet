@@ -33,9 +33,21 @@ $(function () {
                 var fullList = [];
                 
                 $.each(val, function(keys,vals) {
+                    var allReferrals = [];
                     if (keys == 'allReferrals')
                     {
                         
+                        $.each(vals, function(refkey, refval) {
+                            var singleList = [];
+                            
+                            $.each(refval, function(sinkey, sinval) {
+                                singleList.push('<li>' + sinval + '</li>');
+                            });
+                            
+                            allReferrals.push('<li><ul class="alt2">' + singleList.join('') + '</ul></li>');
+                        });
+                        
+                        fullList.push('<li class="subDetails"><ul>' + allReferrals.join('') + '</ul></li>');
                     }
                     else
                     {
