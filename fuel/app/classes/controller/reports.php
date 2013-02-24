@@ -217,6 +217,14 @@ class Controller_Reports extends Controller_BaseHybrid
 	{
     	$reportArray = Controller_Reports::generate_telesales_report($center);
     	return $this->response(array(
+    	    'titles' => array(
+    	        'Name',
+    	        'Referrals',
+    	        'Pack Outs',
+    	        'Conversion Rate',
+    	        'Points',
+    	        'Comission',
+    	    ),
     	    'report' => $reportArray,
     	));
 	}
