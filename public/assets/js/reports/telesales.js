@@ -2,16 +2,17 @@ $(function () {
 
     $.getJSON('/reports/get_telesales_report/GAB.json', function(data) {
         var items = [];
+        var titleList = [];
         
         $.each(data['titles'], function(key, val) {
         
-            var fullList = [];
             
-            fullList.push('<li>' + val + '</li>');
+            titleList.push('<li>' + val + '</li>');
             
         });
         
-        items.push( '<ul class="titles">' + fullList.join('') + '</ul>' );
+        items.push( '<ul class="titles">' + titleList.join('') + '</ul>' );
+        
         
         $.each(data['report'], function(key, val) {
             
