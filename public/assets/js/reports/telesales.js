@@ -33,7 +33,14 @@ $(function () {
                 var fullList = [];
                 
                 $.each(val, function(keys,vals) {
-                    fullList.push('<li>' + vals + '</li>');
+                    if (keys == 'allReferrals')
+                    {
+                        
+                    }
+                    else
+                    {
+                        fullList.push('<li>' + vals + '</li>');
+                    }
                 });
                 
                 items.push( '<ul class="alt' + altChoice + '">' + fullList.join('') + '</ul>' );
