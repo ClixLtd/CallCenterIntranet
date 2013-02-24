@@ -174,8 +174,8 @@ class Controller_Reports extends Controller_BaseHybrid
                 'leadID' => $result['leadpool_id'],
                 'LeadName' => 'Leadpool Name',
                 'Result' => $result['Description'],
-                'DI' => $result['DI'],
-                'referred' => $result['referral_date'],
+                'DI' => "£".number_format((float)$result['DI'], 2),
+                'referred' => date("d/m/Y", strtotime($result['referral_date'])),
             );
 
     	}
