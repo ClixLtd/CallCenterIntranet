@@ -77,7 +77,7 @@ class Controller_Reports extends Controller_BaseHybrid
             			         ELSE
             			           ''
             			        END AS 'Call Back Date'
-            			      , ISNULL(DR.product,'DR') AS Product
+            			      , DR.product AS Product
                               , (CD.Forename + ' ' + CD.Surname) AS Name
                           FROM Dialler.dbo.referrals AS DR
                           LEFT JOIN LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
@@ -104,7 +104,7 @@ class Controller_Reports extends Controller_BaseHybrid
     			         ELSE
     			           ''
     			        END AS 'Call Back Date'
-    			      , ISNULL(DR.product,'DR') AS Product
+    			      , DR.product AS Product
                       , (CD.Forename + ' ' + CD.Surname) AS Name
                   FROM Dialler.dbo.referrals AS DR
                   LEFT JOIN BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
