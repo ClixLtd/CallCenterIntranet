@@ -12,7 +12,7 @@ $(function () {
     $('.userClick').live("click", function() {
         var user = $(this).attr('rel');
         
-        alert(user);
+        $('#subDetails' + user).toggle();
     });
 
     function getReport()
