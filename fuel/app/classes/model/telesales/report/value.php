@@ -8,6 +8,9 @@ class Model_Telesales_Report_Value extends \Orm\Model
 		'referral_points',
 		'pack_out_points',
 		'di_pound_point',
+		'pack_out_commission',
+		'pack_out_bonus',
+		'payment_percentage',
 		'created_at',
 		'updated_at'
 	);

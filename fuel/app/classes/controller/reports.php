@@ -23,9 +23,9 @@ class Controller_Reports extends Controller_BaseHybrid
     	        'referral'            => $value->referral_points,
     	        'pack_out'            => $value->pack_out_points,
     	        'di_point'            => $value->di_pound_point,
-    	        'pack_out_commission' => $value->di_pound_point,
-    	        'pack_out_bonus'      => $value->di_pound_point,
-    	        'payment_percentage'  => $value->di_pound_point,
+    	        'pack_out_commission' => $value->pack_out_commission,
+    	        'pack_out_bonus'      => $value->pack_out_bonus,
+    	        'payment_percentage'  => $value->payment_percentage,
     	    );
 	    }
 	
