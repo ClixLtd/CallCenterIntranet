@@ -4,13 +4,29 @@ $(function () {
         var items = [];
         
         $.each(data['report'], function(key, val) {
-            items.push('<li id="' + key + '">' + val + '</li>');
+            
+            var fullList = [];
+            
+            $.each(val, function(key,val) {
+                fullList.push('<li>' + val + '</li>');
+            });
+            
+            
+            items.push( $('<ul/>', {
+                'class': 'alt1',
+                html: fullList.join('')
+            }) );
+            
+            
+            
         });
         
         $('<ul/>', {
-            'class': 'my-new-list',
+            'class': 'allTelesales',
             html: items.join('')
         }).appendTo('#telesalesList');
+        
+        
     });
 
-});
+}).

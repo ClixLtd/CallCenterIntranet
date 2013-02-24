@@ -9,6 +9,8 @@
 
 		<div id="telesalesList">
 			
+			
+						
 		</div>
 		
 	</section>
@@ -18,3 +20,4 @@
 </article>
 
 <?php echo Asset::js('reports/telesales.js'); ?>
+<?php echo Asset::css('reports/telesales.css'); ?>

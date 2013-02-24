@@ -1,0 +1,60 @@
+/* CSS file for the Telesales report */
+
+.allTelesales
+{
+    list-style: none;
+    list-style-image: none;
+    list-style-type: none;
+    
+    background: none;
+
+    margin: 0px;
+    padding: 0px;
+    
+}
+
+    .allTelesales li
+    {
+        background: none;
+        margin: 0px;
+        padding: 0px;
+    }
+    
+        .allTelesales ul
+        {
+            clear: both;
+            height: 30px;
+            padding: 0px;
+            margin: 2px 0px;
+            
+        }
+        
+        .allTelesales ul.titles
+        {
+            background-color: #DDDDDD;
+            font-weight: bold;
+        }
+        .allTelesales ul.alt1
+        {
+            background-color: #F5F5F5;
+        }
+        .allTelesales ul.alt2
+        {
+            background-color: #EEEEEE;
+        }
+        
+            .allTelesales ul li
+            {
+                float: left;
+                line-height: 24px;
+                padding: 3px 0px;
+                width: 16%;
+                text-align: center;
+            }
+            
+            .allTelesales ul li:first-child
+            {
+                font-weight: bold;
+                text-align: left;
+                width: 20%;
+            }
