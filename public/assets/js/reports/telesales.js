@@ -11,6 +11,7 @@ $(function () {
 
     function getReport()
     {
+        $('#loading_data').fadeIn();
         
         $.getJSON(reportURL, function(data) {
             var items = [];
@@ -40,6 +41,8 @@ $(function () {
             
             
             $('#telesalesList').html('<ul class="allTelesales">' + items.join('') + '</ul>');
+            
+            $('#loading_data').fadeOut();
                         
         });
     

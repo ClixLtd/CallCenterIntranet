@@ -17,6 +17,11 @@
 			
 		</header>
 	</div>
+	
+	<section>
+		<div id="loading_data"><span class="loader red" title="Loading, please wait&#8230;" style="margin-right: 30px;"></span> Loading Report - Please Wait!</div>
+	</section>
+	
 	<section>
 
 		<div id="telesalesList"></div>
