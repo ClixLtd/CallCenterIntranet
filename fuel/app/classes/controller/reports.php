@@ -157,7 +157,6 @@ class Controller_Reports extends Controller_BaseHybrid
         	    $reportArray[$result['user_login']]['referrals']++;
         	    $reportArray[$result['user_login']]['totalDI'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['totalDI'] + $result['DI'] : 0;
         	    $reportArray[$result['user_login']]['packOuts'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['packOuts']+1 : $reportArray[$result['user_login']]['packOuts'];
-        	    $reportArray[$result['user_login']]['allReferrals'][] = $result;
     	    }
     	    else
     	    {
@@ -168,14 +167,16 @@ class Controller_Reports extends Controller_BaseHybrid
                 );
                 
                 $reportArray[$result['user_login']] = $singleResult;
-                $reportArray[$result['user_login']]['allReferrals'][] = array(
-                    'Name' => $result['Name'],
-                    'leadID' => $result['leadpool_id'],
-                    'LeadName' => 'Leadpool Name',
-                    'Result' => $result['Description'],
-                    'DI' => $result['DI'],
-                );
     	    }
+    	    
+    	    $reportArray[$result['user_login']]['allReferrals'][] = array(
+                'Name' => $result['Name'],
+                'leadID' => $result['leadpool_id'],
+                'LeadName' => 'Leadpool Name',
+                'Result' => $result['Description'],
+                'DI' => $result['DI'],
+                'referred' => $result['referral_date'],
+            );
 
     	}
     	
