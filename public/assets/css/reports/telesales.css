@@ -66,6 +66,8 @@
             }                
                 .allTelesales ul li.subDetails
                 {
+                    max-height: 300px;
+                    overflow-x: scroll;
                     box-sizing: border-box;
                     padding: 0px;
                     margin-bottom: 5px;
