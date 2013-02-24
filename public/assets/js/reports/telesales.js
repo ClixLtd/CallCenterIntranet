@@ -15,7 +15,7 @@ $(function () {
             items.push( $('<ul/>', {
                 'class': 'alt1',
                 html: fullList.join('')
-            }).clone() );
+            }).parent().html() );
             
             
             
