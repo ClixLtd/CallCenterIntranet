@@ -38,12 +38,9 @@ $(function () {
                 
             });
             
-            $('<ul/>', {
-                'class': 'allTelesales',
-                html: items.join('')
-            }).appendTo('#telesalesList');
             
-            
+            $('#telesalesList').html('<ul class="allTelesales">' + tems.join('') + '</ul>');
+                        
         });
     
     }
