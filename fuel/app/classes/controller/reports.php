@@ -190,7 +190,7 @@ class Controller_Reports extends Controller_BaseHybrid
                 'leadID'      => $result['leadpool_id'],
                 'LeadName'    => 'Leadpool Name',
                 'Result'      => $result['Description'],
-                'DI'          => "£".number_format((float)$result['DI'], 2),
+                'DI'          => ((int)$result['DI'] < 10) ? "" : "£".number_format((float)$result['DI'], 2),
                 'Product'     => $result['Product'],
                 'referred'    => date("d/m/Y", strtotime($result['referral_date'])),
                 'lastContact' => (strlen($result['Last Contact Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Last Contact Date'])),
