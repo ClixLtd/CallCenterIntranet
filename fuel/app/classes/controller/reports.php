@@ -186,15 +186,15 @@ class Controller_Reports extends Controller_BaseHybrid
     	    }
     	    
     	    $reportArray[$result['user_login']]['allReferrals'][] = array(
-                'Name' => $result['Name'],
-                'leadID' => $result['leadpool_id'],
-                'LeadName' => 'Leadpool Name',
-                'Result' => $result['Description'],
-                'DI' => "£".number_format((float)$result['DI'], 2),
-                'Product' => $result['Product'],
-                'referred' => date("d/m/Y", strtotime($result['referral_date'])),
-                'lastContact' => date("d/m/Y", strtotime($result['Last Contact Date'])),
-                'callBack' => date("d/m/Y", strtotime($result['Call Back Date'])),
+                'Name'        => $result['Name'],
+                'leadID'      => $result['leadpool_id'],
+                'LeadName'    => 'Leadpool Name',
+                'Result'      => $result['Description'],
+                'DI'          => "£".number_format((float)$result['DI'], 2),
+                'Product'     => $result['Product'],
+                'referred'    => date("d/m/Y", strtotime($result['referral_date'])),
+                'lastContact' => (strlen($result['Last Contact Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Last Contact Date'])),
+                'callBack'    => (strlen($result['Call Back Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Call Back Date'])),
             );
 
     	}
