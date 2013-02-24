@@ -34,11 +34,11 @@
             background-color: #DDDDDD;
             font-weight: bold;
         }
-        .allTelesales ul.alt1
+        .allTelesales ul.alt1, .allTelesales ul.alt1 li.subDetails
         {
             background-color: #F5F5F5;
         }
-        .allTelesales ul.alt2
+        .allTelesales ul.alt2, .allTelesales ul.alt2 li.subDetails
         {
             background-color: #EEEEEE;
         }
@@ -57,4 +57,44 @@
                 font-weight: bold;
                 text-align: left;
                 width: 20%;
-            }
+            }                
+                .allTelesales ul li.subDetails
+                {
+                    box-sizing: border-box;
+                    padding: 0px;
+                    margin-bottom: 5px;
+                    
+                    width: 100%;
+                    
+                    border-radius: 0px 0px 8px 8px;
+                    box-shadow: 0px 1px 1px #CCCCCC;
+                }
+                
+                    .allTelesales ul li.subDetails ul li
+                    {
+                        width: 100%;
+                    }
+                    
+                        .allTelesales ul li.subDetails ul li ul li
+                        {
+                            margin: 0px;
+                            padding: 0px;
+                            line-height: 24px;
+                            width: 11%;
+                            
+                            padding: 3px 0px;
+                        }
+                        
+                        .allTelesales ul li.subDetails ul li ul li:first-child
+                        {
+                            width: 12%;
+                        }
+                    
+                        
+                                
+                
+                
+                
+                
+                
+                

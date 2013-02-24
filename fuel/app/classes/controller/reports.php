@@ -153,6 +153,7 @@ class Controller_Reports extends Controller_BaseHybrid
         	    $reportArray[$result['user_login']]['referrals']++;
         	    $reportArray[$result['user_login']]['totalDI'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['totalDI'] + $result['DI'] : 0;
         	    $reportArray[$result['user_login']]['packOuts'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['packOuts']+1 : $reportArray[$result['user_login']]['packOuts'];
+        	    $reportArray[$result['user_login']]['allReferrals'][] = $result;
     	    }
     	    else
     	    {
@@ -163,6 +164,7 @@ class Controller_Reports extends Controller_BaseHybrid
                 );
                 
                 $reportArray[$result['user_login']] = $singleResult;
+                $reportArray[$result['user_login']]['allReferrals'][] = $result;
     	    }
 
     	}
@@ -203,6 +205,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	       'conversionrate' => isset($reportArray[$member->dialler_id]['conversionRate']) ? number_format($reportArray[$member->dialler_id]['conversionRate'],2) : 0,
     	       'points'         => isset($reportArray[$member->dialler_id]) ? number_format((($reportArray[$member->dialler_id]['referrals'] * $centerValue['referral']) + ($reportArray[$member->dialler_id]['packOuts'] * $centerValue['pack_out']) + ($reportArray[$member->dialler_id]['totalDI'] * $centerValue['di_point'])),2) : 0.00,
     	       'commission'     => isset($reportArray[$member->dialler_id]['commission']) ? number_format($reportArray[$member->dialler_id]['commission'], 2) : 0.00,
+    	       'allReferrals'   => $reportArray[$member->dialler_id]['allReferrals'],
     	    );
     	}
     	
