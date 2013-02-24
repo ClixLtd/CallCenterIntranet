@@ -12,10 +12,7 @@ $(function () {
             });
             
             
-            items.push( $('<ul/>', {
-                'class': 'alt1',
-                html: fullList.join('')
-            }).parent().html() );
+            items.push( '<ul class="alt1">' + fullList.join('') + '</ul>' );
             
             
             
