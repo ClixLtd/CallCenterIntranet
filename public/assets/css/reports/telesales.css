@@ -81,7 +81,9 @@
                     width: 98%;
                     
                     border-radius: 0px 0px 8px 8px;
-                    box-shadow: 0px 2px 4px #AAAAAA;
+                    border-color: #AAAAAA;
+                    border-width: 0px 1px 1px 1px;
+                    border-style: solid;
                 }
                 
                     .allTelesales ul li.subDetails ul li
