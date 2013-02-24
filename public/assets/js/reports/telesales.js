@@ -44,6 +44,8 @@ $(function () {
                     if (keys == 'allReferrals')
                     {
                         
+                        allReferrals.push('<li><ul class="titles"><li>Name</li><li>Leadpool ID</li><li>Leadpool Ref</li><li>Status</li><li>DI</li><li>Product</li><li>Referred</li><li>Last Contact</li><li>Callback</li></ul></li>');
+                        
                         $.each(vals, function(refkey, refval) {
                             var singleList = [];
                             
