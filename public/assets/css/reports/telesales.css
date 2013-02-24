@@ -67,11 +67,6 @@
                 text-align: left;
                 width: 19%;
             }     
-            
-            .allTelesales ul li:first-child .titles
-            {
-                padding: 0px !important;
-            }
                        
                 .allTelesales ul li.subDetails
                 {
@@ -101,6 +96,7 @@
                         {
                             background-color: #DDDDDD;
                             padding: 0px !important;
+                            margin: 0px !important;
                         }
                         
                         .allTelesales ul li.subDetails ul li ul li
