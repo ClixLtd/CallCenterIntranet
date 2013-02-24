@@ -46,9 +46,10 @@ $(function () {
                         
                         allReferrals.push('<li><ul class="titles"><li>Name</li><li>Leadpool ID</li><li>List Name</li><li>Status</li><li>DI</li><li>Product</li><li>Referred</li><li>Last Contact</li><li>Callback</li></ul></li>');
                         
+                        var altSinChoice = 1;
+                            
                         $.each(vals, function(refkey, refval) {
                             var singleList = [];
-                            var altSinChoice = 1;
                             
                             $.each(refval, function(sinkey, sinval) {
                                 singleList.push('<li>' + sinval + '</li>');
