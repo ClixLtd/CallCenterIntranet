@@ -87,6 +87,7 @@
                             padding: 0px;
                             line-height: 24px;
                             width: 11%;
+                            overflow: hidden;
                             
                             padding: 3px 0px;
                         }

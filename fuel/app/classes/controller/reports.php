@@ -193,8 +193,8 @@ class Controller_Reports extends Controller_BaseHybrid
                 'DI' => "£".number_format((float)$result['DI'], 2),
                 'Product' => $result['Product'],
                 'referred' => date("d/m/Y", strtotime($result['referral_date'])),
-                'lastContact' => $result['Last Contact Date'],
-                'callBack' => $result['Call Back Date'],
+                'lastContact' => date("d/m/Y", strtotime($result['Last Contact Date'])),
+                'callBack' => date("d/m/Y", strtotime($result['Call Back Date'])),
             );
 
     	}
