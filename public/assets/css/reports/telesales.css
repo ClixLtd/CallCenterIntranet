@@ -71,8 +71,8 @@
                 .allTelesales ul li.subDetails
                 {
                     max-height: 300px;
-                    overflow-x: scroll;
-                    overflow-y: hidden;
+                    overflow-x: hidden;
+                    overflow-y: scroll;
                     box-sizing: border-box;
                     padding: 0px;
                     margin: 1%;
