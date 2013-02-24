@@ -48,12 +48,15 @@ $(function () {
                         
                         $.each(vals, function(refkey, refval) {
                             var singleList = [];
+                            var altSinChoice = 1;
                             
                             $.each(refval, function(sinkey, sinval) {
                                 singleList.push('<li>' + sinval + '</li>');
                             });
                             
-                            allReferrals.push('<li><ul class="alt2">' + singleList.join('') + '</ul></li>');
+                            allReferrals.push('<li><ul class="alt' + altSinChoice + '">' + singleList.join('') + '</ul></li>');
+                            
+                            altSinChoice = (altSinChoice==1) ? 2 : 1;
                         });
                         
                         fullList.push('<li class="subDetails" id="subDetails' + userID + '"><ul>' + allReferrals.join('') + '</ul></li>');
