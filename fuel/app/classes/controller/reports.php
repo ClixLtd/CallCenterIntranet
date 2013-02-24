@@ -20,17 +20,24 @@ class Controller_Reports extends Controller_BaseHybrid
 	    foreach ($_allValues AS $value)
 	    {
     	    $centerValues[$value->center_id] = array(
-    	        'referral' => $value->referral_points,
-    	        'pack_out' => $value->pack_out_points,
-    	        'di_point' => $value->di_pound_point,
+    	        'referral'            => $value->referral_points,
+    	        'pack_out'            => $value->pack_out_points,
+    	        'di_point'            => $value->di_pound_point,
+    	        'pack_out_commission' => $value->di_pound_point,
+    	        'pack_out_bonus'      => $value->di_pound_point,
+    	        'payment_percentage'  => $value->di_pound_point,
     	    );
 	    }
+	
 	
 	    // Set the start and end dates
 	    $startDate = strtotime("1st February 2013");
 	    $endDate = strtotime("Today");
 	   
 	    $call_center = Model_Call_Center::query()->where('shortcode', $center)->get_one();
+	    
+	    
+	    $centerValue = (is_null($center)) ? $centerValues[0] : $centerValues[$call_center->id];
 	    
 	    // Get a list of debtsolv_id names for active users
 	    $staff = Model_Staff::query()->where( 'active', 1)->where('department_id', 1);
@@ -167,19 +174,19 @@ class Controller_Reports extends Controller_BaseHybrid
         	$reportArray[$key]['conversionRate'] = (($items['packOuts'] / $items['referrals']) * 100);
         	$reportArray[$key]['points'] = ($items['packOuts'] * 2) + ($items['referrals']);
         	
-        	$reportArray[$key]['commission'] = ($items['packOuts'] * 2.5);
+        	$reportArray[$key]['commission'] = ($items['packOuts'] * $centerValue['pack_out_commission']);
     	}
     	
     	// Finally look through the first payments and create the comissions
     	foreach ($paymentsResults AS $payment)
     	{
-    	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ($payment['DI']/1000) : ($payment['DI']/1000);
+    	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ($payment['DI']/100) : ($payment['DI']/100);
     	}
     	
     	// Finally look through the first payments and create the comissions
     	foreach ($paymentsResultsResolve AS $payment)
     	{
-    	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ($payment['DI']/1000) : ($payment['DI']/1000);
+    	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ((($payment['DI']/100)/100)*$centerValue['payment_percentage']) : ((($payment['DI']/100)/100)*$centerValue['payment_percentage']);
     	}
     	
     	
@@ -188,7 +195,6 @@ class Controller_Reports extends Controller_BaseHybrid
     	foreach ($staff AS $member)
     	{
     	    
-    	    $centerValue = (is_null($center)) ? $centerValues[0] : $centerValues[$member->center_id];
     	    
     	    $sendArray[] = array(
     	       'name'           => $member->first_name . " " . $member->last_name,
