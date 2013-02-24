@@ -1,5 +1,10 @@
 /* CSS file for the Telesales report */
 
+.subDetails
+{
+    display: none;
+}
+
 .allTelesales
 {
     list-style: none;
