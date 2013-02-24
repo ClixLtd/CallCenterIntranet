@@ -70,6 +70,14 @@ class Controller_Reports extends Controller_BaseHybrid
                               , TCR.[Description]
                               , D_CPD.NormalExpectedPayment/100 AS DI
                               , DR.referral_date
+                              , CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
+                              , CASE
+            			         WHEN CC.ContactResult = 700
+            			           THEN CONVERT(varchar, CC.Appointment, 120)
+            			         ELSE
+            			           ''
+            			        END AS 'Call Back Date'
+            			      , ISNULL(DR.product,'DR') AS Product
                               , (CD.Forename + ' ' + CD.Surname) AS Name
                           FROM Dialler.dbo.referrals AS DR
                           LEFT JOIN LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
@@ -89,6 +97,14 @@ class Controller_Reports extends Controller_BaseHybrid
                       , TCR.[Description]
                       , D_CPD.NormalExpectedPayment/100 AS DI
                       , DR.referral_date
+                      , CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
+                      , CASE
+    			         WHEN CC.ContactResult = 700
+    			           THEN CONVERT(varchar, CC.Appointment, 120)
+    			         ELSE
+    			           ''
+    			        END AS 'Call Back Date'
+    			      , ISNULL(DR.product,'DR') AS Product
                       , (CD.Forename + ' ' + CD.Surname) AS Name
                   FROM Dialler.dbo.referrals AS DR
                   LEFT JOIN BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
@@ -175,7 +191,10 @@ class Controller_Reports extends Controller_BaseHybrid
                 'LeadName' => 'Leadpool Name',
                 'Result' => $result['Description'],
                 'DI' => "£".number_format((float)$result['DI'], 2),
+                'Product' => $result['Product'],
                 'referred' => date("d/m/Y", strtotime($result['referral_date'])),
+                'lastContact' => $result['Last Contact Date'],
+                'callBack' => $result['Call Back Date'],
             );
 
     	}
