@@ -20,9 +20,8 @@
 </article>
 
 <script>
-    $(function () {
-        var reportURL = "<?php echo $url;?>";
-    });
+    var reportURL = "<?php echo $url;?>";
+
 </script>
 
 <?php echo Asset::js('reports/telesales.js'); ?>

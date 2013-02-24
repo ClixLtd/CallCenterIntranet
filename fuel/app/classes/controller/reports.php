@@ -234,7 +234,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	
     	$this->template->title = 'Reports &raquo; Telesales';
 		$this->template->content = View::forge('reports/telesales', array(
-			'url' => '/reports/get_telesales_report/'.$center.'.json',
+			'url' => (!is_null($center)) ? '/reports/get_telesales_report/'.$center.'.json' : '/reports/get_telesales_report.json',
 		));	
     	
 	}
