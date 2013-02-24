@@ -16,6 +16,7 @@ $(function () {
         $.getJSON(reportURL, function(data) {
             var items = [];
             var titleList = [];
+            var altChoice = 1;
             
             $.each(data['titles'], function(key, val) {
             
@@ -35,7 +36,9 @@ $(function () {
                     fullList.push('<li>' + vals + '</li>');
                 });
                 
-                items.push( '<ul class="alt1">' + fullList.join('') + '</ul>' );
+                items.push( '<ul class="alt' + altChoice + '">' + fullList.join('') + '</ul>' );
+                
+                altChoice = (altChoice==1) ? 2 : 1;
                 
             });
             
