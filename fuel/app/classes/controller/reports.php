@@ -169,7 +169,7 @@ class Controller_Reports extends Controller_BaseHybrid
                 
                 $reportArray[$result['user_login']] = $singleResult;
                 $reportArray[$result['user_login']]['allReferrals'][] = array(
-                    $result[''],
+                    $result['Name'],
                 );
     	    }
 
