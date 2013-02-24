@@ -12,7 +12,8 @@ $(function () {
     $('.userClick').live("click", function() {
         var user = $(this).attr('rel');
         
-        $('#subDetails' + user).slideToggle();
+        $('.subDetails').slideUp('fast');
+        $('#subDetails' + user).slideToggle('fast');
     });
 
     function getReport()
