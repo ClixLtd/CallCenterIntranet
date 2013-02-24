@@ -9,9 +9,9 @@ $(function () {
             
             fullList.push('<li>' + val + '</li>');
             
-            items.push( '<ul class="titles">' + fullList.join('') + '</ul>' );
-            
         });
+        
+        items.push( '<ul class="titles">' + fullList.join('') + '</ul>' );
         
         $.each(data['report'], function(key, val) {
             
