@@ -39,7 +39,7 @@
         {
             background-color: #BBBBBB;
             font-weight: bold;
-            text-shadow: 1px 1px 1px white;
+            text-shadow: 1px 1px 1px RGBA(255,255,255,0.5);
         }
         .allTelesales ul.alt1, .allTelesales ul.alt1 li.subDetails
         {
