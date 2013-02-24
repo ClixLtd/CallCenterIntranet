@@ -89,6 +89,7 @@
                         .allTelesales ul li.subDetails ul li ul.titles
                         {
                             background-color: #DDDDDD;
+                            padding: 0px !important;
                         }
                         
                         .allTelesales ul li.subDetails ul li ul li
@@ -106,8 +107,8 @@
                         
                         .allTelesales ul li.subDetails ul li ul li:first-child
                         {
-                            padding-left: 0;
-                            width: 12%;
+                            padding-left: 1%;
+                            width: 11%;
                         }
                         
                         .allTelesales ul li.subDetails ul li ul.alt1
