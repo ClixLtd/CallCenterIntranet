@@ -77,7 +77,15 @@ class Controller_Reports extends Controller_BaseHybrid
             			         ELSE
             			           ''
             			        END AS 'Call Back Date'
-            			      , DR.product AS Product
+            			      , (
+                			      	SELECT Top (1)
+                			      		ResponseVal
+                			      	FROM
+                			      		Debtsolv.dbo.Client_CustomQuestionResponses
+                			      	WHERE
+                			      		QuestionID = 10007
+                			      		AND ClientID = D_CLD.Client_ID
+                			      ) AS 'ProductType'
                               , (CD.Forename + ' ' + CD.Surname) AS Name
                           FROM Dialler.dbo.referrals AS DR
                           LEFT JOIN LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
@@ -104,7 +112,15 @@ class Controller_Reports extends Controller_BaseHybrid
     			         ELSE
     			           ''
     			        END AS 'Call Back Date'
-    			      , DR.product AS Product
+    			      , (
+        			      	SELECT Top (1)
+        			      		ResponseVal
+        			      	FROM
+        			      		Debtsolv.dbo.Client_CustomQuestionResponses
+        			      	WHERE
+        			      		QuestionID = 10007
+        			      		AND ClientID = D_CLD.Client_ID
+        			      ) AS 'ProductType'
                       , (CD.Forename + ' ' + CD.Surname) AS Name
                   FROM Dialler.dbo.referrals AS DR
                   LEFT JOIN BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
@@ -191,7 +207,7 @@ class Controller_Reports extends Controller_BaseHybrid
                 'LeadName'    => 'Leadpool Name',
                 'Result'      => $result['Description'],
                 'DI'          => ((int)$result['DI'] < 10) ? "" : "£".number_format((float)$result['DI'], 2),
-                'Product'     => $result['Product'],
+                'Product'     => $result['ProductType'],
                 'referred'    => date("d/m/Y", strtotime($result['referral_date'])),
                 'lastContact' => (strlen($result['Last Contact Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Last Contact Date'])),
                 'callBack'    => (strlen($result['Call Back Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Call Back Date'])),
