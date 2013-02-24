@@ -37,16 +37,16 @@
         
         .allTelesales ul.titles
         {
-            background-color: #CCCCCC;
+            background-color: #BBBBBB;
             font-weight: bold;
         }
         .allTelesales ul.alt1, .allTelesales ul.alt1 li.subDetails
         {
-            background-color: #D5D5D5;
+            background-color: #EEEEEE;
         }
         .allTelesales ul.alt2, .allTelesales ul.alt2 li.subDetails
         {
-            background-color: #DDDDDD;
+            background-color: #E5E5E5;
         }
         
             .allTelesales ul li
