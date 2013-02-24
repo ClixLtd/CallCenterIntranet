@@ -39,7 +39,7 @@ $(function () {
             });
             
             
-            $('#telesalesList').html('<ul class="allTelesales">' + tems.join('') + '</ul>');
+            $('#telesalesList').html('<ul class="allTelesales">' + items.join('') + '</ul>');
                         
         });
     
