@@ -37,16 +37,16 @@
         
         .allTelesales ul.titles
         {
-            background-color: #DDDDDD;
+            background-color: #CCCCCC;
             font-weight: bold;
         }
         .allTelesales ul.alt1, .allTelesales ul.alt1 li.subDetails
         {
-            background-color: #F5F5F5;
+            background-color: #D5D5D5;
         }
         .allTelesales ul.alt2, .allTelesales ul.alt2 li.subDetails
         {
-            background-color: #EEEEEE;
+            background-color: #DDDDDD;
         }
         
             .allTelesales ul li
@@ -83,6 +83,11 @@
                         width: 100%;
                     }
                     
+                        .allTelesales ul li.subDetails ul li ul.titles
+                        {
+                            background-color: #DDDDDD;
+                        }
+                        
                         .allTelesales ul li.subDetails ul li ul li
                         {
                             margin: 0px;
@@ -100,7 +105,15 @@
                         {
                             width: 12%;
                         }
-                    
+                        
+                        .allTelesales ul li.subDetails ul li ul li.alt1
+                        {
+                            background-color: #F5F5F5;
+                        }
+                        .allTelesales ul li.subDetails ul li ul.alt2
+                        {
+                            background-color: #EEEEEE;
+                        }
                         
                                 
                 
