@@ -9,6 +9,12 @@ $(function () {
         getReport();
     });
 
+    $('.userClick').click(function() {
+        var user = $(this).attr('rel');
+        
+        alert(user);
+    });
+
     function getReport()
     {
         $('#loading_data').fadeIn();
@@ -32,6 +38,8 @@ $(function () {
                 
                 var fullList = [];
                 
+                var userID = key;
+                
                 $.each(val, function(keys,vals) {
                     var allReferrals = [];
                     if (keys == 'allReferrals')
@@ -47,7 +55,7 @@ $(function () {
                             allReferrals.push('<li><ul class="alt2">' + singleList.join('') + '</ul></li>');
                         });
                         
-                        fullList.push('<li class="subDetails"><ul>' + allReferrals.join('') + '</ul></li>');
+                        fullList.push('<li class="subDetails" id="subDetails' + userID + '"><ul>' + allReferrals.join('') + '</ul></li>');
                     }
                     else
                     {
@@ -55,7 +63,7 @@ $(function () {
                     }
                 });
                 
-                items.push( '<ul class="alt' + altChoice + '">' + fullList.join('') + '</ul>' );
+                items.push( '<ul class="alt' + altChoice + ' userClick" rel="' + userID + '">' + fullList.join('') + '</ul>' );
                 
                 altChoice = (altChoice==1) ? 2 : 1;
                 
