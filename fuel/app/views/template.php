@@ -102,6 +102,7 @@
 					<a href="/reports" title="" class="logs">Reports</a>
 					<ul>
 						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('reports/disposition', 'Disposition Report'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('reports/telesales_report', 'Telesales Report'); ?></li><?php endif; ?>
 						<?php if (Auth::has_access('reports.ppi')): ?><li><?php echo Html::anchor('crm/reports/ppi/disposition', 'PPI Disposition Report'); ?></li><?php endif; ?>
 						<?php if (Auth::has_access('reports.commission')): ?><li><?php echo Html::anchor('reports/commission', 'Commission Report'); ?></li><?php endif; ?>
 						<?php if (Auth::has_access('reports.supplier')): ?><li><?php echo Html::anchor('reports/supplier', 'Supplier Reports'); ?></li><?php endif; ?>
