@@ -7,8 +7,8 @@ $(function () {
             
             var fullList = [];
             
-            $.each(val, function(key,val) {
-                fullList.push('<li>' + val + '</li>');
+            $.each(val, function(keys,vals) {
+                fullList.push('<li>' + vals + '</li>');
             });
             
             
