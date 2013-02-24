@@ -223,7 +223,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	        'Pack Outs',
     	        'Conversion Rate',
     	        'Points',
-    	        'Comission',
+    	        'Commission',
     	    ),
     	    'report' => $reportArray,
     	));
