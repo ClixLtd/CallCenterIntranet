@@ -9,7 +9,7 @@ $(function () {
         getReport();
     });
 
-    $('.userClick').click(function() {
+    $('.userClick').live("click", function() {
         var user = $(this).attr('rel');
         
         alert(user);
