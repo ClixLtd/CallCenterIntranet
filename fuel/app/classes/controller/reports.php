@@ -180,7 +180,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	// Finally look through the first payments and create the comissions
     	foreach ($paymentsResults AS $payment)
     	{
-    	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ($payment['DI']/100) : ($payment['DI']/100);
+    	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ((($payment['DI']/100)/100)*$centerValue['payment_percentage']) : ((($payment['DI']/100)/100)*$centerValue['payment_percentage']);
     	}
     	
     	// Finally look through the first payments and create the comissions
