@@ -1,6 +1,6 @@
 $(function () {
 
-    $.getJSON('/reports/get_telesales_report/GAB.json', function(data) {
+    $.getJSON(reportURL, function(data) {
         var items = [];
         var titleList = [];
         
