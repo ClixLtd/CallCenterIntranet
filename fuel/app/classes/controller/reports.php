@@ -205,7 +205,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	       'conversionrate' => isset($reportArray[$member->dialler_id]['conversionRate']) ? number_format($reportArray[$member->dialler_id]['conversionRate'],2) : 0,
     	       'points'         => isset($reportArray[$member->dialler_id]) ? number_format((($reportArray[$member->dialler_id]['referrals'] * $centerValue['referral']) + ($reportArray[$member->dialler_id]['packOuts'] * $centerValue['pack_out']) + ($reportArray[$member->dialler_id]['totalDI'] * $centerValue['di_point'])),2) : 0.00,
     	       'commission'     => isset($reportArray[$member->dialler_id]['commission']) ? number_format($reportArray[$member->dialler_id]['commission'], 2) : 0.00,
-    	       'allReferrals'   => $reportArray[$member->dialler_id]['allReferrals'],
+    	       'allReferrals'   => isset($reportArray[$member->dialler_id]) ? $reportArray[$member->dialler_id]['allReferrals'] : array(),
     	    );
     	}
     	
