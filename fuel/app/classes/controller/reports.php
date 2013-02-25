@@ -332,10 +332,10 @@ class Controller_Reports extends Controller_BaseHybrid
 	    $values->pack_out_bonus      = (float)Input::post('pack_out_bonus');
 	    $values->payment_percentage  = (float)Input::post('payment_percentage');
 	    
-	    $values->save();
+	    $saved = $values->save();
 	    	   
     	return $this->response(array(
-    	    'status' => 'FAIL',
+    	    'status' => ($saved) ? 'SUCESS' : 'FAIL',
     	));
 	}
 	

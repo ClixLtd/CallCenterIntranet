@@ -32,11 +32,11 @@ $(function () {
 		function(data){
 			if (data['status'] == 'SUCCESS')
 			{
-			    alert('DONE');
+			    getReport();
 			}
 			else
 			{
-    			alert('FAIL');
+    			alert('Updating values failed. Please submit a support ticket with a screenshot!');
 			}
 		});
 
