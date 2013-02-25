@@ -1,6 +1,6 @@
 function getReport()
 {
-    var playersPerLeague = 6;
+    var playersPerLeague = 5;
     var leagueZeroName = "Premier League";
     var currentLeague = 0;
     var fullCode = [];
