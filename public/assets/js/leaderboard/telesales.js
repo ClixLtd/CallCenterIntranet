@@ -40,7 +40,7 @@ function getReport()
 
         });
         
-        if (currentPlayer < playersPerLeague)
+        if (currentPlayer < playersPerLeague || currentLeague == leagueNames.length-1 )
         {
             leagueDetails.push('</ul></li>');
             fullCode.push(leagueDetails.join(""));
