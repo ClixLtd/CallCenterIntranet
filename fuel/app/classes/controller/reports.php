@@ -317,7 +317,20 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	public function post_save_telesales_values($center=null)
 	{
-	
+	   
+	    $call_center = Model_Call_Center::query()->where('shortcode', $center)->get_one();
+	    
+	    $values = Model_Telesales_Report_Value::query()->where('center_id', $call_center->id)->get_one();
+	    
+	    $values->referral_points     = (float)Input::post('referral');
+	    $values->pack_out_points     = (float)Input::post('pack_out');
+	    $values->di_pound_point      = (float)Input::post('di_point');
+	    $values->pack_out_commission = (float)Input::post('pack_out_commission');
+	    $values->pack_out_bonus      = (float)Input::post('pack_out_bonus');
+	    $values->payment_percentage  = (float)Input::post('payment_percentage');
+	    
+	    $values->save();
+	    	   
     	return $this->response(array(
     	    'status' => 'FAIL',
     	));
