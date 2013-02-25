@@ -65,12 +65,22 @@
     background: #bbe6d0;
 }
 
-#division_1 ul
+#championship ul
 {
     background: #e3d0a7;
 }
 
-#division_2 ul
+#league_1 ul
+{
+    background: #dbacac;
+}
+
+#league_2 ul
+{
+    background: #dbacac;
+}
+
+#conference_league ul
 {
     background: #dbacac;
 }
