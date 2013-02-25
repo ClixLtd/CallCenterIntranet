@@ -13,15 +13,17 @@ function getReport()
             
             if (currentPlayer == 1)
             {
+                leagueDetails.push('<li class="league" id="premier_league"><ul>');
                 var leagueName = (currentLeague == 0) ? leagueZeroName : "Division " + currentLeague;
                 leagueDetails.push("<li class='title'>" + leagueName + "</li>");
             }
             
-            leagueDetails.push("<li><ul></ul></li>");
+            leagueDetails.push("<li><ul><li>" + val['name'] + "</li><li>" + val['referrals'] + "</li><li>" + val['packouts'] + "</li><li>" + val['points'] + "</li></ul></li>");
             
             
             if (currentPlayer == playersPerLeague)
             {
+                leagueDetails.push('</ul></li>');
                 fullCode.push(leagueDetails.join(""));
                 
                 currentLeague++;
@@ -37,7 +39,7 @@ function getReport()
         });
         
         
-        console.log(fullCode.join(""));
+        console.log('<ul>' + fullCode.join("") + '</ul>');
         
     });
     
