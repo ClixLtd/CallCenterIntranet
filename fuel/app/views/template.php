@@ -194,6 +194,12 @@
 				</li>
 				<?php endif; ?>
 
+				<li>
+					<a href="/leaderboard" title="" class="logs">Leaderboards</a>
+					<ul>
+						<li><?php echo Html::anchor('leaderboard/telesales', 'Telesales'); ?></li>
+					</ul>
+				</li>
 				
 			</ul>
 		</nav>
