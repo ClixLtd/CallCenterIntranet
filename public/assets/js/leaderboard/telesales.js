@@ -23,9 +23,15 @@ function getReport()
             if (currentPlayer == playersPerLeague)
             {
                 fullCode.push(leagueDetails.join(""));
+                currentPlayer = 1;
+            }
+            else
+            {
+                currentPlayer++;
             }
             
-            currentPlayer++;
+            console.log(currentPlayer);
+            
             
         });
         
