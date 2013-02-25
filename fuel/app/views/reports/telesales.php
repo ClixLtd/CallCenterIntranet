@@ -17,7 +17,7 @@
 			
 			<nav>
 				<ul class="tab-switch">
-					<li><a class="default-tab" href="#telesalesList">Full Report</a></li>
+					<li><a class="default-tab" href="#telesalesListTab">Full Report</a></li>
 					<li><a href="#centerSettings">Center Settings</a></li>
 				</ul>
 			</nav>
@@ -30,7 +30,7 @@
 	</section>
 	
 	
-	<div class="tab default-tab" id="telesalesList">
+	<div class="tab default-tab" id="telesalesListTab">
 	
         	<section>
         		<div id="telesalesList"></div>
