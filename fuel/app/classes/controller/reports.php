@@ -96,6 +96,7 @@ class Controller_Reports extends Controller_BaseHybrid
                           LEFT JOIN LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                           WHERE DR.user_login IN (" . $inList . ")
                               AND DR.short_code IN ('GAB','GBS')
+                              AND TCR.[Description] <> 'Referred'
                               AND CONVERT(date, DR.referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
                               AND CONVERT(date, DR.referral_date, 105) <= '" . date('Y-m-d', $endDate) . "'";
     	
@@ -131,6 +132,7 @@ class Controller_Reports extends Controller_BaseHybrid
                   LEFT JOIN BS_LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                   WHERE DR.user_login IN (" . $inList . ")
                       AND DR.short_code IN ('RESOLVE')
+                      AND TCR.[Description] <> 'Referred'
                       AND CONVERT(date, DR.referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
                       AND CONVERT(date, DR.referral_date, 105) <= '" . date('Y-m-d', $endDate) . "'";
     	
