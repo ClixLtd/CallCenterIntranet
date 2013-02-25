@@ -20,7 +20,7 @@ class Controller_User extends Controller_BaseHybrid
 		}
 	}
 
-	public function get_view()
+	public function get_get_view()
 	{
 	
 		if (Auth::has_access('user.view')) {
