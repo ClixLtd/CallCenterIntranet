@@ -22,6 +22,9 @@ function getReport()
             
             if (currentPlayer == playersPerLeague)
             {
+            
+                console.log(leagueDetails.join(""));
+            
                 fullCode.push(leagueDetails.join(""));
                 currentPlayer = 1;
             }
@@ -30,7 +33,6 @@ function getReport()
                 currentPlayer++;
             }
             
-            console.log(currentPlayer);
             
             
         });
