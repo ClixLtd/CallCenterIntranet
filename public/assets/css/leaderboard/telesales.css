@@ -28,6 +28,8 @@
 {
     clear: both;
     border-radius: 20px;
+    font-size: 30px;
+    background: #dbacac;
 }
 
 
@@ -61,17 +63,14 @@
 #premier_league ul
 {
     background: #bbe6d0;
-    font-size: 30px;
 }
 
 #division_1 ul
 {
     background: #e3d0a7;
-    font-size: 30px;
 }
 
 #division_2 ul
 {
     background: #dbacac;
-    font-size: 30px;
 }
