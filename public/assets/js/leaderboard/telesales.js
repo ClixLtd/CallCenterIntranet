@@ -25,7 +25,7 @@ function getReport()
             {
                 leagueDetails.push('</ul></li>');
                 fullCode.push(leagueDetails.join(""));
-                
+                leagueDetails = [];
                 currentLeague++;
                 currentPlayer = 1;
             }
