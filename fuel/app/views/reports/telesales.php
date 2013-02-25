@@ -49,19 +49,19 @@
         					<label>Points Per Referral</label>
         				</dt>
         				<dd>
-        					<input type="text" class="small" name="referral_points" placeholder="Referral Points">
+        					<input type="text" class="small" name="referral" placeholder="Referral Points">
         				</dd>
         				<dt>
         					<label>Points Per Pack Out</label>
         				</dt>
         				<dd>
-        					<input type="text" class="small" name="pack_out_points" placeholder="Pack Out Points">
+        					<input type="text" class="small" name="pack_out" placeholder="Pack Out Points">
         				</dd>
         				<dt>
         					<label>Points per Pound of DI</label>
         				</dt>
         				<dd>
-        					<input type="text" class="small" name="di_pound_point" placeholder="Points per Pound">
+        					<input type="text" class="small" name="di_point" placeholder="Points per Pound">
         				</dd>
         				<dt>
         					<label>Commission per Pack Out (£)</label>
