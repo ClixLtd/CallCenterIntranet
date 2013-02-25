@@ -55,6 +55,11 @@ $(function () {
         getReport();
     }, 30000);
     
-
+    $('#callCenter').change(function() {
+        reportURL = ($(this).val() == "ALL") ? "/reports/get_telesales_report.json" : "/reports/get_telesales_report/" + $(this).val() + ".json";
+        
+                
+        getReport();
+    });
     
 });
