@@ -1,6 +1,6 @@
 function getReport()
 {
-    var playersPerLeague = 5;
+    var playersPerLeague = 6;
     var leagueZeroName = "Premier League";
     var currentLeague = 0;
     var fullCode = [];
@@ -33,17 +33,13 @@ function getReport()
             {
                 currentPlayer++;
             }
-            
-            
-            
+
         });
-        
         
         $("#telesalesList").html('<ul>' + fullCode.join("") + '</ul>');
         
     });
     
-
 }
     
 $(function () {
