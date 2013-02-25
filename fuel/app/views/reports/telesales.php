@@ -31,16 +31,14 @@
 	
 	
 	<div class="tab default-tab" id="telesalesList">
-	   <article class="full-block">
 	
         	<section>
         		<div id="telesalesList"></div>
         	</section>
-	   </article>
+        	
 	</div>
 	
 	<div class="tab" id="centerSettings">
-	   <article class="full-block">
 	
         	<section>
         		<form id="centerValues">
@@ -90,7 +88,6 @@
             		</dl>
         		</form>
         	</section>
-	   </article>
 	</div>
 	
 
