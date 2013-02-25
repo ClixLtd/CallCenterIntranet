@@ -320,7 +320,10 @@ class Controller_Reports extends Controller_BaseHybrid
 	   
 	    $call_center = Model_Call_Center::query()->where('shortcode', $center)->get_one();
 	    
+	    
 	    $values = Model_Telesales_Report_Value::query()->where('center_id', $call_center->id)->get_one();
+	    
+	    print_r($values);
 	    
 	    $values->referral_points     = (float)Input::post('referral');
 	    $values->pack_out_points     = (float)Input::post('pack_out');
