@@ -2,6 +2,8 @@ function getReport()
 {
     $('#loading_data').fadeIn();
     
+    var leagueNames = ["Premier League","Championship","League 1","League 2","Conference League"];
+    
     var playersPerLeague = 5;
     var leagueZeroName = "Premier League";
     var currentLeague = 0;
@@ -15,7 +17,7 @@ function getReport()
             
             if (currentPlayer == 1)
             {
-                var leagueName = (currentLeague == 0) ? leagueZeroName : "Division " + currentLeague;
+                var leagueName = leagueNames[currentLeague];
                 leagueDetails.push('<li class="league" id="' + leagueName.toLowerCase().split(' ').join('_') + '"><ul>');
                 leagueDetails.push("<li class='title'>" + leagueName + "</li>");
             }
@@ -23,7 +25,7 @@ function getReport()
             leagueDetails.push("<li><ul><li>" + val['name'] + "</li><li>" + val['referrals'] + "</li><li>" + val['packouts'] + "</li><li>" + val['points'] + "</li></ul></li>");
             
             
-            if (currentPlayer == playersPerLeague)
+            if (currentPlayer == playersPerLeague && currentLeague < leagueNames.length-1)
             {
                 leagueDetails.push('</ul></li>');
                 fullCode.push(leagueDetails.join(""));
