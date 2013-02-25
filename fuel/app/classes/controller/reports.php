@@ -335,7 +335,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	    $saved = $values->save();
 	    	   
     	return $this->response(array(
-    	    'status' => ($saved) ? 'SUCESS' : 'FAIL',
+    	    'status' => ($saved) ? 'SUCCESS' : 'FAIL',
     	));
 	}
 	
