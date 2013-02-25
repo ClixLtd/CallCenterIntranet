@@ -1,4 +1,4 @@
-<div style="float: right;">
+<div style="float: right; margin-bottom: 30px;">
 <?php if($view_all): ?>
 <select name="center" id="callCenter" rel="tooltip" title="Call Center">
 	<option value="ALL">All Centers</option>
@@ -10,6 +10,10 @@
 </div>
 
 <article class="full-block clearfix">
+
+	<section>
+		<div id="loading_data"><span class="loader red" title="Loading, please wait&#8230;" style="margin-bottom: 20px; margin-right: 30px;"></span> Loading Report - Please Wait!</div>
+	</section>
 
 	<section>
 		<div id="telesalesList"></div>

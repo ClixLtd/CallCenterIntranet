@@ -1,5 +1,7 @@
 function getReport()
 {
+    $('#loading_data').fadeIn();
+    
     var playersPerLeague = 5;
     var leagueZeroName = "Premier League";
     var currentLeague = 0;
@@ -43,6 +45,7 @@ function getReport()
         }
         
         $("#telesalesList").html('<ul>' + fullCode.join("") + '</ul>');
+        $('#loading_data').fadeOut();
         
     });
     
