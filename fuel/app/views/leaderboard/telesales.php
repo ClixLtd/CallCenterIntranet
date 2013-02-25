@@ -1,12 +1,10 @@
 <div style="float: right; margin-bottom: 30px;">
-<?php if($view_all): ?>
 <select name="center" id="callCenter" rel="tooltip" title="Call Center">
 	<option value="ALL">All Centers</option>
 	<?php foreach($all_call_centers AS $cc): ?>
 	<option value="<?php echo $cc->shortcode; ?>" <?php echo ($cc->shortcode == $center) ? "SELECTED" : ""; ?>><?php echo $cc->title; ?></option>
 	<?php endforeach; ?>
 </select>
-<?php endif; ?>
 </div>
 
 <article class="full-block clearfix">
