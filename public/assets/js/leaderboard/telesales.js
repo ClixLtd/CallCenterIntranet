@@ -36,6 +36,12 @@ function getReport()
 
         });
         
+        if (currentPlayer < playersPerLeague)
+        {
+            leagueDetails.push('</ul></li>');
+            fullCode.push(leagueDetails.join(""));
+        }
+        
         $("#telesalesList").html('<ul>' + fullCode.join("") + '</ul>');
         
     });
