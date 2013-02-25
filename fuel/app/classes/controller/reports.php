@@ -290,7 +290,10 @@ class Controller_Reports extends Controller_BaseHybrid
         	$sendArray[$ksend]['points'] = number_format($send['points'],2);
     	}
     	
-    	return $sendArray;
+    	return array(
+    	    'report' => $sendArray,
+    	    'centerVals' => $centerValue,
+    	);
     	    	
 	}
 	
@@ -298,7 +301,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	{
     	$reportArray = Controller_Reports::generate_telesales_report($center);
     	return $this->response(array(
-    	    'titles' => array(
+    	    'titles'     => array(
     	        'Name',
     	        'Referrals',
     	        'Pack Outs',
@@ -306,7 +309,8 @@ class Controller_Reports extends Controller_BaseHybrid
     	        'Points',
     	        'Commission',
     	    ),
-    	    'report' => $reportArray,
+    	    'report'     => $reportArray['report'],
+    	    'centerVals' => $reportArray['centerVals'],
     	));
 	}
 	

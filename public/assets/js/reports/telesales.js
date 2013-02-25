@@ -23,9 +23,14 @@ $(function () {
             var titleList = [];
             var altChoice = 1;
             
+            
+            $.each(data['centerVals'], function(key, val) {
+                $('input[name=' + key + ']').val(val);
+            });
+            
+            
             $.each(data['titles'], function(key, val) {
             
-                
                 titleList.push('<li>' + val + '</li>');
                 
             });
