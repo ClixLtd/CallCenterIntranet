@@ -56,6 +56,9 @@ return array(
 				47 => '054_add_center_id_to_staff',
 				48 => '055_add_department_id_to_staff',
 				49 => '056_create_telesales_report_values',
+				50 => '057_add_pack_out_commission_to_telesales_report_values',
+				51 => '058_add_pack_out_bonus_to_telesales_report_values',
+				52 => '059_add_payment_percentage_to_telesales_report_values',
 			),
 		),
 		'module' => 
