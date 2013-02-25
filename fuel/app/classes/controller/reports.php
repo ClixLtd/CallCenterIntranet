@@ -285,6 +285,11 @@ class Controller_Reports extends Controller_BaseHybrid
     	
     	array_multisort($sort, SORT_DESC, $sendArray);
     	
+    	foreach ($sendArray AS $ksend => $send)
+    	{
+        	$sendArray[$ksend]['points'] = number_format($send['points'],2);
+    	}
+    	
     	return $sendArray;
     	    	
 	}
