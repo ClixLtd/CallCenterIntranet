@@ -39,7 +39,7 @@ function getReport()
         });
         
         
-        console.log('<ul>' + fullCode.join("") + '</ul>');
+        $("#telesalesList").html('<ul>' + fullCode.join("") + '</ul>');
         
     });
     
