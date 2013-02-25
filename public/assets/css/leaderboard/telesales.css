@@ -1,0 +1,77 @@
+/* Leaderboard CSS File */
+
+#telesalesList ul
+{
+    list-style: none;
+    list-style-image: none;
+    list-style-type: none;
+    
+    background: none;
+    
+    margin: 0px;
+    padding: 0px;
+}
+
+    #telesalesList ul li
+    {
+        background: none;
+        margin: 0px;
+        padding: 0px;
+    }
+
+.league
+{
+    margin-bottom: 20px !important;
+}
+
+.league ul
+{
+    clear: both;
+    border-radius: 20px;
+}
+
+
+    .league ul li.title
+    {
+        color: red;
+        padding-left: 20px !important;
+        font-weight: bold;
+    }
+    
+    .league ul li
+    {
+        clear: both;
+        display: block;
+        height: 50px;
+        line-height: 50px;
+    }
+
+    .league ul li ul li
+    {
+        clear: none;
+        width: 25%;
+        float: left;
+        text-align: center;
+    }
+    
+    
+    
+/* Division Specific Styles */
+
+#premier_league ul
+{
+    background: #bbe6d0;
+    font-size: 30px;
+}
+
+#division_1 ul
+{
+    background: #e3d0a7;
+    font-size: 30px;
+}
+
+#division_2 ul
+{
+    background: #dbacac;
+    font-size: 30px;
+}
