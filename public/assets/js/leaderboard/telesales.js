@@ -13,8 +13,8 @@ function getReport()
             
             if (currentPlayer == 1)
             {
-                leagueDetails.push('<li class="league" id="premier_league"><ul>');
                 var leagueName = (currentLeague == 0) ? leagueZeroName : "Division " + currentLeague;
+                leagueDetails.push('<li class="league" id="' + leagueName.toLowerCase().split(' ').join('_') + '"><ul>');
                 leagueDetails.push("<li class='title'>" + leagueName + "</li>");
             }
             
