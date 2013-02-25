@@ -37,7 +37,7 @@ class Controller_User extends Controller_BaseHybrid
 					Auth_Group_SimpleGroup::instance()->get_name($user->group),
 					$user->email, 
 					$user->call_center->title,
-					(strlen($user->last_login) > 2) ? date("M j, Y g:i A", (int)$user->last_login) : "No previous Login",
+					(isset($user->last_login) > 2) ? date("M j, Y g:i A", (int)$user->last_login) : "No previous Login",
 				);
 				
 			}
