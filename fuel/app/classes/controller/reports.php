@@ -317,14 +317,14 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	public function post_save_telesales_values($center=null)
 	{
-	   
-	    $call_center = Model_Call_Center::query()->where('shortcode', $center)->get_one();
 	    
 	    
-	    $values = Model_Telesales_Report_Value::query()->where('center_id', $call_center->id)->get_one();
+	    $call_center = (is_null($center)) ? null : Model_Call_Center::query()->where('shortcode', $center)->get_one();
 	    
-	    print_r($values);
+	    $center_id = (is_null($center)) ? 0 : $call_center->id;
 	    
+	    $values = Model_Telesales_Report_Value::query()->where('center_id', $center_id)->get_one();
+	    	    
 	    $values->referral_points     = (float)Input::post('referral');
 	    $values->pack_out_points     = (float)Input::post('pack_out');
 	    $values->di_pound_point      = (float)Input::post('di_point');
