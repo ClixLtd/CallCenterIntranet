@@ -5,6 +5,11 @@ $(function () {
     $('#callCenter').change(function() {
         reportURL = ($(this).val() == "ALL") ? "/reports/get_telesales_report.json" : "/reports/get_telesales_report/" + $(this).val() + ".json";
         
+        newUrl = ($(this).val() == "ALL") ? '/reports/telesales_report/' : '/reports/telesales_report/'+$(this).val()+'/';
+        
+        currentCenter = $(this).val();
+        
+        window.history.pushState('', document.title, newUrl);
                 
         getReport();
     });
@@ -13,6 +18,35 @@ $(function () {
         var user = $(this).attr('rel');
         $('#subDetails' + user).slideToggle('fast');
     });
+    
+    
+    
+    
+    $('#submitNewValues').click(function() {
+        
+        
+        var postUrl = (currentCenter == "ALL") ? "/reports/save_telesales_values.json" : "/reports/save_telesales_values/" + currentCenter + ".json";
+
+        $.post(postUrl,
+		$('#centerValues').serialize(), 
+		function(data){
+			if (data['status'] == 'SUCCESS')
+			{
+			    alert('DONE');
+			}
+			else
+			{
+    			alert('FAIL');
+			}
+		});
+
+
+    });
+    
+    
+    
+    
+    
 
     function getReport()
     {

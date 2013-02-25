@@ -314,6 +314,16 @@ class Controller_Reports extends Controller_BaseHybrid
     	));
 	}
 	
+	
+	public function post_save_telesales_values($center=null)
+	{
+	
+    	return $this->response(array(
+    	    'status' => 'FAIL',
+    	));
+	}
+	
+	
 	public function action_telesales_report($center=null)
 	{
     	

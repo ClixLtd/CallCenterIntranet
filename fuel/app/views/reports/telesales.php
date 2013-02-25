@@ -43,7 +43,7 @@
 	   <article class="full-block">
 	
         	<section>
-        		<form>
+        		<form id="centerValues">
             		<dl>
         				<dt>
         					<label>Points Per Referral</label>
@@ -81,6 +81,12 @@
         				<dd>
         					<input type="text" class="small" name="payment_percentage" placeholder="First Payment Commission">
         				</dd>
+        				<dt>
+        				    <label>&nbsp;</label>
+        				</dt>
+        				<dd>
+        					<a href='#' class="button" id="submitNewValues">Save Values</a><br />
+        				</dd>
             		</dl>
         		</form>
         	</section>
@@ -91,6 +97,7 @@
 </article>
 
 <script>
+    var currentCenter = "<?php echo (is_null($center)) ? "ALL" : $center; ?>";
     var reportURL = "<?php echo $url;?>";
 </script>
 
