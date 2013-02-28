@@ -60,45 +60,17 @@ class Controller_Reports extends Controller_BaseHybrid
 
 
 
-    	$salesQuery = "SELECT  DR.leadpool_id
-                              , DR.short_code
-                              , DR.user_login
-                              , TCR.[Description]
-                              , D_CPD.NormalExpectedPayment/100 AS DI
-                              , DR.referral_date
-                              , CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
-                              , CASE
-            			         WHEN CC.ContactResult = 700
-            			           THEN CONVERT(varchar, CC.Appointment, 120)
-            			         ELSE
-            			           ''
-            			        END AS 'Call Back Date'
-            			      , (
-                			      	SELECT Top (1)
-                			      		ResponseVal
-                			      	FROM
-                			      		Debtsolv.dbo.Client_CustomQuestionResponses
-                			      	WHERE
-                			      		QuestionID = 10007
-                			      		AND ClientID = D_CLD.Client_ID
-                			      ) AS 'ProductType'
-                              , (CD.Forename + ' ' + CD.Surname) AS Name
-                          FROM Dialler.dbo.referrals AS DR
-                          LEFT JOIN LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
-                          LEFT JOIN LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
-                          LEFT JOIN LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
-                          LEFT JOIN Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
-                          LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
-                          LEFT JOIN LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
-                          WHERE DR.user_login IN (" . $salesinList . ")
-                              AND DR.short_code IN ('GAB','GBS')
-                              AND TCR.[Description] <> 'Referred'
-                              AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
-                              AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
-
-
-
-
+        $salesQuery = "SELECT 
+                              D_CLD.Client_ID
+                        	, D_URS.Login
+                        	, D_CLD.DatePackSent
+                        FROM
+                        	Debtsolv.dbo.Client_LeadData AS D_CLD
+                        LEFT JOIN
+                        	Debtsolv.dbo.Users AS D_URS ON D_CLD.TelesalesAgent = D_URS.ID
+                        WHERE
+                        	D_CLD.DatePackSent >= '2013-02-01'
+                        	AND D_URS.Login IN (".$salesinList.")";
 
 
 
@@ -117,6 +89,7 @@ class Controller_Reports extends Controller_BaseHybrid
         
         
         $reportResultsSeniors = DB::query($seniorQuery)->cached(60)->execute('debtsolv');
+        $reportResultsSales = DB::query($salesQuery)->cached(60)->execute('debtsolv');
         
         
         $point = array(
@@ -131,7 +104,10 @@ class Controller_Reports extends Controller_BaseHybrid
         }
     	
         
-        
+        foreach ($reportResultsSales AS $oneSenior)
+        {
+            $userList[$oneSenior['Login']]['points'] = (!isset($userList[$oneSenior['Login']]['points'])) ? $point['packOut'] : $userList[$oneSenior['Login']]['points'] + $point['packOut'];
+        }
         
         
         
@@ -152,10 +128,16 @@ class Controller_Reports extends Controller_BaseHybrid
                 {
                     $hqResults[] = array(
                         'name' => $salesstaff->first_name . " " . $salesstaff->last_name,
-                        'points' => $points['points'],
+                        'points' => (int)$points['points'],
+                    );
+                } 
+                else if ($salesstaff->center_id == 2)
+                {
+                    $pccResults[] = array(
+                        'name' => $salesstaff->first_name . " " . $salesstaff->last_name,
+                        'points' => (int)$points['points'],
                     );
                 }
-
 
             }
                         
@@ -163,7 +145,7 @@ class Controller_Reports extends Controller_BaseHybrid
         
     	
     	return $this->response(array(
-    	    'pcc'     => array(),
+    	    'pcc'     => $pccResults,
     	    'hq'      => $hqResults,
     	));
     	
