@@ -130,7 +130,27 @@ class Controller_Reports extends Controller_BaseHybrid
             $userList[$oneSenior['Login']]['points'] = (!isset($userList[$oneSenior['Login']]['points'])) ? $point['packIn'] : $userList[$oneSenior['Login']]['points'] + $point['packIn'];
         }
     	
-    	print_r($userList);
+        
+        
+        
+        
+        
+        
+        $pccResults = array();
+        $hqResults = array();
+        
+        foreach ($userList AS $username => $points)
+        {
+            $salesstaff = Model_Staff::query()->where('debtsolv_id', $username)->get_one();
+            if ($salesstaff->center_id == 1)
+            {
+                $hqResults[] = array(
+                    'name' => $salesstaff->first_name . " " . $salesstaff->last_name,
+                    'points' => $points,
+                );
+            }
+        }
+        
     	
     	return $this->response(array(
     	    'pcc'     => array(),
