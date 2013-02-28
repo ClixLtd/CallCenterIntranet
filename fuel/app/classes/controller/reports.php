@@ -152,7 +152,7 @@ class Controller_Reports extends Controller_BaseHybrid
                 {
                     $hqResults[] = array(
                         'name' => $salesstaff->first_name . " " . $salesstaff->last_name,
-                        'points' => $points,
+                        'points' => $points['points'],
                     );
                 }
 
