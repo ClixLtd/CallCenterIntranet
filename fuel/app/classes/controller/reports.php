@@ -9,8 +9,26 @@ class Controller_Reports extends Controller_BaseHybrid
 	}
 	
 	
+	public status function get_trading_places()
+	{
+	    // Get the PCC telesales Report
+    	$pccReport = Controller_Reports::generate_telesales_report('GBS', 999);
+    	
+    	// Get the HQ telesales Report
+    	$hqReport = Controller_Reports::generate_telesales_report('GAB', 999);
+    	
+    	
+    	
+    	
+    	
+    	return $this->response(array(
+    	    'pcc'     => $pccReport,
+    	    'hq'      => $hqReport,
+    	));
+    	
+	}
 	
-	public static function generate_telesales_report($center=null)
+	public static function generate_telesales_report($center=null, $_startDate=null, $_endDate=null, $valueScheme=null)
 	{
 	
 	    // Pull in the values required for all centers
@@ -31,13 +49,21 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	
 	    // Set the start and end dates
-	    $startDate = strtotime("1st February 2013");
-	    $endDate = strtotime("Today");
+	    $startDate = (is_null($_startDate)) ? date('Y-m-d', strtotime("1st February 2013")) : $_startDate;
+	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Today")) : $_endDate;
 	   
 	    $call_center = Model_Call_Center::query()->where('shortcode', $center)->get_one();
 	    
 	    
-	    $centerValue = (is_null($center)) ? $centerValues[0] : $centerValues[$call_center->id];
+	    if (is_null($valueScheme))
+	    {
+	       $centerValue = (is_null($center)) ? $centerValues[0] : $centerValues[$call_center->id];
+	    }
+	    else
+	    {
+	       $centerValue = $centerValues[$valueScheme];
+	    }
+	    
 	    
 	    // Get a list of debtsolv_id names for active users
 	    $staff = Model_Staff::query()->where( 'active', 1)->where('department_id', 1);
@@ -97,8 +123,8 @@ class Controller_Reports extends Controller_BaseHybrid
                           WHERE DR.user_login IN (" . $inList . ")
                               AND DR.short_code IN ('GAB','GBS')
                               AND TCR.[Description] <> 'Referred'
-                              AND CONVERT(date, DR.referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
-                              AND CONVERT(date, DR.referral_date, 105) <= '" . date('Y-m-d', $endDate) . "'";
+                              AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
+                              AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
     	
     	$reportQueryResolve = "SELECT  DR.leadpool_id
                       , DR.short_code
@@ -133,8 +159,8 @@ class Controller_Reports extends Controller_BaseHybrid
                   WHERE DR.user_login IN (" . $inList . ")
                       AND DR.short_code IN ('RESOLVE')
                       AND TCR.[Description] <> 'Referred'
-                      AND CONVERT(date, DR.referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
-                      AND CONVERT(date, DR.referral_date, 105) <= '" . date('Y-m-d', $endDate) . "'";
+                      AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
+                      AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
     	
     	// Find all the paid clients for this date range
     	$paymentsQuery = "SELECT  D_CD.ClientID
@@ -148,8 +174,8 @@ class Controller_Reports extends Controller_BaseHybrid
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
                               AND D_R.short_code IN ('GAB','GBS')
-                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . date('Y-m-d', $startDate) . "'
-                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . date('Y-m-d', $endDate) . "'";
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . $endDate . "'";
     	
     	// Find all the paid clients for this date range
     	$paymentsQueryResolve = "SELECT  D_CD.ClientID
@@ -163,8 +189,8 @@ class Controller_Reports extends Controller_BaseHybrid
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
                               AND D_R.short_code IN ('RESOLVE')
-                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . date('Y-m-d', $startDate) . "'
-                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . date('Y-m-d', $endDate) . "'";
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . $endDate . "'";
     	
     	// Loop through the results and create the report
     	$reportResultsGAB = DB::query($reportQuery)->cached(60)->execute('debtsolv');
