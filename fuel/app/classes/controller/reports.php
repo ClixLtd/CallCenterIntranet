@@ -12,10 +12,10 @@ class Controller_Reports extends Controller_BaseHybrid
 	public function get_trading_places()
 	{
 	    // Get the PCC telesales Report
-    	$pccReport = Controller_Reports::generate_telesales_report('GBS', 999);
+    	$pccReport = Controller_Reports::generate_telesales_report('GBS', '2013-02-01', '2013-02-28', 999);
     	
     	// Get the HQ telesales Report
-    	$hqReport = Controller_Reports::generate_telesales_report('GAB', 999);
+    	$hqReport = Controller_Reports::generate_telesales_report('GAB', '2013-02-01', '2013-02-28', 999);
     	
     	
     	
