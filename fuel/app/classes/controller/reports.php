@@ -148,6 +148,8 @@ class Controller_Reports extends Controller_BaseHybrid
             {
                 $salesstaff = $salesstaff->get_one();
                 
+                print "In If";
+                
                 if ($salesstaff->center_id == 1)
                 {
                     $hqResults[] = array(
