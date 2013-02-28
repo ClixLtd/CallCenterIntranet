@@ -9,7 +9,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	}
 	
 	
-	public status function get_trading_places()
+	public static function get_trading_places()
 	{
 	    // Get the PCC telesales Report
     	$pccReport = Controller_Reports::generate_telesales_report('GBS', 999);
