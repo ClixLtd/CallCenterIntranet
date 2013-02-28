@@ -46,7 +46,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	    // Convert the active users into a list ready for the "IN" query
 	    $seniorinList = "";
 	    $seniorinListCount = 0;
-	    foreach ($seniorsstaff AS $seniormember)
+	    foreach ($seniorstaff AS $seniormember)
 	    {
 	        $seniorinListCount++;
     	    $seniorinList .= "'" . $seniormember->dialler_id . "'";
