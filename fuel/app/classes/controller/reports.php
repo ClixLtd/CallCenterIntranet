@@ -35,7 +35,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	    }
 	    }
 	    
-	    $seniorstaff = Model_Staff::query()->where( 'active', 1)->where('department_id', 2)->where('center_id', 1);
+	    $seniorstaff = Model_Staff::query()->where( 'active', 1)->where('department_id', 2);
 	    if (!is_null($center))
 	    {
     	    $seniorstaff->where('center_id', $call_center->id);
@@ -141,18 +141,24 @@ class Controller_Reports extends Controller_BaseHybrid
         
         foreach ($userList AS $username => $points)
         {
-            $salesstaff = Model_Staff::query()->where('debtsolv_id', $username)->get_one();
+            $salesstaff = Model_Staff::query()->where('debtsolv_id', $username);
             
-            print_r($username . " - " . $salesstaff->center_id . "<br />");
-            
-            /* if ($salesstaff->center_id == 1)
+           
+            if ($salesstaff->count() > 0)
             {
-                $hqResults[] = array(
-                    'name' => $salesstaff->first_name . " " . $salesstaff->last_name,
-                    'points' => $points,
-                );
+                $salesstaff = $salesstaff->get_one();
+                
+                if ($salesstaff->center_id == 1)
+                {
+                    $hqResults[] = array(
+                        'name' => $salesstaff->first_name . " " . $salesstaff->last_name,
+                        'points' => $points,
+                    );
+                }
+
+
             }
-            */
+                        
         }
         
     	
