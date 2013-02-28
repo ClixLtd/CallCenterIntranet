@@ -18,7 +18,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	    {
     	    $salesstaff->where('center_id', $call_center->id);
 	    }
-	    $totalStaff = $staff->count();
+	    $totalStaff = $salesstaff->count();
 	    $salesstaff = $salesstaff->get();
 	    
 	    // Convert the active users into a list ready for the "IN" query
@@ -40,7 +40,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	    {
     	    $seniorstaff->where('center_id', $call_center->id);
 	    }
-	    $totalStaff = $staff->count();
+	    $totalStaff = $seniorstaff->count();
 	    $seniorstaff = $seniorstaff->get();
 	    
 	    // Convert the active users into a list ready for the "IN" query
