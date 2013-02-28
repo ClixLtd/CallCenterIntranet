@@ -166,7 +166,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	
     	return $this->response(array(
     	    'pcc'     => array(),
-    	    'hq'      => array(),
+    	    'hq'      => $hqResults,
     	));
     	
 	}
