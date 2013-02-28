@@ -143,7 +143,7 @@ class Controller_Reports extends Controller_BaseHybrid
         {
             $salesstaff = Model_Staff::query()->where('debtsolv_id', $username)->get_one();
             
-            print_r($username " - " $salesstaff->center_id . "<br />");
+            print_r($username . " - " . $salesstaff->center_id . "<br />");
             
             /* if ($salesstaff->center_id == 1)
             {
