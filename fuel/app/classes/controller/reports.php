@@ -112,6 +112,8 @@ class Controller_Reports extends Controller_BaseHybrid
         
         
         
+        arsort($userList);
+        
         $pccResults = array();
         $hqResults = array();
         
