@@ -9,7 +9,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	}
 	
 	
-	public function get_trading_places()
+	public function get_trading_places($center=null)
 	{
 
 	    // Get a list of debtsolv_id names for active users
