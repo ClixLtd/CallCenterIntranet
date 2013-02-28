@@ -114,11 +114,23 @@ class Controller_Reports extends Controller_BaseHybrid
                         	D_CLD.DatePackReceived >= '2013-02-01'
                         	AND D_URS.Login IN (".$seniorinList.")";
 
-
-                        	print $seniorQuery;
-
+        
+        
+        $reportResultsSeniors = DB::query($reportQuery)->cached(60)->execute('debtsolv');
+        
+        
+        $point = array(
+            'packOut' => 50,
+            'packIn' => 25,
+        );
+        
+        $userList = array();
+        foreach ($reportResultsSeniors AS $oneSenior)
+        {
+            $userList[$oneSenior['Login']]['points'] = (!isset($userList[$oneSenior]['points'])) ? $point['packIn'] : $userList[$oneSenior]['points'] + $point['packIn'];
+        }
     	
-    	
+    	print_r($userList);
     	
     	return $this->response(array(
     	    'pcc'     => array(),
