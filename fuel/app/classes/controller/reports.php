@@ -11,19 +11,118 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	public function get_trading_places()
 	{
-	    // Get the PCC telesales Report
-    	$pccReport = Controller_Reports::generate_telesales_report('GBS', '2013-02-01', '2013-02-28', 999);
+
+	    // Get a list of debtsolv_id names for active users
+	    $salesstaff = Model_Staff::query()->where( 'active', 1)->where('department_id', 1);
+	    if (!is_null($center))
+	    {
+    	    $salesstaff->where('center_id', $call_center->id);
+	    }
+	    $totalStaff = $staff->count();
+	    $salesstaff = $salesstaff->get();
+	    
+	    // Convert the active users into a list ready for the "IN" query
+	    $salesinList = "";
+	    $salesinListCount = 0;
+	    foreach ($salesstaff AS $salesmember)
+	    {
+	        $salesinListCount++;
+    	    $salesinList .= "'" . $salesmember->dialler_id . "'";
+    	    
+    	    if ($salesinListCount < $totalStaff)
+    	    {
+        	    $salesinList .= ",";
+    	    }
+	    }
+	    
+	    $seniorstaff = Model_Staff::query()->where( 'active', 1)->where('department_id', 2);
+	    if (!is_null($center))
+	    {
+    	    $seniorstaff->where('center_id', $call_center->id);
+	    }
+	    $totalStaff = $staff->count();
+	    $seniorstaff = $seniorstaff->get();
+	    
+	    // Convert the active users into a list ready for the "IN" query
+	    $seniorinList = "";
+	    $seniorinListCount = 0;
+	    foreach ($seniorsstaff AS $seniormember)
+	    {
+	        $seniorinListCount++;
+    	    $seniorinList .= "'" . $seniormember->dialler_id . "'";
+    	    
+    	    if ($seniorinListCount < $totalStaff)
+    	    {
+        	    $seniorinList .= ",";
+    	    }
+	    }
     	
-    	// Get the HQ telesales Report
-    	$hqReport = Controller_Reports::generate_telesales_report('GAB', '2013-02-01', '2013-02-28', 999);
-    	
-    	
+
+
+
+    	$salesQuery = "SELECT  DR.leadpool_id
+                              , DR.short_code
+                              , DR.user_login
+                              , TCR.[Description]
+                              , D_CPD.NormalExpectedPayment/100 AS DI
+                              , DR.referral_date
+                              , CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
+                              , CASE
+            			         WHEN CC.ContactResult = 700
+            			           THEN CONVERT(varchar, CC.Appointment, 120)
+            			         ELSE
+            			           ''
+            			        END AS 'Call Back Date'
+            			      , (
+                			      	SELECT Top (1)
+                			      		ResponseVal
+                			      	FROM
+                			      		Debtsolv.dbo.Client_CustomQuestionResponses
+                			      	WHERE
+                			      		QuestionID = 10007
+                			      		AND ClientID = D_CLD.Client_ID
+                			      ) AS 'ProductType'
+                              , (CD.Forename + ' ' + CD.Surname) AS Name
+                          FROM Dialler.dbo.referrals AS DR
+                          LEFT JOIN LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
+                          LEFT JOIN LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+                          LEFT JOIN LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                          LEFT JOIN Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+                          LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+                          LEFT JOIN LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
+                          WHERE DR.user_login IN (" . $salesinList . ")
+                              AND DR.short_code IN ('GAB','GBS')
+                              AND TCR.[Description] <> 'Referred'
+                              AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
+                              AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
+
+
+
+
+
+
+
+        $seniorQuery = "SELECT 
+                              D_CLD.Client_ID
+                        	, D_URS.Login
+                        	, D_CLD.DatePackReceived
+                        FROM
+                        	Debtsolv.dbo.Client_LeadData AS D_CLD
+                        LEFT JOIN
+                        	Debtsolv.dbo.Users AS D_URS ON D_CLD.Counsellor = D_URS.ID
+                        WHERE
+                        	D_CLD.DatePackReceived >= '2013-02-01'
+                        	AND D_URS.Login IN (".$seniorinList.")";
+
+
+                        	print $seniorQuery;
+
     	
     	
     	
     	return $this->response(array(
-    	    'pcc'     => $pccReport,
-    	    'hq'      => $hqReport,
+    	    'pcc'     => array(),
+    	    'hq'      => array(),
     	));
     	
 	}
