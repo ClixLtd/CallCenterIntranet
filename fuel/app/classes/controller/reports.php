@@ -116,7 +116,7 @@ class Controller_Reports extends Controller_BaseHybrid
 
         
         
-        $reportResultsSeniors = DB::query($reportQuery)->cached(60)->execute('debtsolv');
+        $reportResultsSeniors = DB::query($seniorQuery)->cached(60)->execute('debtsolv');
         
         
         $point = array(
