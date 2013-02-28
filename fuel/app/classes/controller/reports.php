@@ -142,13 +142,17 @@ class Controller_Reports extends Controller_BaseHybrid
         foreach ($userList AS $username => $points)
         {
             $salesstaff = Model_Staff::query()->where('debtsolv_id', $username)->get_one();
-            if ($salesstaff->center_id == 1)
+            
+            print_r($salesstaff);
+            
+            /* if ($salesstaff->center_id == 1)
             {
                 $hqResults[] = array(
                     'name' => $salesstaff->first_name . " " . $salesstaff->last_name,
                     'points' => $points,
                 );
             }
+            */
         }
         
     	
