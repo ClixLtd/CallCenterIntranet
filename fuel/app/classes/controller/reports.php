@@ -35,7 +35,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	    }
 	    }
 	    
-	    $seniorstaff = Model_Staff::query()->where( 'active', 1)->where('department_id', 2);
+	    $seniorstaff = Model_Staff::query()->where( 'active', 1)->where('department_id', 2)->where('center_id', 1);
 	    if (!is_null($center))
 	    {
     	    $seniorstaff->where('center_id', $call_center->id);
