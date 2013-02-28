@@ -127,7 +127,7 @@ class Controller_Reports extends Controller_BaseHybrid
         $userList = array();
         foreach ($reportResultsSeniors AS $oneSenior)
         {
-            $userList[$oneSenior['Login']]['points'] = (!isset($userList[$oneSenior]['points'])) ? $point['packIn'] : $userList[$oneSenior]['points'] + $point['packIn'];
+            $userList[$oneSenior['Login']]['points'] = (!isset($userList[$oneSenior['Login']]['points'])) ? $point['packIn'] : $userList[$oneSenior['Login']]['points'] + $point['packIn'];
         }
     	
     	print_r($userList);
