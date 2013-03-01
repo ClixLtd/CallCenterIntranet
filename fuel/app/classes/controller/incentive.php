@@ -8,6 +8,13 @@ class Controller_incentive extends Controller_BaseApi
 	public function get_trading_places($center=null)
 	{
 
+        $userList = array();
+        $allstaff = Model_Staff::query()->where( 'active', 1)->where('center_id', 1)->or_where('center_id', 2);
+        foreach ($allstaff AS $oneStaff)
+        {
+            $userList[$oneStaff->debtsolv_id]['points'] = 0;
+        }
+        
 	    // Get a list of debtsolv_id names for active users
 	    $salesstaff = Model_Staff::query()->where( 'active', 1)->where('department_id', 1);
 	    if (!is_null($center))
@@ -93,7 +100,6 @@ class Controller_incentive extends Controller_BaseApi
             'packIn' => 25,
         );
         
-        $userList = array();
         foreach ($reportResultsSeniors AS $oneSenior)
         {
             $userList[$oneSenior['Login']]['points'] = (!isset($userList[$oneSenior['Login']]['points'])) ? $point['packIn'] : $userList[$oneSenior['Login']]['points'] + $point['packIn'];
