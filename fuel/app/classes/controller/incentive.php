@@ -65,7 +65,7 @@ class Controller_incentive extends Controller_BaseApi
                         LEFT JOIN
                         	Debtsolv.dbo.Users AS D_URS ON D_CLD.TelesalesAgent = D_URS.ID
                         WHERE
-                        	D_CLD.DatePackSent >= '2013-02-01'
+                        	D_CLD.DatePackSent >= '2013-03-01'
                         	AND D_URS.Login IN (".$salesinList.")";
 
 
@@ -79,7 +79,7 @@ class Controller_incentive extends Controller_BaseApi
                         LEFT JOIN
                         	Debtsolv.dbo.Users AS D_URS ON D_CLD.Counsellor = D_URS.ID
                         WHERE
-                        	D_CLD.DatePackReceived >= '2013-02-01'
+                        	D_CLD.DatePackReceived >= '2013-03-01'
                         	AND D_URS.Login IN (".$seniorinList.")";
 
         
