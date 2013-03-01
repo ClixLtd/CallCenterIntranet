@@ -1261,7 +1261,16 @@ class Controller_Reports extends Controller_BaseHybrid
 				      		WHEN
 				      			DI_REF.full_name = ' '
 				      		THEN
-				      			'Not ''Ere'
+				      			(
+                			        SELECT Top (1)
+                			          Undersigned
+                			        FROM
+                			          Debtsolv.dbo.Users AS D_URS
+                			        LEFT JOIN
+                			          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
+                			        WHERE
+                			          D_CLD.LeadPoolReference = CLD.ClientID
+                			      )
 				      		ELSE
 				      			ISNULL(DI_REF.full_name,D_U.Undersigned)
 				      		END AS 'Telesales Agent',
