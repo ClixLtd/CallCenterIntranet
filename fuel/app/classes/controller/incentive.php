@@ -9,8 +9,8 @@ class Controller_incentive extends Controller_BaseApi
 	{
 
         $userList = array();
-        $allstaff = Model_Staff::query()->where( 'active', 1)->where('center_id', 1)->or_where('center_id', 2);
-        print_r($allstaff);
+        $allstaff = Model_Staff::query()->where( 'active', 1)->where('center_id', 1)->or_where('center_id', 2)->get();
+        //print_r($allstaff);
         foreach ($allstaff AS $oneStaff)
         {
             $userList[$oneStaff->debtsolv_id]['points'] = 0;
