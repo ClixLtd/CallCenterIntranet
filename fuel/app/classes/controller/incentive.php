@@ -31,7 +31,7 @@ class Controller_incentive extends Controller_BaseApi
 	    foreach ($salesstaff AS $salesmember)
 	    {
 	        $salesinListCount++;
-    	    $salesinList .= "'" . $salesmember->dialler_id . "'";
+    	    $salesinList .= "'" . $salesmember->debtsolv_id . "'";
     	    
     	    if ($salesinListCount < $totalStaff)
     	    {
@@ -53,7 +53,7 @@ class Controller_incentive extends Controller_BaseApi
 	    foreach ($seniorstaff AS $seniormember)
 	    {
 	        $seniorinListCount++;
-    	    $seniorinList .= "'" . $seniormember->dialler_id . "'";
+    	    $seniorinList .= "'" . $seniormember->debtsolv_id . "'";
     	    
     	    if ($seniorinListCount < $totalStaff)
     	    {
