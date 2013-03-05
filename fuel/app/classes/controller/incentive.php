@@ -76,7 +76,7 @@ class Controller_incentive extends Controller_BaseApi
                         	D_CLD.DatePackSent >= '2013-03-01'
                         	AND D_URS.Login IN (".$salesinList.")";
 
-        \Log::write('QUERY_OUTPUT', $salesQuery);
+        
 
         $seniorQuery = "SELECT 
                               D_CLD.Client_ID
