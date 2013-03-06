@@ -2032,7 +2032,7 @@ class Controller_Reports extends Controller_BaseHybrid
     				  }
 				
 				
-				    $all_paid[] = array(
+				    $all_paid['G'.$paid['ClientID']] = array(
 				        $paid['ClientID'],
 				        $paid['Name'],
 				        $paid['Lead Source'],
@@ -2072,7 +2072,7 @@ class Controller_Reports extends Controller_BaseHybrid
     				  }
 				
 				
-				    $all_paid[] = array(
+				    $all_paid['R'.$paid['ClientID']] = array(
 				        $paid['ClientID'],
 				        $paid['Name'],
 				        $paid['Lead Source'],
@@ -2090,7 +2090,6 @@ class Controller_Reports extends Controller_BaseHybrid
 					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
 				}
 				
-				$all_paid = array_unique($all_paid, SORT_REGULAR);
 				
 				
 				// arrange the totals
