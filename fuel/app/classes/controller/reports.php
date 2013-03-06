@@ -42,7 +42,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	    
 	    $seniorQueryGAB = "SELECT
                         	  D_URS.Login
-                        	, COUNT(CASE WHEN (D_CLD.DateAgreed >= '".$startDate."' AND D_CLD.DateAgreed < '".$endDate."') THEN Client_ID END) AS PackOut
+                        	, COUNT(CASE WHEN (D_CLD.DatePackSent >= '".$startDate."' AND D_CLD.DatePackSent < '".$endDate."') THEN Client_ID END) AS PackOut
                         	, COUNT(CASE WHEN (D_CLD.DatePackReceived >= '".$startDate."' AND D_CLD.DatePackReceived < '".$endDate."') THEN Client_ID END) AS PackIn
                         	, (SELECT COUNT(DD_CD.id) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN Debtsolv.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN Debtsolv.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID WHERE FirstPaymentDate >= '".$startDate."' AND FirstPaymentDate < '".$endDate."' AND Office = 'GAB' AND DD_URS.login = D_URS.Login) AS Paid
                         FROM
@@ -50,7 +50,7 @@ class Controller_Reports extends Controller_BaseHybrid
                         LEFT JOIN
                         	Debtsolv.dbo.Users AS D_URS ON D_CLD.Counsellor = D_URS.ID
                         WHERE
-                        	(D_CLD.DatePackReceived >= '".$startDate."' OR D_CLD.DateAgreed >= '".$endDate."')
+                        	(D_CLD.DatePackReceived >= '".$startDate."' OR D_CLD.DatePackSent >= '".$startDate."')
                         	AND D_URS.Login IN (".$inList.")
                         GROUP BY
                         	D_URS.Login";
@@ -74,7 +74,7 @@ class Controller_Reports extends Controller_BaseHybrid
         	);
     	}
     	
-    	return $returnResults;
+    	return $returnResults
     	
 	}
 	
