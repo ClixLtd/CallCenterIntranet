@@ -1990,15 +1990,15 @@ class Controller_Reports extends Controller_BaseHybrid
                                             LEFT JOIN
                                               BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD ON D_CLD.LeadPoolReference = CLD.ClientID
                                             LEFT JOIN
-                                              BS_LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
+                                              BS_Debtsolv_DM.dbo.Client_Contact AS CD ON D_CLD.Client_ID = CD.ID
                                             LEFT JOIN
                                               BS_LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
                                             LEFT JOIN
                                               BS_LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
-				  LEFT JOIN
-				    BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
-				  LEFT JOIN
-				    BS_Debtsolv_DM.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+                        				    LEFT JOIN
+                        				      BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+                        				    LEFT JOIN
+                        				    BS_Debtsolv_DM.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
                                             WHERE
                                               " . $paid_duration . "
                                               ". $call_center_choice ."
