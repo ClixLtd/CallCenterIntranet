@@ -8,6 +8,18 @@ class Controller_Reports extends Controller_BaseHybrid
 		print count(Goautodial\Live::closers());
 	}
 	
+	
+	
+	public static function generate_senior_report($center=null, $_startDate=null, $_endDate=null)
+	{
+    	
+    	$startDate = (is_null($_startDate)) ? date('Y-m-d', strtotime("1st February 2013")) : $_startDate;
+	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Today")) : $_endDate;
+    	
+	}
+	
+	
+	
 		
 	public static function generate_telesales_report($center=null, $_startDate=null, $_endDate=null, $valueScheme=null)
 	{
@@ -30,7 +42,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	
 	    // Set the start and end dates
-	    $startDate = (is_null($_startDate)) ? date('Y-m-d', strtotime("1st February 2013")) : $_startDate;
+	    $startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m'), 1, (int)date('Y'))) : $_startDate;
 	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Today")) : $_endDate;
 	   
 	    $call_center = Model_Call_Center::query()->where('shortcode', $center)->get_one();
