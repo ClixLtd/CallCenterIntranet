@@ -2001,6 +2001,7 @@ class Controller_Reports extends Controller_BaseHybrid
                         				    BS_Debtsolv_DM.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
                                             WHERE
                                               " . $paid_duration . "
+                                              AND D_CD.Office = 'RESOLVE'
 				")->cached(300)->execute('debtsolv');
 				
 				
