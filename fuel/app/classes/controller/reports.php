@@ -1938,7 +1938,7 @@ class Controller_Reports extends Controller_BaseHybrid
                                                 D_CD.ClientID
                                               , (CD.Forename + ' ' + CD.Surname) AS Name
                                               , LSO.[Description] AS 'Lead Source'
-											  , CLD.LeadRef2 AS Office
+											  , ISNULL(CLD.LeadRef2,'RESOLVE') AS Office
 											  , CASE
                             				      		WHEN
                             				      			DI_REF.full_name = ' '
