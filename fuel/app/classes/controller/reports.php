@@ -2090,7 +2090,7 @@ class Controller_Reports extends Controller_BaseHybrid
 					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
 				}
 				
-				
+				$all_paid = array_unique($all_paid, SORT_REGULAR);
 				
 				
 				// arrange the totals
