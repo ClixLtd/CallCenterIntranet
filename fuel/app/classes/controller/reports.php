@@ -40,7 +40,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	    }
 	    
 	    
-	    $seniorQuery = "SELECT
+	    $seniorQueryGAB = "SELECT
                         	  D_URS.Login
                         	, COUNT(CASE WHEN (D_CLD.DatePackSent >= '".$startDate."' AND D_CLD.DatePackSent < '".$endDate."') THEN Client_ID END) AS PackOut
                         	, COUNT(CASE WHEN (D_CLD.DatePackReceived >= '".$startDate."' AND D_CLD.DatePackReceived < '".$endDate."') THEN Client_ID END) AS PackIn
@@ -55,7 +55,24 @@ class Controller_Reports extends Controller_BaseHybrid
                         GROUP BY
                         	D_URS.Login";
 	    
-	    print $seniorQuery;
+	    $seniorResultsGAB = DB::query($seniorQueryGAB)->cached(60)->execute('debtsolv');
+    	
+    	
+    	$returnResults = array();
+    	foreach ($seniorResultsGAB AS $single)
+    	{
+        	$returnResults[$single['Login']] = array(
+        	   'login' => $single['Login'],
+        	   'PackOuts' => $single['PackOut'],
+        	   'PackIns' => $single['PackIn'],
+        	   'Paids' => $single['Paid'],
+        	   'HKtoPO' => 0,
+        	   'POtoPI' => (($single['PackIn'] / $single['PackOut']) * 100),
+        	   'PItoPC' => (($single['Paid'] / $single['PackIn']) * 100),
+        	   'POtoPC' => (($single['Paid'] / $single['PackOut']) * 100),
+        	   'HKtoPC' => 0,
+        	);
+    	}
     	
 	}
 	
@@ -65,7 +82,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	{
     	$reportArray = Controller_Reports::generate_senior_report($center);
     	
-    	
+    	print_r($reportArray);
     	
 	}
 	
