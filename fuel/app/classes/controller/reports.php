@@ -2032,7 +2032,7 @@ class Controller_Reports extends Controller_BaseHybrid
     				  }
 				
 				
-				    $all_paid[] = array(
+				    $all_paid[$paid['ClientID']] = array(
 				        $paid['ClientID'],
 				        $paid['Name'],
 				        $paid['Lead Source'],
