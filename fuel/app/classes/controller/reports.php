@@ -74,7 +74,7 @@ class Controller_Reports extends Controller_BaseHybrid
         	);
     	}
     	
-    	return $returnResults
+    	return $returnResults;
     	
 	}
 	
