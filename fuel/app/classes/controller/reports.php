@@ -2032,7 +2032,7 @@ class Controller_Reports extends Controller_BaseHybrid
     				  }
 				
 				
-				    $all_paid[$paid['ClientID']] = array(
+				    $all_paid['G'.$paid['ClientID']] = array(
 				        $paid['ClientID'],
 				        $paid['Name'],
 				        $paid['Lead Source'],
@@ -2072,7 +2072,7 @@ class Controller_Reports extends Controller_BaseHybrid
     				  }
 				
 				
-				    $all_paid[] = array(
+				    $all_paid['R'.$paid['ClientID']] = array(
 				        $paid['ClientID'],
 				        $paid['Name'],
 				        $paid['Lead Source'],
@@ -2088,6 +2088,13 @@ class Controller_Reports extends Controller_BaseHybrid
 				
     				$totals['paid']['count']++;
 					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
+				}
+				
+				
+				$all_paid_return = array();
+				foreach ($all_paid AS $allPaid)
+				{
+    				$all_paid_return[] = $allPaid;
 				}
 				
 				
@@ -2107,7 +2114,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	            	//'paid_test' => $paid_results,
 	            	
 	            	'paid' => array(
-	            	    "aaData" => $all_paid,
+	            	    "aaData" => $all_paid_return,
 	            	    "bPaginate" => false,
 		            	"bDestroy" => true,
 		            	"bProcessing" => true,
