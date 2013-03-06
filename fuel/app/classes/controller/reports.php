@@ -80,7 +80,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	public function action_senior_report($center=null)
 	{
-    	$reportArray = Controller_Reports::generate_senior_report($center);
+    	$reportArray = Controller_Reports::generate_senior_report($center, '2013-02-01', '2013-03-01');
     	
     	print_r($reportArray);
     	
