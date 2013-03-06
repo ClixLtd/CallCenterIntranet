@@ -13,8 +13,59 @@ class Controller_Reports extends Controller_BaseHybrid
 	public static function generate_senior_report($center=null, $_startDate=null, $_endDate=null)
 	{
     	
-    	$startDate = (is_null($_startDate)) ? date('Y-m-d', strtotime("1st February 2013")) : $_startDate;
-	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Today")) : $_endDate;
+    	$startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m'), 1, (int)date('Y'))) : $_startDate;
+	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Tomorrow")) : $_endDate;
+	    
+	    // Get a list of debtsolv_id names for active users
+	    $staff = Model_Staff::query()->where('active', 1)->where('department_id', 2);
+	    if (!is_null($center))
+	    {
+    	    $staff->where('center_id', $call_center->id);
+	    }
+	    $totalStaff = $staff->count();
+	    $staff = $staff->get();
+	    
+	    // Convert the active users into a list ready for the "IN" query
+	    $inList = "";
+	    $inListCount = 0;
+	    foreach ($staff AS $member)
+	    {
+	        $inListCount++;
+    	    $inList .= "'" . $member->dialler_id . "'";
+    	    
+    	    if ($inListCount < $totalStaff)
+    	    {
+        	    $inList .= ",";
+    	    }
+	    }
+	    
+	    
+	    $seniorQuery = "SELECT
+                        	  D_URS.Login
+                        	, COUNT(CASE WHEN (D_CLD.DatePackSent >= '".$startDate."' AND D_CLD.DatePackSent < '".$endDate."') THEN Client_ID END) AS PackOut
+                        	, COUNT(CASE WHEN (D_CLD.DatePackReceived >= '".$startDate."' AND D_CLD.DatePackReceived < '".$endDate."') THEN Client_ID END) AS PackIn
+                        	, (SELECT COUNT(DD_CD.id) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN Debtsolv.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN Debtsolv.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID WHERE FirstPaymentDate >= '".$startDate."' AND FirstPaymentDate < '".$endDate."' AND Office = 'GAB' AND DD_URS.login = D_URS.Login) AS Paid
+                        FROM
+                        	Debtsolv.dbo.Client_LeadData AS D_CLD
+                        LEFT JOIN
+                        	Debtsolv.dbo.Users AS D_URS ON D_CLD.Counsellor = D_URS.ID
+                        WHERE
+                        	(D_CLD.DatePackReceived >= '".$startDate."' OR D_CLD.DatePackSent >= '".$endDate."')
+                        	AND D_URS.Login IN (".$inList.")
+                        GROUP BY
+                        	D_URS.Login";
+	    
+	    print $seniorQuery;
+    	
+	}
+	
+	
+	
+	public function action_senior_report($center=null)
+	{
+    	$reportArray = Controller_Reports::generate_senior_report($center);
+    	
+    	
     	
 	}
 	
