@@ -80,6 +80,8 @@ return array(
 		 
 		 73   => array('name' => 'Manager', 'roles' => array('telesales_manager', 'manager', 'ppi', 'ppireports')),
 		 
+		 74	  => array('name' => 'Area Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'ppi', 'ppireports')),
+		 
 		 75	  => array('name' => 'Area Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi', 'ppireports')),
 		 
 		 80   => array('name' => 'Director', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi', 'ppireports')),
