@@ -2050,44 +2050,50 @@ class Controller_Reports extends Controller_BaseHybrid
 					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
 				}
 				
-				foreach ($paid_reports2 AS $paid)
+				
+				if ( is_null($center) || $center == 'RESOLVE' )
 				{
+    				
+    				foreach ($paid_reports2 AS $paid)
+    				{
+    				
+    				    $pdtype = "";
+    						  
+        				  switch ((string)$paid['ProductType']) {
+        				  
+        				      CASE '0':
+        				          $pdtype = "DR";
+        				          break;
+        				      CASE '1':
+        				          $pdtype = "DMPLUS";
+        				          break;
+        				      CASE '2':
+        				          $pdtype = "PPI";
+        				          break;
+        				      CASE '':
+        				          $pdtype = "";
+        				          break;
+        				  }
+    				
+    				
+    				    $all_paid['R'.$paid['ClientID']] = array(
+    				        $paid['ClientID'],
+    				        $paid['Name'],
+    				        $paid['Lead Source'],
+    				        $paid['Office'],
+    				        $paid['Telesales Agent'],
+    				        $paid['Consolidator'],
+    				        $paid['DI'],
+    				        $pdtype,
+    				        date("d-m-y", strtotime($paid['Referred Date'])),
+    				        date("d-m-y", strtotime($paid['Pack In Date'])),
+    				        date("d-m-y", strtotime($paid['FirstPaymentDate'])),
+    				    );
+    				
+        				$totals['paid']['count']++;
+    					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
+    				}
 				
-				    $pdtype = "";
-						  
-    				  switch ((string)$paid['ProductType']) {
-    				  
-    				      CASE '0':
-    				          $pdtype = "DR";
-    				          break;
-    				      CASE '1':
-    				          $pdtype = "DMPLUS";
-    				          break;
-    				      CASE '2':
-    				          $pdtype = "PPI";
-    				          break;
-    				      CASE '':
-    				          $pdtype = "";
-    				          break;
-    				  }
-				
-				
-				    $all_paid['R'.$paid['ClientID']] = array(
-				        $paid['ClientID'],
-				        $paid['Name'],
-				        $paid['Lead Source'],
-				        $paid['Office'],
-				        $paid['Telesales Agent'],
-				        $paid['Consolidator'],
-				        $paid['DI'],
-				        $pdtype,
-				        date("d-m-y", strtotime($paid['Referred Date'])),
-				        date("d-m-y", strtotime($paid['Pack In Date'])),
-				        date("d-m-y", strtotime($paid['FirstPaymentDate'])),
-				    );
-				
-    				$totals['paid']['count']++;
-					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
 				}
 				
 				
