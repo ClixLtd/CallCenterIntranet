@@ -65,8 +65,6 @@ class Controller_Reports extends Controller_BaseHybrid
                         	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
 	    
 	    
-	    print $seniorQueryGAB;
-	    
 	    $seniorResultsGAB = DB::query($seniorQueryGAB)->cached(60)->execute('debtsolv');
 	    $seniorCountResultsGAB = DB::query($seniorCountQueryGAB)->cached(60)->execute('debtsolv');
     	
@@ -107,9 +105,9 @@ class Controller_Reports extends Controller_BaseHybrid
         	$fullReturn[$member->debtsolv_id] = array(
         	    'fullName' => $member->first_name . " " . $member->last_name,
         	    'hotkeys'  => (isset($countResultsGAB[$member->debtsolv_id])) ? $countResultsGAB[$member->debtsolv_id] : 0,
-        	    'PackOuts' => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackOut'] : 0,
-        	    'PackIns'  => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackIn'] : 0,
-        	    'Paids'    => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['Paid'] : 0,
+        	    'PackOuts' => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackOuts'] : 0,
+        	    'PackIns'  => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackIns'] : 0,
+        	    'Paids'    => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['Paids'] : 0,
         	    'HKtoPO'   => 0,
         	    'POtoPI'   => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['POtoPI'] : 0,
         	    'PItoPC'   => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PItoPC'] : 0,
