@@ -1380,7 +1380,7 @@ Gregson and Brooke.');
                                                       D_PA.ClientID = " . $clientID . "
                                                       AND D_PA.AmountIn > 0
                                                     ORDER BY
-                                                      D_PA.TransactionDate ASC")->execute('debtsolv');
+                                                      D_PA.Date ASC")->execute('debtsolv');
             		
             		if ($di == 0)
             		{
@@ -1396,7 +1396,7 @@ Gregson and Brooke.');
                     		$runningTotal = $runningTotal + $payment['Paid'];
                     		if ($runningTotal >= $di AND is_null($firstPaymentDate))
                     		{
-                        		$firstPaymentDate = date('Y-m-d', strtotime($payment['TransactionDate']));
+                        		$firstPaymentDate = date('Y-m-d', strtotime($payment['Date']));
                     		}
                 		}
                 		
