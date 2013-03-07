@@ -64,6 +64,9 @@ class Controller_Reports extends Controller_BaseHybrid
                            WHERE
                         	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
 	    
+	    
+	    print $seniorQueryGAB;
+	    
 	    $seniorResultsGAB = DB::query($seniorQueryGAB)->cached(60)->execute('debtsolv');
 	    $seniorCountResultsGAB = DB::query($seniorCountQueryGAB)->cached(60)->execute('debtsolv');
     	
