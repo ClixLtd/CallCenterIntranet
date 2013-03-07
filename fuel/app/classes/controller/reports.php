@@ -108,11 +108,11 @@ class Controller_Reports extends Controller_BaseHybrid
         	    'PackOuts' => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackOuts'] : 0,
         	    'PackIns'  => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackIns'] : 0,
         	    'Paids'    => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['Paids'] : 0,
-        	    'HKtoPO'   => 0,
-        	    'POtoPI'   => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['POtoPI'] : 0,
-        	    'PItoPC'   => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PItoPC'] : 0,
-        	    'POtoPC'   => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['POtoPC'] : 0,
-        	    'HKtoPC'   => 0,
+        	    'HKtoPO'   => (isset($countResultsGAB[$member->debtsolv_id])) ? number_format((($resultsGAB[$member->debtsolv_id]['PackOuts'] / $countResultsGAB[$member->debtsolv_id])*100),2) : 0,
+        	    'POtoPI'   => (isset($resultsGAB[$member->debtsolv_id])) ? number_format($resultsGAB[$member->debtsolv_id]['POtoPI'],2) : 0,
+        	    'PItoPC'   => (isset($resultsGAB[$member->debtsolv_id])) ? number_format($resultsGAB[$member->debtsolv_id]['PItoPC'],2) : 0,
+        	    'POtoPC'   => (isset($resultsGAB[$member->debtsolv_id])) ? number_format($resultsGAB[$member->debtsolv_id]['POtoPC'],2) : 0,
+        	    'HKtoPC'   => (isset($countResultsGAB[$member->debtsolv_id])) ? number_format((($resultsGAB[$member->debtsolv_id]['Paids'] / $countResultsGAB[$member->debtsolv_id])*100),2) : 0,
         	);
     	}
     	
