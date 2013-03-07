@@ -42,17 +42,17 @@ class Controller_Reports extends Controller_BaseHybrid
 	    
 	    $seniorQueryGAB = "SELECT
                             	  D_URS.Login
-                            	, COUNT(CASE WHEN (D_CLD.DatePackSent >= '2013-02-01' AND D_CLD.DatePackSent < '2013-03-01') THEN Client_ID END) AS PackOut
-                            	, COUNT(CASE WHEN (D_CLD.DatePackReceived >= '2013-02-01' AND D_CLD.DatePackReceived < '2013-03-01') THEN Client_ID END) AS PackIn
-                            	, (SELECT COUNT(DD_CD.id) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN Debtsolv.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN Debtsolv.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID WHERE FirstPaymentDate >= '2013-02-01' AND FirstPaymentDate < '2013-03-01' AND Office = 'GAB' AND DD_URS.login = D_URS.Login) AS Paid
-                            	, ISNULL((SELECT SUM((D_CPD.NormalExpectedPayment/100)) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN Debtsolv.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN Debtsolv.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON DD_CLD.Client_ID = D_CPD.ClientID WHERE DD_CD.FirstPaymentDate >= '2013-02-01' AND DD_CD.FirstPaymentDate < '2013-03-01' AND Office = 'GAB' AND DD_URS.login = D_URS.Login),0) AS Income
+                            	, COUNT(CASE WHEN (D_CLD.DatePackSent >= '".$startDate."' AND D_CLD.DatePackSent < '".$endDate."') THEN Client_ID END) AS PackOut
+                            	, COUNT(CASE WHEN (D_CLD.DatePackReceived >= '".$startDate."' AND D_CLD.DatePackReceived < '".$endDate."') THEN Client_ID END) AS PackIn
+                            	, (SELECT COUNT(DD_CD.id) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN Debtsolv.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN Debtsolv.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID WHERE FirstPaymentDate >= '".$startDate."' AND FirstPaymentDate < '".$endDate."' AND Office = 'GAB' AND DD_URS.login = D_URS.Login) AS Paid
+                            	, ISNULL((SELECT SUM((D_CPD.NormalExpectedPayment/100)) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN Debtsolv.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN Debtsolv.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON DD_CLD.Client_ID = D_CPD.ClientID WHERE DD_CD.FirstPaymentDate >= '".$startDate."' AND DD_CD.FirstPaymentDate < '".$endDate."' AND Office = 'GAB' AND DD_URS.login = D_URS.Login),0) AS Income
                             FROM
                             	Debtsolv.dbo.Client_LeadData AS D_CLD
                             LEFT JOIN
                             	Debtsolv.dbo.Users AS D_URS ON D_CLD.Counsellor = D_URS.ID
                             WHERE
-                            	(D_CLD.DatePackReceived >= '2013-02-01' OR D_CLD.DatePackSent >= '2013-02-01')
-                            	AND D_URS.Login IN ('sraja','zbloch','mseremak','nburke','sgharda','kwallwork','djenkins','jtayar','mwarren','ahigginbotham','kmolloy','abarnes','fchoudhury','zidris','abeech','dgordon','eharding','gfoster','hbates','jcurtis','ktilley','lmartin','lprice','mibrar','srafiq','sdennis')
+                            	(D_CLD.DatePackReceived >= '".$startDate."' OR D_CLD.DatePackSent >= '".$startDate."')
+                            	AND D_URS.Login IN (".$inList.")
                             GROUP BY
                             	D_URS.Login";
 	    
@@ -65,8 +65,6 @@ class Controller_Reports extends Controller_BaseHybrid
                            WHERE
                         	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
 	    
-	    
-	    print $seniorQueryGAB;
 	    
 	    $seniorResultsGAB = DB::query($seniorQueryGAB)->cached(60)->execute('debtsolv');
 	    $seniorCountResultsGAB = DB::query($seniorCountQueryGAB)->cached(60)->execute('debtsolv');
@@ -93,7 +91,6 @@ class Controller_Reports extends Controller_BaseHybrid
     	{
         	$countResultsGAB[$single['Senior']] = (isset($countResultsGAB[$single['Senior']])) ? $countResultsGAB[$single['Senior']] + 1 : 1;
     	}
-    	
     	
     	
     	
