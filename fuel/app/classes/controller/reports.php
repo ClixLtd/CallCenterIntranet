@@ -65,6 +65,8 @@ class Controller_Reports extends Controller_BaseHybrid
                         	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
 	    
 	    
+	    print $seniorQueryGAB;
+	    
 	    $seniorResultsGAB = DB::query($seniorQueryGAB)->cached(60)->execute('debtsolv');
 	    $seniorCountResultsGAB = DB::query($seniorCountQueryGAB)->cached(60)->execute('debtsolv');
     	
@@ -77,11 +79,9 @@ class Controller_Reports extends Controller_BaseHybrid
         	   'PackOuts' => $single['PackOut'],
         	   'PackIns'  => $single['PackIn'],
         	   'Paids'    => $single['Paid'],
-        	   'HKtoPO'   => 0,
         	   'POtoPI'   => ($single['PackOut'] == 0) ? 0 : (($single['PackIn'] / $single['PackOut']) * 100),
         	   'PItoPC'   => ($single['PackIn'] == 0) ? 0 : (($single['Paid'] / $single['PackIn']) * 100),
         	   'POtoPC'   => ($single['PackOut'] == 0) ? 0 : (($single['Paid'] / $single['PackOut']) * 100),
-        	   'HKtoPC'   => 0,
         	);
     	}
     	
