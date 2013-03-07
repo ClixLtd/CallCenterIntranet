@@ -77,9 +77,9 @@ class Controller_Reports extends Controller_BaseHybrid
         	   'PackIns'  => $single['PackIn'],
         	   'Paids'    => $single['Paid'],
         	   'HKtoPO'   => 0,
-        	   'POtoPI'   => (isset($single['PackOut'])) ? (($single['PackIn'] / $single['PackOut']) * 100) : 0,
-        	   'PItoPC'   => (isset($single['PackIn'])) ? (($single['Paid'] / $single['PackIn']) * 100) : 0,
-        	   'POtoPC'   => (isset($single['PackOut'])) ? (($single['Paid'] / $single['PackOut']) * 100) : 0,
+        	   'POtoPI'   => (isset($single['PackOut'] == 0)) ? 0 : (($single['PackIn'] / $single['PackOut']) * 100),
+        	   'PItoPC'   => (isset($single['PackIn'] == 0)) ? 0 : (($single['Paid'] / $single['PackIn']) * 100),
+        	   'POtoPC'   => (isset($single['PackOut'] == 0)) ? 0 : (($single['Paid'] / $single['PackOut']) * 100),
         	   'HKtoPC'   => 0,
         	);
     	}
