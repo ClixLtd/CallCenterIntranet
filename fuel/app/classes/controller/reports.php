@@ -71,7 +71,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	$resultsGAB = array();
     	foreach ($seniorResultsGAB AS $single)
     	{
-        	$returnResults[$single['Login']] = array(
+        	$resultsGAB[$single['Login']] = array(
         	   'login'    => $single['Login'],
         	   'PackOuts' => $single['PackOut'],
         	   'PackIns'  => $single['PackIn'],
