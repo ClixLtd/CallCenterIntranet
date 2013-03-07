@@ -103,14 +103,14 @@ class Controller_Reports extends Controller_BaseHybrid
     	{
         	$fullReturn[$member->debtsolv_id] = array(
         	    'fullName' => $member->first_name . " " . $member->last_name,
-        	    'hotkeys'  => $countResultsGAB[$member->debtsolv_id],
-        	    'PackOuts' => $resultsGAB[$member->debtsolv_id]['PackOut'],
-        	    'PackIns'  => $resultsGAB[$member->debtsolv_id]['PackIn'],
-        	    'Paids'    => $resultsGAB[$member->debtsolv_id]['Paid'],
+        	    'hotkeys'  => (isset($countResultsGAB[$member->debtsolv_id])) ? $countResultsGAB[$member->debtsolv_id] : 0,
+        	    'PackOuts' => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackOut'] : 0,
+        	    'PackIns'  => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackIn'] : 0,
+        	    'Paids'    => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['Paid'] : 0,
         	    'HKtoPO'   => 0,
-        	    'POtoPI'   => $resultsGAB[$member->debtsolv_id]['POtoPI'],
-        	    'PItoPC'   => $resultsGAB[$member->debtsolv_id]['PItoPC'],
-        	    'POtoPC'   => $resultsGAB[$member->debtsolv_id]['POtoPC'],
+        	    'POtoPI'   => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['POtoPI'] : 0,
+        	    'PItoPC'   => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PItoPC'] : 0,
+        	    'POtoPC'   => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['POtoPC'] : 0,
         	    'HKtoPC'   => 0,
         	);
     	}
