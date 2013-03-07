@@ -1373,7 +1373,7 @@ Gregson and Brooke.');
             		
             		$totalPayments = \DB::query("   SELECT
                                                         D_PA.AmountIn AS Paid
-                                                      , D_PA.TransactionDate
+                                                      , D_PA.Date
                                                     FROM
                                                       ".$debtsolv.".Payment_Account AS D_PA
                                                     WHERE 
