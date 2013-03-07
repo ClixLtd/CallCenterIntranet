@@ -31,7 +31,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	    foreach ($staff AS $member)
 	    {
 	        $inListCount++;
-    	    $inList .= "'" . $member->dialler_id . "'";
+    	    $inList .= "'" . $member->debtsolv_id . "'";
     	    
     	    if ($inListCount < $totalStaff)
     	    {
@@ -72,15 +72,15 @@ class Controller_Reports extends Controller_BaseHybrid
     	foreach ($seniorResultsGAB AS $single)
     	{
         	$returnResults[$single['Login']] = array(
-        	   'login' => $single['Login'],
+        	   'login'    => $single['Login'],
         	   'PackOuts' => $single['PackOut'],
-        	   'PackIns' => $single['PackIn'],
-        	   'Paids' => $single['Paid'],
-        	   'HKtoPO' => 0,
-        	   'POtoPI' => (($single['PackIn'] / $single['PackOut']) * 100),
-        	   'PItoPC' => (($single['Paid'] / $single['PackIn']) * 100),
-        	   'POtoPC' => (($single['Paid'] / $single['PackOut']) * 100),
-        	   'HKtoPC' => 0,
+        	   'PackIns'  => $single['PackIn'],
+        	   'Paids'    => $single['Paid'],
+        	   'HKtoPO'   => 0,
+        	   'POtoPI'   => (($single['PackIn'] / $single['PackOut']) * 100),
+        	   'PItoPC'   => (($single['Paid'] / $single['PackIn']) * 100),
+        	   'POtoPC'   => (($single['Paid'] / $single['PackOut']) * 100),
+        	   'HKtoPC'   => 0,
         	);
     	}
     	
@@ -93,7 +93,35 @@ class Controller_Reports extends Controller_BaseHybrid
     	
     	
     	
-    	return $countResultsGAB;
+    	
+    	
+    	
+    	
+    	
+    	$fullReturn = array();
+    	foreach ($staff AS $member)
+    	{
+        	$fullReturn[$member->debtsolv_id] = array(
+        	    'fullName' => $member->first_name . " " . $member->last_name,
+        	    'hotkeys'  => $countResultsGAB[$member->debtsolv_id],
+        	    'PackOuts' => $resultsGAB[$member->debtsolv_id]['PackOut'],
+        	    'PackIns'  => $resultsGAB[$member->debtsolv_id]['PackIn'],
+        	    'Paids'    => $resultsGAB[$member->debtsolv_id]['Paid'],
+        	    'HKtoPO'   => 0,
+        	    'POtoPI'   => $resultsGAB[$member->debtsolv_id]['POtoPI'],
+        	    'PItoPC'   => $resultsGAB[$member->debtsolv_id]['PItoPC'],
+        	    'POtoPC'   => $resultsGAB[$member->debtsolv_id]['POtoPC'],
+        	    'HKtoPC'   => 0,
+        	);
+    	}
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	return $fullReturn;
     	
 	}
 	
