@@ -70,8 +70,19 @@ class Controller_Reports extends Controller_BaseHybrid
                         	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
 	    
 	    
+	    $seniorCountQueryRESOLVE = "SELECT
+                	   ISNULL((SELECT TOP 1 D_U.Login FROM BS_Leadpool_DM.dbo.CampaignContactAccess AS CCA LEFT JOIN BS_Debtsolv_DM.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
+                   FROM 
+                	   [Dialler].[dbo].[referrals] AS D_R
+                   LEFT JOIN
+                	   BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON D_R.leadpool_id = CC.ClientID
+                   WHERE
+                	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
+	    
+	    
 	    $seniorResultsGAB = DB::query($seniorQueryGAB)->cached(60)->execute('debtsolv');
 	    $seniorCountResultsGAB = DB::query($seniorCountQueryGAB)->cached(60)->execute('debtsolv');
+	    $seniorCountResultsRESOLVE = DB::query($seniorCountQueryRESOLVE)->cached(60)->execute('debtsolv');
     	
     	
     	$resultsGAB = array();
@@ -92,6 +103,11 @@ class Controller_Reports extends Controller_BaseHybrid
     	
     	$countResultsGAB = array();
     	foreach ($seniorCountResultsGAB AS $single)
+    	{
+        	$countResultsGAB[$single['Senior']] = (isset($countResultsGAB[$single['Senior']])) ? $countResultsGAB[$single['Senior']] + 1 : 1;
+    	}
+    	
+    	foreach ($seniorCountResultsRESOLVE AS $single)
     	{
         	$countResultsGAB[$single['Senior']] = (isset($countResultsGAB[$single['Senior']])) ? $countResultsGAB[$single['Senior']] + 1 : 1;
     	}
