@@ -166,7 +166,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	$all_call_centers = Model_Call_Center::find('all');
     	
     	$this->template->title = 'Reports &raquo; Seniors';
-		$this->template->content = View::forge('reports/telesales', array(
+		$this->template->content = View::forge('reports/senior', array(
 		    'view_all' => $view_all,
 		    'all_call_centers' => $all_call_centers,
 		    'center' => $center,
