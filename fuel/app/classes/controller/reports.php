@@ -122,7 +122,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	$sort = array();
     	foreach ($fullReturn AS $key => $row)
     	{
-            $sort[$key] = $row['PpHK'];
+            $sort[$key] = (int)str_replace("&pound;", "", $row['PpHK']);
     	}
     	
     	array_multisort($sort, SORT_DESC, $fullReturn);
