@@ -1415,6 +1415,24 @@ Gregson and Brooke.');
         		
         		
     		}
+    		
+    		
+            /*
+            
+            DELETE [Dialler].[dbo].[client_dates] 
+            FROM [Dialler].[dbo].[client_dates]
+            LEFT OUTER JOIN (
+               SELECT MIN(id) as id, ClientID, FirstPaymentDate, Office
+               FROM [Dialler].[dbo].[client_dates] 
+               GROUP BY ClientID, FirstPaymentDate, Office
+            ) as KeepRows ON
+               [Dialler].[dbo].[client_dates].id = KeepRows.id
+            WHERE
+               KeepRows.id IS NULL
+               
+            */
+    		
+    		
         		\Log::write('ADAM', "First Payment Table updated");
     		
 		}
