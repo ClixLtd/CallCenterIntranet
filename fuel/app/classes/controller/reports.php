@@ -69,7 +69,33 @@ class Controller_Reports extends Controller_BaseHybrid
                            WHERE
                         	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
 	    
+	    $seniorQueryRESOLVE = "SELECT
+                            	  D_URS.Login
+                            	, COUNT(CASE WHEN (D_CLD.DatePackSent >= '".$startDate."' AND D_CLD.DatePackSent < '".$endDate."') THEN Client_ID END) AS PackOut
+                            	, COUNT(CASE WHEN (D_CLD.DatePackReceived >= '".$startDate."' AND D_CLD.DatePackReceived < '".$endDate."') THEN Client_ID END) AS PackIn
+                            	, (SELECT COUNT(DISTINCT DD_CD.ClientID) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN BS_Debtsolv_DM.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN BS_Debtsolv_DM.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID WHERE FirstPaymentDate >= '".$startDate."' AND FirstPaymentDate < '".$endDate."' AND Office = 'RESOLVE' AND DD_URS.login = D_URS.Login) AS Paid
+                            	, ISNULL((SELECT SUM((D_CPD.NormalExpectedPayment/100)) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN BS_Debtsolv_DM.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN BS_Debtsolv_DM.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID LEFT JOIN BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON DD_CLD.Client_ID = D_CPD.ClientID WHERE DD_CD.FirstPaymentDate >= '".$startDate."' AND DD_CD.FirstPaymentDate < '".$endDate."' AND Office = 'RESOLVE' AND DD_URS.login = D_URS.Login),0) AS Income
+                            FROM
+                            	BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD
+                            LEFT JOIN
+                            	BS_Debtsolv_DM.dbo.Users AS D_URS ON D_CLD.Counsellor = D_URS.ID
+                            WHERE
+                            	(D_CLD.DatePackReceived >= '".$startDate."' OR D_CLD.DatePackSent >= '".$startDate."')
+                            	AND D_URS.Login IN (".$inList.")
+                            GROUP BY
+                            	D_URS.Login";
 	    
+	    $seniorCountQueryGAB = "SELECT
+                        	   ISNULL((SELECT TOP 1 D_U.Login FROM Leadpool_DM.dbo.CampaignContactAccess AS CCA LEFT JOIN Debtsolv.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
+                           FROM 
+                        	   [Dialler].[dbo].[referrals] AS D_R
+                           LEFT JOIN
+                        	   LeadPool_DM.dbo.Campaign_Contacts AS CC ON D_R.leadpool_id = CC.ClientID
+                           WHERE
+                        	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
+                        	   
+                        	   
+                        	   
 	    $seniorCountQueryRESOLVE = "SELECT
                 	   ISNULL((SELECT TOP 1 D_U.Login FROM BS_Leadpool_DM.dbo.CampaignContactAccess AS CCA LEFT JOIN BS_Debtsolv_DM.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
                    FROM 
@@ -82,11 +108,27 @@ class Controller_Reports extends Controller_BaseHybrid
 	    
 	    $seniorResultsGAB = DB::query($seniorQueryGAB)->cached(60)->execute('debtsolv');
 	    $seniorCountResultsGAB = DB::query($seniorCountQueryGAB)->cached(60)->execute('debtsolv');
+	    
+	    $seniorResultsRESOLVE = DB::query($seniorQueryRESOLVE)->cached(60)->execute('debtsolv');
 	    $seniorCountResultsRESOLVE = DB::query($seniorCountQueryRESOLVE)->cached(60)->execute('debtsolv');
     	
     	
     	$resultsGAB = array();
     	foreach ($seniorResultsGAB AS $single)
+    	{
+        	$resultsGAB[$single['Login']] = array(
+        	   'login'    => $single['Login'],
+        	   'PackOuts' => $single['PackOut'],
+        	   'PackIns'  => $single['PackIn'],
+        	   'Paids'    => $single['Paid'],
+        	   'Revenue'  => $single['Income'],
+        	   'POtoPI'   => ($single['PackOut'] == 0) ? 0 : (($single['PackIn'] / $single['PackOut']) * 100),
+        	   'PItoPC'   => ($single['PackIn'] == 0) ? 0 : (($single['Paid'] / $single['PackIn']) * 100),
+        	   'POtoPC'   => ($single['PackOut'] == 0) ? 0 : (($single['Paid'] / $single['PackOut']) * 100),
+        	);
+    	}
+    	
+        foreach ($seniorResultsRESOLVE AS $single)
     	{
         	$resultsGAB[$single['Login']] = array(
         	   'login'    => $single['Login'],
