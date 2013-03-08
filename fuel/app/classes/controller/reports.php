@@ -107,7 +107,7 @@ class Controller_Reports extends Controller_BaseHybrid
         	    'PackOuts' => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackOuts'] : 0,
         	    'PackIns'  => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackIns'] : 0,
         	    'Paids'    => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['Paids'] : 0,
-        	    'Revenue'    => (isset($resultsGAB[$member->debtsolv_id])) ? "&pound;".$resultsGAB[$member->debtsolv_id]['Revenue'] : "&pound;0.00",
+        	    'Revenue'    => (isset($resultsGAB[$member->debtsolv_id])) ? "&pound;".number_format($resultsGAB[$member->debtsolv_id]['Revenue'],2) : "&pound;0.00",
         	    'HKtoPO'   => (isset($countResultsGAB[$member->debtsolv_id])) ? number_format((($resultsGAB[$member->debtsolv_id]['PackOuts'] / $countResultsGAB[$member->debtsolv_id])*100),2)."%" : "0.00%",
         	    'POtoPI'   => (isset($resultsGAB[$member->debtsolv_id])) ? number_format($resultsGAB[$member->debtsolv_id]['POtoPI'],2)."%" : "0.00%",
         	    'PItoPC'   => (isset($resultsGAB[$member->debtsolv_id])) ? number_format($resultsGAB[$member->debtsolv_id]['PItoPC'],2)."%" : "0.00%",
