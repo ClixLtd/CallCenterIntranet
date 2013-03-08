@@ -155,11 +155,6 @@ class Controller_Reports extends Controller_BaseHybrid
     	}
     	
     	
-    	
-    	
-    	
-    	
-    	
     	$fullReturn = array();
     	foreach ($staff AS $member)
     	{
