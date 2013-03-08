@@ -227,6 +227,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	{
     	
     	if (Auth::has_access('reports.disposition'))
+    	{
     	
         	if (Auth::has_access('reports.all_centers')) {
             	$view_all = TRUE;
