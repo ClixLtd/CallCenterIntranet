@@ -27,6 +27,12 @@ class Controller_Reports extends Controller_BaseHybrid
     	    $staff->where('center_id', $call_center->id);
 	    }
 	    $totalStaff = $staff->count();
+	    
+	    if ((int)$totalStaff < 1)
+	    {
+    	    return null;
+	    }
+	    
 	    $staff = $staff->get();
 	    
 	    // Convert the active users into a list ready for the "IN" query
@@ -193,7 +199,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	public function get_get_senior_report($center=null)
 	{
-    	$reportArray = Controller_Reports::generate_senior_report($center, '2013-02-01', '2013-03-01');
+    	$reportArray = Controller_Reports::generate_senior_report($center);
     	return $this->response(array(
     	    'titles'     => array(
     	        'Name',
@@ -211,7 +217,7 @@ class Controller_Reports extends Controller_BaseHybrid
     	        'Revenue',
     	        '&pound; per HK',
     	    ),
-    	    'report'     => $reportArray,
+    	    'report'     => (is_null($reportArray)) ? array() : $reportArray,
     	));
 	}
 	
