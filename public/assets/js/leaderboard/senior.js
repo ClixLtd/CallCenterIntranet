@@ -22,7 +22,7 @@ function getReport()
                 leagueDetails.push("<li class='title'>" + leagueName + "</li>");
             }
             
-            leagueDetails.push("<li><ul><li>" + val['name'] + "</li><li>" + val['referrals'] + "</li><li>" + val['packouts'] + "</li><li>" + val['points'] + "</li></ul></li>");
+            leagueDetails.push("<li><ul><li>" + val['fullName'] + "</li><li>" + val['hotkeys'] + "</li><li>" + val['Paids'] + "</li><li>" + val['PpHK'] + "</li></ul></li>");
             
             
             if (currentPlayer == playersPerLeague && currentLeague < leagueNames.length-1)
@@ -61,7 +61,7 @@ $(function () {
     }, 30000);
     
     $('#callCenter').change(function() {
-        reportURL = ($(this).val() == "ALL") ? "/reports/get_telesales_report.json" : "/reports/get_telesales_report/" + $(this).val() + ".json";
+        reportURL = ($(this).val() == "ALL") ? "/reports/get_senior_report.json" : "/reports/get_senior_report/" + $(this).val() + ".json";
         
                 
         getReport();
