@@ -16,6 +16,10 @@ class Controller_Reports extends Controller_BaseHybrid
     	$startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m'), 1, (int)date('Y'))) : $_startDate;
 	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Tomorrow")) : $_endDate;
 	    
+	    
+	    $call_center = Model_Call_Center::query()->where('shortcode', $center)->get_one();
+	    
+	    
 	    // Get a list of debtsolv_id names for active users
 	    $staff = Model_Staff::query()->where('active', 1)->where('department_id', 2);
 	    if (!is_null($center))
