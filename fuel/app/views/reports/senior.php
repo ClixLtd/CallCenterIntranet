@@ -13,14 +13,7 @@
 
 	<div class="article-container">
 		<header>
-			<h2>Telesales Report</h2>
-			
-			<nav>
-				<ul class="tab-switch">
-					<li><a class="default-tab" href="#telesalesListTab">Full Report</a></li>
-					<li><a href="#centerSettings">Center Settings</a></li>
-				</ul>
-			</nav>
+			<h2>Senior Report</h2>
 			
 		</header>
 	</div>
@@ -38,59 +31,6 @@
         	
 	</div>
 	
-	<div class="tab" id="centerSettings">
-	
-        	<section>
-        		<form id="centerValues">
-            		<dl>
-        				<dt>
-        					<label>Points Per Referral</label>
-        				</dt>
-        				<dd>
-        					<input type="text" class="small" name="referral" placeholder="Referral Points">
-        				</dd>
-        				<dt>
-        					<label>Points Per Pack Out</label>
-        				</dt>
-        				<dd>
-        					<input type="text" class="small" name="pack_out" placeholder="Pack Out Points">
-        				</dd>
-        				<dt>
-        					<label>Points per Pound of DI</label>
-        				</dt>
-        				<dd>
-        					<input type="text" class="small" name="di_point" placeholder="Points per Pound">
-        				</dd>
-        				<dt>
-        					<label>Commission per Pack Out (£)</label>
-        				</dt>
-        				<dd>
-        					<input type="text" class="small" name="pack_out_commission" placeholder="Pack Out Commission">
-        				</dd>
-        				<dt>
-        					<label>Special Bonus for Pack Out (£)</label>
-        				</dt>
-        				<dd>
-        					<input type="text" class="small" name="pack_out_bonus" placeholder="Pack Out Bonus">
-        				</dd>
-        				<dt>
-        					<label>Commission for First Payment (%)</label>
-        				</dt>
-        				<dd>
-        					<input type="text" class="small" name="payment_percentage" placeholder="First Payment Commission">
-        				</dd>
-        				<dt>
-        				    <label>&nbsp;</label>
-        				</dt>
-        				<dd>
-        					<a href='#' class="button" id="submitNewValues">Save Values</a><br />
-        				</dd>
-            		</dl>
-        		</form>
-        	</section>
-	</div>
-	
-
 </article>
 
 <script>
