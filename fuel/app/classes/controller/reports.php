@@ -13,10 +13,6 @@ class Controller_Reports extends Controller_BaseHybrid
 	public static function generate_senior_report($center=null, $_startDate=null, $_endDate=null)
 	{
     	
-    	if ($center == "ALL")
-    	{
-        	$center = null;
-    	}
     	
     	$startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m'), 1, (int)date('Y'))) : $_startDate;
 	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Tomorrow")) : $_endDate;
@@ -204,7 +200,25 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	public function get_get_senior_report($center=null)
 	{
-    	$reportArray = Controller_Reports::generate_senior_report($center);
+	
+    	if ($center == "ALL")
+    	{
+        	$center = null;
+    	}
+    	
+    	$startDate = null;
+    	$endDate = null;
+    	
+    	$month = $this->param('month');
+    	if (!is_null($month))
+    	{
+        	$monthSplit = explode('-', $month);
+        	$startDate = mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]);
+        	$endDate = mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]);
+    	}
+    	
+	
+    	$reportArray = Controller_Reports::generate_senior_report($center, $startDate, $endDate);
     	return $this->response(array(
     	    'titles'     => array(
     	        'Name',
