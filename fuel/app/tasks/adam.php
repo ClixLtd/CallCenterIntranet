@@ -1169,7 +1169,7 @@ Gregson and Brooke.');
 				$required_channels = ($dial_rate*($campaign_stats->differential_onemin*1.8));
 				
 				
-				$channels = ($connection=="rj5") ? 96 : 250;
+				$channels = 500;
 				
 				if ($required_channels > $channels)
 				{
