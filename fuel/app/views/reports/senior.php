@@ -6,7 +6,7 @@
     for ($i = 0; $i <= 18; $i++) {
     
         $date = strtotime("-".$i." months");
-        echo '<option value="'.date("d-Y", $date).'">'.date("F Y", $date).'</option>';
+        echo '<option value="'.date("m-Y", $date).'">'.date("F Y", $date).'</option>';
     
     }
     ?>
