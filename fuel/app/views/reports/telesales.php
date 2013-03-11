@@ -1,4 +1,19 @@
 <div style="float: right;">
+
+<select name="month" id="month" rel="tooltip" title="Select Month and Year">
+
+    <?php 
+    for ($i = 0; $i <= 18; $i++) {
+    
+        $date = strtotime("-".$i." months");
+        echo '<option value="'.date("m-Y", $date).'">'.date("F Y", $date).'</option>';
+    
+    }
+    ?>
+    
+</select>
+
+
 <?php if($view_all): ?>
 <select name="center" id="callCenter" rel="tooltip" title="Call Center">
 	<option value="ALL">All Centers</option>
