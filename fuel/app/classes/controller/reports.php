@@ -13,6 +13,11 @@ class Controller_Reports extends Controller_BaseHybrid
 	public static function generate_senior_report($center=null, $_startDate=null, $_endDate=null)
 	{
     	
+    	if ($center == "ALL")
+    	{
+        	$center = null;
+    	}
+    	
     	$startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m'), 1, (int)date('Y'))) : $_startDate;
 	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Tomorrow")) : $_endDate;
 	    
