@@ -2,6 +2,10 @@ $(function () {
 
     getReport();
 
+    $('#month').change(function() {
+        changeSituation();
+    });
+    
     $('#callCenter').change(function() {
         changeSituation();
     });
