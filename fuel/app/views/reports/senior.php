@@ -1,4 +1,11 @@
 <div style="float: right;">
+
+<select name="month" id="month" rel="tooltip" title="Select Month and Year">
+    <option value="01-2013">January 2013</option>
+    <option value="02-2013">February 2013</option>
+    <option value="03-2013">March 2013</option>
+</select>
+
 <?php if($view_all): ?>
 <select name="center" id="callCenter" rel="tooltip" title="Call Center">
 	<option value="ALL">All Centers</option>
