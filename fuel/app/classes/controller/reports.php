@@ -216,7 +216,6 @@ class Controller_Reports extends Controller_BaseHybrid
         	$startDate = mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]);
         	$endDate = mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]);
         	
-        	print_r($monthSplit);
         	
     	}
     	
