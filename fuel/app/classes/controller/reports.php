@@ -573,7 +573,27 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	public function get_get_telesales_report($center=null)
 	{
-    	$reportArray = Controller_Reports::generate_telesales_report($center);
+	    
+	    if ($center == "ALL")
+    	{
+        	$center = null;
+    	}
+	    
+	    $startDate = null;
+    	$endDate = null;
+    	
+    	$month = $this->param('month');
+    	if (!is_null($month))
+    	{
+        	$monthSplit = explode('-', $month);
+        	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
+        	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
+        	
+        	
+    	}
+
+	
+    	$reportArray = Controller_Reports::generate_telesales_report($center, $startDate, $endDate);
     	return $this->response(array(
     	    'titles'     => array(
     	        'Name',
