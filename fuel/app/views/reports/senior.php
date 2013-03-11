@@ -1,9 +1,16 @@
 <div style="float: right;">
 
 <select name="month" id="month" rel="tooltip" title="Select Month and Year">
-    <option value="01-2013">January 2013</option>
-    <option value="02-2013">February 2013</option>
-    <option value="03-2013">March 2013</option>
+
+    <?php 
+    for ($i = 0; $i <= 18; $i++) {
+    
+        $date = strtotime("-".$i." months");
+        echo '<option value="'.date("d-Y", $date).'">'.date("F Y", $date).'</option>';
+    
+    }
+    ?>
+    
 </select>
 
 <?php if($view_all): ?>
