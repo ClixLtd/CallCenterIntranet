@@ -45,6 +45,12 @@ return array(
 	
 	
 	
+	
+	'reports/senior_report/(:center)/:month' => 'reports/senior_report/$1',
+	'reports/senior_report/(:center)' => 'reports/senior_report/$1',
+	'reports/senior_report' => 'reports/senior_report',
+	
+	
 	'reports/supplier/fulllist/:listid' => 'reports/supplier',
 	'reports/supplier/(:num)' => 'reports/supplier/$1',
 	
