@@ -16,9 +16,9 @@ $(function () {
     function changeSituation()
     {
     
-        currentCenter = ($('#callCenter').val() == "ALL") ? "" : "/" + $('#callCenter').val();
+        currentCenter = ($('#callCenter').val() == "ALL") ? "/ALL" : "/" + $('#callCenter').val();
         
-        currentDate = currentCenter = ($('#month').val() == "THISMONTH") ? "" : "/" + $('#month').val();
+        currentDate = ($('#month').val() == "THISMONTH") ? "" : "/" + $('#month').val();
         
         
         reportURL = "/reports/get_senior_report" + currentCenter + "" + currentDate + ".json";
