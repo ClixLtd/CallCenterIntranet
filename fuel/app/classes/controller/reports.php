@@ -213,8 +213,8 @@ class Controller_Reports extends Controller_BaseHybrid
     	if (!is_null($month))
     	{
         	$monthSplit = explode('-', $month);
-        	$startDate = mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]);
-        	$endDate = mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]);
+        	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
+        	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
         	
         	
     	}
