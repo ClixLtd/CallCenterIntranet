@@ -3,15 +3,7 @@ $(function () {
     getReport();
 
     $('#callCenter').change(function() {
-        reportURL = ($(this).val() == "ALL") ? "/reports/get_senior_report.json" : "/reports/get_senior_report/" + $(this).val() + ".json";
-        
-        newUrl = ($(this).val() == "ALL") ? '/reports/senior_report/' : '/reports/senior_report/'+$(this).val()+'/';
-        
-        currentCenter = $(this).val();
-        
-        window.history.pushState('', document.title, newUrl);
-                
-        getReport();
+        changeSituation();
     });
 
     $('.userClick').live("click", function() {
@@ -19,6 +11,26 @@ $(function () {
         $('#subDetails' + user).slideToggle('fast');
     });
     
+    
+    
+    function changeSituation()
+    {
+    
+        currentCenter = ($('#callCenter').val() == "ALL") ? "" : "/" + $('#callCenter').val();
+        
+        currentDate = currentCenter = ($('#month').val() == "THISMONTH") ? "" : "/" + $('#month').val();
+        
+        
+        reportURL = "/reports/get_senior_report" + currentCenter + "" + currentDate + ".json";
+        
+        newUrl = '/reports/senior_report' + currentCenter + "" + currentDate + '/';
+        
+        
+        window.history.pushState('', document.title, newUrl);
+                
+        getReport();
+
+    }
     
     
 
