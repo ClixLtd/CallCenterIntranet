@@ -167,7 +167,7 @@
 		
 		public function sorry_message()
 		{
-    		Adam::send_push_message("Sorry for the constant 'Lack of Leads' messages. This has been fixed and I promise I will not keep you awake all night! Sorry!");
+    		Adam::send_push_message("This is just a test message for adam!");
 		}
 		
 		
@@ -296,6 +296,9 @@
 					'alert' => $message,
 					'sound' => 'default',
 				),
+				"android" => array(
+                    "alert" => $message,
+                ),
 			);
 			
 			$session = curl_init('https://go.urbanairship.com/api/push/broadcast/'); 
