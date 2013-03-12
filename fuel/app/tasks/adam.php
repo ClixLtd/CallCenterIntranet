@@ -292,12 +292,12 @@
 		public function send_push_message($message)
 		{
 			$payload = array(
-				'aps' => array(
+				/*'aps' => array(
 					'alert' => $message,
 					'sound' => 'default',
-				),
-				"android" => array(
-                    "alert" => $message,
+				),*/
+				'android' => array(
+                    'alert' => $message,
                 ),
 			);
 			
