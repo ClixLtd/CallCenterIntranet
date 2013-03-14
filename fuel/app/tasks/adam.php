@@ -167,7 +167,7 @@
 		
 		public function sorry_message()
 		{
-    		Adam::send_push_message("Sorry for the constant 'Lack of Leads' messages. This has been fixed and I promise I will not keep you awake all night! Sorry!");
+    		Adam::send_push_message("This is just a test message for adam!");
 		}
 		
 		
@@ -296,6 +296,9 @@
 					'alert' => $message,
 					'sound' => 'default',
 				),
+				'android' => array(
+                    'alert' => $message,
+                ),
 			);
 			
 			$session = curl_init('https://go.urbanairship.com/api/push/broadcast/'); 
@@ -1169,7 +1172,7 @@ Gregson and Brooke.');
 				$required_channels = ($dial_rate*($campaign_stats->differential_onemin*1.8));
 				
 				
-				$channels = ($connection=="rj5") ? 96 : 250;
+				$channels = 500;
 				
 				if ($required_channels > $channels)
 				{
@@ -1373,14 +1376,14 @@ Gregson and Brooke.');
             		
             		$totalPayments = \DB::query("   SELECT
                                                         D_PA.AmountIn AS Paid
-                                                      , D_PA.TransactionDate
+                                                      , D_PA.Date
                                                     FROM
                                                       ".$debtsolv.".Payment_Account AS D_PA
                                                     WHERE 
                                                       D_PA.ClientID = " . $clientID . "
                                                       AND D_PA.AmountIn > 0
                                                     ORDER BY
-                                                      D_PA.TransactionDate ASC")->execute('debtsolv');
+                                                      D_PA.Date ASC")->execute('debtsolv');
             		
             		if ($di == 0)
             		{
@@ -1396,7 +1399,7 @@ Gregson and Brooke.');
                     		$runningTotal = $runningTotal + $payment['Paid'];
                     		if ($runningTotal >= $di AND is_null($firstPaymentDate))
                     		{
-                        		$firstPaymentDate = date('Y-m-d', strtotime($payment['TransactionDate']));
+                        		$firstPaymentDate = date('Y-m-d', strtotime($payment['Date']));
                     		}
                 		}
                 		
@@ -1415,6 +1418,24 @@ Gregson and Brooke.');
         		
         		
     		}
+    		
+    		
+            /*
+            
+            DELETE [Dialler].[dbo].[client_dates] 
+            FROM [Dialler].[dbo].[client_dates]
+            LEFT OUTER JOIN (
+               SELECT MIN(id) as id, ClientID, FirstPaymentDate, Office
+               FROM [Dialler].[dbo].[client_dates] 
+               GROUP BY ClientID, FirstPaymentDate, Office
+            ) as KeepRows ON
+               [Dialler].[dbo].[client_dates].id = KeepRows.id
+            WHERE
+               KeepRows.id IS NULL
+               
+            */
+    		
+    		
         		\Log::write('ADAM', "First Payment Table updated");
     		
 		}

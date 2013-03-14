@@ -10,14 +10,315 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	
 	
-	public static function generate_telesales_report()
+	public static function generate_senior_report($center=null, $_startDate=null, $_endDate=null)
 	{
+    	
+    	
+    	$startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m'), 1, (int)date('Y'))) : $_startDate;
+	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Tomorrow")) : $_endDate;
+	    
+	    
+	    $call_center = Model_Call_Center::query()->where('shortcode', $center)->get_one();
+	    
+	    
+	    // Get a list of debtsolv_id names for active users
+	    $staff = Model_Staff::query()->where('active', 1)->where('department_id', 2);
+	    if (!is_null($center))
+	    {
+    	    $staff->where('center_id', $call_center->id);
+	    }
+	    $totalStaff = $staff->count();
+	    
+	    if ((int)$totalStaff < 1)
+	    {
+    	    return null;
+	    }
+	    
+	    $staff = $staff->get();
+	    
+	    // Convert the active users into a list ready for the "IN" query
+	    $inList = "";
+	    $inListCount = 0;
+	    foreach ($staff AS $member)
+	    {
+	        $inListCount++;
+    	    $inList .= "'" . $member->debtsolv_id . "'";
+    	    
+    	    if ($inListCount < $totalStaff)
+    	    {
+        	    $inList .= ",";
+    	    }
+	    }
+	    
+	    
+	    $seniorQueryGAB = "SELECT
+                            	  D_URS.Login
+                            	, COUNT(CASE WHEN (D_CLD.DatePackSent >= '".$startDate."' AND D_CLD.DatePackSent < '".$endDate."') THEN Client_ID END) AS PackOut
+                            	, COUNT(CASE WHEN (D_CLD.DatePackReceived >= '".$startDate."' AND D_CLD.DatePackReceived < '".$endDate."') THEN Client_ID END) AS PackIn
+                            	, (SELECT COUNT(DISTINCT DD_CD.ClientID) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN Debtsolv.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN Debtsolv.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID WHERE FirstPaymentDate >= '".$startDate."' AND FirstPaymentDate < '".$endDate."' AND Office = 'GAB' AND DD_URS.login = D_URS.Login) AS Paid
+                            	, ISNULL((SELECT SUM((D_CPD.NormalExpectedPayment/100)) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN Debtsolv.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN Debtsolv.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON DD_CLD.Client_ID = D_CPD.ClientID WHERE DD_CD.FirstPaymentDate >= '".$startDate."' AND DD_CD.FirstPaymentDate < '".$endDate."' AND Office = 'GAB' AND DD_URS.login = D_URS.Login),0) AS Income
+                            FROM
+                            	Debtsolv.dbo.Client_LeadData AS D_CLD
+                            LEFT JOIN
+                            	Debtsolv.dbo.Users AS D_URS ON D_CLD.Counsellor = D_URS.ID
+                            WHERE
+                            	(D_CLD.DatePackReceived >= '".$startDate."' OR D_CLD.DatePackSent >= '".$startDate."')
+                            	AND D_URS.Login IN (".$inList.")
+                            GROUP BY
+                            	D_URS.Login";
+	    
+	    $seniorCountQueryGAB = "SELECT
+                        	   ISNULL((SELECT TOP 1 D_U.Login FROM Leadpool_DM.dbo.CampaignContactAccess AS CCA LEFT JOIN Debtsolv.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
+                           FROM 
+                        	   [Dialler].[dbo].[referrals] AS D_R
+                           LEFT JOIN
+                        	   LeadPool_DM.dbo.Campaign_Contacts AS CC ON D_R.leadpool_id = CC.ClientID
+                           WHERE
+                        	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
+	    
+	    $seniorQueryRESOLVE = "SELECT
+                            	  D_URS.Login
+                            	, COUNT(CASE WHEN (D_CLD.DatePackSent >= '".$startDate."' AND D_CLD.DatePackSent < '".$endDate."') THEN Client_ID END) AS PackOut
+                            	, COUNT(CASE WHEN (D_CLD.DatePackReceived >= '".$startDate."' AND D_CLD.DatePackReceived < '".$endDate."') THEN Client_ID END) AS PackIn
+                            	, (SELECT COUNT(DISTINCT DD_CD.ClientID) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN BS_Debtsolv_DM.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN BS_Debtsolv_DM.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID WHERE FirstPaymentDate >= '".$startDate."' AND FirstPaymentDate < '".$endDate."' AND Office = 'RESOLVE' AND DD_URS.login = D_URS.Login) AS Paid
+                            	, ISNULL((SELECT SUM((D_CPD.NormalExpectedPayment/100)) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN BS_Debtsolv_DM.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN BS_Debtsolv_DM.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID LEFT JOIN BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON DD_CLD.Client_ID = D_CPD.ClientID WHERE DD_CD.FirstPaymentDate >= '".$startDate."' AND DD_CD.FirstPaymentDate < '".$endDate."' AND Office = 'RESOLVE' AND DD_URS.login = D_URS.Login),0) AS Income
+                            FROM
+                            	BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD
+                            LEFT JOIN
+                            	BS_Debtsolv_DM.dbo.Users AS D_URS ON D_CLD.Counsellor = D_URS.ID
+                            WHERE
+                            	(D_CLD.DatePackReceived >= '".$startDate."' OR D_CLD.DatePackSent >= '".$startDate."')
+                            	AND D_URS.Login IN (".$inList.")
+                            GROUP BY
+                            	D_URS.Login";
+	    
+	    $seniorCountQueryGAB = "SELECT
+                        	   ISNULL((SELECT TOP 1 D_U.Login FROM Leadpool_DM.dbo.CampaignContactAccess AS CCA LEFT JOIN Debtsolv.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
+                           FROM 
+                        	   [Dialler].[dbo].[referrals] AS D_R
+                           LEFT JOIN
+                        	   LeadPool_DM.dbo.Campaign_Contacts AS CC ON D_R.leadpool_id = CC.ClientID
+                           WHERE
+                        	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
+                        	   
+                        	   
+                        	   
+	    $seniorCountQueryRESOLVE = "SELECT
+                	   ISNULL((SELECT TOP 1 D_U.Login FROM BS_Leadpool_DM.dbo.CampaignContactAccess AS CCA LEFT JOIN BS_Debtsolv_DM.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
+                   FROM 
+                	   [Dialler].[dbo].[referrals] AS D_R
+                   LEFT JOIN
+                	   BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON D_R.leadpool_id = CC.ClientID
+                   WHERE
+                	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
+	    
+	    
+	    $seniorResultsGAB = DB::query($seniorQueryGAB)->cached(60)->execute('debtsolv');
+	    $seniorCountResultsGAB = DB::query($seniorCountQueryGAB)->cached(60)->execute('debtsolv');
+	    
+	    $seniorResultsRESOLVE = DB::query($seniorQueryRESOLVE)->cached(60)->execute('debtsolv');
+	    $seniorCountResultsRESOLVE = DB::query($seniorCountQueryRESOLVE)->cached(60)->execute('debtsolv');
+    	
+    	
+    	$resultsGAB = array();
+    	foreach ($seniorResultsGAB AS $single)
+    	{
+        	$resultsGAB[$single['Login']] = array(
+        	   'login'    => $single['Login'],
+        	   'PackOuts' => $single['PackOut'],
+        	   'PackIns'  => $single['PackIn'],
+        	   'Paids'    => $single['Paid'],
+        	   'Revenue'  => $single['Income'],
+        	   'POtoPI'   => ($single['PackOut'] == 0) ? 0 : (($single['PackIn'] / $single['PackOut']) * 100),
+        	   'PItoPC'   => ($single['PackIn'] == 0) ? 0 : (($single['Paid'] / $single['PackIn']) * 100),
+        	   'POtoPC'   => ($single['PackOut'] == 0) ? 0 : (($single['Paid'] / $single['PackOut']) * 100),
+        	);
+    	}
+    	
+        foreach ($seniorResultsRESOLVE AS $single)
+    	{
+        	$resultsGAB[$single['Login']] = array(
+        	   'login'    => $single['Login'],
+        	   'PackOuts' => $single['PackOut'],
+        	   'PackIns'  => $single['PackIn'],
+        	   'Paids'    => $single['Paid'],
+        	   'Revenue'  => $single['Income'],
+        	   'POtoPI'   => ($single['PackOut'] == 0) ? 0 : (($single['PackIn'] / $single['PackOut']) * 100),
+        	   'PItoPC'   => ($single['PackIn'] == 0) ? 0 : (($single['Paid'] / $single['PackIn']) * 100),
+        	   'POtoPC'   => ($single['PackOut'] == 0) ? 0 : (($single['Paid'] / $single['PackOut']) * 100),
+        	);
+    	}
+    	
+    	
+    	$countResultsGAB = array();
+    	foreach ($seniorCountResultsGAB AS $single)
+    	{
+        	$countResultsGAB[$single['Senior']] = (isset($countResultsGAB[$single['Senior']])) ? $countResultsGAB[$single['Senior']] + 1 : 1;
+    	}
+    	
+    	foreach ($seniorCountResultsRESOLVE AS $single)
+    	{
+        	$countResultsGAB[$single['Senior']] = (isset($countResultsGAB[$single['Senior']])) ? $countResultsGAB[$single['Senior']] + 1 : 1;
+    	}
+    	
+    	
+    	$fullReturn = array();
+    	foreach ($staff AS $member)
+    	{
+        	$fullReturn[$member->debtsolv_id] = array(
+        	    'fullName' => $member->first_name . " " . $member->last_name,
+        	    'hotkeys'  => (isset($countResultsGAB[$member->debtsolv_id])) ? $countResultsGAB[$member->debtsolv_id] : 0,
+        	    'PackOuts' => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackOuts'] : 0,
+        	    'PackIns'  => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackIns'] : 0,
+        	    'Paids'    => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['Paids'] : 0,
+        	    'HKtoPO'   => (isset($countResultsGAB[$member->debtsolv_id])) ? number_format((($resultsGAB[$member->debtsolv_id]['PackOuts'] / $countResultsGAB[$member->debtsolv_id])*100),2)."%" : "0.00%",
+        	    'POtoPI'   => (isset($resultsGAB[$member->debtsolv_id])) ? number_format($resultsGAB[$member->debtsolv_id]['POtoPI'],2)."%" : "0.00%",
+        	    'PItoPC'   => (isset($resultsGAB[$member->debtsolv_id])) ? number_format($resultsGAB[$member->debtsolv_id]['PItoPC'],2)."%" : "0.00%",
+        	    'POtoPC'   => (isset($resultsGAB[$member->debtsolv_id])) ? number_format($resultsGAB[$member->debtsolv_id]['POtoPC'],2)."%" : "0.00%",
+        	    'HKtoPC'   => (isset($countResultsGAB[$member->debtsolv_id])) ? number_format((($resultsGAB[$member->debtsolv_id]['Paids'] / $countResultsGAB[$member->debtsolv_id])*100),2)."%" : "0.00%",
+        	    'Revenue'    => (isset($resultsGAB[$member->debtsolv_id])) ? "&pound;".number_format($resultsGAB[$member->debtsolv_id]['Revenue'],2) : "&pound;0.00",
+        	    'PpHK' => (isset($countResultsGAB[$member->debtsolv_id])) ? "&pound;".number_format(($resultsGAB[$member->debtsolv_id]['Revenue'] / $countResultsGAB[$member->debtsolv_id]),2) : "&pound;0.00",
+        	);
+    	}
+    	
+    	
+    	
+    	$sort = array();
+    	foreach ($fullReturn AS $key => $row)
+    	{
+            $sort[$key] = (int)str_replace("&pound;", "", $row['PpHK']);
+    	}
+    	
+    	array_multisort($sort, SORT_DESC, $fullReturn);
+    	
+    	
+    	
+    	return $fullReturn;
+    	
+	}
+	
+	
+	public function get_get_senior_report($center=null)
+	{
+	
+    	if ($center == "ALL")
+    	{
+        	$center = null;
+    	}
+    	
+    	$startDate = null;
+    	$endDate = null;
+    	
+    	$month = $this->param('month');
+    	if (!is_null($month))
+    	{
+        	$monthSplit = explode('-', $month);
+        	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
+        	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
+        	
+        	
+    	}
+    	
+	
+    	$reportArray = Controller_Reports::generate_senior_report($center, $startDate, $endDate);
+    	return $this->response(array(
+    	    'titles'     => array(
+    	        'Name',
+    	        'Hotkeys',
+    	        'Pack Out',
+    	        'Pack In',
+    	        'Paid',
+    	        
+    	        'HK to PO',
+    	        'PO to PI',
+    	        'PI to PC',
+    	        'PO to PC',
+    	        'HK to PC',
+    	        
+    	        'Revenue',
+    	        '&pound; per HK',
+    	    ),
+    	    'report'     => (is_null($reportArray)) ? array() : $reportArray,
+    	));
+	}
+	
+		
+	
+	public function action_senior_report($center=null)
+	{
+    	
+    	if (Auth::has_access('reports.disposition'))
+    	{
+    	
+        	if (Auth::has_access('reports.all_centers')) {
+            	$view_all = TRUE;
+        	} else {
+            	$view_all = FALSE;
+        	}
+        	
+        	$all_call_centers = Model_Call_Center::find('all');
+        	
+        	$this->template->title = 'Reports &raquo; Seniors';
+    		$this->template->content = View::forge('reports/senior', array(
+    		    'view_all' => $view_all,
+    		    'all_call_centers' => $all_call_centers,
+    		    'center' => $center,
+    			'url' => (!is_null($center)) ? '/reports/get_senior_report/'.$center.'.json' : '/reports/get_senior_report.json',
+    		));	
+		
+		}
+		else
+		{
+			Session::set_flash('fail', 'You do not have access to that section: This has been logged!');
+			Response::redirect('/');
+		}
+    	
+	}
+	
+		
+	public static function generate_telesales_report($center=null, $_startDate=null, $_endDate=null, $valueScheme=null)
+	{
+	
+	    // Pull in the values required for all centers
+	    $_allValues = Model_Telesales_Report_Value::find('all');
+	    $centerValues = array();
+	    
+	    foreach ($_allValues AS $value)
+	    {
+    	    $centerValues[$value->center_id] = array(
+    	        'referral'            => $value->referral_points,
+    	        'pack_out'            => $value->pack_out_points,
+    	        'di_point'            => $value->di_pound_point,
+    	        'pack_out_commission' => $value->pack_out_commission,
+    	        'pack_out_bonus'      => $value->pack_out_bonus,
+    	        'payment_percentage'  => $value->payment_percentage,
+    	    );
+	    }
+	
+	
+	    // Set the start and end dates
+	    $startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m'), 1, (int)date('Y'))) : $_startDate;
+	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Today")) : $_endDate;
 	   
-	    $startDate = strtotime("1st February 2013");
-	    $endDate = strtotime("Today");
-	   
+	    $call_center = Model_Call_Center::query()->where('shortcode', $center)->get_one();
+	    
+	    
+	    if (is_null($valueScheme))
+	    {
+	       $centerValue = (is_null($center)) ? $centerValues[0] : $centerValues[$call_center->id];
+	    }
+	    else
+	    {
+	       $centerValue = $centerValues[$valueScheme];
+	    }
+	    
+	    
 	    // Get a list of debtsolv_id names for active users
 	    $staff = Model_Staff::query()->where( 'active', 1)->where('department_id', 1);
+	    if (!is_null($center))
+	    {
+    	    $staff->where('center_id', $call_center->id);
+	    }
 	    $totalStaff = $staff->count();
 	    $staff = $staff->get();
 	    
@@ -35,37 +336,79 @@ class Controller_Reports extends Controller_BaseHybrid
     	    }
 	    }
 	    
-	    
-	    
     	
     	// Select all the required details from Debtsolv.
     	$reportQuery = "SELECT  DR.leadpool_id
                               , DR.short_code
                               , DR.user_login
                               , TCR.[Description]
+                              , D_CPD.NormalExpectedPayment/100 AS DI
                               , DR.referral_date
+                              , CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
+                              , CASE
+            			         WHEN CC.ContactResult = 700
+            			           THEN CONVERT(varchar, CC.Appointment, 120)
+            			         ELSE
+            			           ''
+            			        END AS 'Call Back Date'
+            			      , (
+                			      	SELECT Top (1)
+                			      		ResponseVal
+                			      	FROM
+                			      		Debtsolv.dbo.Client_CustomQuestionResponses
+                			      	WHERE
+                			      		QuestionID = 10007
+                			      		AND ClientID = D_CLD.Client_ID
+                			      ) AS 'ProductType'
+                              , (CD.Forename + ' ' + CD.Surname) AS Name
                           FROM Dialler.dbo.referrals AS DR
                           LEFT JOIN LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
                           LEFT JOIN LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
                           LEFT JOIN LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                          LEFT JOIN Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+                          LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+                          LEFT JOIN LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                           WHERE DR.user_login IN (" . $inList . ")
                               AND DR.short_code IN ('GAB','GBS')
-                              AND CONVERT(date, DR.referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
-                              AND CONVERT(date, DR.referral_date, 105) <= '" . date('Y-m-d', $endDate) . "'";
+                              AND TCR.[Description] <> 'Referred'
+                              AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
+                              AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
     	
     	$reportQueryResolve = "SELECT  DR.leadpool_id
                       , DR.short_code
                       , DR.user_login
                       , TCR.[Description]
+                      , D_CPD.NormalExpectedPayment/100 AS DI
                       , DR.referral_date
+                      , CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
+                      , CASE
+    			         WHEN CC.ContactResult = 700
+    			           THEN CONVERT(varchar, CC.Appointment, 120)
+    			         ELSE
+    			           ''
+    			        END AS 'Call Back Date'
+    			      , (
+        			      	SELECT Top (1)
+        			      		ResponseVal
+        			      	FROM
+        			      		Debtsolv.dbo.Client_CustomQuestionResponses
+        			      	WHERE
+        			      		QuestionID = 10007
+        			      		AND ClientID = D_CLD.Client_ID
+        			      ) AS 'ProductType'
+                      , (CD.Forename + ' ' + CD.Surname) AS Name
                   FROM Dialler.dbo.referrals AS DR
                   LEFT JOIN BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
                   LEFT JOIN BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
                   LEFT JOIN BS_LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                  LEFT JOIN BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+                  LEFT JOIN BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+                  LEFT JOIN BS_LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                   WHERE DR.user_login IN (" . $inList . ")
                       AND DR.short_code IN ('RESOLVE')
-                      AND CONVERT(date, DR.referral_date, 105) >= '" . date('Y-m-d', $startDate) . "'
-                      AND CONVERT(date, DR.referral_date, 105) <= '" . date('Y-m-d', $endDate) . "'";
+                      AND TCR.[Description] <> 'Referred'
+                      AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
+                      AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
     	
     	// Find all the paid clients for this date range
     	$paymentsQuery = "SELECT  D_CD.ClientID
@@ -79,8 +422,8 @@ class Controller_Reports extends Controller_BaseHybrid
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
                               AND D_R.short_code IN ('GAB','GBS')
-                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . date('Y-m-d', $startDate) . "'
-                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . date('Y-m-d', $endDate) . "'";
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . $endDate . "'";
     	
     	// Find all the paid clients for this date range
     	$paymentsQueryResolve = "SELECT  D_CD.ClientID
@@ -94,8 +437,8 @@ class Controller_Reports extends Controller_BaseHybrid
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
                               AND D_R.short_code IN ('RESOLVE')
-                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . date('Y-m-d', $startDate) . "'
-                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . date('Y-m-d', $endDate) . "'";
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . $endDate . "'";
     	
     	// Loop through the results and create the report
     	$reportResultsGAB = DB::query($reportQuery)->cached(60)->execute('debtsolv');
@@ -120,20 +463,52 @@ class Controller_Reports extends Controller_BaseHybrid
     	    if ( isset($reportArray[$result['user_login']]) )
     	    {
         	    $reportArray[$result['user_login']]['referrals']++;
+        	    $reportArray[$result['user_login']]['totalDI'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['totalDI'] + $result['DI'] : 0;
         	    $reportArray[$result['user_login']]['packOuts'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['packOuts']+1 : $reportArray[$result['user_login']]['packOuts'];
     	    }
     	    else
     	    {
                 $singleResult = array(
                     'referrals' => 1,
+                    'totalDI' => ($result['Description'] == "Lead Completed") ? $result['DI'] : 0,
                     'packOuts' => ($result['Description'] == "Lead Completed") ? 1 : 0,
                 );
                 
                 $reportArray[$result['user_login']] = $singleResult;
     	    }
+    	    
+    	    
+    	    $pdtype = "";
+						  
+            switch ((string)$result['ProductType']) {
+            
+              CASE '0':
+                  $pdtype = "DR";
+                  break;
+              CASE '1':
+                  $pdtype = "DMPLUS";
+                  break;
+              CASE '2':
+                  $pdtype = "PPI";
+                  break;
+              CASE '':
+                  $pdtype = "";
+                  break;
+             }
+    	    
+    	    $reportArray[$result['user_login']]['allReferrals'][] = array(
+                'Name'        => $result['Name'],
+                'leadID'      => $result['leadpool_id'],
+                'LeadName'    => 'Leadpool Name',
+                'Result'      => $result['Description'],
+                'DI'          => ((int)$result['DI'] < 10) ? "" : "£".number_format((float)$result['DI'], 2),
+                'Product'     => $pdtype,
+                'referred'    => date("d/m/Y", strtotime($result['referral_date'])),
+                'lastContact' => (strlen($result['Last Contact Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Last Contact Date'])),
+                'callBack'    => (strlen($result['Call Back Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Call Back Date'])),
+            );
 
     	}
-    	
     	
     	// Work out points, conversion rate and P/O bonus
     	
@@ -142,19 +517,19 @@ class Controller_Reports extends Controller_BaseHybrid
         	$reportArray[$key]['conversionRate'] = (($items['packOuts'] / $items['referrals']) * 100);
         	$reportArray[$key]['points'] = ($items['packOuts'] * 2) + ($items['referrals']);
         	
-        	$reportArray[$key]['commission'] = ($items['packOuts'] * 2.5);
+        	$reportArray[$key]['commission'] = ($items['packOuts'] * $centerValue['pack_out_commission']);
     	}
     	
     	// Finally look through the first payments and create the comissions
     	foreach ($paymentsResults AS $payment)
     	{
-    	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ($payment['DI']/1000) : ($payment['DI']/1000);
+    	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ((($payment['DI']/100)/100)*$centerValue['payment_percentage']) : ((($payment['DI']/100)/100)*$centerValue['payment_percentage']);
     	}
     	
     	// Finally look through the first payments and create the comissions
     	foreach ($paymentsResultsResolve AS $payment)
     	{
-    	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ($payment['DI']/1000) : ($payment['DI']/1000);
+    	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ((($payment['DI']/100)/100)*$centerValue['payment_percentage']) : ((($payment['DI']/100)/100)*$centerValue['payment_percentage']);
     	}
     	
     	
@@ -162,13 +537,16 @@ class Controller_Reports extends Controller_BaseHybrid
     	$sendArray = array();
     	foreach ($staff AS $member)
     	{
+    	    
+    	    
     	    $sendArray[] = array(
     	       'name'           => $member->first_name . " " . $member->last_name,
     	       'referrals'      => isset($reportArray[$member->dialler_id]['referrals']) ? $reportArray[$member->dialler_id]['referrals'] : 0,
     	       'packouts'       => isset($reportArray[$member->dialler_id]['packOuts']) ? $reportArray[$member->dialler_id]['packOuts'] : 0,
     	       'conversionrate' => isset($reportArray[$member->dialler_id]['conversionRate']) ? number_format($reportArray[$member->dialler_id]['conversionRate'],2) : 0,
-    	       'points'         => isset($reportArray[$member->dialler_id]['points']) ? $reportArray[$member->dialler_id]['points'] : 0,
+    	       'points'         => isset($reportArray[$member->dialler_id]['referrals']) ? (($reportArray[$member->dialler_id]['referrals'] * $centerValue['referral']) + ($reportArray[$member->dialler_id]['packOuts'] * $centerValue['pack_out']) + ($reportArray[$member->dialler_id]['totalDI'] * $centerValue['di_point'])) : 0.00,
     	       'commission'     => isset($reportArray[$member->dialler_id]['commission']) ? number_format($reportArray[$member->dialler_id]['commission'], 2) : 0.00,
+    	       'allReferrals'   => isset($reportArray[$member->dialler_id]['allReferrals']) ? $reportArray[$member->dialler_id]['allReferrals'] : array(),
     	    );
     	}
     	
@@ -181,20 +559,109 @@ class Controller_Reports extends Controller_BaseHybrid
     	
     	array_multisort($sort, SORT_DESC, $sendArray);
     	
-    	return $sendArray;
+    	foreach ($sendArray AS $ksend => $send)
+    	{
+        	$sendArray[$ksend]['points'] = number_format($send['points'],2);
+    	}
+    	
+    	return array(
+    	    'report' => $sendArray,
+    	    'centerVals' => $centerValue,
+    	);
     	    	
 	}
 	
-	
-	public function action_telesales_report()
+	public function get_get_telesales_report($center=null)
 	{
+	    
+	    if ($center == "ALL")
+    	{
+        	$center = null;
+    	}
+	    
+	    $startDate = null;
+    	$endDate = null;
     	
-    	$reportArray = Controller_Reports::generate_telesales_report();
+    	$month = $this->param('month');
+    	if (!is_null($month))
+    	{
+        	$monthSplit = explode('-', $month);
+        	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
+        	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
+        	
+        	
+    	}
+
+	
+    	$reportArray = Controller_Reports::generate_telesales_report($center, $startDate, $endDate);
+    	return $this->response(array(
+    	    'titles'     => array(
+    	        'Name',
+    	        'Referrals',
+    	        'Pack Outs',
+    	        'Conversion Rate',
+    	        'Points',
+    	        'Commission',
+    	    ),
+    	    'report'     => $reportArray['report'],
+    	    'centerVals' => $reportArray['centerVals'],
+    	));
+	}
+	
+	
+	public function post_save_telesales_values($center=null)
+	{
+	    
+	    
+	    $call_center = (is_null($center)) ? null : Model_Call_Center::query()->where('shortcode', $center)->get_one();
+	    
+	    $center_id = (is_null($center)) ? 0 : $call_center->id;
+	    
+	    $values = Model_Telesales_Report_Value::query()->where('center_id', $center_id)->get_one();
+	    	    
+	    $values->referral_points     = (float)Input::post('referral');
+	    $values->pack_out_points     = (float)Input::post('pack_out');
+	    $values->di_pound_point      = (float)Input::post('di_point');
+	    $values->pack_out_commission = (float)Input::post('pack_out_commission');
+	    $values->pack_out_bonus      = (float)Input::post('pack_out_bonus');
+	    $values->payment_percentage  = (float)Input::post('payment_percentage');
+	    
+	    $saved = $values->save();
+	    	   
+    	return $this->response(array(
+    	    'status' => ($saved) ? 'SUCCESS' : 'FAIL',
+    	));
+	}
+	
+	
+	public function action_telesales_report($center=null)
+	{
+	
+	    if (Auth::has_access('reports.disposition'))
+	    {
     	
-    	$this->template->title = 'Reports &raquo; Telesales';
-		$this->template->content = View::forge('reports/telesales', array(
-			'results' => $reportArray,
-		));	
+        	if (Auth::has_access('reports.all_centers')) {
+            	$view_all = TRUE;
+        	} else {
+            	$view_all = FALSE;
+        	}
+        	
+        	$all_call_centers = Model_Call_Center::find('all');
+        	
+        	$this->template->title = 'Reports &raquo; Telesales';
+    		$this->template->content = View::forge('reports/telesales', array(
+    		    'view_all' => $view_all,
+    		    'all_call_centers' => $all_call_centers,
+    		    'center' => $center,
+    			'url' => (!is_null($center)) ? '/reports/get_telesales_report/'.$center.'.json' : '/reports/get_telesales_report.json',
+    		));	
+		
+		}
+		else
+		{
+			Session::set_flash('fail', 'You do not have access to that section: This has been logged!');
+			Response::redirect('/');
+		}
     	
 	}
 	
@@ -1087,14 +1554,17 @@ class Controller_Reports extends Controller_BaseHybrid
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
-			      ,CASE
-				      		WHEN
-				      			DI_REF.full_name = ' '
-				      		THEN
-				      			'Not ''Ere'
-				      		ELSE
-				      			ISNULL(DI_REF.full_name,D_U.Undersigned)
-				      		END AS 'Telesales Agent',
+			      ,ISNULL((
+			        SELECT Top (1)
+			          Undersigned
+			        FROM
+			          Debtsolv.dbo.Users AS D_URS
+			        LEFT JOIN
+			          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
+			        WHERE
+			          D_CLD.LeadPoolReference = CLD.ClientID
+			      ), ISNULL(DI_REF.full_name, 'NONE'))
+                  AS 'Telesales Agent',
 			      
 			      ISNULL((
 			        SELECT Top (1)
@@ -1196,14 +1666,17 @@ class Controller_Reports extends Controller_BaseHybrid
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
-			      ,CASE
-				      		WHEN
-				      			DI_REF.full_name = ' '
-				      		THEN
-				      			'Not ''Ere'
-				      		ELSE
-				      			ISNULL(DI_REF.full_name,D_U.Undersigned)
-				      		END AS 'Telesales Agent',
+			      ,ISNULL((
+			        SELECT Top (1)
+			          Undersigned
+			        FROM
+			          Debtsolv.dbo.Users AS D_URS
+			        LEFT JOIN
+			          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
+			        WHERE
+			          D_CLD.LeadPoolReference = CLD.ClientID
+			      ), ISNULL(DI_REF.full_name, 'NONE'))
+                  AS 'Telesales Agent',
 			      
 			      ISNULL((
 			        SELECT Top (1)
@@ -1762,7 +2235,7 @@ class Controller_Reports extends Controller_BaseHybrid
                                                 D_CD.ClientID
                                               , (CD.Forename + ' ' + CD.Surname) AS Name
                                               , LSO.[Description] AS 'Lead Source'
-											  , CLD.LeadRef2 AS Office
+											  , ISNULL(CLD.LeadRef2,'RESOLVE') AS Office
 											  , CASE
                             				      		WHEN
                             				      			DI_REF.full_name = ' '
@@ -1814,18 +2287,17 @@ class Controller_Reports extends Controller_BaseHybrid
                                             LEFT JOIN
                                               BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD ON D_CLD.LeadPoolReference = CLD.ClientID
                                             LEFT JOIN
-                                              BS_LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
+                                              BS_Debtsolv_DM.dbo.Client_Contact AS CD ON D_CLD.Client_ID = CD.ID
                                             LEFT JOIN
                                               BS_LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
                                             LEFT JOIN
                                               BS_LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
-				  LEFT JOIN
-				    BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
-				  LEFT JOIN
-				    BS_Debtsolv_DM.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+                        				    LEFT JOIN
+                        				      BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+                        				    LEFT JOIN
+                        				    BS_Debtsolv_DM.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
                                             WHERE
                                               " . $paid_duration . "
-                                              ". $call_center_choice ."
                                               AND D_CD.Office = 'RESOLVE'
 				")->cached(300)->execute('debtsolv');
 				
@@ -1858,7 +2330,7 @@ class Controller_Reports extends Controller_BaseHybrid
     				  }
 				
 				
-				    $all_paid[] = array(
+				    $all_paid['G'.$paid['ClientID']] = array(
 				        $paid['ClientID'],
 				        $paid['Name'],
 				        $paid['Lead Source'],
@@ -1876,46 +2348,58 @@ class Controller_Reports extends Controller_BaseHybrid
 					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
 				}
 				
-				foreach ($paid_reports2 AS $paid)
+				
+				if ( is_null($center) || $center == 'RESOLVE' )
 				{
+    				
+    				foreach ($paid_reports2 AS $paid)
+    				{
+    				
+    				    $pdtype = "";
+    						  
+        				  switch ((string)$paid['ProductType']) {
+        				  
+        				      CASE '0':
+        				          $pdtype = "DR";
+        				          break;
+        				      CASE '1':
+        				          $pdtype = "DMPLUS";
+        				          break;
+        				      CASE '2':
+        				          $pdtype = "PPI";
+        				          break;
+        				      CASE '':
+        				          $pdtype = "";
+        				          break;
+        				  }
+    				
+    				
+    				    $all_paid['R'.$paid['ClientID']] = array(
+    				        $paid['ClientID'],
+    				        $paid['Name'],
+    				        $paid['Lead Source'],
+    				        $paid['Office'],
+    				        $paid['Telesales Agent'],
+    				        $paid['Consolidator'],
+    				        $paid['DI'],
+    				        $pdtype,
+    				        date("d-m-y", strtotime($paid['Referred Date'])),
+    				        date("d-m-y", strtotime($paid['Pack In Date'])),
+    				        date("d-m-y", strtotime($paid['FirstPaymentDate'])),
+    				    );
+    				
+        				$totals['paid']['count']++;
+    					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
+    				}
 				
-				    $pdtype = "";
-						  
-    				  switch ((string)$paid['ProductType']) {
-    				  
-    				      CASE '0':
-    				          $pdtype = "DR";
-    				          break;
-    				      CASE '1':
-    				          $pdtype = "DMPLUS";
-    				          break;
-    				      CASE '2':
-    				          $pdtype = "PPI";
-    				          break;
-    				      CASE '':
-    				          $pdtype = "";
-    				          break;
-    				  }
-				
-				
-				    $all_paid[] = array(
-				        $paid['ClientID'],
-				        $paid['Name'],
-				        $paid['Lead Source'],
-				        $paid['Office'],
-				        $paid['Telesales Agent'],
-				        $paid['Consolidator'],
-				        $paid['DI'],
-				        $pdtype,
-				        date("d-m-y", strtotime($paid['Referred Date'])),
-				        date("d-m-y", strtotime($paid['Pack In Date'])),
-				        date("d-m-y", strtotime($paid['FirstPaymentDate'])),
-				    );
-				
-    				$totals['paid']['count']++;
-					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
 				}
 				
+				
+				$all_paid_return = array();
+				foreach ($all_paid AS $allPaid)
+				{
+    				$all_paid_return[] = $allPaid;
+				}
 				
 				
 				
@@ -1934,7 +2418,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	            	//'paid_test' => $paid_results,
 	            	
 	            	'paid' => array(
-	            	    "aaData" => $all_paid,
+	            	    "aaData" => $all_paid_return,
 	            	    "bPaginate" => false,
 		            	"bDestroy" => true,
 		            	"bProcessing" => true,

@@ -44,6 +44,14 @@ return array(
 	'reports/dispositiontest/:startdate' => 'reports/dispositiontest',
 	
 	
+	'reports/get_telesales_report/(:center)/:month' => 'reports/get_telesales_report/$1',
+	'reports/get_telesales_report/(:center)' => 'reports/get_telesales_report/$1',
+	'reports/get_telesales_report' => 'reports/get_telesales_report',
+	
+	'reports/get_senior_report/(:center)/:month' => 'reports/get_senior_report/$1',
+	'reports/get_senior_report/(:center)' => 'reports/get_senior_report/$1',
+	'reports/get_senior_report' => 'reports/get_senior_report',
+	
 	
 	'reports/supplier/fulllist/:listid' => 'reports/supplier',
 	'reports/supplier/(:num)' => 'reports/supplier/$1',

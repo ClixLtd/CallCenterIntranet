@@ -19,7 +19,7 @@
 			<script>
 				$(document).ready(function() {
 					$.ajax({
-						"url" : "/user/view.json",
+						"url" : "/user/get_view.json",
 						"success": function ( json ) {
 							if (json['error']) {
 								alert(json['error']);
