@@ -1,5 +1,79 @@
 $(function () {
   
+  // -- Print Claim Letter
+  // ---------------------
+  $('.printPPILetter').click(function()
+  {	
+	   var settings = $(this).attr('rel');
+     var settingsArray = settings.split(",");
+     
+     var letterID = settingsArray[0];
+     var claimID  = settingsArray[1];
+     var clientID = settingsArray[2];
+     var freeText = settingsArray[3];
+     
+     var newDialog = $("#Print-PPI-Letter-Dialog").dialog();
+     
+     $("#Letter-Free-Text").val("");
+     $("#Letter-Free-Text-Box").hide();
+    
+     newDialog.dialog( { 
+       autoOpen: false, 
+       modal: true, 
+       resizable: false,
+       /*height: auto,*/
+       width: 500,
+       /*height: 400,*/
+       open: function()
+       {
+         $("#Letter-Free-Text").val("");
+         
+         if(freeText == 0)
+         {
+           $("#Letter-Free-Text-Box").hide();
+         }
+         else
+         {
+           $("#Letter-Free-Text-Box").show();
+         }
+       },
+       title: "Print Letters",
+       buttons: 
+           [ 
+               { 
+                   text: "Print", 
+                   click: function()
+                   {
+                       printClaimLetter(letterID, claimID, clientID);
+                       $( this ).dialog( "close" );
+                   } 
+               },
+               { 
+                   text: "Cancel", 
+                   click: function() { 
+                       $( this ).dialog( "close" );
+                   } 
+               }
+           ] 
+       });
+  	
+  	 newDialog.dialog( "open" );
+	});
+  
+  // -- Enable Editing of the Partner Details
+  // ----------------------------------------
+  $("#editClaim").click(function()
+  {
+    $(".Claim-Edit-Input").removeAttr('readonly');
+    $(".Claim-Edit-Input").css('box-shadow', '0px 0px 2px #333');
+    
+    $("#Claim-Amount-Input").val($("#Claim-Amount-Raw").val());
+    
+    $("#saveClaimDetails").show();
+  });
+  
+  // -- Cancel a Client's PPI Account
+  // --------------------------------  
   $("#cancelPPIClient").click(function()
   {
     if(confirm('Are you sure you want to cancel this client?') == true)
@@ -9,6 +83,7 @@ $(function () {
         if(data['status'] == 'SUCCESS')
         {
           alert('Client PPI account has been canceled');
+          location.reload();
         }
       });
     }
@@ -16,9 +91,143 @@ $(function () {
     {
       return;
     }
-  })
+  });
   
-  $('#createCliamsButton').click(function()
+  // -- Cancel a Client's PPI Account
+  // --------------------------------  
+  $("#reactivatePPIClient").click(function()
+  {
+    if(confirm('Are you sure you want reactivate this client?') == true)
+    {
+      $.getJSON('/crm/ppi/reactivate_client/' + $(this).attr('rel'), function(data)
+      {
+        if(data['status'] == 'SUCCESS')
+        {
+          alert('Client PPI account has been reactivated');
+          location.reload();
+        }
+      });
+    }
+    else
+    {
+      return;
+    }
+  });
+  
+  // -- Edit creditors from the client view
+  // --------------------------------------
+  $('#editCreditorsButton').click(function()
+  {    
+    var clientID = $(this).attr('rel');
+    
+    var newDialog1 = $("#Edit-Creditors-Dialog").dialog();
+    
+    newDialog1.dialog( { 
+	       autoOpen: false, 
+	       modal: true, 
+	       resizable: false,
+	       width: 800,
+	       height: 500,
+	       title: "Edit Creditors",
+	       buttons: 
+	           [ 
+	               { 
+	                   text: "Save Creditors", 
+	                   click: function() { 
+	                       //$( '#addClaimsForm' ).submit();
+                         editCreditors();
+	                   } 
+	               },
+	               { 
+	                   text: "Cancel", 
+	                   click: function() { 
+	                       $( this ).dialog( "close" );
+	                   } 
+	               }
+	           ] 
+	       });
+	
+	   newDialog1.dialog( "open" );
+     
+  });
+  
+  // -- Create Claims
+  // ----------------
+  $('#createClaimsButton').click(function()
+  {
+    var clientID = $(this).attr('rel');
+    
+    var newDialog2 = $("#Create-Claims-Dialog").dialog();
+    
+    newDialog2.dialog( { 
+	       autoOpen: false, 
+	       modal: true, 
+	       resizable: false,
+	       width: 800,
+	       height: 500,
+	       title: "Create Claims",
+	       buttons: 
+	           [ 
+	               { 
+	                   text: "Create Claims", 
+	                   click: function() { 
+	                       //$( '#addClaimsForm' ).submit();
+                         createClaims(); 
+	                   } 
+	               },
+	               { 
+	                   text: "Cancel", 
+	                   click: function() { 
+	                       $( this ).dialog( "close" );
+	                   } 
+	               }
+	           ] 
+	       });
+	
+	   newDialog2.dialog( "open" );
+  });
+  
+  // -- Edit Creditors
+  // -----------------
+  function editCreditors()
+  {
+    $.post('/crm/save_creditors/0.json',
+		$('#creditorEditFrom').serialize(),
+		function(data){
+			if (data['status'] == 'done')
+			{
+				alert('Creditors have been saved');
+        location.reload();
+			}
+			else
+			{
+				alert('Creditors could not be saved');
+			}
+		});
+  }
+  
+  // -- Create Claims
+  // ----------------
+  function createClaims()
+  {
+    $.post('/crm/ppi/create_claims/0.json',
+		$('#creditorFrom').serialize(),
+		function(data){
+			if (data['status'] == 'SUCCESS')
+			{
+				alert('Claims Created');
+        location.reload();
+			}
+			else
+			{
+				alert('Claims could not be created');
+			}
+		});
+  }
+  
+  // -- Edit creditors from the client view
+  // --------------------------------------
+  $('#editCreditorButton').click(function()
   {
     var clientID = $(this).attr('rel');
     
@@ -53,25 +262,7 @@ $(function () {
   
 	$('#PPI-Stage-Search').change(function()
   {
-    $.getJSON('/crm/ppi/stage_statues_list/' + $(this).val(), function(data)
-    {
-      var options = '';
-      var selected = '';
-      
-      options += '<option value="-1">-- Select Stage Status --</option>';
-      
-      for(i = 0; i < data.length; i++)
-      {
-        if($("#PPI-Stage-Status-Selected").val() == data[i].id)
-        {
-          selected = ' SELECTED';
-        }
-        
-        options += '<option value="' + data[i].id + '" ' + selected + '>' + data[i].description + '</option>';
-      }
-      
-      $('select#PPI-Stage-Status-Search').html(options);
-    });
+    updatePPIStatusCombo();
   });
   
   $("#PPI-Stage-Status-Search").change(function()
@@ -113,7 +304,77 @@ $(function () {
 	   
 	});
   
-  // -- Add a new Correspondance
+  // -- Add Claim Correspondence
+  // ---------------------------
+  $('#addPPIClaimCorrespondence').click(function()
+  {
+    $('#Claim-Correspondence-Dialog').dialog( { 
+     autoOpen: false, 
+     modal: true, 
+     resizable: false,
+     width: 510,
+     height: 330,
+     title: "Add a Correspondance!",
+     buttons: 
+       [ 
+           { 
+               text: "Save", 
+               click: function() {
+                   $( '#addClaimCorrespondenceForm' ).submit(); 
+               } 
+           },
+           { 
+               text: "Cancel", 
+               click: function() { 
+                   $( this ).dialog( "close" ); 
+               } 
+           }
+       ] 
+     });
+	
+	   $('#Claim-Correspondence-Dialog').dialog( "open" );
+  });
+  
+  // -- Change the Claim Stage and Status
+  // ------------------------------------
+  $("#changeClaimStatus").click(function()
+  {
+    $('#Claim-Change_stage-status-Dialog').dialog( { 
+     autoOpen: false, 
+     modal: true, 
+     resizable: false,
+     width: 510,
+     height: 330,
+     title: "Change Claim Stage and Status",
+     open: function()
+     {
+       updatePPIStatusCombo();
+     },
+     close: function()
+     {
+       
+     },
+     buttons: 
+       [ 
+           { 
+               text: "Save", 
+               click: function() {
+                   $( '#changeClaimStageStatusForm' ).submit(); 
+               } 
+           },
+           { 
+               text: "Cancel", 
+               click: function() { 
+                   $( this ).dialog( "close" ); 
+               } 
+           }
+       ] 
+     });
+	
+	   $('#Claim-Change_stage-status-Dialog').dialog( "open" );
+  });
+  
+  // -- Add a new Correspondence
   // ---------------------------
   
   $('#addPPICorrespondence').click(function()
@@ -149,9 +410,7 @@ $(function () {
   });
   
   // -- PPI Pack In Check List
-  // -------------------------
-  
-  
+  // ------------------------- 
 	
 	$('.reprintPack').click(function() {
 	
@@ -206,7 +465,7 @@ $(function () {
     	                   text: "Cancel", 
     	                   click: function() { 
     	                       $( this ).dialog( "close" );
-                             location.reload(); 
+                             location.reload();
     	                   } 
     	               }
     	           ] 
@@ -282,7 +541,7 @@ $(function () {
 		function(data){
 			if (data['status'] == 'SUCCESS')
 			{
-				$(location).attr('href','/crm/ppi/referral/'+data['referralID']);
+				$(location).attr('href','/crm/ppi/referral/'+data['referralID'] + '/' + data['clientID']);
 			}
 			else
 			{
@@ -322,7 +581,50 @@ $(function () {
 	
 	$('#addCreditorButton').click(function() {
 		add_creditor();
-	});  
+	});
+  
+  function updatePPIStatusCombo()
+  {
+    $.getJSON('/crm/ppi/stage_statues_list/' + $('#PPI-Stage-Search').val(), function(data)
+    {
+      var options = '';
+      var selected = '';
+      
+      options += '<option value="-1">-- Select Stage Status --</option>';
+      
+      for(i = 0; i < data.length; i++)
+      {
+        if($("#PPI-Stage-Status-Selected").val() == data[i].id)
+        {
+          selected = ' SELECTED';
+        }
+        
+        options += '<option value="' + data[i].id + '" ' + selected + '>' + data[i].description + '</option>';
+      }
+      
+      $('select#PPI-Stage-Status-Search').html(options);
+    });
+  }
+  
+  // -- Print the selected claim letter
+  // ----------------------------------
+  function printClaimLetter(letterID, claimID, clientID)
+  {
+    //var url = '/crm/ppi/print_PPI_letter/' + letterID + '/' + claimID;
+     
+     $.post('/crm/ppi/print_PPI_letter/' + letterID + '/' + claimID + '/' + clientID + '.json',
+      $('#PrintPPILetterForm').serialize(),
+      function(data)
+      {
+        if(data['status'] == "done")
+        {
+          alert("Letter has been sent to the print queue");
+	        $("#print_letter_image_" + letterID).attr('src', "/assets/img/icons/print.gif");
+          
+          location.reload();
+        }
+      });
+  }
 	
 	
 	function add_creditor()
