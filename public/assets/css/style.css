@@ -1655,7 +1655,7 @@ table .actions .delete { background:url('../img/icons/icon_table_delete.png') no
 
 /* Custom */
 
-.Client-Edit-Input, .Partner-Edit-Input
+.Client-Edit-Input, .Partner-Edit-Input, .Claim-Input
 {
   box-shadow: none;
   border: 0px;
