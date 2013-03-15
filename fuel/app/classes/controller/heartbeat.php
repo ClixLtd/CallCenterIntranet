@@ -33,6 +33,7 @@ class Controller_Heartbeat extends Controller_BaseApi
     	$servers = array(
     	   'GAB Dialler 1' => 'go.goautodial.org',
     	   'GAB Dialler 2' => 'dialler2.gab.local',
+    	   'GAB Dialler 3' => 'dialler1.gab.local',
     	   'GAB Database 1' => 'skywalker.gab.local',
     	   'RESOLVE Dialler 1' => 'dialler1.resolve.local',
     	   'RESOLVE Database 1' => 'database1.resolve.local',
