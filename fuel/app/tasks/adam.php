@@ -431,7 +431,7 @@
 				
 				
 				
-				// gipltd
+				/* gipltd
 				
 				$minute_message .= @Adam::gipltd_guess_dial_rate('UKCam', TRUE, "gipltd")."\n";
 				$minute_message .= @Adam::gipltd_guess_dial_rate('Training', TRUE, "gipltd")."\n";
@@ -439,7 +439,7 @@
 				$minute_message .= @Adam::gipltd_guess_dial_rate('Inbound', TRUE, "gipltd")."\n";
 				$minute_message .= @Adam::gipltd_guess_dial_rate('clixtest', TRUE, "gipltd")."\n";
 				
-				
+				*/
 				
 				
 				// Monitor the External diallers
@@ -476,13 +476,13 @@
 			//@Adam::log_minute_stats('UK', TRUE, "rj5");
 				
 			
-			// gipltd
+			/* gipltd
 			@Adam::gipltd_log_minute_stats('UKCam');
 			@Adam::gipltd_log_minute_stats('Training');
 			@Adam::gipltd_log_minute_stats('INSURANC');
 			@Adam::gipltd_log_minute_stats('Inbound');
 			@Adam::gipltd_log_minute_stats('clixtest');
-			
+			*/
 			
 		}
 		
