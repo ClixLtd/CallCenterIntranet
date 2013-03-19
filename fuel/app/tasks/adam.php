@@ -48,6 +48,9 @@
 		public function run()
 		{
 			$todayPayments = \DB::query("INSERT INTO `asterisk`.`vicidial_conferences` (`conf_exten`, `server_ip`, `extension`, `leave_3way`, `leave_3way_datetime`) VALUES ('8600706', '10.1.0.132', NULL, '0', NULL)")->execute('gabdialler');
+			
+			print_r($todayPayments);
+			
 		}
 		
 		
