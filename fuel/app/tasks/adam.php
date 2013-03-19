@@ -47,8 +47,8 @@
 		
 		public function run()
 		{
-		    for ($i = 700; $i <= 899; $i++) {
-    		    $todayPayments = \DB::query("INSERT INTO `asterisk`.`vicidial_conferences` (`conf_exten`, `server_ip`, `extension`, `leave_3way`, `leave_3way_datetime`) VALUES ('8600".$i."', '10.1.0.132', NULL, '0', NULL)")->execute('gabdialler');
+		    for ($i = 500; $i <= 699; $i++) {
+    		    $todayPayments = \DB::query("INSERT INTO `asterisk`.`vicidial_conferences` (`conf_exten`, `server_ip`, `extension`, `leave_3way`, `leave_3way_datetime`) VALUES ('8600".$i."', '10.1.0.131', NULL, '0', NULL)")->execute('gabdialler');
 			}
 			
 		}
