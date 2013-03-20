@@ -138,12 +138,8 @@ return array(
 				6 => '007_create_crm_type_ppi_refund_method',
 				7 => '008_alter_crm_ppi_clients_add_packs',
 				8 => '009_alter_crm_ppi_claims_add_account_info',
-				9 => '010_alter_crm_type_ppi_claim_status_change_name',
-				10 => '011_alter_crm_ppi_correspondence_addfields',
-				11 => '012_alter_crm_ppi_clients_packout_fields',
-				12 => '013_alter_crm_ppi_correspondence_changenotes',
-				13 => '014_alter_crm_ppi_claims_addedsignatory',
-				14 => '015_alter_crm_ppi_clients_addpartner',
+				9 => '016_alter_crm_ppi_claims_invoice_id',
+				10 => '017_alter_crm_ppi_claims_change_ac',
 			),
 			'crm_product' => 
 			array(
@@ -163,6 +159,11 @@ return array(
 				8 => '009_alter_crm_referrals_add_consolidation_centre',
 				9 => '010_alter_crm_referrals_callbacks_add_centre_id',
 				10 => '011_alter_crm_referrals_added_intro_name',
+				11 => '012_alter_crm_type_disposition_added_limit',
+			),
+			'crm_invoice' => 
+			array(
+				0 => '001_create_crm_invoices',
 			),
 		),
 	),

@@ -8,7 +8,7 @@ return array(
 		'connection'  => array(
 			'dsn'        => 'mysql:host=127.0.0.1;dbname=gab_intranet',
 			'username'   => 'root',
-			'password'   => '', // Wvts231ct6D
+			'password'   => 'Wvts231ct6D',
 		),
 	),
 	'debtsolv' => array(
@@ -20,6 +20,8 @@ return array(
 		        'persistent'     => false,
 		),
 	),
+	
+	// GAB Databases
 	'gabdialler' => array(
 		'type'       => 'pdo',
 		'table_prefix' => '',
@@ -29,29 +31,23 @@ return array(
 			'password'   => '1234',
 		),
 	),
-	'pccdialler' => array(
+	'gabpbx' => array(
 		'type'       => 'pdo',
 		'table_prefix' => '',
 		'connection'  => array(
-			'dsn'        => 'mysql:host=10.10.1.240;dbname=asterisk',
+			'dsn'        => 'mysql:host=10.1.0.120;dbname=asterisk',
 			'username'   => 'cron',
 			'password'   => '1234',
 		),
 	),
+	
+	
+	
 	'resolvedialler' => array(
 		'type'       => 'pdo',
 		'table_prefix' => '',
 		'connection'  => array(
 			'dsn'        => 'mysql:host=10.150.5.240;dbname=asterisk',
-			'username'   => 'cron',
-			'password'   => '1234',
-		),
-	),
-	'rj5' => array(
-		'type'       => 'pdo',
-		'table_prefix' => '',
-		'connection'  => array(
-			'dsn'        => 'mysql:host=119.92.172.42;dbname=asterisk',
 			'username'   => 'cron',
 			'password'   => '1234',
 		),
