@@ -44,14 +44,16 @@
 								<th>Introducer</th>
 								<th>Total Payments</th>
 								<th>Total Value</th>
+								<th>Average Payment</th>
 							</tr>
 						</thead>
 						<tbody>
 						    <?php foreach($introducer AS $name => $totals): ?>
 							<tr>
 								<td><?php echo $name; ?></td>
+								<td><?php echo number_format($totals['total'],2); ?></td>
 								<td>&pound;<?php echo number_format($totals['amount'],2); ?></td>
-								<td>&pound;<?php echo number_format($totals['total'],2); ?></td>
+								<td>&pound;<?php echo number_format(($totals['amount']/$totals['total']),2); ?></td>
 							</tr>
 							<?php endforeach; ?>
 						</tbody>
