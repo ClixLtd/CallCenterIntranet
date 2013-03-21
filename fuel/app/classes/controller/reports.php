@@ -25,7 +25,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	, D_PA.AmountIn/100 AS AmountIn
 	, D_CPD.NormalExpectedPayment/100 AS NormalExpectedPayment
 	, D_LI.Name AS Introducer
-	, L_CLD.LeadRef2 AS Shortcode
+	, ISNULL(L_CLD.LeadRef2, 'NONE') AS Shortcode
 FROM
 	Debtsolv.dbo.Payment_Account AS D_PA
 LEFT JOIN
@@ -56,7 +56,7 @@ WHERE
 	        $paymentCount = (isset($clientPayments[$payment['ClientID']]['count'])) ? $clientPayments[$payment['ClientID']]['count'] + 1 : 1;
 	        
 	        
-	        $introducerTitle = $payment['Shortcode'];
+	        $introducerTitle = ($payment['Shortcode'] <> 'NONE') ? $payment['Shortcode'] : $payment['Introducer'];
 	            	    
     	    $introducerPayments[$introducerTitle] = array(
     	       'amount' => (isset($introducerPayments[$introducerTitle])) ? $introducerPayments[$introducerTitle]['amount'] + $payment['AmountIn'] : $payment['AmountIn'],
