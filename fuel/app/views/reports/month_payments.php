@@ -24,7 +24,8 @@
 			<nav>
 				<ul class="tab-switch">
 					<li><a class="default-tab" href="#quickview">Quick View</a></li>
-					<li><a href="#monthly">Payments</a></li>
+					<li><a href="#expected">Expected Payments</a></li>
+					<li><a href="#monthly">Payments Made</a></li>
 				</ul>
 			</nav>
 			
@@ -77,12 +78,12 @@
 						</thead>
 						<tbody>
 						    <?php foreach($payments AS $pay): ?>
-							<tr <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>>
-								<td><?php echo $pay['ClientID']; ?></td>
-								<td><?php echo $pay['Introducer']; ?></td>
-								<td><?php echo $pay['Name']; ?></td>
-								<td>&pound;<?php echo number_format($pay['AmountIn'],2); ?></td>
-								<td><?php echo $pay['note']; ?></td>
+							<tr>
+								<td<?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>><?php echo $pay['ClientID']; ?></td>
+								<td<?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>><?php echo $pay['Introducer']; ?></td>
+								<td<?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>><?php echo $pay['Name']; ?></td>
+								<td<?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>>&pound;<?php echo number_format($pay['AmountIn'],2); ?></td>
+								<td<?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>><?php echo $pay['note']; ?></td>
 							</tr>
 							<?php endforeach; ?>
 						</tbody>
