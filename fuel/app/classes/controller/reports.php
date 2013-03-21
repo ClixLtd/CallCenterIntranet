@@ -56,7 +56,7 @@ WHERE
 	        $paymentCount = (isset($clientPayments[$payment['ClientID']]['count'])) ? $clientPayments[$payment['ClientID']]['count'] + 1 : 1;
 	        
 	        
-	        $introducerTitle = ($payment['Shortcode'] <> 'NONE' || str_len($payment['Shortcode']) < 3) ? $payment['Shortcode'] : $payment['Introducer'];
+	        $introducerTitle = ($payment['Shortcode'] <> 'NONE' || strlen($payment['Shortcode']) < 3) ? $payment['Shortcode'] : $payment['Introducer'];
 	            	    
     	    $introducerPayments[$introducerTitle] = array(
     	       'amount' => (isset($introducerPayments[$introducerTitle])) ? $introducerPayments[$introducerTitle]['amount'] + $payment['AmountIn'] : $payment['AmountIn'],
