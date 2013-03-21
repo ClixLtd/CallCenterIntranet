@@ -59,30 +59,51 @@ WHERE
 	        
 	        
 	        $shortCodeChange = array(
-	           "GAB Burton" => "RESOLVE",
-	           "Games Blaster" => "GAB",
-	           "Gregson and Brooke" => "GAB",
-	           "Phillipines" => "GBS",
-	           "PPI - 17-11-2011" => "GAB",
-	           "PPI - 19-11-2011" => "GAB",
-	           "PPI - 21-11-2011" => "GAB",
-	           "Teleprospects" => "GAB",
-	           "UCS" => "GAB",
-	           "Unique Prospects" => "GAB",
-	           "60k Home Owner" => "GAB",
-	           "Data Compiled 2011" => "GAB",
-	           "Data Compiled 2012" => "GAB",
-	           "Dialler Manual Dial" => "GAB",
-	           "Digos Call Centre" => "GBS",
+	           "GAB Burton"                   => "RESOLVE",
+	           "Games Blaster"                => "GAB",
+	           "Gregson and Brooke"           => "GAB",
+	           "Phillipines"                  => "GBS",
+	           "PPI - 17-11-2011"             => "GAB",
+	           "PPI - 19-11-2011"             => "GAB",
+	           "PPI - 21-11-2011"             => "GAB",
+	           "Teleprospects"                => "GAB",
+	           "UCS"                          => "GAB",
+	           "Unique Prospects"             => "GAB",
+	           "60k Home Owner"               => "GAB",
+	           "Data Compiled 2011"           => "GAB",
+	           "Data Compiled 2012"           => "GAB",
+	           "Dialler Manual Dial"          => "GAB",
+	           "Digos Call Centre"            => "GBS",
 	           "Digos Call Centre (Post PPI)" => "GBS",
 	        );
 	        
 	        
 	        
 	        
+	        if ($payment['Shortcode'] <> 'NONE' && $payment['Shortcode'] <> '' && $payment['Shortcode'] <> ' ')
+	        {
+    	        $introducerTitle = $payment['Shortcode'];
+	        }
+	        else
+	        {
+    	        if (in_array($payment['Introducer'], $shortCodeChange))
+    	        {
+        	        $introducerTitle = $shortCodeChange[$payment['Introducer']];
+    	        }
+    	        else
+    	        {
+        	        $introducerTitle = $payment['Introducer'];
+    	        }
+	        }
+	        
+	        
+	        
+	        
+	        /*
 	        $introducerTitle = ($payment['Shortcode'] <> 'NONE' && $payment['Shortcode'] <> '' && $payment['Shortcode'] <> ' ') ? $payment['Shortcode'] : $payment['Introducer'];
 	        
 	        $introducerTitle = (isset($shortCodeChange[$introducerTitle])) ? $shortCodeChange[$payment['Shortcode']] : $introducerTitle;
+	        */
 	            	    
     	    $introducerPayments[$introducerTitle] = array(
     	       'amount' => (isset($introducerPayments[$introducerTitle])) ? $introducerPayments[$introducerTitle]['amount'] + $payment['AmountIn'] : $payment['AmountIn'],
