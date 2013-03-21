@@ -74,6 +74,11 @@ WHERE
 	           "Dialler Manual Dial"          => "GAB",
 	           "Digos Call Centre"            => "GBS",
 	           "Digos Call Centre (Post PPI)" => "GBS",
+	           "DK101"                        => "GAB",
+	           "GAB Debt Hotkeys" => "GAB",
+	           "JPO" => "GAB",
+	           "DLG" => "GAB",
+	           
 	        );
 	        
 	        
