@@ -1,3 +1,20 @@
+<div style="float: right;">
+
+<select name="month" id="month" rel="tooltip" title="Select Month and Year">
+
+    <?php 
+    for ($i = 0; $i <= 18; $i++) {
+    
+        $date = strtotime("-".$i." months");
+        echo '<option value="'.date("m-Y", $date).'">'.date("F Y", $date).'</option>';
+    
+    }
+    ?>
+    
+</select>
+
+</div>
+
 <article class="full-block clearfix">
 
 	<div class="article-container">
