@@ -16,7 +16,7 @@
 	
 	<section>
 		<div class="tab default-tab" id="quickview">
-			<article class="full-block">
+			<article class="half-block">
 				
 				<div class="article-container">
 					<section>
