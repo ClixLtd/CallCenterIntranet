@@ -10,7 +10,11 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	
 	
-	public function action_monthly_payment()
+	/* ******************************
+	 * Start Monthly Payment Report *
+	 ********************************/
+	
+	public static function generate_monthly_payment_report($center=null, $_startDate=null, $_endDate=null)
 	{
     	$startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m'), 1, (int)date('Y'))) : $_startDate;
 	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Tomorrow")) : $_endDate;
@@ -37,7 +41,7 @@ WHERE
 	(D_PA.TransactionDate >= '".$startDate."' AND D_PA.TransactionDate < '".$endDate."')
 	AND D_PA.AmountIn > 0";
 	    
-	    $getPayments = DB::query($monthPaymentsQuery)->cached(60)->execute('debtsolv');
+	    $getPayments = DB::query($monthPaymentsQuery)->cached(300)->execute('debtsolv');
 	    
 	    
 	    
@@ -67,15 +71,42 @@ WHERE
 	    
 	    
 	    
+	    return array(
+	       'clients' => $clientPayments,
+	       'introducer' => $introducerPayments,
+	    );
+
+	}
+	
+	
+	
+	
+	
+	public function action_monthly_payment()
+	{
+    		    
+	    $reportArray = Controller_Reports::generate_monthly_payment_report(null, null, null);
 	    
 	    $this->template->title = 'Reports &raquo; Monthly Payments';
 		$this->template->content = View::forge('reports/month_payments', array(
-		    'payments' => $clientPayments,
-		    'introducer' => $introducerPayments,
+		    'payments' => $reportArray['clients'],
+		    'introducer' => $reportArray['introducer'],
 		));	
 
 	    
 	}
+	
+	/* ****************************
+	 * End Monthly Payment Report *
+	 ******************************/
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
