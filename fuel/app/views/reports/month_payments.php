@@ -22,7 +22,7 @@
 				
 				<div class="article-container">
 					<section>
-					<table class="zebra-striped" width="100%">
+					<table class="zebra-striped datatable" width="100%">
 						<thead>
 							<tr>
 								<th>ClientID</th>
