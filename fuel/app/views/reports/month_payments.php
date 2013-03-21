@@ -51,7 +51,7 @@
 						    <?php foreach($introducer AS $name => $totals): ?>
 							<tr>
 								<td><?php echo $name; ?></td>
-								<td><?php echo number_format($totals['total'],2); ?></td>
+								<td><?php echo number_format($totals['total'],0); ?></td>
 								<td>&pound;<?php echo number_format($totals['amount'],2); ?></td>
 								<td>&pound;<?php echo number_format(($totals['amount']/$totals['total']),2); ?></td>
 							</tr>
