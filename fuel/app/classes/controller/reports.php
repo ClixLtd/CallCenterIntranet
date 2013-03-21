@@ -39,8 +39,6 @@ LEFT JOIN
 LEFT JOIN
     Debtsolv.dbo.Lead_Introducers AS D_LI ON D_TLS.IntroducerID=D_LI.ID
 LEFT JOIN 
-    Debtsolv.dbo.Client_LeadData AS D_CLD ON D_PA.ClientID = D_CLD.Client_ID
-LEFT JOIN 
     Leadpool_DM.dbo.Client_LeadDetails AS L_CLD ON D_CLD.LeadPoolReference = L_CLD.ClientID
 WHERE
 	(D_PA.TransactionDate >= '".$startDate."' AND D_PA.TransactionDate < '".$endDate."')
