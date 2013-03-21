@@ -16,7 +16,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	public static function generate_monthly_payment_report($center=null, $_startDate=null, $_endDate=null)
 	{
-    	$startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m'), 1, (int)date('Y'))) : $_startDate;
+    	$startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m')-1, 1, (int)date('Y'))) : $_startDate;
 	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Tomorrow")) : $_endDate;
 	    
 	    $monthPaymentsQuery = "SELECT
@@ -65,7 +65,10 @@ WHERE
     	    
     	    
     	    
-    	    $introducerPayments[$payment['Introducer']] = (isset($introducerPayments[$payment['Introducer']])) ? $introducerPayments[$payment['Introducer']] + $payment['AmountIn'] : $payment['AmountIn'];
+    	    $introducerPayments[$payment['Introducer']] = array(
+    	       'amount' => (isset($introducerPayments[$payment['Introducer']])) ? $introducerPayments[$payment['Introducer']] + $payment['AmountIn'] : $payment['AmountIn'],
+    	       'total' => (isset($introducerPayments[$payment['Introducer']])) ? $introducerPayments[$payment['Introducer']] + $payment['AmountIn'] : $payment['AmountIn'],
+    	    );
 	    }
 	    
 	    

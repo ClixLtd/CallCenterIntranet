@@ -42,14 +42,16 @@
 						<thead>
 							<tr>
 								<th>Introducer</th>
-								<th>Amount In</th>
+								<th>Total Payments</th>
+								<th>Total Value</th>
 							</tr>
 						</thead>
 						<tbody>
-						    <?php foreach($introducer AS $name => $total): ?>
+						    <?php foreach($introducer AS $name => $totals): ?>
 							<tr>
 								<td><?php echo $name; ?></td>
-								<td>&pound;<?php echo number_format($total,2); ?></td>
+								<td>&pound;<?php echo number_format($totals['amount'],2); ?></td>
+								<td>&pound;<?php echo number_format($totals['total'],2); ?></td>
 							</tr>
 							<?php endforeach; ?>
 						</tbody>
