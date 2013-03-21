@@ -59,8 +59,8 @@ WHERE
 	        $introducerTitle = $payment['Shortcode'];
 	            	    
     	    $introducerPayments[$introducerTitle] = array(
-    	       'amount' => (isset($introducerPayments[$payment['Introducer']])) ? $introducerPayments[$payment['Introducer']]['amount'] + $payment['AmountIn'] : $payment['AmountIn'],
-    	       'total' => (isset($clientPayments[$payment['ClientID']])) ? $introducerPayments[$payment['Introducer']]['total'] : $introducerPayments[$payment['Introducer']]['total'] + 1,
+    	       'amount' => (isset($introducerPayments[$introducerTitle])) ? $introducerPayments[$introducerTitle]['amount'] + $payment['AmountIn'] : $payment['AmountIn'],
+    	       'total' => (isset($clientPayments[$payment['ClientID']])) ? $introducerPayments[$introducerTitle]['total'] : $introducerPayments[$introducerTitle]['total'] + 1,
     	    );
     	    
     	    
