@@ -69,6 +69,12 @@ WHERE
 	           "Teleprospects" => "GAB",
 	           "UCS" => "GAB",
 	           "Unique Prospects" => "GAB",
+	           "60k Home Owner" => "GAB",
+	           "Data Compiled 2011" => "GAB",
+	           "Data Compiled 2012" => "GAB",
+	           "Dialler Manual Dial" => "GAB",
+	           "Digos Call Centre" => "GBS",
+	           "Digos Call Centre (Post PPI)" => "GBS",
 	        );
 	        
 	        
@@ -76,7 +82,7 @@ WHERE
 	        
 	        $introducerTitle = ($payment['Shortcode'] <> 'NONE' && $payment['Shortcode'] <> '' && $payment['Shortcode'] <> ' ') ? $payment['Shortcode'] : $payment['Introducer'];
 	        
-	        $introducerTitle = (isset($shortCodeChange[$payment['Shortcode']])) ? $shortCodeChange[$payment['Shortcode']] : $introducerTitle;
+	        $introducerTitle = (isset($shortCodeChange[$introducerTitle])) ? $shortCodeChange[$payment['Shortcode']] : $introducerTitle;
 	            	    
     	    $introducerPayments[$introducerTitle] = array(
     	       'amount' => (isset($introducerPayments[$introducerTitle])) ? $introducerPayments[$introducerTitle]['amount'] + $payment['AmountIn'] : $payment['AmountIn'],
