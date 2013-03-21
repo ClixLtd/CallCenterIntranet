@@ -30,7 +30,7 @@ LEFT JOIN
 LEFT JOIN
     Debtsolv.dbo.Client_LeadData AS D_CLD ON D_PA.ClientID = D_CLD.Client_ID
 LEFT JOIN
-    Debtsolv.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID=D_TLD.ID
+    Debtsolv.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID=D_TLS.ID
 LEFT JOIN
     Debtsolv.dbo.Lead_Introducers AS D_LI ON D_TLS.IntroducerID=D_LI.ID
 WHERE
