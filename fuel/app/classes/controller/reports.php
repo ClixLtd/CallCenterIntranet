@@ -10,6 +10,55 @@ class Controller_Reports extends Controller_BaseHybrid
 	
 	
 	
+	public function action_monthly_payment()
+	{
+    	$startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m'), 1, (int)date('Y'))) : $_startDate;
+	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Tomorrow")) : $_endDate;
+	    
+	    $monthPaymentsQuery = "SELECT
+	  D_PA.ClientID
+	, (D_CC.Forename + ' ' + D_CC.Surname) AS Name
+	, D_PA.AmountIn
+	, D_CPD.NormalExpectedPayment
+FROM
+	Debtsolv.dbo.Payment_Account AS D_PA
+LEFT JOIN
+	Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_PA.ClientID = D_CPD.ClientID
+LEFT JOIN
+	Debtsolv.dbo.Client_Contact AS D_CC ON D_PA.ClientID = D_CC.ID
+WHERE
+	(D_PA.TransactionDate >= '".$startDate."' AND D_PA.TransactionDate < '".$endDate."')
+	AND D_PA.AmountIn > 0";
+	    
+	    $getPayments = DB::query($monthPaymentsQuery)->cached(60)->execute('debtsolv');
+	    
+	    
+	    
+	    $clientPayments = array();
+	    foreach ($getPayments AS $payment)
+	    {
+    	    $clientPayments[$payment['ClientID']] = array(
+    	       'ClientID'              => $payment['ClientID'],
+    	       'Name'                  => $payment['Name'],
+    	       'AmountIn'              => (isset($clientPayments[$payment['ClientID']]['AmountIn'])) ? $clientPayments[$payment['ClientID']]['AmountIn'] + $payment['AmountIn'] : $payment['AmountIn'],
+    	       'NormalExpectedPayment' => $payment['NormalExpectedPayment'],
+    	    );
+	    }
+	    
+	    
+	    
+	    
+	    
+	    $this->template->title = 'Reports &raquo; Monthly Payments';
+		$this->template->content = View::forge('reports/month_payments', array(
+		    'payments' => $clientPayments,
+		));	
+
+	    
+	}
+	
+	
+	
 	public static function generate_senior_report($center=null, $_startDate=null, $_endDate=null)
 	{
     	
