@@ -33,7 +33,7 @@
 						</thead>
 						<tbody>
 						    <?php foreach($payments AS $pay): ?>
-							<tr <?php echo ($pay['reached']) ? 'style="background-color: red !important;"' : ''; ?>>
+							<tr <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>>
 								<td><?php echo $pay['ClientID']; ?></td>
 								<td><?php echo $pay['Name']; ?></td>
 								<td><?php echo $pay['AmountIn']; ?></td>
