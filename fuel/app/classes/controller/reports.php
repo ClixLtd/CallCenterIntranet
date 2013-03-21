@@ -20,12 +20,19 @@ class Controller_Reports extends Controller_BaseHybrid
 	, (D_CC.Forename + ' ' + D_CC.Surname) AS Name
 	, D_PA.AmountIn/100 AS AmountIn
 	, D_CPD.NormalExpectedPayment/100 AS NormalExpectedPayment
+	, D_LI.Name AS Introducer
 FROM
 	Debtsolv.dbo.Payment_Account AS D_PA
 LEFT JOIN
 	Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_PA.ClientID = D_CPD.ClientID
 LEFT JOIN
 	Debtsolv.dbo.Client_Contact AS D_CC ON D_PA.ClientID = D_CC.ID
+LEFT JOIN
+    Debtsolv.dbo.Client_LeadData AS D_CLD ON D_PA.ClientID = D_CLD.Client_ID
+LEFT JOIN
+    Debtsolv.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID
+LEFT JOIN
+    Debtsolv.dbo.Lead_Introducers AS D_LI ON D_TLS.IntroducerID=D_LI.ID
 WHERE
 	(D_PA.TransactionDate >= '".$startDate."' AND D_PA.TransactionDate < '".$endDate."')
 	AND D_PA.AmountIn > 0";
@@ -43,6 +50,7 @@ WHERE
     	    $clientPayments[$payment['ClientID']] = array(
     	       'ClientID'              => $payment['ClientID'],
     	       'Name'                  => $payment['Name'],
+    	       'Introducer'            => $payment['Introducer'],
     	       'AmountIn'              => $paymentTotal,
     	       'NormalExpectedPayment' => $payment['NormalExpectedPayment'],
     	       'count'                 => $paymentCount,
