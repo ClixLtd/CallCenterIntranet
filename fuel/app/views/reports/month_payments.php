@@ -16,9 +16,6 @@
 	<section>
 		<div class="tab default-tab" id="quickview">
 			<article class="full-block">
-				<h3></h3>
-				
-				<article class="half-block">
 				
 				<div class="article-container">
 					<section>
@@ -44,10 +41,7 @@
 					</table>
 					</section>
 				</div>
-				
-			</article>
-
-				
+								
 			</article>
 		</div>
 
