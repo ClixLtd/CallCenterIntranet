@@ -56,7 +56,27 @@ WHERE
 	        $paymentCount = (isset($clientPayments[$payment['ClientID']]['count'])) ? $clientPayments[$payment['ClientID']]['count'] + 1 : 1;
 	        
 	        
+	        
+	        
+	        $shortCodeChange = array(
+	           "GAB Burton" => "RESOLVE",
+	           "Games Blaster" => "GAB",
+	           "Gregson and Brooke" => "GAB",
+	           "Phillipines" => "GBS",
+	           "PPI - 17-11-2011" => "GAB",
+	           "PPI - 19-11-2011" => "GAB",
+	           "PPI - 21-11-2011" => "GAB",
+	           "Teleprospects" => "GAB",
+	           "UCS" => "GAB",
+	           "Unique Prospects" => "GAB",
+	        );
+	        
+	        
+	        
+	        
 	        $introducerTitle = ($payment['Shortcode'] <> 'NONE' && $payment['Shortcode'] <> '' && $payment['Shortcode'] <> ' ') ? $payment['Shortcode'] : $payment['Introducer'];
+	        
+	        $introducerTitle = (isset($shortCodeChange[$payment['Shortcode']])) ? $shortCodeChange[$payment['Shortcode']] : $introducerTitle;
 	            	    
     	    $introducerPayments[$introducerTitle] = array(
     	       'amount' => (isset($introducerPayments[$introducerTitle])) ? $introducerPayments[$introducerTitle]['amount'] + $payment['AmountIn'] : $payment['AmountIn'],
