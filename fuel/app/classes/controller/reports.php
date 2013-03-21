@@ -25,6 +25,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	, D_PA.AmountIn/100 AS AmountIn
 	, D_CPD.NormalExpectedPayment/100 AS NormalExpectedPayment
 	, D_LI.Name AS Introducer
+	, L_CLD.LeadRef2 AS Shortcode
 FROM
 	Debtsolv.dbo.Payment_Account AS D_PA
 LEFT JOIN
@@ -37,6 +38,10 @@ LEFT JOIN
     Debtsolv.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID=D_TLS.ID
 LEFT JOIN
     Debtsolv.dbo.Lead_Introducers AS D_LI ON D_TLS.IntroducerID=D_LI.ID
+LEFT JOIN 
+    Debtsolv.dbo.Client_LeadData AS D_CLD ON D_PA.ClientID = D_CLD.Client_ID
+LEFT JOIN 
+    Leadpool_DM.dbo.Client_LeadDetails AS L_CLD ON D_CLD.LeadPoolReference = L_CLD.ClientID
 WHERE
 	(D_PA.TransactionDate >= '".$startDate."' AND D_PA.TransactionDate < '".$endDate."')
 	AND D_PA.AmountIn > 0";
