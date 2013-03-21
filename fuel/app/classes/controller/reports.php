@@ -56,9 +56,9 @@ WHERE
 	        $paymentCount = (isset($clientPayments[$payment['ClientID']]['count'])) ? $clientPayments[$payment['ClientID']]['count'] + 1 : 1;
 	        
 	        
-	        
+	        $introducerTitle = $payment['Shortcode'];
 	            	    
-    	    $introducerPayments[$payment['Introducer']] = array(
+    	    $introducerPayments[$introducerTitle] = array(
     	       'amount' => (isset($introducerPayments[$payment['Introducer']])) ? $introducerPayments[$payment['Introducer']]['amount'] + $payment['AmountIn'] : $payment['AmountIn'],
     	       'total' => (isset($clientPayments[$payment['ClientID']])) ? $introducerPayments[$payment['Introducer']]['total'] : $introducerPayments[$payment['Introducer']]['total'] + 1,
     	    );
@@ -68,7 +68,7 @@ WHERE
     	    $clientPayments[$payment['ClientID']] = array(
     	       'ClientID'              => $payment['ClientID'],
     	       'Name'                  => $payment['Name'],
-    	       'Introducer'            => $payment['Introducer'],
+    	       'Introducer'            => $introducerTitle,
     	       'AmountIn'              => $paymentTotal,
     	       'NormalExpectedPayment' => $payment['NormalExpectedPayment'],
     	       'count'                 => $paymentCount,
