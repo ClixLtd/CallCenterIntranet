@@ -23,6 +23,7 @@
 						<thead>
 							<tr>
 								<th>ClientID</th>
+								<th>Introducer</th>
 								<th>Name</th>
 								<th>Amount In</th>
 								<th>Notes</th>
@@ -32,6 +33,7 @@
 						    <?php foreach($payments AS $pay): ?>
 							<tr <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>>
 								<td><?php echo $pay['ClientID']; ?></td>
+								<td><?php echo $pay['Introducer']; ?></td>
 								<td><?php echo $pay['Name']; ?></td>
 								<td>&pound;<?php echo number_format($pay['AmountIn'],2); ?></td>
 								<td><?php echo $pay['note']; ?></td>
