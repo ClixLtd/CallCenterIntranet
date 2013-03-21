@@ -90,13 +90,13 @@ WHERE
 	        }
 	        else
 	        {
-    	        if ( isset($shortCodeChange[$payment['Introducer']]) )
+    	        if ( isset($shortCodeChange[(string)$payment['Introducer']]) )
     	        {
-        	        $introducerTitle = $shortCodeChange[$payment['Introducer']];
+        	        $introducerTitle = $shortCodeChange[(string)$payment['Introducer']];
     	        }
     	        else
     	        {
-        	        $introducerTitle = $payment['Introducer'];
+        	        $introducerTitle = (string)$payment['Introducer'];
     	        }
 	        }
 	        
