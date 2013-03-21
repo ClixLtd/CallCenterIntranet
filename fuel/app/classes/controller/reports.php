@@ -59,7 +59,6 @@ WHERE
 	        
 	        
 	        $shortCodeChange = array(
-	           "GAB Burton"                   => "RESOLVE",
 	           "Games Blaster"                => "GAB",
 	           "Gregson and Brooke"           => "GAB",
 	           "Phillipines"                  => "GBS",
@@ -86,7 +85,7 @@ WHERE
 	        }
 	        else
 	        {
-    	        if (in_array($payment['Introducer'], $shortCodeChange))
+    	        if ( isset($shortCodeChange[$payment['Introducer']]) )
     	        {
         	        $introducerTitle = $shortCodeChange[$payment['Introducer']];
     	        }
