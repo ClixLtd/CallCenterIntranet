@@ -79,11 +79,11 @@
 						<tbody>
 						    <?php foreach($payments AS $pay): ?>
 							<tr>
-								<td<?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>><?php echo $pay['ClientID']; ?></td>
-								<td<?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>><?php echo $pay['Introducer']; ?></td>
-								<td<?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>><?php echo $pay['Name']; ?></td>
-								<td<?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>>&pound;<?php echo number_format($pay['AmountIn'],2); ?></td>
-								<td<?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>><?php echo $pay['note']; ?></td>
+								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>><?php echo $pay['ClientID']; ?></td>
+								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>><?php echo $pay['Introducer']; ?></td>
+								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>><?php echo $pay['Name']; ?></td>
+								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>>&pound;<?php echo number_format($pay['AmountIn'],2); ?></td>
+								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>><?php echo $pay['note']; ?></td>
 							</tr>
 							<?php endforeach; ?>
 						</tbody>
