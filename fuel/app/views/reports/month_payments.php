@@ -6,7 +6,8 @@
 			
 			<nav>
 				<ul class="tab-switch">
-					<li><a class="default-tab" href="#quickview">Payments</a></li>
+					<li><a class="default-tab" href="#quickview">Quick View</a></li>
+					<li><a href="#monthly">Payments</a></li>
 				</ul>
 			</nav>
 			
@@ -15,6 +16,34 @@
 	
 	<section>
 		<div class="tab default-tab" id="quickview">
+			<article class="full-block">
+				
+				<div class="article-container">
+					<section>
+					<table class="zebra-striped datatable" width="100%">
+						<thead>
+							<tr>
+								<th>Introducer</th>
+								<th>Amount In</th>
+							</tr>
+						</thead>
+						<tbody>
+						    <?php foreach($introducer AS $name => $total): ?>
+							<tr>
+								<td><?php echo $name; ?></td>
+								<td>&pound;<?php echo number_format($total,2); ?></td>
+							</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+					</section>
+				</div>
+								
+			</article>
+		</div>
+		
+		
+		<div class="tab" id="monthly">
 			<article class="full-block">
 				
 				<div class="article-container">

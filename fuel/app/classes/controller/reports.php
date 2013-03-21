@@ -42,6 +42,7 @@ WHERE
 	    
 	    
 	    $clientPayments = array();
+	    $introducerPayments = array();
 	    foreach ($getPayments AS $payment)
 	    {
 	        $paymentTotal = (isset($clientPayments[$payment['ClientID']]['AmountIn'])) ? $clientPayments[$payment['ClientID']]['AmountIn'] + $payment['AmountIn'] : $payment['AmountIn'];
@@ -57,6 +58,10 @@ WHERE
     	       'note'                  => ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
     	       'reached'               => ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
     	    );
+    	    
+    	    
+    	    
+    	    $introducerPayments[$payment['Introducer']] = (isset($introducerPayments[$payment['Introducer']])) ? $introducerPayments[$payment['Introducer']] + $payment['AmountIn'] : $payment['AmountIn'];
 	    }
 	    
 	    
@@ -66,6 +71,7 @@ WHERE
 	    $this->template->title = 'Reports &raquo; Monthly Payments';
 		$this->template->content = View::forge('reports/month_payments', array(
 		    'payments' => $clientPayments,
+		    'introducer' => $introducerPayments,
 		));	
 
 	    
