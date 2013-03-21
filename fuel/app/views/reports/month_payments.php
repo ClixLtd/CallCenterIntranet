@@ -22,7 +22,7 @@
 				
 				<div class="article-container">
 					<section>
-					<table class="zebra-striped">
+					<table class="zebra-striped" width="100%">
 						<thead>
 							<tr>
 								<th>ClientID</th>
@@ -37,7 +37,7 @@
 								<td><?php echo $pay['ClientID']; ?></td>
 								<td><?php echo $pay['Name']; ?></td>
 								<td><?php echo $pay['AmountIn']; ?></td>
-								<td><?php echo $pay['NormalExpectedPayment']; ?></td>
+								<td><?php echo $pay['note']; ?></td>
 							</tr>
 							<?php endforeach; ?>
 						</tbody>

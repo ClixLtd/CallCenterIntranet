@@ -37,11 +37,16 @@ WHERE
 	    $clientPayments = array();
 	    foreach ($getPayments AS $payment)
 	    {
+	        $paymentTotal = (isset($clientPayments[$payment['ClientID']]['AmountIn'])) ? $clientPayments[$payment['ClientID']]['AmountIn'] + $payment['AmountIn'] : $payment['AmountIn'];
+	        $paymentCount = (isset($clientPayments[$payment['ClientID']]['count'])) ? $clientPayments[$payment['ClientID']]['count'] + 1 : 1;
+	    
     	    $clientPayments[$payment['ClientID']] = array(
     	       'ClientID'              => $payment['ClientID'],
     	       'Name'                  => $payment['Name'],
-    	       'AmountIn'              => (isset($clientPayments[$payment['ClientID']]['AmountIn'])) ? $clientPayments[$payment['ClientID']]['AmountIn'] + $payment['AmountIn'] : $payment['AmountIn'],
+    	       'AmountIn'              => $paymentTotal,
     	       'NormalExpectedPayment' => $payment['NormalExpectedPayment'],
+    	       'count'                 => $paymentCount,
+    	       'note'                  => ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI not reached, ' . $paymentCount . ' payments made.',
     	    );
 	    }
 	    
