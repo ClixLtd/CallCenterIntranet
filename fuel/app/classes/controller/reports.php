@@ -46,7 +46,7 @@ WHERE
     	       'AmountIn'              => $paymentTotal,
     	       'NormalExpectedPayment' => $payment['NormalExpectedPayment'],
     	       'count'                 => $paymentCount,
-    	       'note'                  => ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI not reached, ' . $paymentCount . ' payments made.',
+    	       'note'                  => ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
     	       'reached'               => ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
     	    );
 	    }

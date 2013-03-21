@@ -36,7 +36,7 @@
 							<tr <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.3) !important;"'; ?>>
 								<td><?php echo $pay['ClientID']; ?></td>
 								<td><?php echo $pay['Name']; ?></td>
-								<td><?php echo $pay['AmountIn']; ?></td>
+								<td>&pound;<?php echo number_format($pay['AmountIn'],2); ?></td>
 								<td><?php echo $pay['note']; ?></td>
 							</tr>
 							<?php endforeach; ?>
