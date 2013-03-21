@@ -18,8 +18,8 @@ class Controller_Reports extends Controller_BaseHybrid
 	    $monthPaymentsQuery = "SELECT
 	  D_PA.ClientID
 	, (D_CC.Forename + ' ' + D_CC.Surname) AS Name
-	, D_PA.AmountIn
-	, D_CPD.NormalExpectedPayment
+	, D_PA.AmountIn/100
+	, D_CPD.NormalExpectedPayment/100
 FROM
 	Debtsolv.dbo.Payment_Account AS D_PA
 LEFT JOIN
