@@ -67,7 +67,7 @@ WHERE
     	    
     	    $introducerPayments[$payment['Introducer']] = array(
     	       'amount' => (isset($introducerPayments[$payment['Introducer']])) ? $introducerPayments[$payment['Introducer']]['amount'] + $payment['AmountIn'] : $payment['AmountIn'],
-    	       'total' => (isset($introducerPayments[$payment['Introducer']])) ? $introducerPayments[$payment['Introducer']]['total'] + 1 : 1,
+    	       'total' => (isset($clientPayments[$payment['ClientID']])) ? $introducerPayments[$payment['Introducer']]['total'] : $introducerPayments[$payment['Introducer']]['total'] + 1,
     	    );
 	    }
 	    
