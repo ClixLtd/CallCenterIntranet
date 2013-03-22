@@ -19,6 +19,24 @@ class Controller_Reports extends Controller_BaseHybrid
     	$startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m')-1, 1, (int)date('Y'))) : $_startDate;
 	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Tomorrow")) : $_endDate;
 	    
+	    
+	    $quickViewStartDate = strtotime("-".$i." months");
+	    
+	    $quickViewCountQuery = "SELECT
+	  REPLACE(CONVERT(VARCHAR(7), P_R.Date, 111), '/', '-') AS Month
+	, COUNT(DISTINCT P_R.ClientID) as totalCount
+FROM 
+	Debtsolv.dbo.Payment_Receipt AS P_R
+WHERE
+	P_R.Date >= '".date('Y-m-01',$quickViewStartDate)."'
+GROUP BY
+	REPLACE(CONVERT(VARCHAR(7), P_R.Date, 111), '/', '-')
+ORDER BY
+	REPLACE(CONVERT(VARCHAR(7), P_R.Date, 111), '/', '-')";
+	
+	    $getGraphDetails = DB::query($quickViewCountQuery)->cached(300)->execute('debtsolv');
+	    
+	    
 	    $monthPaymentsQuery = "SELECT
 	  D_PA.ClientID
 	, (D_CC.Forename + ' ' + D_CC.Surname) AS Name
@@ -135,7 +153,8 @@ WHERE
 	    
 	    
 	    return array(
-	       'clients' => $clientPayments,
+	       'quickGraph' => $getGraphDetails,
+	       'clients'    => $clientPayments,
 	       'introducer' => $introducerPayments,
 	    );
 
@@ -152,6 +171,7 @@ WHERE
 	    
 	    $this->template->title = 'Reports &raquo; Monthly Payments';
 		$this->template->content = View::forge('reports/month_payments', array(
+		    'quickGraph' => $reportArray['quickGraph'],
 		    'payments' => $reportArray['clients'],
 		    'introducer' => $reportArray['introducer'],
 		));	
