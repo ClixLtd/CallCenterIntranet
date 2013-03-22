@@ -41,7 +41,7 @@
 					<section>
 					   
 					   
-					   <?php echo $reports['hourlyStats']; ?>
+					   <?php echo $reports['monthlyStats']; ?>
 					   
 					   					
 					</section>
