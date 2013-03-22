@@ -64,7 +64,6 @@ WHERE
 ORDER BY 
 	ps.DateExpected";
     
-        $expectedPaymentDetails = DB::query($expectedPaymentsQuery)->cached(300)->execute('debtsolv');
 	    
 	    
 	    
