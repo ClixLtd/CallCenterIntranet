@@ -156,7 +156,8 @@ WHERE
 	    $graphDetails = array();
 	    foreach ($getGraphDetails AS $graph)
 	    {
-    	    $graphDetails[$graph['Month']] = $graph['totalCount'];
+	        $date = explode('-', $graph['Month']);
+    	    $graphDetails[$date[1]."-".$date[0]] = $graph['totalCount'];
 	    }
 	    
 	    
