@@ -39,7 +39,7 @@ ORDER BY
 	    
 	    $expectedPaymentsQuery = "SELECT
 	  CC.ID as ClientID
-	, CASE WHEN Title = '' THEN Forename +' ' +Surname ELSE CC.Title + '. ' + CC.Forename + ' ' + CC.Surname AND as ClientName
+	, CASE WHEN Title = '' THEN Forename +' ' +Surname ELSE CC.Title + '. ' + CC.Forename + ' ' + CC.Surname END as ClientName
 	, ps.DateExpected
 	, CONVERT(Money,(ps.Amount+ps.OvertimeAmount+ps.AdditionalAmount))/100 as AmountExpected
 	, CONVERT(money,ISNULL(PR.Amount,0))/100 as 'Amount Received'
