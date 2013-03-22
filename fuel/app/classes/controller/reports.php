@@ -64,8 +64,9 @@ WHERE
 ORDER BY 
 	ps.DateExpected";
     
-        $expectedPaymentDetails = DB::query($expectedPaymentsQuery)->cached(300)->execute('debtsolv');
+        //$expectedPaymentDetails = DB::query($expectedPaymentsQuery)->cached(300)->execute('debtsolv');
 	    
+	    print $expectedPaymentsQuery;
 	    
 	    
 	    $monthPaymentsQuery = "SELECT
@@ -203,7 +204,22 @@ WHERE
 	        ),
 	    ),3600);
 
-	    	    
+	    
+	    $expectedPayments = array();
+	    foreach ($expectedPaymentDetails AS $expected)
+	    {
+    	    $expectedPayments[] = array(
+    	        'clientID'       => $expected['ClientID'],
+    	        'name'           => $expected['ClientName'],
+    	        'dateExpected'   => $expected['DateExpected'],
+    	        'amountExpected' => $expected['AmountExpected'],
+    	        'received'       => $expected['AmountReceived'],
+    	        'complete'       => ((int)$expected['AmountExpected'] == (int)$expected['AmountReceived']) ? TRUE : FALSE,
+    	    );
+	    }
+	    
+	    
+	    
 	    
 	    return array(
 	       'reports'    => $report->generate(),
