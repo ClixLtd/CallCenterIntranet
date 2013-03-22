@@ -238,7 +238,7 @@ GROUP BY
     	        'dateExpected'   => $expected['DateExpected'],
     	        'amountExpected' => $expected['AmountExpected'],
     	        'received'       => $expected['AmountReceived'],
-    	        'complete'       => ((int)$expected['AmountExpected'] >= (int)$expected['AmountReceived']) ? TRUE : FALSE,
+    	        'complete'       => ((int)$expected['AmountReceived'] >= (int)$expected['AmountExpected']) ? TRUE : FALSE,
     	    );
 	    }
 	    
