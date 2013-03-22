@@ -264,7 +264,7 @@ GROUP BY
 	public function action_monthly_payment()
 	{
     		    
-	    $reportArray = Controller_Reports::generate_monthly_payment_report(null, "2012-09-01", "2012-10-01");
+	    $reportArray = Controller_Reports::generate_monthly_payment_report(null, "2012-10-01", "2012-11-01");
 	    
 	    $this->template->title = 'Reports &raquo; Monthly Payments';
 		$this->template->content = View::forge('reports/month_payments', array(
