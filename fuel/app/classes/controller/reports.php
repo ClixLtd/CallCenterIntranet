@@ -40,6 +40,9 @@ ORDER BY
 	    $expectedPaymentsQuery = "SELECT
 	  CC.ID as ClientID
 	, (CC.Forename + ' ' + CC.Surname) AS ClientName
+	, ps.DateExpected
+	, CONVERT(Money,(ps.Amount+ps.OvertimeAmount+ps.AdditionalAmount))/100 as AmountExpected
+	, CONVERT(money,ISNULL(PR.Amount,0))/100 as 'Amount Received'
 FROM 
 	Debtsolv.dbo.Payment_Schedule AS ps
 INNER JOIN
