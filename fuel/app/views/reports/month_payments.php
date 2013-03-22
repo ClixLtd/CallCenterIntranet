@@ -105,7 +105,7 @@
 								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>><?php echo $pay['dateExpected']; ?></td>
 								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>>&pound;<?php echo number_format($pay['amountExpected'],2); ?></td>
 								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>>&pound;<?php echo number_format($pay['received'],2); ?></td>
-								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.2) !important;"'; ?>><?php echo ($pay['complete']) ? 'Complete' : 'Incomplete'; ?></td>
+								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>><?php echo ($pay['complete']) ? 'Complete' : 'Incomplete'; ?></td>
 							</tr>
 							<?php endforeach; ?>
 						</tbody>
