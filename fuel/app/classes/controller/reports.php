@@ -37,14 +37,7 @@ ORDER BY
 	    $getGraphDetails = DB::query($quickViewCountQuery)->cached(300)->execute('debtsolv');
 	    
 	    
-	    $expectedPaymentsQuery = "SELECT
-	  CC.ID as ClientID
-	, CASE WHEN Title = '' THEN Forename +' ' +Surname ELSE CC.Title + '. ' + CC.Forename + ' ' + CC.Surname END as ClientName
-	, ps.DateExpected
-	, CONVERT(Money,(ps.Amount+ps.OvertimeAmount+ps.AdditionalAmount))/100 as AmountExpected
-	, CONVERT(money,ISNULL(PR.Amount,0))/100 as 'Amount Received'
-	, ISNULL(PR.Date,'31 dec 1899') AS 'Date Received'
-	, CASE WHEN PR.ID IS null THEN 'Migrated Payment' ELSE 'Client Payment' END As 'Receipt Type'
+	    $expectedPaymentsQuery = "SELECT *
 FROM 
 	Debtsolv.dbo.Payment_Schedule AS ps
 INNER JOIN
