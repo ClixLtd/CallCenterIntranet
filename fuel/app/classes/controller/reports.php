@@ -73,12 +73,12 @@ ORDER BY
 	    $monthPaymentsQuery = "SELECT
 	  D_PA.ClientID
 	, (D_CC.Forename + ' ' + D_CC.Surname) AS Name
-	, D_PA.AmountIn/100 AS AmountIn
+	, D_PA.Amount/100 AS AmountIn
 	, D_CPD.NormalExpectedPayment/100 AS NormalExpectedPayment
 	, D_LI.Name AS Introducer
 	, ISNULL(L_CLD.LeadRef2, 'NONE') AS Shortcode
 FROM
-	Debtsolv.dbo.Payment_Account AS D_PA
+	Debtsolv.dbo.Payment_Receipt AS D_PA
 LEFT JOIN
 	Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_PA.ClientID = D_CPD.ClientID
 LEFT JOIN
@@ -92,8 +92,7 @@ LEFT JOIN
 LEFT JOIN 
     Leadpool_DM.dbo.Client_LeadDetails AS L_CLD ON D_CLD.LeadPoolReference = L_CLD.ClientID
 WHERE
-	(D_PA.TransactionDate >= '".$startDate."' AND D_PA.TransactionDate < '".$endDate."')
-	AND D_PA.AmountIn > 0";
+	(D_PA.Date >= '".$startDate."' AND D_PA.Date < '".$endDate."')";
 	    
 	    $getPayments = DB::query($monthPaymentsQuery)->cached(300)->execute('debtsolv');
 	    
