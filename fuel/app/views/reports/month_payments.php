@@ -65,7 +65,7 @@
 							$("#chart"), 
 							data,
 							{
-							    xaxis: { ticks:[ <?php $current = 0; foreach ($result AS $key => $single): ?>[<?php echo $current; ?>,"<?php echo $key; ?>"],<?php $current++; endforeach; ?> ]},
+							    xaxis: { ticks:[ <?php $current = 0; foreach ($quickGraph AS $detail): ?>[<?php echo $detail['month']; ?>,<?php echo $detail['total']; ?>],<?php $current++; endforeach; ?> ]},
 							    series: {
 				                   lines: { show: true },
 				                   points: { show: true }
