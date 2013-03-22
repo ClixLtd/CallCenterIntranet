@@ -80,8 +80,9 @@
 								
 			</article>
 		</div>
+	</section>
 		
-		
+    <section>
 		<div class="tab" id="expected">
 			<article class="full-block">
 				
@@ -119,7 +120,7 @@
 
 		
 		
-		
+	<section>
 		<div class="tab" id="monthly">
 			<article class="full-block">
 				
