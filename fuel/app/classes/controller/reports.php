@@ -206,10 +206,12 @@ GROUP BY
 	    }
 	    
 	    $graphDetails2 = array();
+	    $graphDetails3 = array();
 	    foreach ($getFirstPayments AS $graph)
 	    {
 	        $date = explode('-', $graph['Month']);
     	    $graphDetails2[date("M Y",mktime(0,0,0,(int)$date[1],1,$date[0]))] = (int)$graphDetails[date("M Y",mktime(0,0,0,(int)$date[1],1,$date[0]))] - (int)$graph['Total'];
+    	    $graphDetails3[date("M Y",mktime(0,0,0,(int)$date[1],1,$date[0]))] = (int)$graph['Total'];
 	    }
 	    
 	    
@@ -218,7 +220,8 @@ GROUP BY
 	        'monthlyStats' => array(
 	            'reportResults' => array(
 	               'Unique Payments' => $graphDetails,
-	               'First Payments' => $graphDetails2,
+	               'Regular Payments' => $graphDetails2,
+	               'First Payments' => $graphDetails3,
 	            ),
 	            'displayType' => 'chart',
 	        ),
