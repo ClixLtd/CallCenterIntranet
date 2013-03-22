@@ -60,7 +60,7 @@ INNER JOIN
 INNER JOIN
 	Debtsolv.dbo.Users AS Credit ON CLD.CreditController = Credit.ID 
 WHERE
-	(DateExpected >= '".$startDate."' AND DateExpected < '".$endDate."')
+	(ps.DateExpected >= '".$startDate."' AND ps.DateExpected < '".$endDate."')
 ORDER BY 
 	ps.DateExpected";
     
