@@ -34,6 +34,37 @@
 	
 	<section>
 		<div class="tab default-tab" id="quickview">
+		
+		  <article class="full-block">
+				
+				<div class="article-container">
+					<section>
+					
+					   <table class="zebra-striped datatable" width="100%">
+						<thead>
+							<tr>
+								<th>Month</th>
+								<th>Total</th>
+							</tr>
+						</thead>
+						<tbody>
+						    <?php foreach($quickGraph AS $graphTotal): ?>
+							<tr>
+								<td><?php echo $graphTotal['Month']; ?></td>
+								<td><?php echo number_format($graphTotal['totalCount'],0); ?></td>
+							</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+
+					
+					</section>
+					
+				</div>
+				
+		  </article>
+		
+		
 			<article class="half-block">
 				
 				<div class="article-container">
