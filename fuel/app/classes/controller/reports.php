@@ -37,7 +37,7 @@ ORDER BY
 	    $getGraphDetails = DB::query($quickViewCountQuery)->cached(300)->execute('debtsolv');
 	    
 	    
-	    $expectedPaymentsQuery = "SELECT TOP 10 FROM Debtsolv.dbo.Payment_Account";
+	    $expectedPaymentsQuery = "SELECT TOP 10 * FROM Debtsolv.dbo.Payment_Account";
     
         $expectedPaymentDetails = DB::query($expectedPaymentsQuery)->cached(300)->execute('debtsolv');
 	    
