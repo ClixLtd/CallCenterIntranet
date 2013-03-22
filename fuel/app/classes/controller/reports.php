@@ -20,7 +20,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Tomorrow")) : $_endDate;
 	    
 	    
-	    $quickViewStartDate = strtotime("-".$i." months");
+	    $quickViewStartDate = strtotime("-18 months");
 	    
 	    $quickViewCountQuery = "SELECT
 	  REPLACE(CONVERT(VARCHAR(7), P_R.Date, 111), '/', '-') AS Month
