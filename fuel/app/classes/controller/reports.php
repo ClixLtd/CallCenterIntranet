@@ -28,7 +28,7 @@ class Controller_Reports extends Controller_BaseHybrid
 FROM 
 	Debtsolv.dbo.Payment_Receipt AS P_R
 WHERE
-	P_R.Date >= '".date('Y-m-01',$quickViewStartDate)."'
+	P_R.Date >= '".date('Y-m-01',$quickViewStartDate)."' AND P_R.Date <= '".date('Y-m-d')."'
 GROUP BY
 	REPLACE(CONVERT(VARCHAR(7), P_R.Date, 111), '/', '-')
 ORDER BY
@@ -157,9 +157,6 @@ WHERE
 	    foreach ($getGraphDetails AS $graph)
 	    {
 	        $date = explode('-', $graph['Month']);
-	        
-	        
-	        
     	    $graphDetails[date("M Y",mktime(0,0,0,(int)$date[1],1,$date[0]))] = $graph['totalCount'];
 	    }
 	    
