@@ -50,7 +50,7 @@
                         	
                         "Month": {
                         		label: "Month",
-                        		data: [ <?php $current = 0; foreach ($quickGraph AS $key => $single): ?>[<?php echo $current; ?>,<?php echo $single; ?>],<?php $current++; endforeach; ?> ]
+                        		data: [ <?php $current = 0; foreach ($quickGraph AS $detail): ?>[<?php echo $detail['month']; ?>,<?php echo $detail['total']; ?>],<?php $current++; endforeach; ?> ]
                         	},
                         
                         }
