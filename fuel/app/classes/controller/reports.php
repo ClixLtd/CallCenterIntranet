@@ -41,8 +41,7 @@ ORDER BY
 	  CC.ID as ClientID
 	, (CC.Forename + ' ' + CC.Surname) AS ClientName
 	, ps.DateExpected
-	, 100 AS AmountExpected
-	, 100 AS 'Amount Received'
+	, (ps.Amount+ps.OvertimeAmount+ps.AdditionalAmount) AS AmountExpected
 	, ISNULL(PR.Date,'31 dec 1899') AS 'Date Received'
 	, CASE WHEN PR.ID IS null THEN 'Migrated Payment' ELSE 'Client Payment' END As 'Receipt Type'
 FROM 
