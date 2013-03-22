@@ -39,24 +39,47 @@
 				
 				<div class="article-container">
 					<section>
+					   
+					   
+				<div id="chart" class="flotChart" style="width: 100%; height: 300px;"></div>
 					
-					   <table class="zebra-striped datatable" width="100%">
-						<thead>
-							<tr>
-								<th>Month</th>
-								<th>Total</th>
-							</tr>
-						</thead>
-						<tbody>
-						    <?php foreach($quickGraph AS $graphTotal): ?>
-							<tr>
-								<td><?php echo $graphTotal['month']; ?></td>
-								<td><?php echo number_format($graphTotal['total'],0); ?></td>
-							</tr>
-							<?php endforeach; ?>
-						</tbody>
-					</table>
+					<script>
+					$(function () {
+					
+                        var conversionData = {
+                        	
+                        "Month": {
+                        		label: "Month",
+                        		data: [ <?php $current = 0; foreach ($quickGraph AS $key => $single): ?>[<?php echo $current; ?>,<?php echo $single; ?>],<?php $current++; endforeach; ?> ]
+                        	},
+                        
+                        }
 
+						var data = [];
+						
+						$.each(conversionData, function(key, values) {
+							data.push(values);
+						});
+						
+						$.plot(
+							$("#chart"), 
+							data,
+							{
+							    xaxis: { ticks:[ <?php $current = 0; foreach ($result AS $key => $single): ?>[<?php echo $current; ?>,"<?php echo $key; ?>"],<?php $current++; endforeach; ?> ]},
+							    series: {
+				                   lines: { show: true },
+				                   points: { show: true }
+				               },
+				               crosshair: { mode: "x" },
+				               grid: { hoverable: true, }
+							}
+						);
+
+						
+					});
+					</script>
+
+					   
 					
 					</section>
 					
