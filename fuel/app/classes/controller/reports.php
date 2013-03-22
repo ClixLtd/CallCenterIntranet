@@ -68,6 +68,8 @@ ORDER BY
 	    
 	    
 	    
+	    
+	    
 	    $monthPaymentsQuery = "SELECT
 	  D_PA.ClientID
 	, (D_CC.Forename + ' ' + D_CC.Surname) AS Name
@@ -95,6 +97,17 @@ WHERE
 	    
 	    $getPayments = DB::query($monthPaymentsQuery)->cached(300)->execute('debtsolv');
 	    
+	    $monthFirstPaymentsQuery = "SELECT
+      REPLACE(CONVERT(VARCHAR(7), FirstPaymentDate, 111), '/', '-') AS Month
+    , COUNT(DISTINCT ClientID) AS Total
+FROM 
+	[Dialler].[dbo].[client_dates]
+WHERE 
+	Office <> 'RESOLVE'
+GROUP BY
+	REPLACE(CONVERT(VARCHAR(7), FirstPaymentDate, 111), '/', '-')";
+	    
+	    $getFirstPayments = DB::query($monthFirstPaymentsQuery)->cached(300)->execute('debtsolv');
 	    
 	    
 	    $clientPayments = array();
@@ -191,16 +204,24 @@ WHERE
     	    $graphDetails[date("M Y",mktime(0,0,0,(int)$date[1],1,$date[0]))] = $graph['totalCount'];
 	    }
 	    
+	    $graphDetails2 = array();
+	    foreach ($getFirstPayments AS $graph)
+	    {
+	        $date = explode('-', $graph['Month']);
+    	    $graphDetails2[date("M Y",mktime(0,0,0,(int)$date[1],1,$date[0]))] = $graph['totalCount'];
+	    }
 	    
 	    
 	    
 	    $report = Report\Create::forge(array(
 	        'monthlyStats' => array(
 	            'reportResults' => array(
-	               'monthly' => $graphDetails,
+	               'Unique Payments' => $graphDetails,
+	               'First Payments' => $graphDetails2,
 	            ),
 	            'displayType' => 'chart',
 	        ),
+	        
 	    ),3600);
 
 	    
