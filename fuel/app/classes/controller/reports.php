@@ -37,6 +37,36 @@ ORDER BY
 	    $getGraphDetails = DB::query($quickViewCountQuery)->cached(300)->execute('debtsolv');
 	    
 	    
+	    $expectedPaymentsQuery = "select	CC.ID as ClientID,
+		Case when Title = '' Then
+			Forename +' ' +Surname
+		Else
+			CC.Title + '. ' + CC.Forename + ' ' + CC.Surname
+		End as ClientName,
+		ps.DateExpected,
+		convert(Money,(ps.Amount+ps.OvertimeAmount+ps.AdditionalAmount))/100 as AmountExpected,
+		Case when ps.PaymentType = 1 Then 'Initial' Else ' Regular' End as 'Payment Type',
+		convert(money,isnull(PR.Amount,0))/100 as 'Amount Received',
+		isnull(PR.Date,'31 dec 1899') AS 'Date Received',
+		case when PR.ID IS null then 'Migrated Payment' Else 'Client Payment' End As 'Receipt Type',
+		Admin.ShortName As Administrator,
+		Credit.ShortName as 'Credit Controller'
+from Debtsolv.dbo.payment_Schedule ps
+Inner join Debtsolv.dbo.Client_Contact CC On ps.ClientID = CC.ID
+Inner Join Debtsolv.dbo.Client_LeadData CLD On CC.ID = CLD.Client_ID
+left outer join Debtsolv.dbo.PaymentSchedule_AllocationHistory psah on ps.ID = psah.ScheduleID
+left outer join Debtsolv.dbo.Payment_Receipt PR On psah.ReceiptID = PR.ID
+Inner Join Debtsolv.dbo.Users Admin On CLD.Administrator = Admin.ID
+Inner join Debtsolv.dbo.Users Credit On CLD.CreditController = Credit.ID 
+where 
+DateExpected >= '".$startDate."' and DateExpected < '".$endDate."'
+order by ps.DateExpected
+";
+    
+        $expectedPaymentDetails = DB::query($expectedPaymentsQuery)->cached(300)->execute('debtsolv');
+	    
+	    
+	    
 	    $monthPaymentsQuery = "SELECT
 	  D_PA.ClientID
 	, (D_CC.Forename + ' ' + D_CC.Surname) AS Name
@@ -173,6 +203,18 @@ WHERE
 	    ),3600);
 
 	    
+	    $expectedPayments = array();
+	    foreach ($expectedPaymentDetails AS $expected)
+	    {
+    	    $expectedPayments[] = array(
+    	        'clientID'       => $expected['ClientID'],
+    	        'name'           => $expected['ClientName'],
+    	        'dateExpected'   => $expected['DateExpected'],
+    	        'amountExpected' => $expected['AmountExpected'],
+    	        'received'       => $expected['AmountReceived'],
+    	        'complete'       => ((int)$expected['AmountExpected'] == (int)$expected['AmountReceived']) ? TRUE : FALSE,
+    	    );
+	    }
 	    
 	    
 	    
@@ -180,10 +222,15 @@ WHERE
 	    return array(
 	       'reports'    => $report->generate(),
 	       'clients'    => $clientPayments,
+	       'expected'   => $expectedPayments,
 	       'introducer' => $introducerPayments,
 	    );
 
 	}
+	
+	
+	
+	
 	
 	
 	
@@ -198,6 +245,7 @@ WHERE
 		$this->template->content = View::forge('reports/month_payments', array(
 		    'reports' => $reportArray['reports'],
 		    'payments' => $reportArray['clients'],
+		    'expected' => $reportArray['expected'],
 		    'introducer' => $reportArray['introducer'],
 		));	
 

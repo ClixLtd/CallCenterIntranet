@@ -82,6 +82,44 @@
 		</div>
 		
 		
+		<div class="tab" id="expected">
+			<article class="full-block">
+				
+				<div class="article-container">
+					<section>
+					<table class="zebra-striped datatable" width="100%">
+						<thead>
+							<tr>
+								<th>ClientID</th>
+								<th>Name</th>
+								<th>Date Expected</th>
+								<th>Amount Expected</th>
+								<th>Received</th>
+							</tr>
+						</thead>
+						<tbody>
+						    <?php foreach($expected AS $pay): ?>
+							<tr>
+								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>><?php echo $pay['clientID']; ?></td>
+								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>><?php echo $pay['name']; ?></td>
+								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>><?php echo $pay['dateExpected']; ?></td>
+								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>>&pound;<?php echo number_format($pay['amountExpected'],2); ?></td>
+								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>>&pound;<?php echo number_format($pay['received'],2); ?></td>
+							</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+					</section>
+				</div>
+								
+			</article>
+		</div>
+
+	</section>
+
+		
+		
+		
 		<div class="tab" id="monthly">
 			<article class="full-block">
 				
