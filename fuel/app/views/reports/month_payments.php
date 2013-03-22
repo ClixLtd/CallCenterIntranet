@@ -94,6 +94,7 @@
 								<th>Date Expected</th>
 								<th>Amount Expected</th>
 								<th>Received</th>
+								<th>Completed</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -137,6 +138,7 @@
 								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['Name']; ?></td>
 								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>>&pound;<?php echo number_format($pay['AmountIn'],2); ?></td>
 								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['note']; ?></td>
+								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo ($pay['reached']) ? 'Complete' : 'Incomplete'; ?></td>
 							</tr>
 							<?php endforeach; ?>
 						</tbody>
