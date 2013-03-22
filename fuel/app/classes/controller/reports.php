@@ -34,9 +34,6 @@ GROUP BY
 ORDER BY
 	REPLACE(CONVERT(VARCHAR(7), P_R.Date, 111), '/', '-')";
 	
-	    $getGraphDetails = DB::query($quickViewCountQuery)->cached(300)->execute('debtsolv');
-	    
-	    
 	    $monthPaymentsQuery = "SELECT
 	  D_PA.ClientID
 	, (D_CC.Forename + ' ' + D_CC.Surname) AS Name
