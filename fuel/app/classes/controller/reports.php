@@ -208,7 +208,7 @@ GROUP BY
 	    foreach ($getFirstPayments AS $graph)
 	    {
 	        $date = explode('-', $graph['Month']);
-    	    $graphDetails2[date("M Y",mktime(0,0,0,(int)$date[1],1,$date[0]))] = $graph['totalCount'];
+    	    $graphDetails2[date("M Y",mktime(0,0,0,(int)$date[1],1,$date[0]))] = $graph['Total'];
 	    }
 	    
 	    
