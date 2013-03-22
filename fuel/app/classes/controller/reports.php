@@ -42,7 +42,7 @@ ORDER BY
 	, (CC.Forename + ' ' + CC.Surname) AS ClientName
 	, ps.DateExpected
 	, (ps.Amount+ps.OvertimeAmount+ps.AdditionalAmount)/100 AS AmountExpected
-	, ISNULL(PR.Amount,0) AS AmountReceived
+	, ISNULL(PR.Amount,0)/100 AS AmountReceived
 	, ISNULL(PR.Date,'31 dec 1899') AS 'Date Received'
 	, CASE WHEN PR.ID IS null THEN 'Migrated Payment' ELSE 'Client Payment' END As 'Receipt Type'
 FROM 
@@ -213,7 +213,7 @@ WHERE
     	        'dateExpected'   => $expected['DateExpected'],
     	        'amountExpected' => $expected['AmountExpected'],
     	        'received'       => $expected['AmountReceived'],
-    	        'complete'       => ((int)$expected['AmountExpected'] == (int)$expected['AmountReceived']) ? TRUE : FALSE,
+    	        'complete'       => ((int)$expected['AmountExpected'] >= (int)$expected['AmountReceived']) ? TRUE : FALSE,
     	    );
 	    }
 	    
