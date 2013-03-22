@@ -22,6 +22,19 @@ class Controller_Reports extends Controller_BaseHybrid
 	    
 	    $quickViewStartDate = strtotime("-18 months");
 	    
+	    $quickViewCountQuery = "SELECT
+	  REPLACE(CONVERT(VARCHAR(7), P_R.Date, 111), '/', '-') AS Month
+	, COUNT(DISTINCT P_R.ClientID) as totalCount
+FROM 
+	Debtsolv.dbo.Payment_Receipt AS P_R
+WHERE
+	P_R.Date >= '".date('Y-m-01',$quickViewStartDate)."'
+GROUP BY
+	REPLACE(CONVERT(VARCHAR(7), P_R.Date, 111), '/', '-')
+ORDER BY
+	REPLACE(CONVERT(VARCHAR(7), P_R.Date, 111), '/', '-')";
+	
+	    $getGraphDetails = DB::query($quickViewCountQuery)->cached(300)->execute('debtsolv');
 	    
 	    
 	    $monthPaymentsQuery = "SELECT
