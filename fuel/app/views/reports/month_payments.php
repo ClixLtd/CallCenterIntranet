@@ -41,46 +41,9 @@
 					<section>
 					   
 					   
-				<div id="chart" class="flotChart" style="width: 100%; height: 300px;"></div>
-					
-					<script>
-					$(function () {
-					
-                        var conversionData = {
-                        	
-                        "Month": {
-                        		label: "Month",
-                        		data: [ <?php $current = 0; foreach ($quickGraph AS $detail): ?>[<?php echo $detail['month']; ?>,<?php echo $detail['total']; ?>],<?php $current++; endforeach; ?> ]
-                        	},
-                        
-                        }
-
-						var data = [];
-						
-						$.each(conversionData, function(key, values) {
-							data.push(values);
-						});
-						
-						$.plot(
-							$("#chart"), 
-							data,
-							{
-							    xaxis: { ticks:[ <?php $current = 0; foreach ($quickGraph AS $detail): ?>[<?php echo $detail['month']; ?>,<?php echo $detail['total']; ?>],<?php $current++; endforeach; ?> ]},
-							    series: {
-				                   lines: { show: true },
-				                   points: { show: true }
-				               },
-				               crosshair: { mode: "x" },
-				               grid: { hoverable: true, }
-							}
-						);
-
-						
-					});
-					</script>
-
+					   <?php echo $reports['hourlyStats']; ?>
 					   
-					
+					   					
 					</section>
 					
 				</div>

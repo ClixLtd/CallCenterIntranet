@@ -164,8 +164,23 @@ WHERE
 	    
 	    
 	    
+	    
+	    $report = Report\Create::forge(array(
+	        'monthlyStats' => array(
+	            'reportResults' => array(
+	               'monthly' => $graphDetails,
+	            ),
+	            'displayType' => 'chart',
+	        ),
+	    ),3600);
+
+	    
+	    
+	    
+	    
+	    
 	    return array(
-	       'quickGraph' => $graphDetails,
+	       'quickGraph' => $report['monthlyStats'],
 	       'clients'    => $clientPayments,
 	       'introducer' => $introducerPayments,
 	    );
