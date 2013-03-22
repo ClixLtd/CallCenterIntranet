@@ -156,10 +156,7 @@ WHERE
 	    $graphDetails = array();
 	    foreach ($getGraphDetails AS $graph)
 	    {
-    	    $graphDetails[] = array(
-    	        'month' => $graph['Month'],
-    	        'total' => $graph['totalCount'],
-    	    );
+    	    $graphDetails[$graph['Month']] = $graph['totalCount'];
 	    }
 	    
 	    
@@ -168,7 +165,7 @@ WHERE
 	    $report = Report\Create::forge(array(
 	        'monthlyStats' => array(
 	            'reportResults' => array(
-	               'monthly' => $getGraphDetails,
+	               'monthly' => $graphDetails,
 	            ),
 	            'displayType' => 'chart',
 	        ),
