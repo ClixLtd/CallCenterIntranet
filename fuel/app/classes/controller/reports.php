@@ -104,6 +104,7 @@ FROM
 	[Dialler].[dbo].[client_dates]
 WHERE 
 	Office <> 'RESOLVE'
+	AND (FirstPaymentDate >= '".date('Y-m-01',$quickViewStartDate)."' AND FirstPaymentDate <= '".date('Y-m-d')."')
 GROUP BY
 	REPLACE(CONVERT(VARCHAR(7), FirstPaymentDate, 111), '/', '-')";
 	    
