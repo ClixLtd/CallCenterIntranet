@@ -37,7 +37,32 @@ ORDER BY
 	    $getGraphDetails = DB::query($quickViewCountQuery)->cached(300)->execute('debtsolv');
 	    
 	    
-	    $expectedPaymentsQuery = "SELECT TOP 10 * FROM Debtsolv.dbo.Payment_Account";
+	    $expectedPaymentsQuery = "SELECT
+	  CC.ID as ClientID
+	, CASE WHEN Title = '' THEN Forename +' ' +Surname ELSE CC.Title + '. ' + CC.Forename + ' ' + CC.Surname END as ClientName
+	, ps.DateExpected
+	, CONVERT(Money,(ps.Amount+ps.OvertimeAmount+ps.AdditionalAmount))/100 as AmountExpected
+	, CONVERT(money,ISNULL(PR.Amount,0))/100 as 'Amount Received'
+	, ISNULL(PR.Date,'31 dec 1899') AS 'Date Received'
+	, CASE WHEN PR.ID IS null THEN 'Migrated Payment' ELSE 'Client Payment' END As 'Receipt Type'
+FROM 
+	Debtsolv.dbo.Payment_Schedule AS ps
+INNER JOIN
+	Debtsolv.dbo.Client_Contact AS CC ON ps.ClientID = CC.ID
+INNER JOIN 
+	Debtsolv.dbo.Client_LeadData AS CLD ON CC.ID = CLD.Client_ID
+LEFT OUTER JOIN 
+	Debtsolv.dbo.PaymentSchedule_AllocationHistory AS psah ON ps.ID = psah.ScheduleID
+LEFT OUTER JOIN
+	Debtsolv.dbo.Payment_Receipt AS PR ON psah.ReceiptID = PR.ID
+INNER JOIN
+	Debtsolv.dbo.Users AS Admin ON CLD.Administrator = Admin.ID
+INNER JOIN
+	Debtsolv.dbo.Users AS Credit ON CLD.CreditController = Credit.ID 
+WHERE
+	(DateExpected >= '".$startDate."' AND DateExpected < '".$endDate."')
+ORDER BY 
+	ps.DateExpected";
     
         $expectedPaymentDetails = DB::query($expectedPaymentsQuery)->cached(300)->execute('debtsolv');
 	    
