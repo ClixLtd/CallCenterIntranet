@@ -168,7 +168,7 @@ WHERE
 	    $report = Report\Create::forge(array(
 	        'monthlyStats' => array(
 	            'reportResults' => array(
-	               'monthly' => $graphDetails,
+	               'monthly' => $getGraphDetails,
 	            ),
 	            'displayType' => 'chart',
 	        ),
