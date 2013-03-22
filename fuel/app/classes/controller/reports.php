@@ -180,7 +180,7 @@ WHERE
 	    
 	    
 	    return array(
-	       'quickGraph' => $report['monthlyStats'],
+	       'reports'    => $report->generate(),
 	       'clients'    => $clientPayments,
 	       'introducer' => $introducerPayments,
 	    );
@@ -198,7 +198,7 @@ WHERE
 	    
 	    $this->template->title = 'Reports &raquo; Monthly Payments';
 		$this->template->content = View::forge('reports/month_payments', array(
-		    'quickGraph' => $reportArray['quickGraph'],
+		    'reports' => $reportArray['reports'],
 		    'payments' => $reportArray['clients'],
 		    'introducer' => $reportArray['introducer'],
 		));	
