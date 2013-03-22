@@ -152,8 +152,20 @@ WHERE
 	    
 	    
 	    
+	    // Parse Graph
+	    $graphDetails = array();
+	    foreach ($getGraphDetails AS $graph)
+	    {
+    	    $graphDetails = array(
+    	        'month' => $graph['Month'],
+    	        'total' => $graph['totalCount'],
+    	    );
+	    }
+	    
+	    
+	    
 	    return array(
-	       
+	       'quickGraph' => $graphDetails,
 	       'clients'    => $clientPayments,
 	       'introducer' => $introducerPayments,
 	    );

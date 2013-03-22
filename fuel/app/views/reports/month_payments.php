@@ -50,8 +50,8 @@
 						<tbody>
 						    <?php foreach($quickGraph AS $graphTotal): ?>
 							<tr>
-								<td><?php echo $graphTotal['Month']; ?></td>
-								<td><?php echo number_format($graphTotal['totalCount'],0); ?></td>
+								<td><?php echo $graphTotal['month']; ?></td>
+								<td><?php echo number_format($graphTotal['total'],0); ?></td>
 							</tr>
 							<?php endforeach; ?>
 						</tbody>
