@@ -37,20 +37,20 @@ ORDER BY
 	    $getGraphDetails = DB::query($quickViewCountQuery)->cached(300)->execute('debtsolv');
 	    
 	    
-	    $expectedPaymentsQuery = "select	CC.ID as ClientID,
-		Case when Title = '' Then
-			Forename +' ' +Surname
-		Else
-			CC.Title + '. ' + CC.Forename + ' ' + CC.Surname
-		End as ClientName,
-		ps.DateExpected,
-		convert(Money,(ps.Amount+ps.OvertimeAmount+ps.AdditionalAmount))/100 as AmountExpected,
-		Case when ps.PaymentType = 1 Then 'Initial' Else ' Regular' End as 'Payment Type',
-		convert(money,isnull(PR.Amount,0))/100 as 'Amount Received',
-		isnull(PR.Date,'31 dec 1899') AS 'Date Received',
-		case when PR.ID IS null then 'Migrated Payment' Else 'Client Payment' End As 'Receipt Type',
-		Admin.ShortName As Administrator,
-		Credit.ShortName as 'Credit Controller'
+	    $expectedPaymentsQuery = "select CC.ID as ClientID,
+Case when Title = '' Then
+Forename +' ' +Surname
+Else
+CC.Title + '. ' + CC.Forename + ' ' + CC.Surname
+End as ClientName,
+ps.DateExpected,
+convert(Money,(ps.Amount+ps.OvertimeAmount+ps.AdditionalAmount))/100 as AmountExpected,
+Case when ps.PaymentType = 1 Then 'Initial' Else ' Regular' End as 'Payment Type',
+convert(money,isnull(PR.Amount,0))/100 as 'Amount Received',
+isnull(PR.Date,'31 dec 1899') AS 'Date Received',
+case when PR.ID IS null then 'Migrated Payment' Else 'Client Payment' End As 'Receipt Type',
+Admin.ShortName As Administrator,
+Credit.ShortName as 'Credit Controller'
 from Debtsolv.dbo.payment_Schedule ps
 Inner join Debtsolv.dbo.Client_Contact CC On ps.ClientID = CC.ID
 Inner Join Debtsolv.dbo.Client_LeadData CLD On CC.ID = CLD.Client_ID
@@ -60,8 +60,7 @@ Inner Join Debtsolv.dbo.Users Admin On CLD.Administrator = Admin.ID
 Inner join Debtsolv.dbo.Users Credit On CLD.CreditController = Credit.ID 
 where 
 DateExpected >= '".$startDate."' and DateExpected < '".$endDate."'
-order by ps.DateExpected
-";
+order by ps.DateExpected";
     
         $expectedPaymentDetails = DB::query($expectedPaymentsQuery)->cached(300)->execute('debtsolv');
 	    
