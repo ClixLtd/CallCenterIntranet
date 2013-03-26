@@ -26,7 +26,7 @@
 			$surname = Datascrape::get_new_surname();
 			
 			
-			$proxy_count = \Model_Proxy::find()->where('fail_count', '<', static::$current_max_count);
+			$proxy_count = \Model_Proxy::find()->where('fail_count', '<', static::$current_max_count)->order_by('created_at', 'DESC');
 			
 			while ($proxy_count->count() == 0)
 			{
@@ -67,7 +67,7 @@
 					
 					$got_error = FALSE;
 					for ($i = 1; $i <= $totalPageNumbers; $i++) {
-						$proxy_count = \Model_Proxy::find()->where('fail_count', '<', static::$current_max_count);
+						$proxy_count = \Model_Proxy::find()->where('fail_count', '<', static::$current_max_count)->order_by('created_at', 'DESC');
 						if ($i > 1) {
 							$html = Datascrape::get_html_dom($surname['surname'], $town['town'], $i);
 						}
