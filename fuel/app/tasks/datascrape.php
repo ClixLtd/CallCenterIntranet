@@ -49,7 +49,7 @@
 				} 
 				else 
 				{
-					$pagesArray = $html->find(".pages a");
+					$pagesArray = $html->find(".page_nav a");
 					
 					if (count($pagesArray) > 0) {
 						$totalPages = $pagesArray[count($pagesArray)-2];
@@ -236,7 +236,7 @@
 					$proxy = $proxy_query->get_one();
 					echo "Trying Proxy (from ".$count.") - " . $proxy->host.":".$proxy->port;
 					$html = \Simple_Html_Dom\helper::file_get_html(
-						'http://www.118.com/people-search.mvc?Supplied=true&Name='.$surname.'&Location='.$town.'&pageSize=50&pageNumber='.$page_number, 
+						'http://www.ukphonebook.com/telephone_directory/search?data_source=osis&name='.$surname.'&place='.$town.'&er_years%5B0%5D=pre-2013&er_years%5B1%5D=2013&page='.$page_number, 
 						false,
 						stream_context_create(
 							array(
