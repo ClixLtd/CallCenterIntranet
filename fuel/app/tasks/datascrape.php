@@ -59,7 +59,7 @@
 						$totalPageNumbers = 1;
 					}
 					
-					echo $surname['surname']."'s in ".$town['town']."\n";
+					echo $totalPageNumbers." pages of ".$surname['surname']."'s in ".$town['town']."\n";
 					@ob_flush();
 					
 					$results = Array();
@@ -99,6 +99,10 @@
 								$results[] = $singleResult;
 								echo ".";
 								@ob_flush();
+								
+								
+								
+								print_r($singleResult);
 							}
 				
 						}
