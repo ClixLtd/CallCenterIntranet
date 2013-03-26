@@ -81,7 +81,7 @@
 						
 							foreach ($html->find(".record") AS $e) {
 		
-								$name = array_reverse(explode(" ", Datascrape::cleanString(@$e->find("name",0)->plaintext)));
+								$name = array_reverse(explode(" ", Datascrape::cleanString(@$e->find(".name",0)->plaintext)));
 		
 								$singleResult['surname'] = array_shift($name);
 								$singleResult['forename'] = implode(" ", $name);
@@ -89,7 +89,7 @@
 								$address = explode(", ", Datascrape::cleanString(@$e->find(".address",0)->innertext));
 		
 								$singleResult['add1'] = (isset($address[0])) ? $address[0] : "";
-								$singleResult['add2'] = (isset($address[2])) ? $address[2] : $address[1];
+								$singleResult['add2'] = (isset($address[2]) && substr($address[2],0,11) != "<span class") ? $address[2] : $address[1];
 								$singleResult['postcode'] = @Datascrape::cleanString($e->find(".postcode",0)->plaintext, TRUE);
 		
 								$tmpTel = str_replace(array('(',')',' '),array('','',''), @Datascrape::cleanString($e->find(".telnum",0)->plaintext, TRUE));
