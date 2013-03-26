@@ -49,7 +49,7 @@
 				} 
 				else 
 				{
-					$pagesArray = $html->find(".pages a");
+					$pagesArray = $html->find(".page_nav a");
 					
 					if (count($pagesArray) > 0) {
 						$totalPages = $pagesArray[count($pagesArray)-2];
@@ -79,20 +79,20 @@
 						else
 						{
 						
-							foreach ($html->find(".searchResult") AS $e) {
+							foreach ($html->find(".record") AS $e) {
 		
-								$name = explode(" ", Datascrape::cleanString(@$e->find("h2",0)->plaintext));
+								$name = array_reverse(explode(" ", Datascrape::cleanString(@$e->find("name",0)->plaintext)));
 		
 								$singleResult['surname'] = array_shift($name);
 								$singleResult['forename'] = implode(" ", $name);
 		
-								$address = explode("<br />", Datascrape::cleanString(@$e->find(".address",0)->innertext));
+								$address = explode(", ", Datascrape::cleanString(@$e->find(".address",0)->innertext));
 		
 								$singleResult['add1'] = (isset($address[0])) ? $address[0] : "";
-								$singleResult['add2'] = (isset($address[1])) ? $address[1] : "";
-								$singleResult['postcode'] = (isset($address[2])) ? Datascrape::cleanString($address[2], TRUE) : '';
+								$singleResult['add2'] = (isset($address[2])) ? $address[2] : $address[1];
+								$singleResult['postcode'] = @Datascrape::cleanString($e->find(".postcode",0)->plaintext, TRUE);
 		
-								$tmpTel = @Datascrape::cleanString($e->find(".telephoneNumber",0)->plaintext, TRUE);
+								$tmpTel = str_replace(array('(',')',' '),array('','',''), @Datascrape::cleanString($e->find(".telnum",0)->plaintext, TRUE));
 		
 								$singleResult['telephone'] = (substr($tmpTel, 0, 1) == 0) ? substr($tmpTel, 1) : $tmpTel;
 		
@@ -236,7 +236,7 @@
 					$proxy = $proxy_query->get_one();
 					echo "Trying Proxy (from ".$count.") - " . $proxy->host.":".$proxy->port;
 					$html = \Simple_Html_Dom\helper::file_get_html(
-						'http://www.118.com/people-search.mvc?Supplied=true&Name='.$surname.'&Location='.$town.'&pageSize=50&pageNumber='.$page_number, 
+						'http://www.ukphonebook.com/telephone_directory/search?data_source=osis&name='.$surname.'&place='.$town.'&er_years%5B0%5D=pre-2013&er_years%5B1%5D=2013&page='.$page_number, 
 						false,
 						stream_context_create(
 							array(
