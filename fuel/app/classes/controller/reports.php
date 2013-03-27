@@ -77,6 +77,7 @@ ORDER BY
 	, D_CPD.NormalExpectedPayment/100 AS NormalExpectedPayment
 	, D_LI.Name AS Introducer
 	, ISNULL(L_CLD.LeadRef2, 'NONE') AS Shortcode
+	, (SELECT SUM([AmountOwed])/100 FROM [Debtsolv].[dbo].[Finstat_Debt] WHERE ClientID = D_PA.ClientID) AS TotalOwed
 FROM
 	Debtsolv.dbo.Payment_Receipt AS D_PA
 LEFT JOIN
@@ -184,6 +185,7 @@ GROUP BY
     	       'Introducer'            => $introducerTitle,
     	       'AmountIn'              => $paymentTotal,
     	       'NormalExpectedPayment' => $payment['NormalExpectedPayment'],
+    	       'TotalOwed'             => $payment['TotalOwed'],
     	       'count'                 => $paymentCount,
     	       'note'                  => ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
     	       'reached'               => ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
