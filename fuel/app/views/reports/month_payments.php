@@ -128,7 +128,7 @@
 								<th>Introducer</th>
 								<th>Name</th>
 								<th>Amount In</th>
-								<th>Total Owed</th>
+								<th>Remaining Debt</th>
 								<th>Notes</th>
 							</tr>
 						</thead>
