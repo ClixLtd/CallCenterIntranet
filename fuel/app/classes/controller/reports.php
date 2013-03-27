@@ -77,7 +77,7 @@ ORDER BY
 	, D_CPD.NormalExpectedPayment/100 AS NormalExpectedPayment
 	, D_LI.Name AS Introducer
 	, ISNULL(L_CLD.LeadRef2, 'NONE') AS Shortcode
-	, (SELECT SUM([AmountOwed])/100 FROM [Debtsolv].[dbo].[Finstat_Debt] WHERE ClientID = D_PA.ClientID) AS TotalOwed
+	, (SELECT SUM([EstimatedBalance])/100 FROM [Debtsolv].[dbo].[Finstat_Debt] WHERE ClientID = D_PA.ClientID) AS TotalOwed
 FROM
 	Debtsolv.dbo.Payment_Receipt AS D_PA
 LEFT JOIN
@@ -266,7 +266,7 @@ GROUP BY
 	public function action_monthly_payment()
 	{
     		    
-	    $reportArray = Controller_Reports::generate_monthly_payment_report(null, "2012-10-01", "2012-11-01");
+	    $reportArray = Controller_Reports::generate_monthly_payment_report(null, "2013-03-01", "2013-04-01");
 	    
 	    $this->template->title = 'Reports &raquo; Monthly Payments';
 		$this->template->content = View::forge('reports/month_payments', array(
