@@ -2,7 +2,67 @@
 
 class Controller_Reports extends Controller_BaseHybrid
 {
-
+    
+    
+    
+	/* ********************
+	 * Start Agent Report *
+	 **********************/    
+    
+    /* Function to build the query for the agent report
+     *
+     * Send Array is as follows...
+     *
+     * array(
+     *   'agent' => array(
+     *     'agent1',
+     *     'agent2',
+     *   ),
+     *   'comparison' => array(
+     *     'agent1',
+     *     'agent2',
+     *   ),
+     *   'included' => array(
+     *     'referrals',
+     *     'packout',
+     *     'packin',
+     *     'paid',
+     *   ),
+     * );
+     */
+    public static function build_agent_report_query($_requirements=null)
+    {
+        if (is_null($_requirements))
+        {
+            return false;
+        }
+        else
+        {
+            
+        }
+    }
+    
+    
+    public function action_agent()
+    {
+	    
+	    // Get a list of all current active agents
+	    $staff = Model_Staff::query()->where('active', 1)->order_by('last_name')->get();
+	    
+	    
+	    $this->template->title = 'Agent Report &raquo; Reports';
+		$this->template->content = View::forge('reports/agent_generate', array(
+		    'all_active_agents' => $staff,
+		));	
+    }
+    
+    
+	/* ******************
+	 * End Agent Report *
+	 ********************/  
+    
+    
+    
 	public function action_dialler_test()
 	{
 		print count(Goautodial\Live::closers());
