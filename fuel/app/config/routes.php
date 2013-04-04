@@ -44,6 +44,10 @@ return array(
 	'reports/dispositiontest/:startdate' => 'reports/dispositiontest',
 	
 	
+	'reports/get_telesales_report_period/(:center)/:month' => 'reports/get_telesales_report_period/$1',
+	'reports/get_telesales_report_period/(:center)' => 'reports/get_telesales_report_period/$1',
+	'reports/get_telesales_report_period' => 'reports/get_telesales_report_period',
+	
 	'reports/get_telesales_report/(:center)/:month' => 'reports/get_telesales_report/$1',
 	'reports/get_telesales_report/(:center)' => 'reports/get_telesales_report/$1',
 	'reports/get_telesales_report' => 'reports/get_telesales_report',
