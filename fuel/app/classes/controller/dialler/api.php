@@ -3,6 +3,54 @@
 	class Controller_Dialler_Api extends Controller_Rest 
 	{
 		
+		
+		
+		
+		
+	public function get_get_telesales_report_period($center=null)
+	{
+	    
+	    if ($center == "ALL")
+    	{
+        	$center = null;
+    	}
+	    
+	    $startDate = null;
+    	$endDate = null;
+    	
+    	$month = $this->param('month');
+    	if ($month == "month")
+    	{
+        	$startDate = date("Y-m-01");
+        	$endDate = date("Y-m-t");
+        	
+    	}
+    	else
+    	{
+            $startDate = date("Y-m-d");
+        	$endDate = date("Y-m-d");
+    	}
+
+	
+    	$reportArray = Controller_Reports::generate_telesales_report($center, $startDate, $endDate);
+    	return $this->response(array(
+    	    'titles'     => array(
+    	        'Name',
+    	        'Referrals',
+    	        'Pack Outs',
+    	        'Conversion Rate',
+    	        'Points',
+    	        'Commission',
+    	    ),
+    	    'report'     => $reportArray['report'],
+    	    'centerVals' => $reportArray['centerVals'],
+    	));
+	}
+		
+		
+		
+		
+		
 		public function get_live_agents($campaign)
 		{
 			$live_agents = Goautodial\Live::live_agents($campaign);
