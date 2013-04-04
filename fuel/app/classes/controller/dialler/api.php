@@ -82,7 +82,7 @@
 				),
 			);
 			
-			$connection = ($center == "GAB") ? 'gabdialler' : 'resolvedialler';
+			$connection = ($center == "RESOLVE") ? 'resolvedialler' : 'gabdialler';
 			
 			$current_results = GAB\Debtsolv::get_referral_count($center);
 		
