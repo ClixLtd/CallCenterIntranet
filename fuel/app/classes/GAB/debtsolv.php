@@ -496,11 +496,11 @@ class Debtsolv {
 		{
 			if ($center == "INTERNAL")
 			{
-				$center_query = "AND CLD.LeadRef2 IN ('GAB','GBS')";
+				$center_query = "AND DI_REF.short_code IN ('GAB','GBS')";
 			}
 			else
 			{
-				$center_query = "AND CLD.LeadRef2 = '".$center."'";
+				$center_query = "AND DI_REF.short_code = '".$center."'";
 			}
 		}
 		else
@@ -524,7 +524,7 @@ class Debtsolv {
 		}
 		else
 		{
-			$data_cache = (!is_null($start_date) AND !is_null($end_date)) ? 86400 : 30;
+			$data_cache = (!is_null($start_date) AND !is_null($end_date)) ? 60 : 60;
 		}
 			
 		$results1 = \DB::query("SELECT CLD.ClientID
