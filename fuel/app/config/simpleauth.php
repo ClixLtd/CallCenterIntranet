@@ -67,6 +67,7 @@ return array(
 		 
 		 50   => array('name' => 'CDS', 'roles' =>array('ppi')),
 		 
+		 55   => array('name' => 'Data Analyst', 'roles' => array('introducer')),
 		 
 		 61   => array('name' => 'Manager', 'roles' => array('manager')),
 		 
