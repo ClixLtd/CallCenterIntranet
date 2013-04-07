@@ -15,10 +15,14 @@ $(function () {
   function addInvoiceTotal()
   {
     var total = 0;
+    var vat = 0;
     
     total = ($("#Invoice_Charge").val() / 100) * $("#Invoice_Fee").val();
     total = total * $("#Invoice_Qty").val();
+    vat = total / 100 * $("#VAT_Percentage").val();
+    total = total + vat;
     
+    $("#Invoice_VAT").val(vat);
     $("#Invoice_Total").val(total.toFixed(2));
   }
   
@@ -40,6 +44,11 @@ $(function () {
       msg += "Invoice Charge is empty\n";
     }
     
+    if($('#Refund_Method').val() < 0)
+    {
+      msg += "Refund Method not selected\n";
+    }
+    
     if(msg != '')
     {
       alert(msg);
@@ -47,6 +56,32 @@ $(function () {
     else
     {
       var clientID = $('#Invoice_ClientID').val();
+      
+      /*
+      $.ajax({
+        url: 'http://gabintranet.clix.dev/crm/invoice/create_invoice/' + clientID,
+        data:
+        {
+          claimID: 
+          //$('#Create-Invoice').serialize()
+        },
+        async: false,
+        dataType: "json", 
+        success: function(data)
+        {
+          if (data['status'] == 'done')
+    			{
+    				alert('Invoice #' + data['message'] + ', has been created and sent to the print queue');
+            $("#createInvoice").hide();
+            location.reload();
+    			}
+    			else
+    			{
+    				alert('Error: Unable to create an Invoice. Please contact I.T. Support');
+    			}
+        }
+      });
+      */
       
       $.post('/crm/invoice/create_invoice/' + clientID + '.json',
   		$('#Create-Invoice').serialize(),
