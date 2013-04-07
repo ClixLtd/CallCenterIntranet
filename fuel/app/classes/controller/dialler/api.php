@@ -3,6 +3,54 @@
 	class Controller_Dialler_Api extends Controller_Rest 
 	{
 		
+		
+		
+		
+		
+	public function get_get_telesales_report_period($center=null)
+	{
+	    
+	    if ($center == "ALL")
+    	{
+        	$center = null;
+    	}
+	    
+	    $startDate = null;
+    	$endDate = null;
+    	
+    	$month = $this->param('month');
+    	if ($month == "month")
+    	{
+        	$startDate = date("Y-m-01");
+        	$endDate = date("Y-m-t");
+        	
+    	}
+    	else
+    	{
+            $startDate = date("Y-m-d");
+        	$endDate = date("Y-m-d");
+    	}
+
+	
+    	$reportArray = Controller_Reports::generate_telesales_report($center, $startDate, $endDate);
+    	return $this->response(array(
+    	    'titles'     => array(
+    	        'Name',
+    	        'Referrals',
+    	        'Pack Outs',
+    	        'Conversion Rate',
+    	        'Points',
+    	        'Commission',
+    	    ),
+    	    'report'     => $reportArray['report'],
+    	    'centerVals' => $reportArray['centerVals'],
+    	));
+	}
+		
+		
+		
+		
+		
 		public function get_live_agents($campaign)
 		{
 			$live_agents = Goautodial\Live::live_agents($campaign);
@@ -82,6 +130,8 @@
 				),
 			);
 			
+			$connection = ($center == "RESOLVE") ? 'resolvedialler' : 'gabdialler';
+			
 			$current_results = GAB\Debtsolv::get_referral_count($center);
 		
 			$this->response(array(
@@ -93,8 +143,8 @@
 				'pack_out_value' => number_format($current_results['pack_outs_value'],2),
 				'pack_out_average_di' => ($current_results['pack_outs']==0) ? 0 : number_format($current_results['pack_outs_value']/$current_results['pack_outs'],2),
 	
-				'seniors_available' => count(Goautodial\Live::closers('SENIORS')),
-				'seniors_queue' => count(Goautodial\Live::inbound_queue()),
+				'seniors_available' => count(Goautodial\Live::closers('SENIORS', $connection)),
+				'seniors_queue' => count(Goautodial\Live::inbound_queue(null, $connection)),
 				
 				'gab_live' => array(
 					'active' => ( Goautodial\Live::dialable_leads('GAB-LIVE') > 0 ) ? 1 : 0,

@@ -2,7 +2,67 @@
 
 class Controller_Reports extends Controller_BaseHybrid
 {
-
+    
+    
+    
+	/* ********************
+	 * Start Agent Report *
+	 **********************/    
+    
+    /* Function to build the query for the agent report
+     *
+     * Send Array is as follows...
+     *
+     * array(
+     *   'agent' => array(
+     *     'agent1',
+     *     'agent2',
+     *   ),
+     *   'comparison' => array(
+     *     'agent1',
+     *     'agent2',
+     *   ),
+     *   'included' => array(
+     *     'referrals',
+     *     'packout',
+     *     'packin',
+     *     'paid',
+     *   ),
+     * );
+     */
+    public static function build_agent_report_query($_requirements=null)
+    {
+        if (is_null($_requirements))
+        {
+            return false;
+        }
+        else
+        {
+            
+        }
+    }
+    
+    
+    public function action_agent()
+    {
+	    
+	    // Get a list of all current active agents
+	    $staff = Model_Staff::query()->where('active', 1)->order_by('last_name')->get();
+	    
+	    
+	    $this->template->title = 'Agent Report &raquo; Reports';
+		$this->template->content = View::forge('reports/agent_generate', array(
+		    'all_active_agents' => $staff,
+		));	
+    }
+    
+    
+	/* ******************
+	 * End Agent Report *
+	 ********************/  
+    
+    
+    
 	public function action_dialler_test()
 	{
 		print count(Goautodial\Live::closers());
@@ -77,6 +137,7 @@ ORDER BY
 	, D_CPD.NormalExpectedPayment/100 AS NormalExpectedPayment
 	, D_LI.Name AS Introducer
 	, ISNULL(L_CLD.LeadRef2, 'NONE') AS Shortcode
+	, (SELECT SUM(CASE WHEN EstimatedBalance > 0 THEN EstimatedBalance ELSE AmountOwed END)/100 FROM [Debtsolv].[dbo].[Finstat_Debt] WHERE ClientID = D_PA.ClientID) AS TotalOwed
 FROM
 	Debtsolv.dbo.Payment_Receipt AS D_PA
 LEFT JOIN
@@ -184,6 +245,7 @@ GROUP BY
     	       'Introducer'            => $introducerTitle,
     	       'AmountIn'              => $paymentTotal,
     	       'NormalExpectedPayment' => $payment['NormalExpectedPayment'],
+    	       'TotalOwed'             => $payment['TotalOwed'],
     	       'count'                 => $paymentCount,
     	       'note'                  => ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
     	       'reached'               => ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
@@ -264,7 +326,7 @@ GROUP BY
 	public function action_monthly_payment()
 	{
     		    
-	    $reportArray = Controller_Reports::generate_monthly_payment_report(null, "2012-10-01", "2012-11-01");
+	    $reportArray = Controller_Reports::generate_monthly_payment_report(null, "2013-03-01", "2013-04-01");
 	    
 	    $this->template->title = 'Reports &raquo; Monthly Payments';
 		$this->template->content = View::forge('reports/month_payments', array(
@@ -851,7 +913,10 @@ GROUP BY
     	);
     	    	
 	}
-	
+
+
+
+
 	public function get_get_telesales_report($center=null)
 	{
 	    

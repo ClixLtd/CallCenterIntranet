@@ -3,6 +3,16 @@
 class Controller_Debtsolv extends Controller_Rest
 {
 	
+	
+	public function action_import_payments()
+	{
+    	print "hi";
+	}
+	
+	
+	
+	
+	
 	public function action_test_log()
 	{
 		

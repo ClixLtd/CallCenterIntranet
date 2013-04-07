@@ -128,6 +128,7 @@
 								<th>Introducer</th>
 								<th>Name</th>
 								<th>Amount In</th>
+								<th>Remaining Debt</th>
 								<th>Notes</th>
 							</tr>
 						</thead>
@@ -138,6 +139,7 @@
 								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['Introducer']; ?></td>
 								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['Name']; ?></td>
 								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>>&pound;<?php echo number_format($pay['AmountIn'],2); ?></td>
+								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['TotalOwed']; ?></td>
 								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['note']; ?></td>
 								
 							</tr>
