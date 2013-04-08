@@ -1,5 +1,24 @@
 $(function () {
   
+  // -- Print PPI Form
+  // -----------------
+  $('.printPPIForm').click(function()
+  {
+    var formName = $(this).attr('rel');
+    
+    $.getJSON('/crm/letter/manage/print_form/' + formName, function(data)
+    {
+      if(data['status'] == 'success')
+      {
+        alert(data['message']);
+      }
+      else
+      {
+        alert('Error: ' + data['message']);
+      }
+    });
+  });
+  
   // -- Display the PPI Invoice Total
   // --------------------------------
   $("#Invoice_Charge").change(function()
@@ -56,32 +75,6 @@ $(function () {
     else
     {
       var clientID = $('#Invoice_ClientID').val();
-      
-      /*
-      $.ajax({
-        url: 'http://gabintranet.clix.dev/crm/invoice/create_invoice/' + clientID,
-        data:
-        {
-          claimID: 
-          //$('#Create-Invoice').serialize()
-        },
-        async: false,
-        dataType: "json", 
-        success: function(data)
-        {
-          if (data['status'] == 'done')
-    			{
-    				alert('Invoice #' + data['message'] + ', has been created and sent to the print queue');
-            $("#createInvoice").hide();
-            location.reload();
-    			}
-    			else
-    			{
-    				alert('Error: Unable to create an Invoice. Please contact I.T. Support');
-    			}
-        }
-      });
-      */
       
       $.post('/crm/invoice/create_invoice/' + clientID + '.json',
   		$('#Create-Invoice').serialize(),
