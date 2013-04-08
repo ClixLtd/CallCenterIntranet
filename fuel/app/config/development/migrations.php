@@ -75,6 +75,7 @@ return array(
 			'crm_invoice' => 
 			array(
 				0 => '001_create_crm_invoices',
+				1 => '002_alter_crm_invoices_addvat',
 			),
 			'crm_ppi' => 
 			array(
@@ -95,6 +96,7 @@ return array(
 				14 => '015_alter_crm_ppi_clients_addpartner',
 				15 => '016_alter_crm_ppi_claims_invoice_id',
 				16 => '017_alter_crm_ppi_claims_change_ac',
+				17 => '018_alter_crm_ppi_refund_removecols',
 			),
 		),
 	),
