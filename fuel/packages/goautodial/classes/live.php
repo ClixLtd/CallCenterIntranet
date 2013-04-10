@@ -8,7 +8,7 @@
 		
 		public static function dialable_leads($campaign=null)
 		{
-			$get_campaign_calls = Model_Vicidial_Campaign_Stats::find()->where('campaign_id', $campaign)->get_one();
+			$get_campaign_calls = Model_Vicidial_Campaign_Stats::find(null,array(),'gabdialler')->where('campaign_id', $campaign)->get_one();
 			return $get_campaign_calls->dialable_leads;
 		}
 		
