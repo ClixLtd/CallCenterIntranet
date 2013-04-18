@@ -65,7 +65,7 @@ return array(
 		 40   => array('name' => 'Legal', 'roles' => array()),
 		 
 		 
-		 50   => array('name' => 'CDS', 'roles' =>array('ppi')),
+		 50   => array('name' => 'CDS', 'roles' =>array('ppi', 'ppi_admin')),
 		 
 		 55   => array('name' => 'Data Analyst', 'roles' => array('introducer')),
 		 

@@ -1,5 +1,87 @@
 $(function () {
   
+  // -- Save Refund Method
+  // ---------------------
+  $('#saveRefundMethod').click(function()
+  {
+    var claimID = $(this).attr('rel');
+    var methodID = $('#Refund_Method').val();
+    var errorMsg = '';
+    
+    if(methodID == -1)
+    {
+      errorMsg = 'Select a Refund Method';
+    }
+    
+    if(errorMsg != '')
+    {
+      alert(errorMsg);
+    }
+    else
+    {
+      $.post('/crm/ppi/save_refund_method/' + claimID + '.json',
+  		{
+  		  method_id: methodID
+  		},
+  		function(data){
+  			if (data['status'] == 'done')
+  			{
+  				alert('Refund Method has been saved');
+          location.reload();
+  			}
+  			else
+  			{
+  				alert('Error: Refund method has not been saved');
+  			}
+  		});
+    }
+  });
+  
+  // -- Change the Claim Signatory
+  // -----------------------------
+  $("#changeSignatory").click(function()
+  {
+    var newDialog = $("#Change-Signatory-Box").dialog();
+    
+    newDialog.dialog( { 
+       autoOpen: false, 
+       modal: true, 
+       resizable: false,
+       title: "Change Claim Signatory",
+       buttons: 
+           [ 
+               { 
+                   text: "Save", 
+                   click: function()
+                   {
+                     $.post('/crm/ppi/change_signatory/0.json',
+            		     $('#changeSignatoryForm').serialize(),
+                 		   function(data)
+                        {
+                  			  if (data['status'] == 'done')
+                  			  {
+                  				  alert("Signatory has been changed");
+                            location.reload();
+                  			  }
+                  			  else
+                  			  {
+                  				  alert("Error: Signatory couldn't be changed.");
+                  			  }
+                  		  });
+                   } 
+               },
+               { 
+                   text: "Cancel", 
+                   click: function() { 
+                       $( this ).dialog( "close" );
+                   } 
+               }
+           ] 
+       });
+  	
+  	 newDialog.dialog( "open" );
+  });
+  
   // -- Print Claim Letter
   // ---------------------
   $('.printPPILetter').click(function()
@@ -65,6 +147,7 @@ $(function () {
   $("#editClaim").click(function()
   {
     $(".Claim-Edit-Input").removeAttr('readonly');
+    $(".Claim-Edit-Input").removeAttr('disabled');
     $(".Claim-Edit-Input").css('box-shadow', '0px 0px 2px #333');
     
     $("#Claim-Amount-Input").val($("#Claim-Amount-Raw").val());
@@ -163,16 +246,15 @@ $(function () {
 	       autoOpen: false, 
 	       modal: true, 
 	       resizable: false,
-	       width: 800,
-	       height: 500,
+	       width: 400,
+	       height: 250,
 	       title: "Create Claims",
 	       buttons: 
 	           [ 
 	               { 
 	                   text: "Create Claims", 
 	                   click: function() { 
-	                       //$( '#addClaimsForm' ).submit();
-                         createClaims(); 
+                         createClaims(clientID); 
 	                   } 
 	               },
 	               { 
@@ -187,8 +269,64 @@ $(function () {
 	   newDialog2.dialog( "open" );
   });
   
+  // -- Create a new Claim
+  // ---------------------
+  $("#addNewClaimButton").click(function()
+  {
+    var clientID = $(this).attr('rel');
+    var dialogBox = $("#Create-New-Claim").dialog();
+    
+    dialogBox.dialog({
+      autoOpen: false,
+      modal: true,
+      width: 600,
+      height: 500,
+      resizable: false,
+      title: "Create a New Claim",
+      buttons: 
+       [ 
+           { 
+               text: "Create New Claim", 
+               click: function()
+               { 
+                 var errorMsg = '';
+                 
+                 if($("#newClaimCreditorChoice").val() == -1)
+                   errorMsg = "> Select a Creditor\n";
+                   
+                 if($("#newClaimSignatory").val() == -1)
+                   errorMsg += "> Select a Signatory\n";
+                   
+                 if($("#newClaimAccountNumber").val() == '')
+                   errorMsg += "> Enter an Account number\n";
+                   
+                 if($("#newClaimValue").val() == '')
+                   errorMsg += "> Enter a Value";
+                 
+                 if(errorMsg == '')
+                 {
+                   createClaims(clientID, true);
+                   
+                 }
+                 else
+                 {
+                   alert(errorMsg);
+                 }
+               } 
+           },
+           { 
+               text: "Cancel", 
+               click: function() { 
+                   $( this ).dialog( "close" );
+               } 
+           }
+       ]
+    });
+  });
+  
   // -- Edit Creditors
   // -----------------
+
   function editCreditors()
   {
     $.post('/crm/save_creditors/0.json',
@@ -205,26 +343,32 @@ $(function () {
 			}
 		});
   }
+
+function createClaims(clientID, form)
+{
+  var formData = null;
   
-  // -- Create Claims
-  // ----------------
-  function createClaims()
+  if(form == true)
   {
-    $.post('/crm/ppi/create_claims/0.json',
-		$('#creditorFrom').serialize(),
-		function(data){
-			if (data['status'] == 'SUCCESS')
-			{
-				alert('Claims Created');
-        location.reload();
-			}
-			else
-			{
-				alert('Claims could not be created');
-			}
-		});
+    formData = $('#creditorFrom').serialize();
   }
-  
+    
+  $.post('/crm/ppi/create_claims/' + clientID + '.json',
+    formData,
+    function(data)
+    {
+      if (data['status'] == 'SUCCESS')
+      {
+        alert("Claims Created\n\nDon't forget to send the claim letter for each claim made");
+        location.reload();
+      }
+      else
+      {
+        alert('Claims could not be created');
+      }
+   });
+}
+
   // -- Edit creditors from the client view
   // --------------------------------------
   $('#editCreditorButton').click(function()
@@ -609,9 +753,7 @@ $(function () {
   // -- Print the selected claim letter
   // ----------------------------------
   function printClaimLetter(letterID, claimID, clientID)
-  {
-    //var url = '/crm/ppi/print_PPI_letter/' + letterID + '/' + claimID;
-     
+  {     
      $.post('/crm/ppi/print_PPI_letter/' + letterID + '/' + claimID + '/' + clientID + '.json',
       $('#PrintPPILetterForm').serialize(),
       function(data)
@@ -629,8 +771,8 @@ $(function () {
 	
 	function add_creditor()
 	{
-		$newCreditor = $("<div style='margin-bottom: 20px;' class='clearfix'></div>").html('<div class="row-fluid"><div class="span12"><select class="large" name="creditor_'+creditorCurrent+'_choice" id="creditor_'+creditorCurrent+'_choice"><option id="0">-- Unknown Creditor</option>'+creditorSelectBox+'</select></div></div><div class="clearfix"></div><div class="row-fluid" style="margin-top: 10px;"><div class="half-block"><input type="text" class="large" name="creditor_'+creditorCurrent+'_account_number" placeholder="Account Number"></div><div class="half-block clearrm"><input type="text" class="large" name="creditor_'+creditorCurrent+'_sort_code" placeholder="Sort Code"></div></div><div class="clearfix"></div><div class="row-fluid" style="margin-top: 10px;"><div class="half-block"></div><div class="half-block clearrm"><input type="text" class="large" placeholder="Value of Debt" name="creditor_'+creditorCurrent+'_value"></div></div><div class="clearfix"></div>');
-		
+		//$newCreditor = $("<div style='margin-bottom: 20px;' class='clearfix'></div>").html('<div class="row-fluid"><div class="span12"><select class="large" name="creditor_'+creditorCurrent+'_choice" id="creditor_'+creditorCurrent+'_choice"><option id="0">-- Unknown Creditor</option>'+creditorSelectBox+'</select></div></div><div class="clearfix"></div><div class="row-fluid" style="margin-top: 10px;"><div class="half-block"><input type="text" class="large" name="creditor_'+creditorCurrent+'_account_number" placeholder="Account Number"></div><div class="half-block clearrm"><input type="text" class="large" name="creditor_'+creditorCurrent+'_sort_code" placeholder="Sort Code"></div></div><div class="clearfix"></div><div class="row-fluid" style="margin-top: 10px;"><div class="half-block"></div><div class="half-block clearrm"><input type="text" class="large" placeholder="Value of Debt" name="creditor_'+creditorCurrent+'_value"></div></div><div class="clearfix"></div>');
+		$newCreditor = $("<div style='margin-bottom: 20px;' class='clearfix'></div>").html('<div class="row-fluid"><div class="span12"><select class="large" name="creditor_'+creditorCurrent+'_choice" id="creditor_'+creditorCurrent+'_choice"><option id="0">-- Unknown Creditor</option>'+creditorSelectBox+'</select></div></div><div class="clearfix"></div><div class="row-fluid" style="margin-top: 10px;"><div class="half-block"><input type="text" class="large" name="creditor_'+creditorCurrent+'_account_number" placeholder="Account Number"></div><div class="half-block clearrm"><input type="text" class="large" name="creditor_'+creditorCurrent+'_sort_code" placeholder="Sort Code"></div></div><div class="clearfix"></div><div class="row-fluid" style="margin-top: 10px;"><div class="half-block"><select name="creditor_'+creditorCurrent+'_signatory" class="large"><option value="1">Signatory</option><option value="1">Client</option><option value="2">Partner</option><option value="3">Joint</option></select></div><div class="half-block clearrm"><input type="text" class="large" placeholder="Value of Debt" name="creditor_'+creditorCurrent+'_value"></div></div><div class="clearfix"></div><div class="row-fluid" style="margin-top: 10px;"><div class="half-block clearrm"><select name="creditor_'+creditorCurrent+'_debttype" class="large"><option value="0">Type of Debt</option>' + debtType + '</select></div></div>');
 		$('#creditorList').append($newCreditor);
     $('#saveNewCreditor').show();
 

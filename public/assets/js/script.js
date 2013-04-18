@@ -1,5 +1,55 @@
 $(function () {
   
+  // -- Edit a creditors address
+  // ---------------------------
+  $('#editCredContact').click(function()
+  {
+    var creditorID = $(this).attr('rel');
+    
+    var newDialog = $("#EditCreditorContactBox").dialog();
+    
+    newDialog.dialog( { 
+       autoOpen: false, 
+       modal: true, 
+       resizable: false,
+       width: 600,
+       height: 500,
+       title: "Edit Creditor's Contact Details",
+       buttons: 
+         [ 
+             { 
+                 text: "Save", 
+                 click: function() { 
+                     
+                     $.post('/crm/creditor/save_creditor_details/' + creditorID +'.json',
+              		     $('#EditCreditorContactFrom').serialize(),
+                   		   function(data)
+                          {
+                    			  if (data['status'] == 'done')
+                    			  {
+                    				  alert("Creditor's contact have been saved");
+                              location.reload();
+                    			  }
+                    			  else
+                    			  {
+                    				  alert("Creditor's contact details could not be saved");
+                    			  }
+                    		  });
+                 } 
+             },
+             { 
+                 text: "Cancel", 
+                 click: function()
+                 { 
+                   $( this ).dialog( "close" );
+                 } 
+             }
+         ] 
+       });
+	
+	   newDialog.dialog( "open" );
+  });
+  
   // -- Print PPI Form
   // -----------------
   $('.printPPIForm').click(function()
@@ -61,11 +111,6 @@ $(function () {
     if($('#Invoice_Charge').val() == '')
     {
       msg += "Invoice Charge is empty\n";
-    }
-    
-    if($('#Refund_Method').val() < 0)
-    {
-      msg += "Refund Method not selected\n";
     }
     
     if(msg != '')
