@@ -80,13 +80,26 @@ class Controller_Reports extends Controller_BaseHybrid
 	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Tomorrow")) : $_endDate;
 	    
 	    
+	    $db_choice = array(
+	       'GAB' => array('DS' => 'Debtsolv',
+	                      'LP' => 'Leadpool_DM'
+	                      'QU' => 'Office <> \'RESOLVE\''),
+	       'RESOLVE' => 'BS_Debtsolv_DM',
+	    );
+	    
+	    $thisDB = $db_choice['GAB'];
+	    
+	    
+	    
+	    
+	    
 	    $quickViewStartDate = strtotime("-18 months");
 	    
 	    $quickViewCountQuery = "SELECT
 	  REPLACE(CONVERT(VARCHAR(7), P_R.Date, 111), '/', '-') AS Month
 	, COUNT(DISTINCT P_R.ClientID) as totalCount
 FROM 
-	Debtsolv.dbo.Payment_Receipt AS P_R
+	".$thisDB['DS'].".dbo.Payment_Receipt AS P_R
 WHERE
 	P_R.Date >= '".date('Y-m-01',$quickViewStartDate)."' AND P_R.Date <= '".date('Y-m-d')."'
 GROUP BY
@@ -106,19 +119,19 @@ ORDER BY
 	, ISNULL(PR.Date,'31 dec 1899') AS 'Date Received'
 	, CASE WHEN PR.ID IS null THEN 'Migrated Payment' ELSE 'Client Payment' END As 'Receipt Type'
 FROM 
-	Debtsolv.dbo.Payment_Schedule AS ps
+	".$thisDB['DS'].".dbo.Payment_Schedule AS ps
 INNER JOIN
-	Debtsolv.dbo.Client_Contact AS CC ON ps.ClientID = CC.ID
+	".$thisDB['DS'].".dbo.Client_Contact AS CC ON ps.ClientID = CC.ID
 INNER JOIN 
-	Debtsolv.dbo.Client_LeadData AS CLD ON CC.ID = CLD.Client_ID
+	".$thisDB['DS'].".dbo.Client_LeadData AS CLD ON CC.ID = CLD.Client_ID
 LEFT OUTER JOIN 
-	Debtsolv.dbo.PaymentSchedule_AllocationHistory AS psah ON ps.ID = psah.ScheduleID
+	".$thisDB['DS'].".dbo.PaymentSchedule_AllocationHistory AS psah ON ps.ID = psah.ScheduleID
 LEFT OUTER JOIN
-	Debtsolv.dbo.Payment_Receipt AS PR ON psah.ReceiptID = PR.ID
+	".$thisDB['DS'].".dbo.Payment_Receipt AS PR ON psah.ReceiptID = PR.ID
 INNER JOIN
-	Debtsolv.dbo.Users AS Admin ON CLD.Administrator = Admin.ID
+	".$thisDB['DS'].".dbo.Users AS Admin ON CLD.Administrator = Admin.ID
 INNER JOIN
-	Debtsolv.dbo.Users AS Credit ON CLD.CreditController = Credit.ID 
+	".$thisDB['DS'].".dbo.Users AS Credit ON CLD.CreditController = Credit.ID 
 WHERE
 	(ps.DateExpected >= '".$startDate."' AND ps.DateExpected < '".$endDate."')
 ORDER BY 
@@ -137,21 +150,21 @@ ORDER BY
 	, D_CPD.NormalExpectedPayment/100 AS NormalExpectedPayment
 	, D_LI.Name AS Introducer
 	, ISNULL(L_CLD.LeadRef2, 'NONE') AS Shortcode
-	, (SELECT SUM(CASE WHEN EstimatedBalance > 0 THEN EstimatedBalance ELSE AmountOwed END)/100 FROM [Debtsolv].[dbo].[Finstat_Debt] WHERE ClientID = D_PA.ClientID) AS TotalOwed
+	, (SELECT SUM(CASE WHEN EstimatedBalance > 0 THEN EstimatedBalance ELSE AmountOwed END)/100 FROM ".$thisDB['DS'].".[dbo].[Finstat_Debt] WHERE ClientID = D_PA.ClientID) AS TotalOwed
 FROM
-	Debtsolv.dbo.Payment_Receipt AS D_PA
+	".$thisDB['DS'].".dbo.Payment_Receipt AS D_PA
 LEFT JOIN
-	Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_PA.ClientID = D_CPD.ClientID
+	".$thisDB['DS'].".dbo.Client_PaymentData AS D_CPD ON D_PA.ClientID = D_CPD.ClientID
 LEFT JOIN
-	Debtsolv.dbo.Client_Contact AS D_CC ON D_PA.ClientID = D_CC.ID
+	".$thisDB['DS'].".dbo.Client_Contact AS D_CC ON D_PA.ClientID = D_CC.ID
 LEFT JOIN
-    Debtsolv.dbo.Client_LeadData AS D_CLD ON D_PA.ClientID = D_CLD.Client_ID
+    ".$thisDB['DS'].".dbo.Client_LeadData AS D_CLD ON D_PA.ClientID = D_CLD.Client_ID
 LEFT JOIN
-    Debtsolv.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID=D_TLS.ID
+    ".$thisDB['DS'].".dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID=D_TLS.ID
 LEFT JOIN
-    Debtsolv.dbo.Lead_Introducers AS D_LI ON D_TLS.IntroducerID=D_LI.ID
+    ".$thisDB['DS'].".dbo.Lead_Introducers AS D_LI ON D_TLS.IntroducerID=D_LI.ID
 LEFT JOIN 
-    Leadpool_DM.dbo.Client_LeadDetails AS L_CLD ON D_CLD.LeadPoolReference = L_CLD.ClientID
+    ".$thisDB['LP'].".dbo.Client_LeadDetails AS L_CLD ON D_CLD.LeadPoolReference = L_CLD.ClientID
 WHERE
 	(D_PA.Date >= '".$startDate."' AND D_PA.Date < '".$endDate."')";
 	    
@@ -163,7 +176,7 @@ WHERE
 FROM 
 	[Dialler].[dbo].[client_dates]
 WHERE 
-	Office <> 'RESOLVE'
+	".$thisDB['QU']."
 	AND (FirstPaymentDate >= '".date('Y-m-01',$quickViewStartDate)."' AND FirstPaymentDate <= '".date('Y-m-d')."')
 GROUP BY
 	REPLACE(CONVERT(VARCHAR(7), FirstPaymentDate, 111), '/', '-')";

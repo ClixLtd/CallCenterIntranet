@@ -15,6 +15,7 @@
 		
 		// Models
 		'Goautodial\\Model_Vicidial_List' => __DIR__.'/models/vicidial_list.php',
+		'Goautodial\\Model_Vicidial_Lists' => __DIR__.'/models/vicidial_lists.php',
 		'Goautodial\\Model_Vicidial_Log' => __DIR__.'/models/vicidial_log.php',
 		'Goautodial\\Model_Vicidial_Live_Agents' => __DIR__.'/models/vicidial_live_agents.php',
 		'Goautodial\\Model_Vicidial_Auto_Calls' => __DIR__.'/models/vicidial_auto_calls.php',
