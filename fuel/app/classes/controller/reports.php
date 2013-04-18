@@ -80,14 +80,16 @@ class Controller_Reports extends Controller_BaseHybrid
 	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Tomorrow")) : $_endDate;
 	    
 	    
-	    $db_choice = array(
-	       'GAB' => array('DS' => 'Debtsolv',
-	                      'LP' => 'Leadpool_DM',
-	                      'QU' => 'Office <> \'RESOLVE\''),
-	       'RESOLVE' => 'BS_Debtsolv_DM',
+	    $db_choice                  = array(
+	       'GAB' => array('DS'     => 'Debtsolv',
+	                      'LP'     => 'Leadpool_DM',
+	                      'QU'     => 'Office <> \'RESOLVE\''),
+	       'RESOLVE' => array('DS' => 'BS_Debtsolv_DM',
+	                      'LP'     => 'BS_Leadpool_DM',
+	                      'QU'     => 'Office = \'RESOLVE\''),
 	    );
 	    
-	    $thisDB = $db_choice['GAB'];
+	    $thisDB = $db_choice['RESOLVE'];
 	    
 	    
 	    
