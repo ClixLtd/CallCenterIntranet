@@ -82,7 +82,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	    
 	    $db_choice = array(
 	       'GAB' => array('DS' => 'Debtsolv',
-	                      'LP' => 'Leadpool_DM'
+	                      'LP' => 'Leadpool_DM',
 	                      'QU' => 'Office <> \'RESOLVE\''),
 	       'RESOLVE' => 'BS_Debtsolv_DM',
 	    );
