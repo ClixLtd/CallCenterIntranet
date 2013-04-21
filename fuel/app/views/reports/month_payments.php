@@ -1,5 +1,11 @@
 <div style="float: right;">
 
+
+<select name="center" id="center" rel="tooltip" title="Select Call Center">
+    <option value="GAB">Expert Money Solutions</option>
+    <option value="RESOLVE">Resolve</option>
+</select>
+
 <select name="month" id="month" rel="tooltip" title="Select Month and Year">
 
     <?php 
@@ -157,3 +163,35 @@
 	
 
 </article>
+
+
+
+
+
+<script>
+    var disposition_url = "<?php echo $report_url; ?>";
+    
+	$(document).ready(function() {
+    	
+    	$('#month').change(function() {
+        	
+        	disposition_url = "/reports/get_monthly_payment/" + $("#center").val() + "/" + $("#month").val() + ".json";
+        	load_reports();
+        	        	
+    	});
+    	
+    });
+    
+    function load_reports()
+    {
+        $.ajax({
+        	"url" : disposition_url,
+        	"success": function ( json ) {
+        	    
+            	alert(json);
+        	
+        	}
+        });
+    }
+</script>
+

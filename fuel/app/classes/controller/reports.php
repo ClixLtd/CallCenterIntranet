@@ -363,8 +363,22 @@ GROUP BY
 	
 	public function action_monthly_payment($center=null)
 	{
-    		    
+    	
+        $startDate = null;
+    	$endDate = null;
+    	
+    	$month = $this->param('month');
+    	if (!is_null($month))
+    	{
+        	$monthSplit = explode('-', $month);
+        	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
+        	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
+    	}
+    	
+    	
 	    $reportArray = Controller_Reports::generate_monthly_payment_report($center, "2013-03-01", "2013-04-01");
+	    
+	    
 	    
 	    $this->template->title = 'Reports &raquo; Monthly Payments';
 		$this->template->content = View::forge('reports/month_payments', array(
