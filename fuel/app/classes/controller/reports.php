@@ -334,7 +334,30 @@ GROUP BY
 	
 	
 	
-	
+	public function get_get_monthly_payment($center=null)
+	{
+    	
+        $startDate = null;
+    	$endDate = null;
+    	
+    	$month = $this->param('month');
+    	if (!is_null($month))
+    	{
+        	$monthSplit = explode('-', $month);
+        	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
+        	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
+    	}
+    	
+    	
+    	$reportArray = Controller_Reports::generate_monthly_payment_report($center, $startDate, $endDate);
+    	
+    	return $this->response(array(
+		    'reports' => $reportArray['reports'],
+		    'payments' => $reportArray['clients'],
+		    'expected' => $reportArray['expected'],
+		    'introducer' => $reportArray['introducer'],
+		));
+	}
 	
 	
 	
@@ -573,8 +596,6 @@ GROUP BY
         	$monthSplit = explode('-', $month);
         	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
         	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
-        	
-        	
     	}
     	
 	
