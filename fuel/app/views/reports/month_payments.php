@@ -131,31 +131,7 @@
 				
 				<div class="article-container">
 					<section>
-					<table class="zebra-striped datatable" width="100%" id="payments-master">
-						<thead>
-							<tr>
-								<th>ClientID</th>
-								<th>Introducer</th>
-								<th>Name</th>
-								<th>Amount In</th>
-								<th>Remaining Debt</th>
-								<th>Notes</th>
-							</tr>
-						</thead>
-						<tbody id="payments">
-						    <?php foreach($payments AS $pay): ?>
-							<tr>
-								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['ClientID']; ?></td>
-								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['Introducer']; ?></td>
-								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['Name']; ?></td>
-								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>>&pound;<?php echo number_format($pay['AmountIn'],2); ?></td>
-								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['TotalOwed']; ?></td>
-								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['note']; ?></td>
-								
-							</tr>
-							<?php endforeach; ?>
-						</tbody>
-					</table>
+					<table class="zebra-striped datatable" width="100%" id="payments-master"></table>
 					</section>
 				</div>
 								
@@ -198,12 +174,7 @@
         	    
             	
             	$('#payments').empty();
-            	$.each( json['payments'], function(key,value) {
-                	
-                	$('#payments').append("<tr><td>t</td><td>t</td><td>t</td><td>t</td><td>t</td><td>t</td></tr>");
-                	
-            	});
-            	$('#payments-master').dataTable();
+            	$('#payments-master').dataTable(json['payments']);
             	
             	
         	

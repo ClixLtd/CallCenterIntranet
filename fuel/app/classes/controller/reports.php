@@ -353,9 +353,53 @@ GROUP BY
     	
     	return $this->response(array(
 		    'reports' => $reportArray['reports'],
-		    'payments' => $reportArray['clients'],
+		    'payments' => array(
+		        "aaData" => $reportArray['clients'],
+            	"bDestroy" => true,
+            	"bPaginate" => false,
+            	"bProcessing" => true,
+    			"aoColumnDefs" => array(
+    				array(
+    					"iDataSort" => 2,
+    					"asSorting" => array("asc"),
+    					"aTargets" => array(0),
+    				),
+    			),
+    			"aoColumns" => array(
+    				array(
+    					"sTitle" => "Client ID", 
+    					"bSortable" => false,
+    				),
+    				array(
+    					"sTitle"    => "Introducer",
+    					"bSortable" => false,
+    				),
+    				array(
+    					"sTitle"    => "Name",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle"    => "Amount In",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle"    => "Remaining Debt",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle"    => "Notes",
+    					"sType"		=> "string",
+    				),
+    			),
+            ),
+		    
+		    
 		    'expected' => $reportArray['expected'],
 		    'introducer' => $reportArray['introducer'],
+		    
+		    
+		    
+		    
 		));
 	}
 	
