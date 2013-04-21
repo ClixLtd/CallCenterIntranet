@@ -376,7 +376,7 @@ GROUP BY
     	}
     	
     	
-	    $reportArray = Controller_Reports::generate_monthly_payment_report($center, "2013-03-01", "2013-04-01");
+	   // $reportArray = Controller_Reports::generate_monthly_payment_report($center, "2013-03-01", "2013-04-01");
 	    
 	    
 	    
