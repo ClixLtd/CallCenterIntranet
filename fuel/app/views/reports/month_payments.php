@@ -173,7 +173,6 @@
         	    $('#loading_data').fadeOut();
         	    
             	
-            	$('#payments').empty();
             	$('#payments-master').dataTable(json['payments']);
             	
             	
