@@ -131,7 +131,7 @@
 				
 				<div class="article-container">
 					<section>
-					<table class="zebra-striped datatable" width="100%" id="payments-master"></table>
+					<table class="zebra-striped" width="100%" id="payments-master"></table>
 					</section>
 				</div>
 								
