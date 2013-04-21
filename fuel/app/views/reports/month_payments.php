@@ -39,6 +39,10 @@
 	</div>
 	
 	<section>
+		<div id="loading_data"><span class="loader red" title="Loading, please wait&#8230;" style="margin-right: 30px;"></span> Loading Disposition Report - Please Wait!</div>
+	</section>
+	
+	<section>
 		<div class="tab default-tab" id="quickview">
 		
 		  <article class="full-block">
@@ -138,7 +142,7 @@
 								<th>Notes</th>
 							</tr>
 						</thead>
-						<tbody>
+						<tbody id="payments">
 						    <?php foreach($payments AS $pay): ?>
 							<tr>
 								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['ClientID']; ?></td>
@@ -184,11 +188,32 @@
     
     function load_reports()
     {
+        $('#loading_data').fadeIn();
+    
         $.ajax({
         	"url" : disposition_url,
         	"success": function ( json ) {
         	    
-            	alert(json);
+        	    $('#loading_data').fadeOut();
+        	    
+            	
+            	
+            	$.each( json['payments'], function(key,value) {
+                	
+                	$('#payments').append("
+                	<tr>
+                	   <td>t</td>
+                	   <td>t</td>
+                	   <td>t</td>
+                	   <td>t</td>
+                	   <td>t</td>
+                	   <td>t</td>
+                	</tr>
+                	");
+                	
+            	});
+            	
+            	
         	
         	}
         });
