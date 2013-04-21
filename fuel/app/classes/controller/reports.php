@@ -254,7 +254,7 @@ GROUP BY
     	    
     	    
 	        
-    	    $clientPayments[$payment['ClientID']] = array(
+    	    $clientPayments[] = array(
     	       'ClientID'              => $payment['ClientID'],
     	       'Name'                  => $payment['Name'],
     	       'Introducer'            => $introducerTitle,
