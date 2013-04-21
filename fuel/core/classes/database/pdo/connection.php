@@ -210,6 +210,7 @@ class Database_PDO_Connection extends \Database_Connection
 		{
 			// Return a list of insert id and rows created
 			return array(
+				//0, 
 				$this->_connection->lastInsertId(),
 				$result->rowCount(),
 			);
