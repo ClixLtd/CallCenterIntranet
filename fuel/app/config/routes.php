@@ -55,7 +55,11 @@ return array(
 	'reports/get_senior_report/(:center)/:month'                 => 'reports/get_senior_report/$1',
 	'reports/get_senior_report/(:center)'                        => 'reports/get_senior_report/$1',
 	'reports/get_senior_report'                                  => 'reports/get_senior_report',
-	
+
+	'reports/get_monthly_payment/(:center)/:month'                 => 'reports/get_monthly_payment/$1',
+	'reports/get_monthly_payment/(:center)'                        => 'reports/get_monthly_payment/$1',
+	'reports/get_monthly_payment'                                  => 'reports/get_monthly_payment',
+
 	
 	'reports/supplier/fulllist/:listid'                          => 'reports/supplier',
 	'reports/supplier/(:num)'                                    => 'reports/supplier/$1',
