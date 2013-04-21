@@ -200,16 +200,14 @@
             	
             	$.each( json['payments'], function(key,value) {
                 	
-                	$('#payments').append("
-                	<tr>
+                	$('#payments').append("<tr>
                 	   <td>t</td>
                 	   <td>t</td>
                 	   <td>t</td>
                 	   <td>t</td>
                 	   <td>t</td>
                 	   <td>t</td>
-                	</tr>
-                	");
+                	</tr>");
                 	
             	});
             	
