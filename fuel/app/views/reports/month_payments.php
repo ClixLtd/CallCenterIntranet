@@ -131,7 +131,7 @@
 				
 				<div class="article-container">
 					<section>
-					<table class="zebra-striped datatable" width="100%">
+					<table class="zebra-striped datatable" width="100%" id="payments-master">
 						<thead>
 							<tr>
 								<th>ClientID</th>
@@ -197,12 +197,13 @@
         	    $('#loading_data').fadeOut();
         	    
             	
-            	
+            	$('#payments').empty();
             	$.each( json['payments'], function(key,value) {
                 	
                 	$('#payments').append("<tr><td>t</td><td>t</td><td>t</td><td>t</td><td>t</td><td>t</td></tr>");
                 	
             	});
+            	$('#payments-master').dataTable();
             	
             	
         	
