@@ -165,6 +165,7 @@
 			    'GAB' => 10,
 			    'PCC' => 50,
 			    'RESOLVE' => 15,
+			    'COMBINED' => 75,
 			);
 			
 			$this->response(array(
@@ -187,7 +188,6 @@
 					'referrals' => ($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']),
 					'pack_out' => ($hq_today['pack_outs'] + $burton_today['pack_outs'] + $pcc_today['pack_outs']),
 					'pack_out_percentage' => (($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']) < 1) ? 0 : number_format(($hq_today['pack_outs'] + $burton_today['pack_outs'] + $pcc_today['pack_outs']) / ($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']),2),
-					//($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
 				),
 				
 				'HQPP' => array(
@@ -205,6 +205,11 @@
 					'pack_out' => number_format($pcc_today['pack_outs'] / $perPerson['PCC'],2),
 					'pack_out_percentage' => ($pcc_today['referrals']==0) ? 0 : number_format((($pcc_today['pack_outs']/$pcc_today['referrals'])*100),2),
 				),	
+				'COMBINEDPP' => array(
+					'referrals' => number_format(($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']) / $perPerson['COMBINED'],2),
+					'pack_out' => number_format(($hq_today['pack_outs'] + $burton_today['pack_outs'] + $pcc_today['pack_outs']) / $perPerson['COMBINED'],2),
+					'pack_out_percentage' => (($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']) < 1) ? 0 : number_format((($hq_today['pack_outs'] + $burton_today['pack_outs'] + $pcc_today['pack_outs']) / ($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals'])) / $perPerson['COMBINED'],2),
+				),
 				
 			));
 			
