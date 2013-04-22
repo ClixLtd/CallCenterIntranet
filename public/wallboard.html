@@ -95,33 +95,7 @@
 
 						
 					});
-					
-					
-					$('.totalVal').each(function() {
-						var shortcode = $(this).attr('id');
-						$(this).html('&pound;' + data[shortcode]['pack_out_value']);
-					});
-					
-					$('.averageDI').each(function() {
-						var shortcode = $(this).attr('id');
-						$(this).html('&pound;' + data[shortcode]['di']);
-					});
 										
-					
-					$('#weekreferrals').html(data['this_week']['referrals']);
-					$('#weekpackout').html(data['this_week']['pack_out']);
-					$('#weekvalue').html('&pound;' + data['this_week']['pack_out_value']);
-					
-					$('#thismonthreferrals').html(data['this_month']['referrals']);
-					$('#thismonthpackout').html(data['this_month']['pack_out']);
-					$('#thismonthvalue').html('&pound;' + data['this_month']['pack_out_value']);
-					
-					$('#lastmonthreferrals').html(data['last_month']['referrals']);
-					$('#lastmonthpackout').html(data['last_month']['pack_out']);
-					$('#lastmonthvalue').html('&pound;' + data['last_month']['pack_out_value']);
-					
-					
-					
 				});
 			}
 
@@ -323,47 +297,10 @@
 					
 					<br style="clear: both;" />
 				</div>
-				<div class="statHolder">
-					<div class="stat thirdLeftStat totalVal" style="float: left;" id="HQ">&pound;0.00</div>
-					<div class="stat thirdRightStat totalVal" style="float: left;" id="PCC">&pound;0.00</div>
-					<div class="stat third totalVal" style="float: left;" id="RESOLVE">&pound;0.00</div>
-					
-					<br style="clear: both;" />
-				</div>
-				<div class="statHolder">
-					<div class="stat thirdLeftStat averageDI" style="float: left;" id="HQ">&pound;0.00</div>
-					<div class="stat thirdRightStat averageDI" style="float: left;" id="PCC">&pound;0.00</div>
-					<div class="stat third averageDI" style="float: left;" id="RESOLVE">&pound;0.00</div>
-					
-					<br style="clear: both;" />
-				</div>
 			
 			</div>
 			
-			<div class="entry">
-				<div class="etitle">Week</div>
-				<div class="info">
-					<div class="referrals" id="weekreferrals">0</div>
-					<div class="pack_out" id="weekpackout">0</div>
-					<div class="value" id="weekvalue">&pound;0.00</div>
-				</div>
-			</div>
-			<div class="entry">
-				<div class="etitle">This Month</div>
-				<div class="info">
-					<div class="referrals" id="thismonthreferrals">0</div>
-					<div class="pack_out" id="thismonthpackout">0</div>
-					<div class="value" id="thismonthvalue">&pound;0.00</div>
-				</div>
-			</div>
-			<div class="entry">
-				<div class="etitle">Last Month</div>
-				<div class="info">
-					<div class="referrals" id="lastmonthreferrals">0</div>
-					<div class="pack_out" id="lastmonthpackout">0</div>
-					<div class="value" id="lastmonthvalue">&pound;0.00</div>
-				</div>
-			</div>
+			
 			<div class="minihold">
 				<div class="minihold bluebg floatLeft third"></div>
 				<div class="minihold greenbg floatLeft third"></div>
