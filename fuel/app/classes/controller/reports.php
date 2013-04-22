@@ -309,12 +309,12 @@ GROUP BY
 	    foreach ($expectedPaymentDetails AS $expected)
 	    {
     	    $expectedPayments[] = array(
-    	        'clientID'       => $expected['ClientID'],
-    	        'name'           => $expected['ClientName'],
-    	        'dateExpected'   => $expected['DateExpected'],
-    	        'amountExpected' => $expected['AmountExpected'],
-    	        'received'       => $expected['AmountReceived'],
-    	        'complete'       => ((int)$expected['AmountReceived'] >= (int)$expected['AmountExpected']) ? TRUE : FALSE,
+    	        $expected['ClientID'],
+    	        $expected['ClientName'],
+    	        $expected['DateExpected'],
+    	        $expected['AmountExpected'],
+    	        $expected['AmountReceived'],
+    	        ((int)$expected['AmountReceived'] >= (int)$expected['AmountExpected']) ? TRUE : FALSE,
     	    );
 	    }
 	    
@@ -402,7 +402,46 @@ GROUP BY
             ),
 		    
 		    
-		    'expected' => $reportArray['expected'],
+		    'expected' => array(
+		        "aaData" => $reportArray['expected'],
+            	"bDestroy" => true,
+            	"bPaginate" => true,
+            	"bProcessing" => true,
+    			"aoColumnDefs" => array(
+    				array(
+    					"iDataSort" => 2,
+    					"asSorting" => array("asc"),
+    					"aTargets" => array(0),
+    				),
+    			),
+    			"aoColumns" => array(
+    				array(
+    					"sTitle" => "Client ID",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Client Name", 
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Expected", 
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Amount Expected", 
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle"    => "Received",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle"    => "Completed",
+    					"sType"		=> "string",
+    				),
+    			),
+            ),
+            //$reportArray['expected'],
 		    'introducer' => $reportArray['introducer'],
 		    
 		    
