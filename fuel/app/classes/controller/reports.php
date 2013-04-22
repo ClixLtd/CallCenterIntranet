@@ -502,9 +502,14 @@ GROUP BY
         $startDate = null;
     	$endDate = null;
     	
+    	$monthUrl = "/reports/monthly_payment";
+    	
+    	$monthUrl .= (is_null($center)) ? "/GAB" : "/".$center;
+    	
     	$month = $this->param('month');
     	if (!is_null($month))
     	{
+    	    $monthUrl .= "/".$month;
         	$monthSplit = explode('-', $month);
         	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
         	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
@@ -517,6 +522,7 @@ GROUP BY
 	    
 	    $this->template->title = 'Reports &raquo; Monthly Payments';
 		$this->template->content = View::forge('reports/month_payments', array(
+    	    'report_url' => $monthUrl.".json",
 		    'reports' => $reportArray['reports'],
 		    'payments' => $reportArray['clients'],
 		    'expected' => $reportArray['expected'],

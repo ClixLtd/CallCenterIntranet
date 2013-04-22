@@ -109,7 +109,10 @@
 <script>
     var disposition_url = "<?php echo $report_url; ?>";
     
+    
 	$(document).ready(function() {
+    	
+    	load_reports();
     	
     	$('#month').change(function() {
         	
