@@ -306,7 +306,7 @@ GROUP BY
 
 	    
 	    $introducerPaymentsReturn = array();
-	    foraech ($introducerPayments AS $inpayName => $inpayValues)
+	    foreach ($introducerPayments AS $inpayName => $inpayValues)
 	    {
     	    $introducerPaymentsReturn[] = array(
     	        $inpayName,
