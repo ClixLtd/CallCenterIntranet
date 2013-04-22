@@ -502,7 +502,7 @@ GROUP BY
         $startDate = null;
     	$endDate = null;
     	
-    	$monthUrl = "/reports/monthly_payment";
+    	$monthUrl = "/reports/get_monthly_payment";
     	
     	$monthUrl .= (is_null($center)) ? "/GAB" : "/".$center;
     	
