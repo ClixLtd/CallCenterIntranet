@@ -161,9 +161,19 @@
 			$burton_today = GAB\Debtsolv::get_referral_count('RESOLVE');
 			$pcc_today = GAB\Debtsolv::get_referral_count('GBS');
 			
+			
+			$gbsCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('GBSAGENT', 'GBSTRAINING') AND DATE(VDL.event_date)=DATE(NOW());";
+			
+			$gabCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('GABAGENT') AND DATE(VDL.event_date)=DATE(NOW());";
+			
+			
+			$gabResults = DB::query($gabCountQuery)->cached(60)->execute('gabdialler');
+			$gbsResults = DB::query($gbsCountQuery)->cached(60)->execute('gabdialler');
+			
+			
 			$perPerson = array(
-			    'GAB' => 10,
-			    'PCC' => 50,
+			    'GAB' => (int)$gabResults[0]['total'],
+			    'PCC' => (int)$gbsResults[0]['total'],
 			    'RESOLVE' => 15,
 			    'COMBINED' => 75,
 			);
