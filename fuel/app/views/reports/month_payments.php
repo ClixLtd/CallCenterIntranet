@@ -135,7 +135,9 @@
             	$('#payments-master').dataTable(json['payments']);
             	$('#expected-master').dataTable(json['expected']);
             	
-            	
+            	$('#introducer-master').css("width","100%");
+            	$('#payments-master').css("width","100%");
+            	$('#expected-master').css("width","100%");
         	
         	}
         });
