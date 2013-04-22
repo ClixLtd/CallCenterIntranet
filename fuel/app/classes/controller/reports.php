@@ -356,7 +356,7 @@ GROUP BY
 		    'payments' => array(
 		        "aaData" => $reportArray['clients'],
             	"bDestroy" => true,
-            	"bPaginate" => false,
+            	"bPaginate" => true,
             	"bProcessing" => true,
     			"aoColumnDefs" => array(
     				array(
@@ -367,16 +367,16 @@ GROUP BY
     			),
     			"aoColumns" => array(
     				array(
-    					"sTitle" => "Client ID", 
-    					"bSortable" => false,
+    					"sTitle" => "Client ID",
+    					"sType"		=> "string",
     				),
     				array(
     					"sTitle" => "Client Name", 
-    					"bSortable" => false,
+    					"sType"		=> "string",
     				),
     				array(
     					"sTitle"    => "Introducer",
-    					"bSortable" => false,
+    					"sType"		=> "string",
     				),
     				array(
     					"sTitle"    => "Amount In",
@@ -384,7 +384,7 @@ GROUP BY
     				),
     				array(
     					"sTitle" => "Expected", 
-    					"bSortable" => false,
+    					"sType"		=> "string",
     				),
     				array(
     					"sTitle"    => "Remaining Debt",
