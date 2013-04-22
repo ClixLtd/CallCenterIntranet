@@ -310,9 +310,9 @@ GROUP BY
 	    {
     	    $introducerPaymentsReturn[] = array(
     	        $inpayName,
-    	        $inpayValues['amount'],
-    	        $inpayValues['total'],
-    	        ($inpayValues['amount'] < 0.1) ? 0 : ($inpayValues['total'] / $inpayValues['amount']),
+    	        number_format($inpayValues['amount'],0),
+    	        "&pound;".number_format($inpayValues['total'],2),
+    	        ($inpayValues['total'] < 0.1) ? "&pound;0.00" : "&pound;".number_format(($inpayValues['amount'] / $inpayValues['total']),2),
     	    );
 	    }
 	    
