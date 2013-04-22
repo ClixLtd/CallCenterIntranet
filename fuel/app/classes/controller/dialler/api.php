@@ -182,7 +182,7 @@
 					'referrals' => $pcc_today['referrals'],
 					'pack_out' => $pcc_today['pack_outs'],
 					'pack_out_percentage' => ($pcc_today['referrals']==0) ? 0 : number_format((($pcc_today['pack_outs']/$pcc_today['referrals'])*100),2),
-				),				),
+				),
 				'COMBINED' => array(
 					'referrals' => ($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']),
 					'pack_out' => ($hq_today['pack_outs'] + $burton_today['pack_outs'] + $pcc_today['pack_outs']),
