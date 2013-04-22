@@ -156,12 +156,16 @@
 		
 		
 		public function get_mobile_wallboard()
-		{
-			
+		{	
 			$hq_today = GAB\Debtsolv::get_referral_count('GAB');
 			$burton_today = GAB\Debtsolv::get_referral_count('RESOLVE');
 			$pcc_today = GAB\Debtsolv::get_referral_count('GBS');
 			
+			$perPerson = array(
+			    'GAB' => 10,
+			    'PCC' => 50,
+			    'RESOLVE' => 15,
+			);
 			
 			$this->response(array(
 				'HQ' => array(
@@ -177,7 +181,8 @@
 				'PCC' => array(
 					'referrals' => $pcc_today['referrals'],
 					'pack_out' => $pcc_today['pack_outs'],
-					'pack_out_percentage' => ($pcc_today['referrals']==0) ? 0 : number_format((($pcc_today['pack_outs']/$pcc_today['referrals'])*100),2),				),
+					'pack_out_percentage' => ($pcc_today['referrals']==0) ? 0 : number_format((($pcc_today['pack_outs']/$pcc_today['referrals'])*100),2),
+				),				),
 				'COMBINED' => array(
 					'referrals' => ($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']),
 					'pack_out' => ($hq_today['pack_outs'] + $burton_today['pack_outs'] + $pcc_today['pack_outs']),
@@ -185,6 +190,21 @@
 					//($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
 				),
 				
+				'HQPP' => array(
+					'referrals' => $hq_today['referrals'] / $perPerson['GAB'],
+					'pack_out' => $hq_today['pack_outs'] / $perPerson['GAB'],
+					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
+				),
+				'RESOLVEPP' => array(
+					'referrals' => $burton_today['referrals'] / $perPerson['RESOLVE'],
+					'pack_out' => $burton_today['pack_outs'] / $perPerson['RESOLVE'],
+					'pack_out_percentage' => ($burton_today['referrals']==0) ? 0 : number_format((($burton_today['pack_outs']/$burton_today['referrals'])*100),2),
+				),
+				'PCCPP' => array(
+					'referrals' => $pcc_today['referrals'] / $perPerson['PCC'],
+					'pack_out' => $pcc_today['pack_outs'] / $perPerson['PCC'],
+					'pack_out_percentage' => ($pcc_today['referrals']==0) ? 0 : number_format((($pcc_today['pack_outs']/$pcc_today['referrals'])*100),2),
+				),	
 				
 			));
 			
