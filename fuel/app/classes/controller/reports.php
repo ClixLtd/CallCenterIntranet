@@ -255,15 +255,15 @@ GROUP BY
     	    
 	        
     	    $clientPayments[] = array(
-    	       'ClientID'              => $payment['ClientID'],
-    	       'Name'                  => $payment['Name'],
-    	       'Introducer'            => $introducerTitle,
-    	       'AmountIn'              => $paymentTotal,
-    	       'NormalExpectedPayment' => $payment['NormalExpectedPayment'],
-    	       'TotalOwed'             => $payment['TotalOwed'],
-    	       'count'                 => $paymentCount,
-    	       'note'                  => ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
-    	       'reached'               => ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
+    	       $payment['ClientID'],
+    	       $payment['Name'],
+    	       $introducerTitle,
+    	       $paymentTotal,
+    	       $payment['NormalExpectedPayment'],
+    	       $payment['TotalOwed'],
+    	       //$paymentCount,
+    	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
+    	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
     	    );
     	    
     	    
@@ -371,16 +371,20 @@ GROUP BY
     					"bSortable" => false,
     				),
     				array(
+    					"sTitle" => "Client Name", 
+    					"bSortable" => false,
+    				),
+    				array(
     					"sTitle"    => "Introducer",
     					"bSortable" => false,
     				),
     				array(
-    					"sTitle"    => "Name",
+    					"sTitle"    => "Amount In",
     					"sType"		=> "string",
     				),
     				array(
-    					"sTitle"    => "Amount In",
-    					"sType"		=> "string",
+    					"sTitle" => "Expected", 
+    					"bSortable" => false,
     				),
     				array(
     					"sTitle"    => "Remaining Debt",
@@ -389,6 +393,10 @@ GROUP BY
     				array(
     					"sTitle"    => "Notes",
     					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Reached", 
+    					"bSortable" => false,
     				),
     			),
             ),
