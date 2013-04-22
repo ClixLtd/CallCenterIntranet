@@ -77,7 +77,7 @@
 				
 				<div class="article-container">
 					<section>
-					<table class="zebra-striped datatable" width="100%" id="expected-master"></table>
+					<table class="zebra-striped" width="100%" id="expected-master"></table>
 					</section>
 				</div>
 								
