@@ -305,6 +305,18 @@ GROUP BY
 	    ),3600);
 
 	    
+	    $introducerPaymentsReturn = array();
+	    foraech ($introducerPayments AS $inpayName => $inpayValues)
+	    {
+    	    $introducerPaymentsReturn[] = array(
+    	        $inpayName,
+    	        $inpayValues['amount'],
+    	        $inpayValues['total'],
+    	        ($inpayValues['amount'] < 0.1) ? 0 : ($inpayValues['total'] / $inpayValues['amount']),
+    	    );
+	    }
+	    
+	    
 	    $expectedPayments = array();
 	    foreach ($expectedPaymentDetails AS $expected)
 	    {
@@ -325,7 +337,7 @@ GROUP BY
 	       'reports'    => $report->generate(),
 	       'clients'    => $clientPayments,
 	       'expected'   => $expectedPayments,
-	       'introducer' => $introducerPayments,
+	       'introducer' => $introducerPaymentsReturn,
 	    );
 
 	}
@@ -442,7 +454,39 @@ GROUP BY
     			),
             ),
             //$reportArray['expected'],
-		    'introducer' => $reportArray['introducer'],
+		    'introducer' => array(
+		        "aaData" => $reportArray['introducer'],
+            	"bDestroy" => true,
+            	"bPaginate" => false,
+            	"bProcessing" => true,
+    			"aoColumnDefs" => array(
+    				array(
+    					"iDataSort" => 2,
+    					"asSorting" => array("asc"),
+    					"aTargets" => array(0),
+    				),
+    			),
+    			"aoColumns" => array(
+    				array(
+    					"sTitle" => "Introducer",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Total Payments", 
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Total Value", 
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Average Payment", 
+    					"sType"		=> "string",
+    				),
+    			),
+            ),
+
+            //$reportArray['introducer'],
 		    
 		    
 		    
