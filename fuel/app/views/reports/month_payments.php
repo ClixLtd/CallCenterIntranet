@@ -117,6 +117,9 @@
     	$('#month').change(function() {
         	
         	disposition_url = "/reports/get_monthly_payment/" + $("#center").val() + "/" + $("#month").val() + ".json";
+        	
+        	window.history.pushState('', document.title, disposition_url);
+        	
         	load_reports();
         	        	
     	});
