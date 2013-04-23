@@ -1425,6 +1425,46 @@ Gregson and Brooke.');
                 		
                 		$result = @\DB::query("INSERT INTO Dialler.dbo.client_dates (ClientID, FirstPaymentDate, Office) VALUES (".$clientID.", '".$firstPaymentDate."', '".$office."')")->execute('debtsolv');
                 		
+                		// Send an e-mail to the group announcing the first payment!
+                		
+                		
+                		$email = \Email::forge();
+			
+        				$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+        				
+        				$email->to(array(
+        					'firstpayments@expertmoneysolutions.co.uk'  => 'First Payments List',
+        				));
+        				
+        				
+        				$email->priority(\Email::P_HIGH);
+        				
+        				$email->subject('New First Payment');
+        				
+        				$email->html_body(\View::forge('emails/firstpayment/first-payment', array(
+        					'email_data' => array(
+        					   'clientID' => $clientID,
+        					   'di' => $di,
+        					   'office' => $office,
+        					),
+        				)));
+        
+        				
+        				$email->alt_body('Hi.
+        	
+        '.$write_text.'
+        For full details please see the Disposition Report.
+        
+        Regards
+        Gregson and Brooke.');
+        				
+        				$email->send();
+
+                		
+                		
+                		
+                		// Print to console
+                		
                 		print "Client ID " . $clientID . " first DI of £" . number_format(($di/100),2) . " paid on " . $firstPaymentDate . "\n";
             		}
             		
