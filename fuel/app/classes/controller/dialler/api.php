@@ -161,6 +161,32 @@
 			$burton_today = GAB\Debtsolv::get_referral_count('RESOLVE');
 			$pcc_today = GAB\Debtsolv::get_referral_count('GBS');
 			
+			$finishTime = array(
+			    0 => null,
+			    1 => mktime(19,30),
+			    2 => mktime(19,30),
+			    3 => mktime(19,30),
+			    4 => mktime(19,30),
+			    5 => mktime(18,00),
+			    6 => mktime(16,00),
+			);
+			
+			$startTime = array(
+			    0 => null,
+			    1 => mktime(10,00),
+			    2 => mktime(10,00),
+			    3 => mktime(10,00),
+			    4 => mktime(10,00),
+			    5 => mktime(10,00),
+			    6 => mktime(10,00),
+			 );
+			 
+			 // Minutes in today
+			 $minutes = (($finishTime[(int)date("w")] - $startTime[(int)date("w")])/60);
+			 $minutesSinceStart = ((strtotime("NOW") - $startTime[(int)date("w")])/60);
+			 
+			 $multiplier = $minutesSinceStart / $minutes;
+			
 			
 			$gbsCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('GBSAGENT', 'GBSSPECIAL') AND DATE(VDL.event_date)=DATE(NOW());";
 			
@@ -219,7 +245,7 @@
 					'pack_out_percentage' => ($pcc_today['referrals']==0) ? 0 : number_format((($pcc_today['pack_outs']/$pcc_today['referrals'])*100),2),
 				),	
 				'COMBINEDPP' => array(
-					'referrals' => number_format(($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']) / $perPerson['COMBINED'],2),
+					'referrals' => number_format( (($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']) / $perPerson['COMBINED'])*$multiplier,2),
 					'pack_out' => number_format(($hq_today['pack_outs'] + $burton_today['pack_outs'] + $pcc_today['pack_outs']) / $perPerson['COMBINED'],2),
 					'pack_out_percentage' => (($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']) < 1) ? 0 : number_format((($hq_today['pack_outs'] + $burton_today['pack_outs'] + $pcc_today['pack_outs']) / ($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals'])) / $perPerson['COMBINED'],2),
 				),
