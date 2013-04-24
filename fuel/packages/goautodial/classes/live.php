@@ -9,7 +9,17 @@
 		public static function dialable_leads($campaign=null)
 		{
 			$get_campaign_calls = Model_Vicidial_Campaign_Stats::find()->where('campaign_id', $campaign)->get_one();
-			return $get_campaign_calls->dialable_leads;
+			
+			if (is_object($get_campaign_calls))
+			{
+    			return $get_campaign_calls->dialable_leads;
+			}
+			else
+			{
+    			return null;
+			}
+			
+			
 		}
 		
 		
