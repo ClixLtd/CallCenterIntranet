@@ -185,8 +185,10 @@
 			 $minutes = (($finishTime[(int)date("w")] - $startTime[(int)date("w")])/60);
 			 $minutesSinceStart = ((strtotime("NOW") - $startTime[(int)date("w")])/60);
 			 
-			 $multiplier = $minutes / $minutesSinceStart;
-			
+			 $multiplier = ($minutesSinceStart <= 0) ? 0 : $minutes / $minutesSinceStart;
+			 
+			 $multiplier = ($multiplier < 1) ? 1 : $multiplier;
+			 
 			
 			$gbsCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('GBSAGENT', 'GBSSPECIAL') AND DATE(VDL.event_date)=DATE(NOW());";
 			
