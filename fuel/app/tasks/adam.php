@@ -1448,15 +1448,6 @@ Gregson and Brooke.');
         					   'office' => $office,
         					),
         				)));
-        
-        				
-        				$email->alt_body('Hi.
-        	
-        '.$write_text.'
-        For full details please see the Disposition Report.
-        
-        Regards
-        Gregson and Brooke.');
         				
         				$email->send();
 

@@ -392,15 +392,15 @@ GROUP BY
     				),
     				array(
     					"sTitle"    => "Amount In",
-    					"sType"		=> "string",
+    					"sType"		=> "numeric",
     				),
     				array(
     					"sTitle" => "Expected", 
-    					"sType"		=> "string",
+    					"sType"		=> "numeric",
     				),
     				array(
     					"sTitle"    => "Remaining Debt",
-    					"sType"		=> "string",
+    					"sType"		=> "numeric",
     				),
     				array(
     					"sTitle"    => "Notes",
@@ -437,19 +437,19 @@ GROUP BY
     				),
     				array(
     					"sTitle" => "Expected", 
-    					"sType"		=> "string",
+    					"sType"		=> "numeric",
     				),
     				array(
     					"sTitle" => "Amount Expected", 
-    					"sType"		=> "string",
+    					"sType"		=> "numeric",
     				),
     				array(
     					"sTitle"    => "Received",
-    					"sType"		=> "string",
+    					"sType"		=> "numeric",
     				),
     				array(
     					"sTitle"    => "Completed",
-    					"sType"		=> "string",
+    					"sType"		=> "numeric",
     				),
     			),
             ),
@@ -473,15 +473,15 @@ GROUP BY
     				),
     				array(
     					"sTitle" => "Total Payments", 
-    					"sType"		=> "string",
+    					"sType"		=> "numeric",
     				),
     				array(
     					"sTitle" => "Total Value", 
-    					"sType"		=> "string",
+    					"sType"		=> "numeric",
     				),
     				array(
     					"sTitle" => "Average Payment", 
-    					"sType"		=> "string",
+    					"sType"		=> "numeric",
     				),
     			),
             ),

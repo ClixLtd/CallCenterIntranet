@@ -196,16 +196,19 @@
 			
 			$resolveCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('AGENTS') AND DATE(VDL.event_date)=DATE(NOW());";
 			
+			$resolveCountQueryPartTime = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PARTTIME') AND DATE(VDL.event_date)=DATE(NOW());";
+			
 			
 			$gabResults = DB::query($gabCountQuery)->cached(60)->execute('gabdialler');
 			$gbsResults = DB::query($gbsCountQuery)->cached(60)->execute('gabdialler');
 			$resolveResults = DB::query($resolveCountQuery)->cached(60)->execute('resolvedialler');
+			$resolveResultsPartTime = DB::query($resolveCountQueryPartTime)->cached(60)->execute('resolvedialler');
 			
 			
 			$perPerson = array(
 			    'GAB' => (int)$gabResults[0]['total'],
 			    'PCC' => (int)$gbsResults[0]['total'],
-			    'RESOLVE' => (int)$resolveResults[0]['total'],
+			    'RESOLVE' => (int)$resolveResults[0]['total'] + ((int)$resolveResultsPartTime[0]['total']*0.48),
 			    'COMBINED' => ((int)$resolveResults[0]['total'] + (int)$gbsResults[0]['total'] + (int)$gabResults[0]['total']),
 			);
 			
