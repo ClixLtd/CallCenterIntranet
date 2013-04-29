@@ -654,7 +654,7 @@ class Debtsolv {
 	      	WHERE
 	      		QuestionID = 10007
 	      		AND ClientID = D_CLD.Client_ID
-	      ) AS 'Product'
+	      ) AS 'MyProduct'
 	      ,CONVERT(varchar, CLD.DateCreated, 105) AS 'Referred Date'
 	      ,CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
 	      ,CASE
@@ -689,8 +689,6 @@ class Debtsolv {
 		AND TCR.Description <> 'Referred'
 	    ".$center_query."
 	    AND ISNULL(DI_REF.product,'DR') = 'DR'
-      HAVING
-        Product <> 'PPI'
 	  ORDER BY
 		CLD.LeadRef2
 	    ,TCR.[Description]
