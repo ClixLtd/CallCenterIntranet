@@ -217,16 +217,28 @@
 					'referrals' => $hq_today['referrals'],
 					'pack_out' => $hq_today['pack_outs'],
 					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
+					
+					'di' => ($hq_today['pack_outs']==0) ? 0 : number_format($hq_today['pack_outs_value'] / $hq_today['pack_outs'],2),
+					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
+					'pack_out_value' => number_format($hq_today['pack_outs_value'],2),
 				),
 				'RESOLVE' => array(
 					'referrals' => $burton_today['referrals'],
 					'pack_out' => $burton_today['pack_outs'],
 					'pack_out_percentage' => ($burton_today['referrals']==0) ? 0 : number_format((($burton_today['pack_outs']/$burton_today['referrals'])*100),2),
+					
+					'di' => ($burton_today['pack_outs']==0) ? 0 : number_format($burton_today['pack_outs_value'] / $burton_today['pack_outs'],2),
+					'pack_out_percentage' => ($burton_today['referrals']==0) ? 0 : number_format((($burton_today['pack_outs']/$burton_today['referrals'])*100),2),
+					'pack_out_value' => number_format($burton_today['pack_outs_value'],2),
 				),
 				'PCC' => array(
 					'referrals' => $pcc_today['referrals'],
 					'pack_out' => $pcc_today['pack_outs'],
 					'pack_out_percentage' => ($pcc_today['referrals']==0) ? 0 : number_format((($pcc_today['pack_outs']/$pcc_today['referrals'])*100),2),
+					
+					'di' => ($pcc_today['pack_outs']==0) ? 0 : number_format($pcc_today['pack_outs_value'] / $pcc_today['pack_outs'],2),
+					'pack_out_percentage' => ($pcc_today['referrals']==0) ? 0 : number_format((($pcc_today['pack_outs']/$pcc_today['referrals'])*100),2),
+					'pack_out_value' => number_format($pcc_today['pack_outs_value'],2),
 				),
 				'COMBINED' => array(
 					'referrals' => ($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']),
