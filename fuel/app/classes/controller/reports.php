@@ -1030,7 +1030,7 @@ GROUP BY
                   break;
              }
     	    
-    	    if ( $result['Description'] == "Lead Completed" AND (int)$result['DI'] < 10 )
+    	    if ( $result['Description'] == "Lead Completed" AND $result['DI'] < 10 )
     	    {
         	    $ppicomplete = true;
     	    }
