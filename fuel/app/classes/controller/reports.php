@@ -927,7 +927,7 @@ GROUP BY
         			      	FROM
         			      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
         			      	WHERE
-        			      		QuestionID = 10001
+        			      		QuestionID = 10007
         			      		AND ClientID = D_CLD.Client_ID
         			      ) AS 'ProductType'
                       , (CD.Forename + ' ' + CD.Surname) AS Name
@@ -1030,17 +1030,22 @@ GROUP BY
                   break;
              }
     	    
-    	    $reportArray[$result['user_login']]['allReferrals'][] = array(
-                'Name'        => $result['Name'],
-                'leadID'      => $result['leadpool_id'],
-                'LeadName'    => 'Leadpool Name',
-                'Result'      => $result['Description'],
-                'DI'          => ((int)$result['DI'] < 10) ? "" : "£".number_format((float)$result['DI'], 2),
-                'Product'     => $pdtype,
-                'referred'    => date("d/m/Y", strtotime($result['referral_date'])),
-                'lastContact' => (strlen($result['Last Contact Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Last Contact Date'])),
-                'callBack'    => (strlen($result['Call Back Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Call Back Date'])),
-            );
+    	    if ((string)$result['ProductType'] <> '2')
+    	    {
+        	    
+        	    $reportArray[$result['user_login']]['allReferrals'][] = array(
+                    'Name'        => $result['Name'],
+                    'leadID'      => $result['leadpool_id'],
+                    'LeadName'    => 'Leadpool Name',
+                    'Result'      => $result['Description'],
+                    'DI'          => ((int)$result['DI'] < 10) ? "" : "£".number_format((float)$result['DI'], 2),
+                    'Product'     => $pdtype,
+                    'referred'    => date("d/m/Y", strtotime($result['referral_date'])),
+                    'lastContact' => (strlen($result['Last Contact Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Last Contact Date'])),
+                    'callBack'    => (strlen($result['Call Back Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Call Back Date'])),
+                );
+            
+            }
 
     	}
     	
