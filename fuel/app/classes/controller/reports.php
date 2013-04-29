@@ -925,9 +925,9 @@ GROUP BY
         			      	SELECT Top (1)
         			      		ResponseVal
         			      	FROM
-        			      		Debtsolv.dbo.Client_CustomQuestionResponses
+        			      		BS_Debtsolv.dbo.Client_CustomQuestionResponses
         			      	WHERE
-        			      		QuestionID = 10007
+        			      		QuestionID = 10001
         			      		AND ClientID = D_CLD.Client_ID
         			      ) AS 'ProductType'
                       , (CD.Forename + ' ' + CD.Surname) AS Name
