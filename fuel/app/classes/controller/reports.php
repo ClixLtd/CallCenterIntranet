@@ -994,54 +994,51 @@ GROUP BY
     	$reportArray = array();
     	foreach ($reportResults AS $result)
     	{
-    	    if ( isset($reportArray[$result['user_login']]) )
+    	
+    	
+    	    if ( ($result['Description'] == "Lead Completed" AND $result['DI'] < 10) OR (string)$result['ProductType']=='2' )
     	    {
-        	    $reportArray[$result['user_login']]['referrals']++;
-        	    $reportArray[$result['user_login']]['totalDI'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['totalDI'] + $result['DI'] : 0;
-        	    $reportArray[$result['user_login']]['packOuts'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['packOuts']+1 : $reportArray[$result['user_login']]['packOuts'];
-    	    }
-    	    else
-    	    {
-                $singleResult = array(
-                    'referrals' => 1,
-                    'totalDI' => ($result['Description'] == "Lead Completed") ? $result['DI'] : 0,
-                    'packOuts' => ($result['Description'] == "Lead Completed") ? 1 : 0,
-                );
+        	    
+        	
+        	    if ( isset($reportArray[$result['user_login']]) )
+        	    {
+            	    $reportArray[$result['user_login']]['referrals']++;
+            	    $reportArray[$result['user_login']]['totalDI'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['totalDI'] + $result['DI'] : 0;
+            	    $reportArray[$result['user_login']]['packOuts'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['packOuts']+1 : $reportArray[$result['user_login']]['packOuts'];
+        	    }
+        	    else
+        	    {
+                    $singleResult = array(
+                        'referrals' => 1,
+                        'totalDI' => ($result['Description'] == "Lead Completed") ? $result['DI'] : 0,
+                        'packOuts' => ($result['Description'] == "Lead Completed") ? 1 : 0,
+                    );
+                    
+                    $reportArray[$result['user_login']] = $singleResult;
+        	    }
+        	    
+        	    
+        	    $pdtype = "";
+    						  
+                switch ((string)$result['ProductType']) {
                 
-                $reportArray[$result['user_login']] = $singleResult;
-    	    }
+                  CASE '0':
+                      $pdtype = "DR";
+                      break;
+                  CASE '1':
+                      $pdtype = "DMPLUS";
+                      break;
+                  CASE '2':
+                      $pdtype = "PPI";
+                      break;
+                  CASE '':
+                      $pdtype = "";
+                      break;
+                 }
+        	    
+    
+        	    
     	    
-    	    
-    	    $pdtype = "";
-						  
-            switch ((string)$result['ProductType']) {
-            
-              CASE '0':
-                  $pdtype = "DR";
-                  break;
-              CASE '1':
-                  $pdtype = "DMPLUS";
-                  break;
-              CASE '2':
-                  $pdtype = "PPI";
-                  break;
-              CASE '':
-                  $pdtype = "";
-                  break;
-             }
-    	    
-    	    if ( $result['Description'] == "Lead Completed" AND $result['DI'] < 10 )
-    	    {
-        	    $ppicomplete = true;
-    	    }
-    	    else
-    	    {
-        	    $ppicomplete = false;
-    	    }
-    	    
-    	    
-    	    if ((string)$result['ProductType'] <> '2' )
-    	    {
         	    
         	    $reportArray[$result['user_login']]['allReferrals'][] = array(
                     'Name'        => $result['Name'],
