@@ -1040,7 +1040,7 @@ GROUP BY
     	    }
     	    
     	    
-    	    if ((string)$result['ProductType'] <> '2' OR !$ppicomplete)
+    	    if ((string)$result['ProductType'] <> '2' AND !$ppicomplete)
     	    {
         	    
         	    $reportArray[$result['user_login']]['allReferrals'][] = array(
