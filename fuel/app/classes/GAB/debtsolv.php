@@ -612,112 +612,88 @@ class Debtsolv {
 	    
 	    
 	    $results2 = \DB::query("SELECT CLD.ClientID
-				  ,CLD.LeadRef AS 'Dialler Lead ID'
-			      ,(CD.Forename + ' ' + CD.Surname) AS Name
-			      ,ISNULL(NULLIF(LSO.[Description],'<None>'), DSLSO.[Description]) AS 'Lead Source'
-			      ,CASE WHEN
-			      	ISNULL(DI_REF.short_code,'<None>') = '<None>'
-			       THEN
-			       	('<span id='''+CONVERT(varchar,CLD.ClientID)+''' class=''no-office-resolve''></span>')
-			       ELSE
-			       	DI_REF.short_code
-			       END AS Office
-			      ,ISNULL((
-			        SELECT Top (1)
-			          Undersigned
-			        FROM
-			          Debtsolv.dbo.Users AS D_URS
-			        LEFT JOIN
-			          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
-			        WHERE
-			          D_CLD.LeadPoolReference = CLD.ClientID
-			      ), ISNULL(DI_REF.full_name, 'NONE'))
-                  AS 'Telesales Agent',
-			      
-			      ISNULL((
-			        SELECT Top (1)
-			          Undersigned
-			        FROM
-			          BS_Debtsolv_DM.dbo.Users AS D_URS
-			        LEFT JOIN
-			          BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
-			        WHERE
-			          D_CLD.LeadPoolReference = CLD.ClientID
-			      ),(SELECT Top (1)
-			      	  Undersigned
-			      	FROM
-			      	  BS_Debtsolv_DM.dbo.Users AS DURS
-			      	LEFT JOIN
-			      	  BS_Leadpool_DM.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
-			      	WHERE
-			      	  CCA.CampaignContactID = CC.ID
-			      	ORDER BY
-			      	CCA.AccessDate DESC)) AS 'Consolidator'
-			      
-			      ,TCR.[Description]
-			      ,ISNULL(DI_REF.product,'DR') AS Product
-			      ,D_CPD.NormalExpectedPayment / 100 AS DI,
-			      (
-			      	SELECT Top (1)
-			      		ResponseText
-			      	FROM
-			      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
-			      	WHERE
-			      		QuestionID = 10001
-			      		AND ClientID = D_CLD.Client_ID
-			      ) AS 'Delivery',
-			      (
-			      	SELECT Top (1)
-			      		ResponseVal
-			      	FROM
-			      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
-			      	WHERE
-			      		QuestionID = 10007
-			      		AND ClientID = D_CLD.Client_ID
-			      ) AS 'ProductType'
-			      ,CONVERT(varchar, CLD.DateCreated, 120) AS 'Referred Date'
-			      ,CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
-			      ,CASE
-			         WHEN CC.ContactResult = 700
-			           THEN CONVERT(varchar, CC.Appointment, 120)
-			         ELSE
-			           ''
-			       END AS 'Call Back Date'
-			       , CC.ContactResult AS ContactResult
-			  FROM
-			    BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD
-			  LEFT JOIN
-			    BS_LeadPool_DM.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
-			  LEFT JOIN
-			    BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
-			  LEFT JOIN
-			    BS_LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
-			  LEFT JOIN
-				BS_LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
-			  LEFT JOIN
-				BS_LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
-			  
-			  LEFT JOIN
-				BS_Debtsolv_DM.dbo.Type_Lead_Source AS DSLSO ON LBA.LeadSourceID = DSLSO.ID
-				
-			  LEFT JOIN
-			    BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
-			  LEFT JOIN
-			    BS_Debtsolv_DM.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
-			  LEFT JOIN
-			    BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
-			  LEFT JOIN
-			  	Dialler.dbo.referrals AS DI_REF ON CLD.ClientID = DI_REF.leadpool_id
-			  WHERE
-			    ". $date_where ."
-				AND NOT ((D_CPD.InitialAgreedAmount is null OR D_CPD.NormalExpectedPayment <= 0) AND CC.ContactResult = 1500)
-			    ". $center_query ."
-			    AND ISNULL(DI_REF.product,'DR') = 'DR'
-			  ORDER BY
-				CLD.LeadRef2
-			    ,TCR.[Description]
-			    ,Product
-			    ,CLD.DateCreated DESC")->cached($data_cache)->execute(static::$_connection);
+		  ,CLD.LeadRef AS 'Dialler Lead ID'
+	      ,(CD.Forename + ' ' + CD.Surname) AS Name
+	      ,LSO.[Description] AS 'Lead Source'
+	      ,CLD.LeadRef2 AS Office
+	      ,D_U.Undersigned AS 'Telesales Agent',
+	      (
+	        SELECT Top (1)
+	          Undersigned
+	        FROM
+	          BS_Debtsolv_DM.dbo.Users AS D_URS
+	        LEFT JOIN
+	          BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+	        WHERE
+	          D_CLD.LeadPoolReference = CLD.ClientID
+	      ) AS 'Consolidator'
+	      ,TCR.[Description]
+	      ,CASE
+	         WHEN D_CPD.InitialAgreedAmount > 0 AND CC.ContactResult = 1500
+	            THEN 'DR'
+	         WHEN (D_CPD.InitialAgreedAmount is null OR D_CPD.InitialAgreedAmount <= 0) AND CC.ContactResult = 1500
+	            THEN 'PPI'
+	         ELSE
+	           ''
+	         END AS Product
+	      ,D_CPD.InitialAgreedAmount / 100 AS DI,
+	      (
+	      	SELECT Top (1)
+	      		ResponseText
+	      	FROM
+	      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
+	      	WHERE
+	      		QuestionID = 1
+	      		AND ClientID = D_CLD.Client_ID
+	      ) AS 'Delivery',
+	      (
+	      	SELECT Top (1)
+	      		ResponseText
+	      	FROM
+	      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
+	      	WHERE
+	      		QuestionID = 10007
+	      		AND ClientID = D_CLD.Client_ID
+	      ) AS 'MyProduct'
+	      ,CONVERT(varchar, CLD.DateCreated, 105) AS 'Referred Date'
+	      ,CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
+	      ,CASE
+	         WHEN CC.ContactResult = 700
+	           THEN CONVERT(varchar, CC.Appointment, 120)
+	         ELSE
+	           ''
+	       END AS 'Call Back Date'
+	  FROM
+	    BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD
+	  LEFT JOIN
+	    BS_LeadPool_DM.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
+	  LEFT JOIN
+	    BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+	  LEFT JOIN
+	    BS_LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+	  LEFT JOIN
+		BS_LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+	  LEFT JOIN
+		BS_LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+	  LEFT JOIN
+	    BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+	  LEFT JOIN
+	    BS_Debtsolv_DM.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+	  LEFT JOIN
+	    BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+	  LEFT JOIN
+	  	Dialler.dbo.referrals AS DI_REF ON CLD.ClientID = DI_REF.leadpool_id
+	  WHERE
+	    ".$date_where."
+		AND NOT ((D_CPD.InitialAgreedAmount is null OR D_CPD.InitialAgreedAmount <= 0) AND CC.ContactResult = 1500)
+		AND TCR.Description <> 'Referred'
+	    ".$center_query."
+	    AND ISNULL(DI_REF.product,'DR') = 'DR'
+	  ORDER BY
+		CLD.LeadRef2
+	    ,TCR.[Description]
+	    ,Product
+	    ,CLD.DateCreated DESC")->cached($data_cache)->execute(static::$_connection);
 	    
 	    $results = array();
 	    
@@ -749,14 +725,16 @@ class Debtsolv {
 	    	);
 		    foreach ($results AS $result)
 		    {
-			    if ($result['Description']=='Lead Completed')
+			    if ($result['Description']=='Lead Completed' AND (int)$result['DI'] > 10)
 			    {
 			    	$return_array['pack_outs']++;
 			    	$return_array['pack_outs_value'] = $return_array['pack_outs_value'] + $result['DI'];
 			    }
 			    
-                $return_array['referrals']++;
-			    
+			    if ((int)$result['MyProduct'] <> 2)
+			    {
+    			    $return_array['referrals']++;
+			    }
 			    
 			   
 		    }
