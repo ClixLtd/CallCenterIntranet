@@ -1030,7 +1030,17 @@ GROUP BY
                   break;
              }
     	    
-    	    if ((string)$result['ProductType'] <> '2' OR ($result['Description'] == "Lead Completed" AND $result['DI'] > 0))
+    	    if ( $result['Description'] == "Lead Completed" AND (int)$result['DI'] < 1 )
+    	    {
+        	    $ppicomplete = true;
+    	    }
+    	    else
+    	    {
+        	    $ppicomplete = false;
+    	    }
+    	    
+    	    
+    	    if ((string)$result['ProductType'] <> '2' OR !$ppicomplete)
     	    {
         	    
         	    $reportArray[$result['user_login']]['allReferrals'][] = array(
