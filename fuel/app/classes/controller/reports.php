@@ -941,7 +941,7 @@ GROUP BY
                   WHERE DR.user_login IN (" . $inList . ")
                       AND DR.short_code IN ('RESOLVE')
                       AND TCR.[Description] <> 'Referred'
-                      AND (TCR.[Description] = 'Lead Completed' AND DI < 1)
+                      AND (TCR.[Description] = 'Lead Completed' AND D_CPD.NormalExpectedPayment < 1)
                       AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
                       AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
     	
