@@ -903,8 +903,9 @@ GROUP BY
                           LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
                           LEFT JOIN LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                           WHERE DR.user_login IN (" . $inList . ")
-                              AND DR.short_code IN ('GAB','GBS')
+                              AND DR.short_code IN ('GAB','GBS', '1TICK', '1TICK-GBS')
                               AND TCR.[Description] <> 'Referred'
+                              AND D_CPD.NormalExpectedPayment > 0
                               AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
                               AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
     	
@@ -941,6 +942,7 @@ GROUP BY
                   WHERE DR.user_login IN (" . $inList . ")
                       AND DR.short_code IN ('RESOLVE')
                       AND TCR.[Description] <> 'Referred'
+                      AND D_CPD.NormalExpectedPayment > 0
                       AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
                       AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
     	
@@ -955,7 +957,8 @@ GROUP BY
                           LEFT JOIN Debtsolv.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
-                              AND D_R.short_code IN ('GAB','GBS')
+                              AND D_R.short_code IN ('GAB','GBS', '1TICK', '1TICK-GBS')
+                              AND D_CPD.NormalExpectedPayment > 0
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . $endDate . "'";
     	
@@ -971,6 +974,7 @@ GROUP BY
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
                               AND D_R.short_code IN ('RESOLVE')
+                              AND D_CPD.NormalExpectedPayment > 0
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . $endDate . "'";
     	
