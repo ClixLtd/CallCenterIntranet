@@ -998,7 +998,9 @@ GROUP BY
     	
     	    if ( ($result['Description'] == "Lead Completed" AND $result['DI'] < 10) OR (string)$result['ProductType']=='2' )
     	    {
+        	    // It's a PPI
         	    
+            } else {
         	
         	    if ( isset($reportArray[$result['user_login']]) )
         	    {
