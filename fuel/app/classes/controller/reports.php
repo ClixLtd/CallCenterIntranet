@@ -925,7 +925,7 @@ GROUP BY
         			      	SELECT Top (1)
         			      		ResponseVal
         			      	FROM
-        			      		BS_Debtsolv.dbo.Client_CustomQuestionResponses
+        			      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
         			      	WHERE
         			      		QuestionID = 10001
         			      		AND ClientID = D_CLD.Client_ID
