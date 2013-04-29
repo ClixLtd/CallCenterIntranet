@@ -941,7 +941,6 @@ GROUP BY
                   WHERE DR.user_login IN (" . $inList . ")
                       AND DR.short_code IN ('RESOLVE')
                       AND TCR.[Description] <> 'Referred'
-                      AND (TCR.[Description] = 'Lead Completed' AND D_CPD.NormalExpectedPayment < 1)
                       AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
                       AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
     	
@@ -1031,7 +1030,7 @@ GROUP BY
                   break;
              }
     	    
-    	    if ((string)$result['ProductType'] <> '2')
+    	    if ((string)$result['ProductType'] <> '2' OR ($result['Description'] == "Lead Completed" AND $result['DI'] > 0))
     	    {
         	    
         	    $reportArray[$result['user_login']]['allReferrals'][] = array(
