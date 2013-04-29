@@ -749,16 +749,14 @@ class Debtsolv {
 	    	);
 		    foreach ($results AS $result)
 		    {
-			    if ($result['Description']=='Lead Completed' AND (int)$result['DI'] > 10)
+			    if ($result['Description']=='Lead Completed')
 			    {
 			    	$return_array['pack_outs']++;
 			    	$return_array['pack_outs_value'] = $return_array['pack_outs_value'] + $result['DI'];
 			    }
 			    
-			    if ((int)$result['MyProduct'] <> 2)
-			    {
-    			    $return_array['referrals']++;
-			    }
+                $return_array['referrals']++;
+			    
 			    
 			   
 		    }
