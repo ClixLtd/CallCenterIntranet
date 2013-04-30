@@ -2111,7 +2111,7 @@ GROUP BY
     				{
         				$flatList .= $sCenter;
         				$flatList .= ($i < $total) ? "', '" : "";
-        				i++;
+        				$i++;
     				}
     				
     				
