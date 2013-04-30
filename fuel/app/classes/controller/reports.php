@@ -2051,15 +2051,25 @@ GROUP BY
 				list($driver, $user_id) = Auth::get_user_id();
 				$this_user = Model_User::find($user_id);
 				
-				$call_center = Model_Call_Center::find($this_user->call_center_id);
+				$call_center_array = array();
 				
-				if (is_null($call_center->shortcode)) {
+				
+				$all_call_centers = Model_User_Center::query()->where('user', $user_id)->get();
+				
+				foreach ($all_call_centers AS $acc)
+				{
+    				$call_center_check = Model_Call_Center::find($acc->center);
+    				$call_center_array[] = $call_center_check->shortcode;
+				}
+				
+				
+				if (count($call_center_array) < 1) {
 					return(array(
 		            	'status' => 'FAIL',
 		            	'message' => 'You do not have access to the disposition report.',
 		            ));
 				} else {
-					$center = $call_center->shortcode;
+					$center = $call_center_array;
 				}				
 			}
 			
@@ -2090,9 +2100,29 @@ GROUP BY
 				
 				$pack_in_duration = "(D_CLD.DatePackReceived >= CONVERT(datetime, '". $start_date ."', 105) AND D_CLD.DatePackReceived <= CONVERT(datetime, '". $end_date ."', 105)) ";
 				
+				if (is_array($center))
+				{
+    				// Multiple call centers allowed
+    				
+    				$flatList = "";
+    				$total = count($center);
+    				$i=1;
+    				foreach ($center AS $sCenter)
+    				{
+        				$flatList .= $sCenter;
+        				$flatList .= ($i < $total) ? "', '" : "";
+        				i++;
+    				}
+    				
+    				
+    				$call_center_choice = "AND DI_REF.short_code IN '".$flatList."'";
+				}
+				else
+				{
+    				$call_center_choice = (!is_null($center)) ? "AND DI_REF.short_code = '".$center."'" : "";
+				}
 				
 				
-				$call_center_choice = (!is_null($center)) ? "AND DI_REF.short_code = '".$center."'" : "";
 				
 				$results1 = DB::query("SELECT CLD.ClientID
 				  ,CLD.LeadRef AS 'Dialler Lead ID'
