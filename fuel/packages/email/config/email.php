@@ -92,7 +92,7 @@ return array(
 			'host'		=> 'ssl://smtp.gmail.com',
 			'port'		=> 465,
 			'username'	=> 'noreply@expertmoneysolutions.co.uk',
-			'password'	=> 'yJ=4Q6qT',
+			'password'	=> 'Wvts231ct6D',
 			'timeout'	=> 5,
 		),
 
