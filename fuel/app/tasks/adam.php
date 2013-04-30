@@ -1466,7 +1466,7 @@ Gregson and Brooke.');
         				$email->html_body(\View::forge('emails/firstpayment/first-payment', array(
         					'email_data' => array(
         					   'clientID' => $clientID,
-        					   'di' => $di,
+        					   'di' => "£" . number_format(($di/100),2),
         					   'office' => $office,
         					),
         				)));
