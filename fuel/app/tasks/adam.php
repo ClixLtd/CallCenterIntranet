@@ -64,6 +64,9 @@
 									
 			$email->send();
 
+
+			Adam::submit_ticket("Incorrect DI Value", "I have found a client in Debtsolv with a DI value of £0. The Client ID is ");
+
 		}
 		
 		public function run()
@@ -97,11 +100,11 @@
     		date_default_timezone_set('Europe/London');
     		
     		
-    		$submitUrl = "http://www.gregsonandbrooke.co.uk/support/open.php";
+    		$submitUrl = "http://support.expertmoneysolutions.co.uk/open.php";
     		
     		$openTicket = array(
     		  'name'      => 'A.D.A.M.',
-    		  'email'     => 'a.d.a.m@gregsonandbrooke.co.uk',
+    		  'email'     => 'a.d.a.m@expertmoneysolutions.co.uk',
     		  'phone'     => '01204860900',
     		  'phone_ext' => '4000',
     		  'topicId'   => $department,
@@ -838,15 +841,13 @@ WHERE
 				
 				$email = \Email::forge();
 			
-				$email->from('noreply@gregsonandbrooke.co.uk', 'Gregson and Brooke');
+				$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
 				
 				$email->to(array(
-					'l.davenport@gregsonandbrooke.co.uk'  => 'Laura Davenport',
-					'r.knowles@gregsonandbrooke.co.uk'    => 'Richard Knowles',
-				));
+					'l.davenport@expertmoneysolutions.co.uk'  => 'Laura Davenport',				));
 				
 				$email->bcc(array(
-					'support@gregsonandbrooke.co.uk'      => 'Gregson and Brooke Support',
+					'support@expertmoneysolutions.co.uk'      => 'EMS Support',
 				));
 				
 				$email->priority(\Email::P_HIGH);
@@ -911,12 +912,12 @@ Gregson and Brooke.');
 					
 						$email = \Email::forge();
 			
-						$email->from('noreply@gregsonandbrooke.co.uk', 'Gregson and Brooke');
+						$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
 						
 						$email->to($emails);
 						
 						$email->bcc(array(
-							'support@gregsonandbrooke.co.uk'      => 'Gregson and Brooke Support',
+							'support@expertmoneysolutions.co.uk'      => 'EMS Support',
 						));
 				
 						$email->priority(\Email::P_HIGH);
