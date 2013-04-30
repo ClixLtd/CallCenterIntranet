@@ -1,5 +1,5 @@
 <?php
-class Controller_User_Centers extends Controller_Template 
+class Controller_User_Centers extends Controller_BaseHybrid 
 {
 
 	public function action_index()
