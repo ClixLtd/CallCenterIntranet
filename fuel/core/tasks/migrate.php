@@ -3,10 +3,10 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.0
+ * @version    1.5
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2012 Fuel Development Team
+ * @copyright  2010 - 2013 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
@@ -64,8 +64,7 @@ class Migrate
 			$packages = true;
 			$default = true;
 		}
-		
-		
+
 		// if modules option set
 		if ( ! empty($modules))
 		{
@@ -103,7 +102,6 @@ class Migrate
 				{
 					foreach (glob($p . '*/') as $pp)
 					{
-					
 						if (count(glob($pp.\Config::get('migrations.folder').'/*.php')))
 						{
 							static::$packages[] = basename($pp);
@@ -370,7 +368,7 @@ Examples:
     php oil r migrate --version=201203171206
     php oil r migrate --modules --packages --default
     php oil r migrate:up --modules=module1,module2 --packages=package1
-    php oil r migrate --module=module1 -v=3
+    php oil r migrate --modules=module1 -v=3
     php oil r migrate --all
 
 HELP;
