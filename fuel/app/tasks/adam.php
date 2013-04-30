@@ -1445,7 +1445,7 @@ Gregson and Brooke.');
                 		}
                 		
                 		
-                		$result = @\DB::query("INSERT INTO Dialler.dbo.client_dates (ClientID, FirstPaymentDate, Office) VALUES (".$clientID.", '".$firstPaymentDate."', '".$office."')")->execute('debtsolv');
+                		
                 		
                 		// Send an e-mail to the group announcing the first payment!
                 		
@@ -1472,13 +1472,14 @@ Gregson and Brooke.');
         				)));
         				
         				$email->send();
-
-                		
-                		
-                		
+        				
                 		// Print to console
                 		
                 		print "Client ID " . $clientID . " first DI of £" . number_format(($di/100),2) . " paid on " . $firstPaymentDate . "\n";
+
+                		$result = @\DB::query("INSERT INTO Dialler.dbo.client_dates (ClientID, FirstPaymentDate, Office) VALUES (".$clientID.", '".$firstPaymentDate."', '".$office."')")->execute('debtsolv');
+                		
+                		
             		}
             		
         		}
