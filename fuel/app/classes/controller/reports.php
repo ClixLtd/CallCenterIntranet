@@ -1033,6 +1033,9 @@ GROUP BY
                   CASE '2':
                       $pdtype = "PPI";
                       break;
+                  CASE '3':
+                      $pdtype = "DRPLUS";
+                      break;
                   CASE '':
                       $pdtype = "";
                       break;
@@ -2051,17 +2054,15 @@ GROUP BY
 				list($driver, $user_id) = Auth::get_user_id();
 				$this_user = Model_User::find($user_id);
 				
-				$call_center_array = array();
-				
-				
-				$all_call_centers = Model_User_Center::query()->where('user', $user_id)->get();
-				
-				foreach ($all_call_centers AS $acc)
-				{
+    			// ## START - Pull an array of call centers this user can access
+    			$call_center_array = array();
+    			$sall_call_centers = Model_User_Center::query()->where('user', $user_id)->get();
+    			foreach ($sall_call_centers AS $acc)
+    			{
     				$call_center_check = Model_Call_Center::find($acc->center);
     				$call_center_array[] = $call_center_check->shortcode;
-				}
-				
+    			}
+    			// ## END - Pull an array of call centers this user can access
 				
 				if (count($call_center_array) < 1) {
 					return(array(
@@ -2427,6 +2428,9 @@ GROUP BY
 						      CASE '2':
 						          $pdtype = "PPI";
 						          break;
+						      CASE '3':
+						          $pdtype = "DRPLUS";
+						          break;
 						      CASE '':
 						          $pdtype = "";
 						          break;
@@ -2473,6 +2477,11 @@ GROUP BY
 						          break;
 						      CASE '2':
 						          $pdtype = "PPI";
+						          break;
+						      CASE '3':
+						          $pdtype = "DRPLUS";
+						          $totals['dr_pack_outs']['count']++;
+						          $totals['dr_pack_outs']['value']=$totals['dr_pack_outs']['value']+$result['DI'];
 						          break;
 						      DEFAULT:
 						          $pdtype = "";
@@ -2905,6 +2914,9 @@ GROUP BY
     				      CASE '2':
     				          $pdtype = "PPI";
     				          break;
+    				      CASE '3':
+    				          $pdtype = "DRPLUS";
+    				          break;
     				      CASE '':
     				          $pdtype = "";
     				          break;
@@ -2948,6 +2960,9 @@ GROUP BY
         				          break;
         				      CASE '2':
         				          $pdtype = "PPI";
+        				          break;
+        				      CASE '3':
+        				          $pdtype = "DRPLUS";
         				          break;
         				      CASE '':
         				          $pdtype = "";
