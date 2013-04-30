@@ -4,7 +4,7 @@
 	
 	class Adam
 	{
-		
+
 		
 		public static $casual_introductions = array(
 			'Hiya. ',
@@ -44,6 +44,27 @@
 			"The end of another working day! I wonder what the next will hold in store for me! See you soon!",
 			"What shoud I do this evening? Suggestions in an e-mail please! Good night!",
 		);
+		
+		public function testMail()
+		{
+    		$email = \Email::forge();
+			
+			$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+			
+			$email->to(array(
+			    's.skinner@expertmoneysolutions.co.uk' => 'Simon Skinner',
+			));
+			
+	
+			$email->priority(\Email::P_HIGH);
+			
+			$email->subject('Recent No Contacts');
+			
+			$email->html_body("Testing, Oh Yeah");
+									
+			$email->send();
+
+		}
 		
 		public function run()
 		{
