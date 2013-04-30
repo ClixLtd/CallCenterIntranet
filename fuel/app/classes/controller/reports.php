@@ -2115,7 +2115,7 @@ GROUP BY
     				}
     				
     				
-    				$call_center_choice = "AND DI_REF.short_code IN '".$flatList."'";
+    				$call_center_choice = "AND DI_REF.short_code IN ('".$flatList."')";
 				}
 				else
 				{
