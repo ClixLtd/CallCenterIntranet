@@ -62,6 +62,8 @@ return array(
 				53 => '057_add_pack_out_commission_to_telesales_report_values',
 				54 => '058_add_pack_out_bonus_to_telesales_report_values',
 				55 => '059_add_payment_percentage_to_telesales_report_values',
+				56 => '060_create_dialler_current_agents',
+				57 => '061_create_user_centers',
 			),
 		),
 		'module' => 
@@ -97,6 +99,9 @@ return array(
 				15 => '016_alter_crm_ppi_claims_invoice_id',
 				16 => '017_alter_crm_ppi_claims_change_ac',
 				17 => '018_alter_crm_ppi_refund_removecols',
+				18 => '019_create_crm_type_debt',
+				19 => '020_alter_crm_ppi_claims_debttype',
+				20 => '021_alter_crm_ppi_refund_invoiceid',
 			),
 		),
 	),
