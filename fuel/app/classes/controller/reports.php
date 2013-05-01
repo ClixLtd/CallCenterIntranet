@@ -231,7 +231,7 @@ GROUP BY
     	        
     	        if ($payment['Shortcode'] <> 'NONE' && $payment['Shortcode'] <> '' && $payment['Shortcode'] <> ' ')
     	        {
-        	        $introducerTitle = $payment['Shortcode'];
+        	        $introducerTitle = $payment['Shortcode'].sha1((string)$payment['Introducer']);
     	        }
     	        else
     	        {
@@ -241,7 +241,7 @@ GROUP BY
         	        }
         	        else
         	        {
-            	        $introducerTitle = (string)$payment['Introducer'].sha1((string)$payment['Introducer']);
+            	        $introducerTitle = (string)$payment['Introducer'];
         	        }
     	        }
     	        
