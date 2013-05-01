@@ -204,23 +204,23 @@ GROUP BY
     	        
     	        
     	        $shortCodeChange = array(
-    	           "GamesBlaster"                => "GAB",
-    	           "GregsonandBrooke"           => "GAB",
+    	           "Games Blaster"                => "GAB",
+    	           "Gregson and Brooke"           => "GAB",
     	           "Phillipines"                  => "GBS",
-    	           "PPI-17-11-2011"             => "GAB",
-    	           "PPI-19-11-2011"             => "GAB",
-    	           "PPI-21-11-2011"             => "GAB",
+    	           "PPI - 17-11-2011"             => "GAB",
+    	           "PPI - 19-11-2011"             => "GAB",
+    	           "PPI - 21-11-2011"             => "GAB",
     	           "Teleprospects"                => "GAB",
     	           "UCS"                          => "GAB",
-    	           "UniqueProspects"             => "GAB",
-    	           "60kHomeOwner"               => "GAB",
-    	           "DataCompiled2011"           => "GAB",
-    	           "DataCompiled2012"           => "GAB",
-    	           "DiallerManualDial"          => "GAB",
-    	           "DigosCallCentre"            => "GBS",
-    	           "DigosCallCentre(PostPPI)" => "GBS",
+    	           "Unique Prospects"             => "GAB",
+    	           "60k Home Owner"               => "GAB",
+    	           "Data Compiled 2011"           => "GAB",
+    	           "Data Compiled 2012"           => "GAB",
+    	           "Dialler Manual Dial"          => "GAB",
+    	           "Digos Call Centre"            => "GBS",
+    	           "Digos Call Centre (Post PPI)" => "GBS",
     	           "DK101"                        => "GAB",
-    	           "GABDebtHotkeys"             => "GAB",
+    	           "GAB Debt Hotkeys"             => "GAB",
     	           "JPO"                          => "GAB",
     	           "DLG"                          => "GAB",
     	           
@@ -235,13 +235,13 @@ GROUP BY
     	        }
     	        else
     	        {
-        	        if ( isset($shortCodeChange[str_replace(" ", "",(string)$payment['Introducer'])]) )
+        	        if ( isset($shortCodeChange[(string)$payment['Introducer']]) )
         	        {
-            	        $introducerTitle = $shortCodeChange[str_replace(" ", "",(string)$payment['Introducer'])];
+            	        $introducerTitle = $shortCodeChange[(string)$payment['Introducer']];
         	        }
         	        else
         	        {
-            	        $introducerTitle = (string)$payment['Introducer'];
+            	        $introducerTitle = (string)$payment['Introducer'].sha1((string)$payment['Introducer']);
         	        }
     	        }
     	        
