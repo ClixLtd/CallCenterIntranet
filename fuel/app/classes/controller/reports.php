@@ -252,20 +252,29 @@ GROUP BY
     	       'total' => (isset($clientPayments[$payment['ClientID']])) ? $introducerPayments[$introducerTitle]['total'] : $introducerPayments[$introducerTitle]['total'] + 1,
     	    );
     	    
-    	    
+    	    $inThisArray = false;
+    	    foreach ($clientPayments as $cp)
+    	    {
+        	    if ($cp[0] == $payment['ClientID'])
+        	    {
+            	    $inThisArray = true;
+        	    }
+    	    }
 	        
-    	    $clientPayments['ClientID'] = array(
-    	       $payment['ClientID'],
-    	       $payment['Name'],
-    	       $introducerTitle,
-    	       $paymentTotal,
-    	       $payment['NormalExpectedPayment'],
-    	       $payment['TotalOwed'],
-    	       //$paymentCount,
-    	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
-    	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
-    	    );
-    	    
+	        if (!$inThisArray)
+	        {
+        	    $clientPayments[] = array(
+        	       $payment['ClientID'],
+        	       $payment['Name'],
+        	       $introducerTitle,
+        	       $paymentTotal,
+        	       $payment['NormalExpectedPayment'],
+        	       $payment['TotalOwed'],
+        	       //$paymentCount,
+        	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
+        	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
+        	    );
+    	    }
     	    
 
 	    }
