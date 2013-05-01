@@ -498,6 +498,14 @@ class Debtsolv {
 			{
 				$center_query = "AND DI_REF.short_code IN ('GAB','GBS')";
 			}
+			else if ($center == "GAB")
+			{
+				$center_query = "AND DI_REF.short_code IN ('GAB','1TICK')";
+			}
+			else if ($center == "GBS")
+			{
+				$center_query = "AND DI_REF.short_code IN ('GBS','1TICK-GBS')";
+			}
 			else
 			{
 				$center_query = "AND DI_REF.short_code = '".$center."'";
@@ -637,7 +645,16 @@ class Debtsolv {
 	      	WHERE
 	      		QuestionID = 1
 	      		AND ClientID = D_CLD.Client_ID
-	      ) AS 'Delivery'
+	      ) AS 'Delivery',
+	      (
+	      	SELECT Top (1)
+	      		ResponseText
+	      	FROM
+	      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
+	      	WHERE
+	      		QuestionID = 10007
+	      		AND ClientID = D_CLD.Client_ID
+	      ) AS 'MyProduct'
 	      ,CONVERT(varchar, CLD.DateCreated, 105) AS 'Referred Date'
 	      ,CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
 	      ,CASE
@@ -708,13 +725,17 @@ class Debtsolv {
 	    	);
 		    foreach ($results AS $result)
 		    {
-			    if ($result['Description']=='Lead Completed')
+			    if ($result['Description']=='Lead Completed' AND (int)$result['DI'] > 10)
 			    {
 			    	$return_array['pack_outs']++;
 			    	$return_array['pack_outs_value'] = $return_array['pack_outs_value'] + $result['DI'];
 			    }
 			    
-			    $return_array['referrals']++;
+			    if ((int)$result['MyProduct'] <> 2)
+			    {
+    			    $return_array['referrals']++;
+			    }
+			    
 			   
 		    }
 	    }

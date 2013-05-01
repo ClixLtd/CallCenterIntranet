@@ -254,16 +254,16 @@ GROUP BY
     	    
     	    
 	        
-    	    $clientPayments[$payment['ClientID']] = array(
-    	       'ClientID'              => $payment['ClientID'],
-    	       'Name'                  => $payment['Name'],
-    	       'Introducer'            => $introducerTitle,
-    	       'AmountIn'              => $paymentTotal,
-    	       'NormalExpectedPayment' => $payment['NormalExpectedPayment'],
-    	       'TotalOwed'             => $payment['TotalOwed'],
-    	       'count'                 => $paymentCount,
-    	       'note'                  => ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
-    	       'reached'               => ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
+    	    $clientPayments[] = array(
+    	       $payment['ClientID'],
+    	       $payment['Name'],
+    	       $introducerTitle,
+    	       $paymentTotal,
+    	       $payment['NormalExpectedPayment'],
+    	       $payment['TotalOwed'],
+    	       //$paymentCount,
+    	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
+    	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
     	    );
     	    
     	    
@@ -305,16 +305,28 @@ GROUP BY
 	    ),3600);
 
 	    
+	    $introducerPaymentsReturn = array();
+	    foreach ($introducerPayments AS $inpayName => $inpayValues)
+	    {
+    	    $introducerPaymentsReturn[] = array(
+    	        $inpayName,
+    	        number_format($inpayValues['amount'],0),
+    	        "&pound;".number_format($inpayValues['total'],2),
+    	        ($inpayValues['total'] < 0.1) ? "&pound;0.00" : "&pound;".number_format(($inpayValues['amount'] / $inpayValues['total']),2),
+    	    );
+	    }
+	    
+	    
 	    $expectedPayments = array();
 	    foreach ($expectedPaymentDetails AS $expected)
 	    {
     	    $expectedPayments[] = array(
-    	        'clientID'       => $expected['ClientID'],
-    	        'name'           => $expected['ClientName'],
-    	        'dateExpected'   => $expected['DateExpected'],
-    	        'amountExpected' => $expected['AmountExpected'],
-    	        'received'       => $expected['AmountReceived'],
-    	        'complete'       => ((int)$expected['AmountReceived'] >= (int)$expected['AmountExpected']) ? TRUE : FALSE,
+    	        $expected['ClientID'],
+    	        $expected['ClientName'],
+    	        $expected['DateExpected'],
+    	        $expected['AmountExpected'],
+    	        $expected['AmountReceived'],
+    	        ((int)$expected['AmountReceived'] >= (int)$expected['AmountExpected']) ? TRUE : FALSE,
     	    );
 	    }
 	    
@@ -325,7 +337,7 @@ GROUP BY
 	       'reports'    => $report->generate(),
 	       'clients'    => $clientPayments,
 	       'expected'   => $expectedPayments,
-	       'introducer' => $introducerPayments,
+	       'introducer' => $introducerPaymentsReturn,
 	    );
 
 	}
@@ -334,17 +346,183 @@ GROUP BY
 	
 	
 	
-	
+	public function get_get_monthly_payment($center=null)
+	{
+    	
+        $startDate = null;
+    	$endDate = null;
+    	
+    	$month = $this->param('month');
+    	if (!is_null($month))
+    	{
+        	$monthSplit = explode('-', $month);
+        	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
+        	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
+    	}
+    	
+    	
+    	$reportArray = Controller_Reports::generate_monthly_payment_report($center, $startDate, $endDate);
+    	
+    	return $this->response(array(
+		    'reports' => $reportArray['reports'],
+		    'payments' => array(
+		        "aaData" => $reportArray['clients'],
+            	"bDestroy" => true,
+            	"bPaginate" => true,
+            	"bProcessing" => true,
+    			"aoColumnDefs" => array(
+    				array(
+    					"iDataSort" => 2,
+    					"asSorting" => array("asc"),
+    					"aTargets" => array(0),
+    				),
+    			),
+    			"aoColumns" => array(
+    				array(
+    					"sTitle" => "Client ID",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Client Name", 
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle"    => "Introducer",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle"    => "Amount In",
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle" => "Expected", 
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle"    => "Remaining Debt",
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle"    => "Notes",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Reached", 
+    					"bSortable" => false,
+    				),
+    			),
+            ),
+		    
+		    
+		    'expected' => array(
+		        "aaData" => $reportArray['expected'],
+            	"bDestroy" => true,
+            	"bPaginate" => true,
+            	"bProcessing" => true,
+    			"aoColumnDefs" => array(
+    				array(
+    					"iDataSort" => 2,
+    					"asSorting" => array("asc"),
+    					"aTargets" => array(0),
+    				),
+    			),
+    			"aoColumns" => array(
+    				array(
+    					"sTitle" => "Client ID",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Client Name", 
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Expected", 
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle" => "Amount Expected", 
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle"    => "Received",
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle"    => "Completed",
+    					"sType"		=> "numeric",
+    				),
+    			),
+            ),
+            //$reportArray['expected'],
+		    'introducer' => array(
+		        "aaData" => $reportArray['introducer'],
+            	"bDestroy" => true,
+            	"bPaginate" => false,
+            	"bProcessing" => true,
+    			"aoColumnDefs" => array(
+    				array(
+    					"iDataSort" => 2,
+    					"asSorting" => array("asc"),
+    					"aTargets" => array(0),
+    				),
+    			),
+    			"aoColumns" => array(
+    				array(
+    					"sTitle" => "Introducer",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Total Payments", 
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle" => "Total Value", 
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle" => "Average Payment", 
+    					"sType"		=> "numeric",
+    				),
+    			),
+            ),
+
+            //$reportArray['introducer'],
+		    
+		    
+		    
+		    
+		));
+	}
 	
 	
 	
 	public function action_monthly_payment($center=null)
 	{
-    		    
-	    $reportArray = Controller_Reports::generate_monthly_payment_report($center, "2013-03-01", "2013-04-01");
+    	
+        $startDate = null;
+    	$endDate = null;
+    	
+    	$monthUrl = "/reports/get_monthly_payment";
+    	
+    	$monthUrl .= (is_null($center)) ? "/GAB" : "/".$center;
+    	
+    	$month = $this->param('month');
+    	if (!is_null($month))
+    	{
+    	    $monthUrl .= "/".$month;
+        	$monthSplit = explode('-', $month);
+        	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
+        	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
+    	}
+    	
+    	
+	   // $reportArray = Controller_Reports::generate_monthly_payment_report($center, "2013-03-01", "2013-04-01");
+	    
+	    
 	    
 	    $this->template->title = 'Reports &raquo; Monthly Payments';
 		$this->template->content = View::forge('reports/month_payments', array(
+    	    'report_url' => $monthUrl.".json",
 		    'reports' => $reportArray['reports'],
 		    'payments' => $reportArray['clients'],
 		    'expected' => $reportArray['expected'],
@@ -573,8 +751,6 @@ GROUP BY
         	$monthSplit = explode('-', $month);
         	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
         	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
-        	
-        	
     	}
     	
 	
@@ -727,7 +903,7 @@ GROUP BY
                           LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
                           LEFT JOIN LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                           WHERE DR.user_login IN (" . $inList . ")
-                              AND DR.short_code IN ('GAB','GBS')
+                              AND DR.short_code IN ('GAB','GBS', '1TICK', '1TICK-GBS')
                               AND TCR.[Description] <> 'Referred'
                               AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
                               AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
@@ -749,7 +925,7 @@ GROUP BY
         			      	SELECT Top (1)
         			      		ResponseVal
         			      	FROM
-        			      		Debtsolv.dbo.Client_CustomQuestionResponses
+        			      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
         			      	WHERE
         			      		QuestionID = 10007
         			      		AND ClientID = D_CLD.Client_ID
@@ -779,7 +955,7 @@ GROUP BY
                           LEFT JOIN Debtsolv.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
-                              AND D_R.short_code IN ('GAB','GBS')
+                              AND D_R.short_code IN ('GAB','GBS', '1TICK', '1TICK-GBS')
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . $endDate . "'";
     	
@@ -818,53 +994,70 @@ GROUP BY
     	$reportArray = array();
     	foreach ($reportResults AS $result)
     	{
-    	    if ( isset($reportArray[$result['user_login']]) )
+    	
+    	
+    	    if ( ($result['Description'] == "Lead Completed" AND $result['DI'] < 10) OR (string)$result['ProductType']=='2' )
     	    {
-        	    $reportArray[$result['user_login']]['referrals']++;
-        	    $reportArray[$result['user_login']]['totalDI'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['totalDI'] + $result['DI'] : 0;
-        	    $reportArray[$result['user_login']]['packOuts'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['packOuts']+1 : $reportArray[$result['user_login']]['packOuts'];
-    	    }
-    	    else
-    	    {
-                $singleResult = array(
-                    'referrals' => 1,
-                    'totalDI' => ($result['Description'] == "Lead Completed") ? $result['DI'] : 0,
-                    'packOuts' => ($result['Description'] == "Lead Completed") ? 1 : 0,
-                );
+        	    // It's a PPI
+        	    
+            } else {
+        	
+        	    if ( isset($reportArray[$result['user_login']]) )
+        	    {
+            	    $reportArray[$result['user_login']]['referrals']++;
+            	    $reportArray[$result['user_login']]['totalDI'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['totalDI'] + $result['DI'] : 0;
+            	    $reportArray[$result['user_login']]['packOuts'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['packOuts']+1 : $reportArray[$result['user_login']]['packOuts'];
+        	    }
+        	    else
+        	    {
+                    $singleResult = array(
+                        'referrals' => 1,
+                        'totalDI' => ($result['Description'] == "Lead Completed") ? $result['DI'] : 0,
+                        'packOuts' => ($result['Description'] == "Lead Completed") ? 1 : 0,
+                    );
+                    
+                    $reportArray[$result['user_login']] = $singleResult;
+        	    }
+        	    
+        	    
+        	    $pdtype = "";
+    						  
+                switch ((string)$result['ProductType']) {
                 
-                $reportArray[$result['user_login']] = $singleResult;
-    	    }
+                  CASE '0':
+                      $pdtype = "DR";
+                      break;
+                  CASE '1':
+                      $pdtype = "DMPLUS";
+                      break;
+                  CASE '2':
+                      $pdtype = "PPI";
+                      break;
+                  CASE '3':
+                      $pdtype = "DRPLUS";
+                      break;
+                  CASE '':
+                      $pdtype = "";
+                      break;
+                 }
+        	    
+    
+        	    
     	    
-    	    
-    	    $pdtype = "";
-						  
-            switch ((string)$result['ProductType']) {
+        	    
+        	    $reportArray[$result['user_login']]['allReferrals'][] = array(
+                    'Name'        => $result['Name'],
+                    'leadID'      => $result['leadpool_id'],
+                    'LeadName'    => 'Leadpool Name',
+                    'Result'      => $result['Description'],
+                    'DI'          => ((int)$result['DI'] < 10) ? "" : "£".number_format((float)$result['DI'], 2),
+                    'Product'     => $pdtype,
+                    'referred'    => date("d/m/Y", strtotime($result['referral_date'])),
+                    'lastContact' => (strlen($result['Last Contact Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Last Contact Date'])),
+                    'callBack'    => (strlen($result['Call Back Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Call Back Date'])),
+                );
             
-              CASE '0':
-                  $pdtype = "DR";
-                  break;
-              CASE '1':
-                  $pdtype = "DMPLUS";
-                  break;
-              CASE '2':
-                  $pdtype = "PPI";
-                  break;
-              CASE '':
-                  $pdtype = "";
-                  break;
-             }
-    	    
-    	    $reportArray[$result['user_login']]['allReferrals'][] = array(
-                'Name'        => $result['Name'],
-                'leadID'      => $result['leadpool_id'],
-                'LeadName'    => 'Leadpool Name',
-                'Result'      => $result['Description'],
-                'DI'          => ((int)$result['DI'] < 10) ? "" : "£".number_format((float)$result['DI'], 2),
-                'Product'     => $pdtype,
-                'referred'    => date("d/m/Y", strtotime($result['referral_date'])),
-                'lastContact' => (strlen($result['Last Contact Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Last Contact Date'])),
-                'callBack'    => (strlen($result['Call Back Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Call Back Date'])),
-            );
+            }
 
     	}
     	
@@ -1861,15 +2054,23 @@ GROUP BY
 				list($driver, $user_id) = Auth::get_user_id();
 				$this_user = Model_User::find($user_id);
 				
-				$call_center = Model_Call_Center::find($this_user->call_center_id);
+    			// ## START - Pull an array of call centers this user can access
+    			$call_center_array = array();
+    			$sall_call_centers = Model_User_Center::query()->where('user', $user_id)->get();
+    			foreach ($sall_call_centers AS $acc)
+    			{
+    				$call_center_check = Model_Call_Center::find($acc->center);
+    				$call_center_array[] = $call_center_check->shortcode;
+    			}
+    			// ## END - Pull an array of call centers this user can access
 				
-				if (is_null($call_center->shortcode)) {
+				if (count($call_center_array) < 1) {
 					return(array(
 		            	'status' => 'FAIL',
 		            	'message' => 'You do not have access to the disposition report.',
 		            ));
 				} else {
-					$center = $call_center->shortcode;
+					$center = $call_center_array;
 				}				
 			}
 			
@@ -1900,9 +2101,29 @@ GROUP BY
 				
 				$pack_in_duration = "(D_CLD.DatePackReceived >= CONVERT(datetime, '". $start_date ."', 105) AND D_CLD.DatePackReceived <= CONVERT(datetime, '". $end_date ."', 105)) ";
 				
+				if (is_array($center))
+				{
+    				// Multiple call centers allowed
+    				
+    				$flatList = "";
+    				$total = count($center);
+    				$i=1;
+    				foreach ($center AS $sCenter)
+    				{
+        				$flatList .= $sCenter;
+        				$flatList .= ($i < $total) ? "', '" : "";
+        				$i++;
+    				}
+    				
+    				
+    				$call_center_choice = "AND DI_REF.short_code IN ('".$flatList."')";
+				}
+				else
+				{
+    				$call_center_choice = (!is_null($center)) ? "AND DI_REF.short_code = '".$center."'" : "";
+				}
 				
 				
-				$call_center_choice = (!is_null($center)) ? "AND DI_REF.short_code = '".$center."'" : "";
 				
 				$results1 = DB::query("SELECT CLD.ClientID
 				  ,CLD.LeadRef AS 'Dialler Lead ID'
@@ -2207,6 +2428,9 @@ GROUP BY
 						      CASE '2':
 						          $pdtype = "PPI";
 						          break;
+						      CASE '3':
+						          $pdtype = "DRPLUS";
+						          break;
 						      CASE '':
 						          $pdtype = "";
 						          break;
@@ -2253,6 +2477,11 @@ GROUP BY
 						          break;
 						      CASE '2':
 						          $pdtype = "PPI";
+						          break;
+						      CASE '3':
+						          $pdtype = "DRPLUS";
+						          $totals['dr_pack_outs']['count']++;
+						          $totals['dr_pack_outs']['value']=$totals['dr_pack_outs']['value']+$result['DI'];
 						          break;
 						      DEFAULT:
 						          $pdtype = "";
@@ -2685,6 +2914,9 @@ GROUP BY
     				      CASE '2':
     				          $pdtype = "PPI";
     				          break;
+    				      CASE '3':
+    				          $pdtype = "DRPLUS";
+    				          break;
     				      CASE '':
     				          $pdtype = "";
     				          break;
@@ -2728,6 +2960,9 @@ GROUP BY
         				          break;
         				      CASE '2':
         				          $pdtype = "PPI";
+        				          break;
+        				      CASE '3':
+        				          $pdtype = "DRPLUS";
         				          break;
         				      CASE '':
         				          $pdtype = "";

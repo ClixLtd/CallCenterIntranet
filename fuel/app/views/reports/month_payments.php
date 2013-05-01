@@ -1,5 +1,11 @@
 <div style="float: right;">
 
+
+<select name="center" id="center" rel="tooltip" title="Select Call Center">
+    <option value="GAB">Expert Money Solutions</option>
+    <option value="RESOLVE">Resolve</option>
+</select>
+
 <select name="month" id="month" rel="tooltip" title="Select Month and Year">
 
     <?php 
@@ -33,6 +39,10 @@
 	</div>
 	
 	<section>
+		<div id="loading_data"><span class="loader red" title="Loading, please wait&#8230;" style="margin-right: 30px;"></span> Loading Disposition Report - Please Wait!</div>
+	</section>
+	
+	<section>
 		<div class="tab default-tab" id="quickview">
 		
 		  <article class="full-block">
@@ -55,26 +65,7 @@
 				
 				<div class="article-container">
 					<section>
-					<table class="zebra-striped datatable" width="100%">
-						<thead>
-							<tr>
-								<th>Introducer</th>
-								<th>Total Payments</th>
-								<th>Total Value</th>
-								<th>Average Payment</th>
-							</tr>
-						</thead>
-						<tbody>
-						    <?php foreach($introducer AS $name => $totals): ?>
-							<tr>
-								<td><?php echo $name; ?></td>
-								<td><?php echo number_format($totals['total'],0); ?></td>
-								<td>&pound;<?php echo number_format($totals['amount'],2); ?></td>
-								<td>&pound;<?php echo number_format(($totals['amount']/$totals['total']),2); ?></td>
-							</tr>
-							<?php endforeach; ?>
-						</tbody>
-					</table>
+					<table class="zebra-striped" width="100%" id="introducer-master"></table>
 					</section>
 				</div>
 								
@@ -86,30 +77,7 @@
 				
 				<div class="article-container">
 					<section>
-					<table class="zebra-striped datatable" width="100%">
-						<thead>
-							<tr>
-								<th>ClientID</th>
-								<th>Name</th>
-								<th>Date Expected</th>
-								<th>Amount Expected</th>
-								<th>Received</th>
-								<th>Completed</th>
-							</tr>
-						</thead>
-						<tbody>
-						    <?php foreach($expected AS $pay): ?>
-							<tr>
-								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>><?php echo $pay['clientID']; ?></td>
-								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>><?php echo $pay['name']; ?></td>
-								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>><?php echo $pay['dateExpected']; ?></td>
-								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>>&pound;<?php echo number_format($pay['amountExpected'],2); ?></td>
-								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>>&pound;<?php echo number_format($pay['received'],2); ?></td>
-								<td <?php echo ($pay['complete']) ? '' : 'style="background-color: RGBA(200,0,0,0.1) !important;"'; ?>><?php echo ($pay['complete']) ? 'Complete' : 'Incomplete'; ?></td>
-							</tr>
-							<?php endforeach; ?>
-						</tbody>
-					</table>
+					<table class="zebra-striped" width="100%" id="expected-master"></table>
 					</section>
 				</div>
 								
@@ -121,31 +89,7 @@
 				
 				<div class="article-container">
 					<section>
-					<table class="zebra-striped datatable" width="100%">
-						<thead>
-							<tr>
-								<th>ClientID</th>
-								<th>Introducer</th>
-								<th>Name</th>
-								<th>Amount In</th>
-								<th>Remaining Debt</th>
-								<th>Notes</th>
-							</tr>
-						</thead>
-						<tbody>
-						    <?php foreach($payments AS $pay): ?>
-							<tr>
-								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['ClientID']; ?></td>
-								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['Introducer']; ?></td>
-								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['Name']; ?></td>
-								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>>&pound;<?php echo number_format($pay['AmountIn'],2); ?></td>
-								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['TotalOwed']; ?></td>
-								<td <?php echo ($pay['reached']) ? '' : 'style="background-color: RGBA(200,0,0,0.05) !important;"'; ?>><?php echo $pay['note']; ?></td>
-								
-							</tr>
-							<?php endforeach; ?>
-						</tbody>
-					</table>
+					<table class="zebra-striped" width="100%" id="payments-master"></table>
 					</section>
 				</div>
 								
@@ -157,3 +101,53 @@
 	
 
 </article>
+
+
+
+
+
+<script>
+    var disposition_url = "<?php echo $report_url; ?>";
+    
+    
+	$(document).ready(function() {
+    	
+    	load_reports();
+    	
+    	$('#month').change(function() {
+        	
+        	disposition_url = "/reports/get_monthly_payment/" + $("#center").val() + "/" + $("#month").val() + ".json";
+        	ndisposition_url = "/reports/monthly_payment/" + $("#center").val() + "/" + $("#month").val() + "/";
+        	
+        	window.history.pushState('', document.title, ndisposition_url);
+        	
+        	load_reports();
+        	        	
+    	});
+    	
+    });
+    
+    function load_reports()
+    {
+        $('#loading_data').fadeIn();
+    
+        $.ajax({
+        	"url" : disposition_url,
+        	"success": function ( json ) {
+        	    
+        	    $('#loading_data').fadeOut();
+        	    
+            	
+            	$('#introducer-master').dataTable(json['introducer']);
+            	$('#payments-master').dataTable(json['payments']);
+            	$('#expected-master').dataTable(json['expected']);
+            	
+            	$('#introducer-master').css("width","100%");
+            	$('#payments-master').css("width","100%");
+            	$('#expected-master').css("width","100%");
+        	
+        	}
+        });
+    }
+</script>
+

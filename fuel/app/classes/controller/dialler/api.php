@@ -156,32 +156,68 @@
 		
 		
 		public function get_mobile_wallboard()
-		{
-			$all_last_month = GAB\Debtsolv::get_referral_count(null, date("01-m-Y", strtotime("Last Month")), date("t-m-Y", strtotime("Last Month")), 604800);
-			$all_this_month = GAB\Debtsolv::get_referral_count(null, date("01-m-Y"), date("t-m-Y"), 86400);
-			$all_this_week = GAB\Debtsolv::get_referral_count(null, date("d-m-Y", strtotime("monday this week")), date("d-m-Y"), 900);
-			
-			$internal_today = GAB\Debtsolv::get_referral_count('INTERNAL');
-			
+		{	
 			$hq_today = GAB\Debtsolv::get_referral_count('GAB');
 			$burton_today = GAB\Debtsolv::get_referral_count('RESOLVE');
 			$pcc_today = GAB\Debtsolv::get_referral_count('GBS');
 			
-			$rjfive_today = GAB\Debtsolv::get_referral_count('rj5');
-			$sixeleven_today = GAB\Debtsolv::get_referral_count('SixEleven');
-			$so_today = GAB\Debtsolv::get_referral_count('SO');
+			$finishTime = array(
+			    0 => null,
+			    1 => mktime(19,30),
+			    2 => mktime(19,30),
+			    3 => mktime(19,30),
+			    4 => mktime(19,30),
+			    5 => mktime(18,00),
+			    6 => mktime(16,00),
+			);
+			
+			$startTime = array(
+			    0 => null,
+			    1 => mktime(10,00),
+			    2 => mktime(10,00),
+			    3 => mktime(10,00),
+			    4 => mktime(10,00),
+			    5 => mktime(10,00),
+			    6 => mktime(10,00),
+			 );
+			 
+			 // Minutes in today
+			 $minutes = (($finishTime[(int)date("w")] - $startTime[(int)date("w")])/60);
+			 $minutesSinceStart = ((strtotime("NOW") - $startTime[(int)date("w")])/60);
+			 
+			 $multiplier = ($minutesSinceStart <= 0) ? 0 : $minutes / $minutesSinceStart;
+			 
+			 $multiplier = ($multiplier < 1) ? 1 : $multiplier;
+			 
+			
+			$gbsCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('GBSAGENT', 'GBSSPECIAL') AND DATE(VDL.event_date)=DATE(NOW());";
+			
+			$gabCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('GABAGENT') AND DATE(VDL.event_date)=DATE(NOW());";
+			
+			$resolveCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('AGENTS') AND DATE(VDL.event_date)=DATE(NOW());";
+			
+			$resolveCountQueryPartTime = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PARTTIME') AND DATE(VDL.event_date)=DATE(NOW());";
+			
+			
+			$gabResults = DB::query($gabCountQuery)->cached(60)->execute('gabdialler');
+			$gbsResults = DB::query($gbsCountQuery)->cached(60)->execute('gabdialler');
+			$resolveResults = DB::query($resolveCountQuery)->cached(60)->execute('resolvedialler');
+			$resolveResultsPartTime = DB::query($resolveCountQueryPartTime)->cached(60)->execute('resolvedialler');
+			
+			
+			$perPerson = array(
+			    'GAB' => (int)$gabResults[0]['total'],
+			    'PCC' => (int)$gbsResults[0]['total'],
+			    'RESOLVE' => (int)$resolveResults[0]['total'] + ((int)$resolveResultsPartTime[0]['total']*0.48),
+			    'COMBINED' => ((int)$resolveResults[0]['total'] + (int)$gbsResults[0]['total'] + (int)$gabResults[0]['total']),
+			);
 			
 			$this->response(array(
-				'INTERNAL' => array(
-					'referrals' => $internal_today['referrals'],
-					'pack_out' => $internal_today['pack_outs'],
-					'di' => ($internal_today['pack_outs']==0) ? 0 : number_format($internal_today['pack_outs_value'] / $internal_today['pack_outs'],2),
-					'pack_out_percentage' => ($internal_today['referrals']==0) ? 0 : number_format((($internal_today['pack_outs']/$internal_today['referrals'])*100),2),
-					'pack_out_value' => number_format($internal_today['pack_outs_value'],2),
-				),
 				'HQ' => array(
 					'referrals' => $hq_today['referrals'],
 					'pack_out' => $hq_today['pack_outs'],
+					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
+					
 					'di' => ($hq_today['pack_outs']==0) ? 0 : number_format($hq_today['pack_outs_value'] / $hq_today['pack_outs'],2),
 					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
 					'pack_out_value' => number_format($hq_today['pack_outs_value'],2),
@@ -189,6 +225,8 @@
 				'RESOLVE' => array(
 					'referrals' => $burton_today['referrals'],
 					'pack_out' => $burton_today['pack_outs'],
+					'pack_out_percentage' => ($burton_today['referrals']==0) ? 0 : number_format((($burton_today['pack_outs']/$burton_today['referrals'])*100),2),
+					
 					'di' => ($burton_today['pack_outs']==0) ? 0 : number_format($burton_today['pack_outs_value'] / $burton_today['pack_outs'],2),
 					'pack_out_percentage' => ($burton_today['referrals']==0) ? 0 : number_format((($burton_today['pack_outs']/$burton_today['referrals'])*100),2),
 					'pack_out_value' => number_format($burton_today['pack_outs_value'],2),
@@ -196,51 +234,54 @@
 				'PCC' => array(
 					'referrals' => $pcc_today['referrals'],
 					'pack_out' => $pcc_today['pack_outs'],
+					'pack_out_percentage' => ($pcc_today['referrals']==0) ? 0 : number_format((($pcc_today['pack_outs']/$pcc_today['referrals'])*100),2),
+					
 					'di' => ($pcc_today['pack_outs']==0) ? 0 : number_format($pcc_today['pack_outs_value'] / $pcc_today['pack_outs'],2),
 					'pack_out_percentage' => ($pcc_today['referrals']==0) ? 0 : number_format((($pcc_today['pack_outs']/$pcc_today['referrals'])*100),2),
 					'pack_out_value' => number_format($pcc_today['pack_outs_value'],2),
 				),
-				'RJ5' => array(
-					'referrals' => $rjfive_today['referrals'],
-					'pack_out' => $rjfive_today['pack_outs'],
-					'di' => ($rjfive_today['pack_outs']==0) ? 0 : number_format($rjfive_today['pack_outs_value'] / $rjfive_today['pack_outs'],2),
-					'pack_out_percentage' => ($rjfive_today['referrals']==0) ? 0 : number_format((($rjfive_today['pack_outs']/$rjfive_today['referrals'])*100),2),
-					'pack_out_value' => number_format($rjfive_today['pack_outs_value'],2),
-				),
-				'SO' => array(
-					'referrals' => $so_today['referrals'],
-					'pack_out' => $so_today['pack_outs'],
-					'di' => ($so_today['pack_outs']==0) ? 0 : number_format($so_today['pack_outs_value'] / $so_today['pack_outs'],2),
-					'pack_out_percentage' => ($so_today['referrals']==0) ? 0 : number_format((($so_today['pack_outs']/$so_today['referrals'])*100),2),
-					'pack_out_value' => number_format($so_today['pack_outs_value'],2),
-				),
-				'SIXELEVEN' => array(
-					'referrals' => $sixeleven_today['referrals'],
-					'pack_out' => $sixeleven_today['pack_outs'],
-					'di' => ($sixeleven_today['pack_outs']==0) ? 0 : number_format($sixeleven_today['pack_outs_value'] / $sixeleven_today['pack_outs'],2),
-					'pack_out_percentage' => ($sixeleven_today['referrals']==0) ? 0 : number_format((($sixeleven_today['pack_outs']/$sixeleven_today['referrals'])*100),2),
-					'pack_out_value' => number_format($sixeleven_today['pack_outs_value'],2),
+				'COMBINED' => array(
+					'referrals' => ($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']),
+					'pack_out' => ($hq_today['pack_outs'] + $burton_today['pack_outs'] + $pcc_today['pack_outs']),
+					'pack_out_percentage' => (($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']) < 1) ? 0 : number_format(($hq_today['pack_outs'] + $burton_today['pack_outs'] + $pcc_today['pack_outs']) / ($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']),2),
 				),
 				
+				'HQP' => array(
+					'referrals' => number_format(($hq_today['referrals'] / $perPerson['GAB']),2),
+					'pack_out' => number_format(($hq_today['pack_outs'] / $perPerson['GAB']),2),
+					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
+				),
+				'RESOLVEP' => array(
+					'referrals' => number_format(($burton_today['referrals'] / $perPerson['RESOLVE']),2),
+					'pack_out' => number_format(($burton_today['pack_outs'] / $perPerson['RESOLVE']),2),
+					'pack_out_percentage' => ($burton_today['referrals']==0) ? 0 : number_format((($burton_today['pack_outs']/$burton_today['referrals'])*100),2),
+				),
+				'PCCP' => array(
+					'referrals' => number_format(($pcc_today['referrals'] / $perPerson['PCC']),2),
+					'pack_out' => number_format(($pcc_today['pack_outs'] / $perPerson['PCC']),2),
+					'pack_out_percentage' => ($pcc_today['referrals']==0) ? 0 : number_format((($pcc_today['pack_outs']/$pcc_today['referrals'])*100),2),
+				),	
+				'HQPP' => array(
+					'referrals' => number_format(($hq_today['referrals'] / $perPerson['GAB'])*$multiplier,2),
+					'pack_out' => number_format(($hq_today['pack_outs'] / $perPerson['GAB'])*$multiplier,2),
+					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
+				),
+				'RESOLVEPP' => array(
+					'referrals' => number_format(($burton_today['referrals'] / $perPerson['RESOLVE'])*$multiplier,2),
+					'pack_out' => number_format(($burton_today['pack_outs'] / $perPerson['RESOLVE'])*$multiplier,2),
+					'pack_out_percentage' => ($burton_today['referrals']==0) ? 0 : number_format((($burton_today['pack_outs']/$burton_today['referrals'])*100),2),
+				),
+				'PCCPP' => array(
+					'referrals' => number_format(($pcc_today['referrals'] / $perPerson['PCC'])*$multiplier,2),
+					'pack_out' => number_format(($pcc_today['pack_outs'] / $perPerson['PCC'])*$multiplier,2),
+					'pack_out_percentage' => ($pcc_today['referrals']==0) ? 0 : number_format((($pcc_today['pack_outs']/$pcc_today['referrals'])*100),2),
+				),	
+				'COMBINEDPP' => array(
+					'referrals' => number_format( (($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']) / $perPerson['COMBINED'])*$multiplier,2),
+					'pack_out' => number_format((($hq_today['pack_outs'] + $burton_today['pack_outs'] + $pcc_today['pack_outs']) / $perPerson['COMBINED'])*$multiplier,2),
+					'pack_out_percentage' => (($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']) < 1) ? 0 : number_format((($hq_today['pack_outs'] + $burton_today['pack_outs'] + $pcc_today['pack_outs']) / ($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals'])) / $perPerson['COMBINED'],2),
+				),
 				
-				'last_month' => array(
-					'referrals' => $all_last_month['referrals'],
-					'pack_out' => $all_last_month['pack_outs'],
-					'pack_out_percentage' => ($all_last_month['referrals']==0) ? 0 : number_format((($all_last_month['pack_outs']/$all_last_month['referrals'])*100),2),
-					'pack_out_value' => number_format($all_last_month['pack_outs_value'],2),
-				),
-				'this_month' => array(
-					'referrals' => $all_this_month['referrals'],
-					'pack_out' => $all_this_month['pack_outs'],
-					'pack_out_percentage' => ($all_this_month['referrals']==0) ? 0 : number_format((($all_this_month['pack_outs']/$all_this_month['referrals'])*100),2),
-					'pack_out_value' => number_format($all_this_month['pack_outs_value'],2),
-				),
-				'this_week' => array(
-					'referrals' => $all_this_week['referrals'],
-					'pack_out' => $all_this_week['pack_outs'],
-					'pack_out_percentage' => ($all_this_week['referrals']==0) ? 0 : number_format((($all_this_week['pack_outs']/$all_this_week['referrals'])*100),2),
-					'pack_out_value' => number_format($all_this_week['pack_outs_value'],2),
-				),
 			));
 			
 		}

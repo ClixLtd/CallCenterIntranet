@@ -2,12 +2,12 @@
 /**
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
- * @package		Fuel
- * @version		1.0
- * @author		Fuel Development Team
- * @license		MIT License
- * @copyright	2010 - 2012 Fuel Development Team
- * @link		http://fuelphp.com
+ * @package    Fuel
+ * @version    1.5
+ * @author     Fuel Development Team
+ * @license    MIT License
+ * @copyright  2010 - 2013 Fuel Development Team
+ * @link       http://fuelphp.com
  */
 
 namespace Orm;
@@ -82,7 +82,7 @@ class ManyMany extends Relation
 	public function get(Model $from)
 	{
 		// Create the query on the model_through
-		$query = call_user_func(array($this->model_to, 'find'));
+		$query = call_user_func(array($this->model_to, 'query'));
 
 		// set the model_from's keys as where conditions for the model_through
 		$join = array(
@@ -95,6 +95,10 @@ class ManyMany extends Relation
 		reset($this->key_from);
 		foreach ($this->key_through_from as $key)
 		{
+			if ($from->{current($this->key_from)} === null)
+			{
+				return array();
+			}
 			$query->where('t0_through.'.$key, $from->{current($this->key_from)});
 			next($this->key_from);
 		}
@@ -106,16 +110,25 @@ class ManyMany extends Relation
 			next($this->key_to);
 		}
 
-		$query->_join($join);
+		foreach (\Arr::get($this->conditions, 'where', array()) as $key => $condition)
+		{
+			is_array($condition) or $condition = array($key, '=', $condition);
+			$query->where($condition);
+		}
 
-		if ($where = \Arr::get($this->conditions, 'where')) 
+		foreach (\Arr::get($this->conditions, 'order_by', array()) as $field => $direction)
 		{
-			$query->where($where);
+			if (is_numeric($field))
+			{
+				$query->order_by($direction);
+			}
+			else
+			{
+				$query->order_by($field, $direction);
+			}
 		}
-		if ($order_by = \Arr::get($this->conditions, 'order_by'))
-		{
-			$query->order_by($order_by);
-		}
+
+		$query->_join($join);
 
 		return $query->get();
 	}
