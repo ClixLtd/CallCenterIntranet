@@ -1,5 +1,43 @@
 $(function () {
   
+  // -- Find Address
+  // ---------------
+  $("#findAddress").click(function()
+  {
+    
+    if($("#post_code").val() == '')
+    {
+      alert("Enter a Post Code First");
+      return false;
+    }
+    
+     $.post('/crm/find_address/0.json',
+     {
+       postCode: $("#post_code").val(),
+     },
+	   function(data)
+      {
+			  if (data['status'] == 'done')
+			  {
+				  if(data['results'])
+          {
+            $("#Address1").val(data['results'][0]['address_1']);
+            $("#Address2").val(data['results'][0]['address_2']);
+            $("#Town").val(data['results'][0]['town']);
+            $("#County").val(data['results'][0]['county']);
+          }
+          else
+          {
+            alert('Address Not Found!');
+          }
+			  }
+			  else
+			  {
+				  alert("Creditor's contact details could not be saved");
+			  }
+		  });
+  });
+  
   // -- Edit a creditors address
   // ---------------------------
   $('#editCredContact').click(function()
