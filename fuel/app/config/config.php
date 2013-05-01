@@ -230,6 +230,7 @@ return array(
 			'report',
 			#'messages',
 			'log',
+			'sms',
 		),
 
 		/**

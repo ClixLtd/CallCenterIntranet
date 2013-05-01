@@ -93,6 +93,7 @@ $(function () {
      var claimID  = settingsArray[1];
      var clientID = settingsArray[2];
      var freeText = settingsArray[3];
+     var tray     = settingsArray[4];
      
      var newDialog = $("#Print-PPI-Letter-Dialog").dialog();
      
@@ -126,7 +127,7 @@ $(function () {
                    text: "Print", 
                    click: function()
                    {
-                       printClaimLetter(letterID, claimID, clientID);
+                       printClaimLetter(letterID, claimID, clientID, tray);
                        $( this ).dialog( "close" );
                    } 
                },
@@ -752,9 +753,9 @@ function createClaims(clientID, form)
   
   // -- Print the selected claim letter
   // ----------------------------------
-  function printClaimLetter(letterID, claimID, clientID)
+  function printClaimLetter(letterID, claimID, clientID, tray)
   {     
-     $.post('/crm/ppi/print_PPI_letter/' + letterID + '/' + claimID + '/' + clientID + '.json',
+     $.post('/crm/ppi/print_PPI_letter/' + letterID + '/' + claimID + '/' + clientID + '/' + tray + '.json',
       $('#PrintPPILetterForm').serialize(),
       function(data)
       {
