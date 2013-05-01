@@ -245,14 +245,6 @@ GROUP BY
         	        }
     	        }
     	        
-    	        
-    	        
-    	        
-    	        /*
-    	        $introducerTitle = ($payment['Shortcode'] <> 'NONE' && $payment['Shortcode'] <> '' && $payment['Shortcode'] <> ' ') ? $payment['Shortcode'] : $payment['Introducer'];
-    	        
-    	        $introducerTitle = (isset($shortCodeChange[$introducerTitle])) ? $shortCodeChange[$payment['Shortcode']] : $introducerTitle;
-    	        */
     	            	    
         	    $introducerPayments[$introducerTitle] = array(
         	       'amount' => (isset($introducerPayments[$introducerTitle])) ? $introducerPayments[$introducerTitle]['amount'] + $payment['AmountIn'] : $payment['AmountIn'],
@@ -481,7 +473,7 @@ GROUP BY
     					"sType"		=> "string",
     				),
     				array(
-    					"sTitle" => "Total Payments", 
+    					"sTitle" => "Unique Payers", 
     					"sType"		=> "numeric",
     				),
     				array(
