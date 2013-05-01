@@ -231,7 +231,14 @@ GROUP BY
     	        
     	        if ($payment['Shortcode'] <> 'NONE' && $payment['Shortcode'] <> '' && $payment['Shortcode'] <> ' ')
     	        {
-        	        $introducerTitle = $payment['Shortcode'].sha1((string)$payment['Introducer']);
+        	        if ( isset($shortCodeChange[(string)$payment['Shortcode']]) )
+        	        {
+            	        $introducerTitle = $shortCodeChange[(string)$payment['Shortcode']];
+        	        }
+        	        else
+        	        {
+            	        $introducerTitle = (string)$payment['Shortcode'];
+        	        }
     	        }
     	        else
     	        {
