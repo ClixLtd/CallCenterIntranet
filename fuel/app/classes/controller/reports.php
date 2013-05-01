@@ -136,6 +136,7 @@ INNER JOIN
 	".$thisDB['DS'].".dbo.Users AS Credit ON CLD.CreditController = Credit.ID 
 WHERE
 	(ps.DateExpected >= '".$startDate."' AND ps.DateExpected < '".$endDate."')
+	AND CC.status = 9
 ORDER BY 
 	ps.DateExpected";
     
