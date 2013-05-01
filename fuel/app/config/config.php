@@ -229,6 +229,7 @@ return array(
 			'crm',
 			'report',
 			#'messages',
+			'log',
 		),
 
 		/**
