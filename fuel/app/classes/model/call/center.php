@@ -9,6 +9,7 @@ class Model_Call_Center extends Model
 		'address',
 		'phone_number',
 		'shortcode',
+		'survey',
 		'created_at',
 		'updated_at',
 	);

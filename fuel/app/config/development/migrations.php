@@ -69,6 +69,7 @@ return array(
 				60 => '064_create_survey_question_answers',
 				61 => '065_create_survey_responses',
 				62 => '066_add_required_to_survey_questions',
+				63 => '067_add_survey_to_call_centers',
 			),
 		),
 		'module' => 
