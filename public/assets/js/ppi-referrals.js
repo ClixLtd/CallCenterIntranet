@@ -19,6 +19,7 @@ $(function () {
                 else
                 {
                     alert(data.message);
+                    $('#sendTextMessageBody').val("")
                     $( "#sendTextMessageDialog" ).dialog( "close" );
                 }
                 
