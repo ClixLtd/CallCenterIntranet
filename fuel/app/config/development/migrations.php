@@ -73,6 +73,18 @@ return array(
 		),
 		'package' => 
 		array(
+			'crm' => 
+			array(
+				0 => '001_create_crm_client_details',
+				1 => '002_create_crm_client_access_log',
+				2 => '003_create_crm_type_client_status',
+				3 => '004_create_crm_type_countries',
+				4 => '005_create_crm_client_products',
+				5 => '006_drop_crm_client_access_log',
+				6 => '007_alter_crm_client_details_add_created',
+				7 => '008_create_crm_client_partner_details',
+				8 => '009_alter_crm_client_partner_detailsautoid',
+			),
 		),
 		'subpackage' => 
 		array(
@@ -101,6 +113,9 @@ return array(
 				15 => '016_alter_crm_ppi_claims_invoice_id',
 				16 => '017_alter_crm_ppi_claims_change_ac',
 				17 => '018_alter_crm_ppi_refund_removecols',
+				18 => '019_create_crm_type_debt',
+				19 => '020_alter_crm_ppi_claims_debttype',
+				20 => '021_alter_crm_ppi_refund_invoiceid',
 			),
 		),
 	),
