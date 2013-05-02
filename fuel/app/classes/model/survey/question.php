@@ -10,7 +10,17 @@ class Model_Survey_Question extends Model
 		'created_at',
 		'updated_at',
 	);
-
+	
+	protected static $_has_many = array(
+	   'answers' => array(
+            'key_from' => 'id',
+            'model_to' => 'Model_Survey_Question_Answer',
+            'key_to' => 'question_id',
+            'cascade_save' => true,
+            'cascade_delete' => false,
+        )
+	);
+	
 	protected static $_observers = array(
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
