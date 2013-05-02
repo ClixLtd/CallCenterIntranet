@@ -1,5 +1,49 @@
 $(function () {
   
+  var textNumber = 0;
+  
+  $( "#sendTextMessageDialog" ).dialog({
+      autoOpen: false,
+      height: 270,
+      width: 340,
+      modal: true,
+      buttons: {
+        "Send": function() {
+            $.post('/sms/send.json', { to: textNumber, from: "Persolvo", body: $('#sendTextMessageBody').val() }).done(function(data) {
+                
+                
+                if (data.status == "FAIL")
+                {
+                    alert(data.message);
+                }
+                else
+                {
+                    alert(data.message);
+                    $( "#sendTextMessageDialog" ).dialog( "close" );
+                }
+                
+            });
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+
+  
+  
+  
+  $('.sendText').click(function() {
+  
+        textNumber = $(this).attr('id');
+        
+        $( "#sendTextMessageDialog" ).dialog("open");
+      	 
+  });
+  
+  
+  
+  
   // -- Save Refund Method
   // ---------------------
   $('#saveRefundMethod').click(function()
@@ -86,7 +130,7 @@ $(function () {
   // ---------------------
   $('.printPPILetter').click(function()
   {	
-	   var settings = $(this).attr('rel');
+     var settings = $(this).attr('rel');
      var settingsArray = settings.split(",");
      
      var letterID = settingsArray[0];
@@ -97,7 +141,16 @@ $(function () {
      var newDialog = $("#Print-PPI-Letter-Dialog").dialog();
      
      $("#Letter-Free-Text").val("");
-     $("#Letter-Free-Text-Box").hide();
+    
+     if(freeText == 0)
+     {
+        $("#Letter-Free-Text-Box").hide();
+     }
+     else
+     {
+        $("#Letter-Free-Text-Box").show();
+     }
+
     
      newDialog.dialog( { 
        autoOpen: false, 
@@ -110,14 +163,6 @@ $(function () {
        {
          $("#Letter-Free-Text").val("");
          
-         if(freeText == 0)
-         {
-           $("#Letter-Free-Text-Box").hide();
-         }
-         else
-         {
-           $("#Letter-Free-Text-Box").show();
-         }
        },
        title: "Print Letters",
        buttons: 
