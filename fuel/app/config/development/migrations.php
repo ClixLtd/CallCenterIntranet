@@ -85,6 +85,10 @@ return array(
 				7 => '008_create_crm_client_partner_details',
 				8 => '009_alter_crm_client_partner_detailsautoid',
 			),
+			'sms' => 
+			array(
+				0 => '001_create_sms_logs',
+			),
 		),
 		'subpackage' => 
 		array(
