@@ -24,12 +24,11 @@ class Controller_Reports extends Controller_BaseHybrid
         
         $externalReferralResult = $externalReferrals->get();
         
-        print_r($externalReferralResult);
         
         $allReferrals = array();
         foreach ($externalReferralResult as $referral)
         {
-            $responses = \Model_Survey_Response::query()->where('reference', $externalReferrals->id)->get();
+            $responses = \Model_Survey_Response::query()->where('reference', $referral->id)->get();
             
             $responseList = array();
             foreach ($responses as $singleResponse)
@@ -43,10 +42,10 @@ class Controller_Reports extends Controller_BaseHybrid
             }
             
             $allReferrals[] = array(
-                $externalReferrals->id,
-                $externalReferrals->title." ".$externalReferrals->forename." ".$externalReferrals->surname,
-                $externalReferrals->introducer_agent_name,
-                $externalReferrals->dialler_list_id,
+                $referral->id,
+                $referral->title." ".$externalReferrals->forename." ".$externalReferrals->surname,
+                $referral->introducer_agent_name,
+                $referral->dialler_list_id,
                 $responseList,
             );
         }
