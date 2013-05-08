@@ -1,21 +1,16 @@
 <?php
 use Orm\Model;
 
-class Model_Call_Center extends Model
+class Model_Survey_Question_Answer extends Model
 {
 	protected static $_properties = array(
 		'id',
-		'title',
-		'address',
-		'phone_number',
-		'shortcode',
-		'survey',
+		'question_id',
+		'answer',
 		'created_at',
 		'updated_at',
 	);
-	
-	protected static $_has_many = array('dialler_campaign');
-	
+
 	protected static $_observers = array(
 		'Orm\Observer_CreatedAt' => array(
 			'events' => array('before_insert'),
@@ -30,10 +25,8 @@ class Model_Call_Center extends Model
 	public static function validate($factory)
 	{
 		$val = Validation::forge($factory);
-		$val->add_field('title', 'Title', 'required|max_length[255]');
-		$val->add_field('address', 'Address', 'required');
-		$val->add_field('phone_number', 'Phone Number', 'required|max_length[25]');
-		$val->add_field('shortcode', 'Short Code', 'required|max_length[255]');
+		$val->add_field('question_id', 'Question Id', 'required|valid_string[numeric]');
+		$val->add_field('answer', 'Answer', 'required');
 
 		return $val;
 	}

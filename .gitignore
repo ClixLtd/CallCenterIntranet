@@ -3,3 +3,5 @@ fuel/app/cache
 fuel/app/logs
 fuel/app/config/development/migrations.php
 fuel/app/config/development/
+fuel/app/config/production/
+fuel/app/config/production/migrations.php

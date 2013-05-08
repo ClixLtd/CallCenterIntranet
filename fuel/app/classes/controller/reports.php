@@ -77,7 +77,8 @@ class Controller_Reports extends Controller_BaseHybrid
 	public static function generate_monthly_payment_report($center=null, $_startDate=null, $_endDate=null)
 	{
     	$startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m')-1, 1, (int)date('Y'))) : $_startDate;
-	    $endDate = (is_null($_endDate))? date('Y-m-d', strtotime("Tomorrow")) : $_endDate;
+	    $endDate = (is_null($_endDate))? date('Y-m-d', mktime(0,0,0,(int)date('m')-1, 1, (int)date('Y'))) : $_endDate;
+	    
 	    
 	    
 	    $db_choice                  = array(
@@ -136,6 +137,7 @@ INNER JOIN
 	".$thisDB['DS'].".dbo.Users AS Credit ON CLD.CreditController = Credit.ID 
 WHERE
 	(ps.DateExpected >= '".$startDate."' AND ps.DateExpected < '".$endDate."')
+	AND CC.status = 9
 ORDER BY 
 	ps.DateExpected";
     
@@ -188,84 +190,91 @@ GROUP BY
 	    
 	    $clientPayments = array();
 	    $introducerPayments = array();
+	    $completedClients = array();
 	    foreach ($getPayments AS $payment)
 	    {
-	        $paymentTotal = (isset($clientPayments[$payment['ClientID']]['AmountIn'])) ? $clientPayments[$payment['ClientID']]['AmountIn'] + $payment['AmountIn'] : $payment['AmountIn'];
-	        $paymentCount = (isset($clientPayments[$payment['ClientID']]['count'])) ? $clientPayments[$payment['ClientID']]['count'] + 1 : 1;
-	        
-	        
-	        
-	        
-	        $shortCodeChange = array(
-	           "Games Blaster"                => "GAB",
-	           "Gregson and Brooke"           => "GAB",
-	           "Phillipines"                  => "GBS",
-	           "PPI - 17-11-2011"             => "GAB",
-	           "PPI - 19-11-2011"             => "GAB",
-	           "PPI - 21-11-2011"             => "GAB",
-	           "Teleprospects"                => "GAB",
-	           "UCS"                          => "GAB",
-	           "Unique Prospects"             => "GAB",
-	           "60k Home Owner"               => "GAB",
-	           "Data Compiled 2011"           => "GAB",
-	           "Data Compiled 2012"           => "GAB",
-	           "Dialler Manual Dial"          => "GAB",
-	           "Digos Call Centre"            => "GBS",
-	           "Digos Call Centre (Post PPI)" => "GBS",
-	           "DK101"                        => "GAB",
-	           "GAB Debt Hotkeys"             => "GAB",
-	           "JPO"                          => "GAB",
-	           "DLG"                          => "GAB",
-	           
-	        );
-	        
-	        
-	        
-	        
-	        if ($payment['Shortcode'] <> 'NONE' && $payment['Shortcode'] <> '' && $payment['Shortcode'] <> ' ')
+	    
+	        if (!in_array($payment['ClientID'], $completedClients))
 	        {
-    	        $introducerTitle = $payment['Shortcode'];
-	        }
-	        else
-	        {
-    	        if ( isset($shortCodeChange[(string)$payment['Introducer']]) )
+    	    
+    	        $paymentTotal = (isset($clientPayments[$payment['ClientID']]['AmountIn'])) ? $clientPayments[$payment['ClientID']]['AmountIn'] + $payment['AmountIn'] : $payment['AmountIn'];
+    	        $paymentCount = (isset($clientPayments[$payment['ClientID']]['count'])) ? $clientPayments[$payment['ClientID']]['count'] + 1 : 1;
+    	        
+    	        
+    	        
+    	        
+    	        $shortCodeChange = array(
+    	           "Games Blaster"                => "GAB",
+    	           "Gregson and Brooke"           => "GAB",
+    	           "Phillipines"                  => "GBS",
+    	           "PPI - 03-11-2011"             => "GAB",
+    	           "PPI - 17-11-2011"             => "GAB",
+    	           "PPI - 19-11-2011"             => "GAB",
+    	           "PPI - 21-11-2011"             => "GAB",
+    	           "Teleprospects"                => "GAB",
+    	           "UCS"                          => "GAB",
+    	           "Unique Prospects"             => "GAB",
+    	           "60k Home Owner"               => "GAB",
+    	           "Data Compiled 2011"           => "GAB",
+    	           "Data Compiled 2012"           => "GAB",
+    	           "Dialler Manual Dial"          => "GAB",
+    	           "Digos Call Centre"            => "GBS",
+    	           "Digos Call Centre (Post PPI)" => "GBS",
+    	           "DK101"                        => "GAB",
+    	           "GAB Debt Hotkeys"             => "GAB",
+    	           "JPO"                          => "GAB",
+    	           "DLG"                          => "GAB",
+    	           
+    	        );
+    	        
+    	        
+    	        
+    	        
+    	        if ($payment['Shortcode'] <> 'NONE' && $payment['Shortcode'] <> '' && $payment['Shortcode'] <> ' ')
     	        {
-        	        $introducerTitle = $shortCodeChange[(string)$payment['Introducer']];
+        	        if ( isset($shortCodeChange[(string)$payment['Shortcode']]) )
+        	        {
+            	        $introducerTitle = $shortCodeChange[(string)$payment['Shortcode']];
+        	        }
+        	        else
+        	        {
+            	        $introducerTitle = (string)$payment['Shortcode'];
+        	        }
     	        }
     	        else
     	        {
-        	        $introducerTitle = (string)$payment['Introducer'];
+        	        if ( isset($shortCodeChange[(string)$payment['Introducer']]) )
+        	        {
+            	        $introducerTitle = $shortCodeChange[(string)$payment['Introducer']];
+        	        }
+        	        else
+        	        {
+            	        $introducerTitle = (string)$payment['Introducer'];
+        	        }
     	        }
-	        }
-	        
-	        
-	        
-	        
-	        /*
-	        $introducerTitle = ($payment['Shortcode'] <> 'NONE' && $payment['Shortcode'] <> '' && $payment['Shortcode'] <> ' ') ? $payment['Shortcode'] : $payment['Introducer'];
-	        
-	        $introducerTitle = (isset($shortCodeChange[$introducerTitle])) ? $shortCodeChange[$payment['Shortcode']] : $introducerTitle;
-	        */
-	            	    
-    	    $introducerPayments[$introducerTitle] = array(
-    	       'amount' => (isset($introducerPayments[$introducerTitle])) ? $introducerPayments[$introducerTitle]['amount'] + $payment['AmountIn'] : $payment['AmountIn'],
-    	       'total' => (isset($clientPayments[$payment['ClientID']])) ? $introducerPayments[$introducerTitle]['total'] : $introducerPayments[$introducerTitle]['total'] + 1,
-    	    );
-    	    
-    	    
-	        
-    	    $clientPayments[] = array(
-    	       $payment['ClientID'],
-    	       $payment['Name'],
-    	       $introducerTitle,
-    	       $paymentTotal,
-    	       $payment['NormalExpectedPayment'],
-    	       $payment['TotalOwed'],
-    	       //$paymentCount,
-    	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
-    	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
-    	    );
-    	    
+    	        
+    	            	    
+        	    $introducerPayments[$introducerTitle] = array(
+        	       'amount' => (isset($introducerPayments[$introducerTitle])) ? $introducerPayments[$introducerTitle]['amount'] + $payment['AmountIn'] : $payment['AmountIn'],
+        	       'total' => (isset($clientPayments[$payment['ClientID']])) ? $introducerPayments[$introducerTitle]['total'] : $introducerPayments[$introducerTitle]['total'] + 1,
+        	    );
+
+        	    $clientPayments[] = array(
+        	       $payment['ClientID'],
+        	       $payment['Name'],
+        	       $introducerTitle,
+        	       $paymentTotal,
+        	       $payment['NormalExpectedPayment'],
+        	       $payment['TotalOwed'],
+        	       //$paymentCount,
+        	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
+        	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
+        	    );
+        	    
+        	    
+        	    $completedClients[] = $payment['ClientID'];
+        	    
+    	    }
     	    
 
 	    }
@@ -310,8 +319,8 @@ GROUP BY
 	    {
     	    $introducerPaymentsReturn[] = array(
     	        $inpayName,
-    	        number_format($inpayValues['amount'],0),
-    	        "&pound;".number_format($inpayValues['total'],2),
+    	        number_format($inpayValues['total'],0),
+    	        "&pound;".number_format($inpayValues['amount'],2),
     	        ($inpayValues['total'] < 0.1) ? "&pound;0.00" : "&pound;".number_format(($inpayValues['amount'] / $inpayValues['total']),2),
     	    );
 	    }
@@ -472,7 +481,7 @@ GROUP BY
     					"sType"		=> "string",
     				),
     				array(
-    					"sTitle" => "Total Payments", 
+    					"sTitle" => "Unique Payers", 
     					"sType"		=> "numeric",
     				),
     				array(
