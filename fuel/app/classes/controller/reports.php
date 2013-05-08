@@ -24,6 +24,8 @@ class Controller_Reports extends Controller_BaseHybrid
         
         $externalReferrals->get();
         
+        print_r($externalReferrals);
+        
         $allReferrals = array();
         foreach ($externalReferrals as $referral)
         {
