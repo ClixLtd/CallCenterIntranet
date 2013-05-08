@@ -71,7 +71,7 @@ class Controller_Reports extends Controller_BaseHybrid
     
     public function action_externals()
     {
-        $externalReport = Controller_Reports::generate_externals_report(17);
+        $externalReport = Controller_Reports::generate_externals_report(array(17,16));
         
         print_r($externalReport);
     }
