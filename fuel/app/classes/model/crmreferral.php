@@ -3,6 +3,8 @@ use Orm\Model;
 
 class Model_Crmreferral extends Model
 {
+    protected static $_table_name = 'crm_referrals';
+
 	protected static $_properties = array(
 		'id',
 		'user_id',
