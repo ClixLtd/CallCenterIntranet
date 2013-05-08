@@ -1,7 +1,7 @@
 <?php
 use Orm\Model;
 
-class Model_Crm_Referral extends Model
+class Model_Crmreferral extends Model
 {
 	protected static $_properties = array(
 		'id',
