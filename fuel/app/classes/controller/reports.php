@@ -19,7 +19,7 @@ class Controller_Reports extends Controller_BaseHybrid
         }
         else
         {
-            $externalReferrals->where(DB::expr('DATE(referral_date)'), '=', Date::create_from_string($startDate,'mysql');
+            $externalReferrals->where(DB::expr('DATE(referral_date)'), '=', Date::create_from_string($startDate,'mysql'));
         }
         
         $externalReferrals->get();
