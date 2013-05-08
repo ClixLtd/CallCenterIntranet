@@ -5,13 +5,29 @@ class Controller_Reports extends Controller_BaseHybrid
     
     
     
-    public static function generate_externals_report($_startDate=null, $_endDate=null)
+    public static function generate_externals_report($introducer=null, $_startDate=null, $_endDate=null)
     {
         
         $startDate = (is_null($_startDate)) ? date('Y-m-d') : $_startDate;
         $endDate = (is_null($_endDate)) ? date('Y-m-d') : $_endDate;
         
-        $externalReferrals = \Model_Crmreferral::query()->where('introducer_id', 17);
+        $externalReferrals = \Model_Crmreferral::query();
+        
+        if (!is_null($introducer))
+        {
+            if (is_array($introducer))
+            {
+                $externalReferrals->where('introducer_id', "IN", $introducer);
+            }
+            else
+            {
+                $externalReferrals->where('introducer_id', (int)$introducer);
+            }
+        }
+        else
+        {
+            return null;
+        }
         
         if (!is_null($_endDate))
         {
@@ -55,7 +71,7 @@ class Controller_Reports extends Controller_BaseHybrid
     
     public function action_externals()
     {
-        $externalReport = Controller_Reports::generate_externals_report();
+        $externalReport = Controller_Reports::generate_externals_report(17);
         
         print_r($externalReport);
     }
