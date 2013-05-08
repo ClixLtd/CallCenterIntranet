@@ -33,11 +33,9 @@ class Controller_Reports extends Controller_BaseHybrid
             $responseList = array();
             foreach ($responses as $singleResponse)
             {
-                $responseList[] = array(
-                    $singleResponse->question_id = array(
-                        $singleResponse->answer_id,
-                        $singleResponse->extra,
-                    ),
+                $responseList[$singleResponse->question_id] = array(
+                    $singleResponse->answer_id,
+                    $singleResponse->extra,
                 );
             }
             
