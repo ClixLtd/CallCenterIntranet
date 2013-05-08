@@ -5,6 +5,54 @@ class Controller_Reports extends Controller_BaseHybrid
     
     
     
+    public static function generate_externals_report($_startDate=null, $_endDate=null)
+    {
+        
+        $startDate = (is_null($_startDate)) ? date('Y-m-d') : $_startDate;
+        $endDate = (is_null($_endDate)) ? date('Y-m-d') : $_endDate;
+        
+        $externalReferrals = \Model_Crm_Referral::query()->where('introducer_id', 17)->where('referral_date', '>=', $startDate)->where('referral_date', '<', $endDate)->get();
+        
+        $allReferrals = array();
+        foreach ($externalReferrals as $referral)
+        {
+            $responses = \Model_Survey_Response::query()->where('reference', $externalReferrals->id)->get();
+            
+            $responseList = array();
+            foreach ($responses as $singleResponse)
+            {
+                $responseList[] = array(
+                    $singleResponse->question_id = array(
+                        $singleResponse->answer_id,
+                        $singleResponse->extra,
+                    ),
+                );
+            }
+            
+            $allReferrals[] = array(
+                $externalReferrals->id,
+                $externalReferrals->title." ".$externalReferrals->forename." ".$externalReferrals->surname,
+                $externalReferrals->introducer_agent_name,
+                $externalReferrals->dialler_list_id,
+                $responseList,
+            );
+        }
+        
+        return $allReferrals;
+        
+    }
+    
+    
+    public function action_externals()
+    {
+        $externalReport = Controller_Reports::generate_externals_report();
+        
+        print_r($externalReport);
+    }
+    
+    
+    
+    
 	/* ********************
 	 * Start Agent Report *
 	 **********************/    

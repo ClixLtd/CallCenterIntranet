@@ -24,15 +24,4 @@ class Model_Survey_Response extends Model
 		),
 	);
 
-	public static function validate($factory)
-	{
-		$val = Validation::forge($factory);
-		$val->add_field('reference', 'Reference', 'required|max_length[255]');
-		$val->add_field('question_id', 'Question Id', 'required|valid_string[numeric]');
-		$val->add_field('answer_id', 'Answer Id', 'required|valid_string[numeric]');
-		$val->add_field('extra', 'Extra', 'required');
-
-		return $val;
-	}
-
 }
