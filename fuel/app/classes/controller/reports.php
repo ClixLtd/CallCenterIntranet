@@ -11,7 +11,7 @@ class Controller_Reports extends Controller_BaseHybrid
         $startDate = (is_null($_startDate)) ? date('Y-m-d') : $_startDate;
         $endDate = (is_null($_endDate)) ? date('Y-m-d') : $_endDate;
         
-        $externalReferrals = \Model_Crmreferral::query();
+        $externalReferrals = \Model_Crmreferral::query()->where('introducer_id', 17);
         
         if (!is_null($_endDate))
         {
@@ -19,15 +19,15 @@ class Controller_Reports extends Controller_BaseHybrid
         }
         else
         {
-            //$externalReferrals->where(DB::expr('DATE(referral_date)'), '=', "'".$startDate."'");
+            $externalReferrals->where(DB::expr('DATE(referral_date)'), '=', $startDate);
         }
         
-        $externalReferrals->get();
+        $externalReferralResult = $externalReferrals->get();
         
-        print_r($externalReferrals);
+        print_r($externalReferralResult);
         
         $allReferrals = array();
-        foreach ($externalReferrals as $referral)
+        foreach ($externalReferralResult as $referral)
         {
             $responses = \Model_Survey_Response::query()->where('reference', $externalReferrals->id)->get();
             
