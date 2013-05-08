@@ -15,11 +15,11 @@ class Controller_Reports extends Controller_BaseHybrid
         
         if (!is_null($_endDate))
         {
-            $externalReferrals->where(DB::expr('MONTH(referral_date)'), '>=', $startDate)->where(DB::expr('MONTH(referral_date)'), '<=', $endDate);
+            $externalReferrals->where(DB::expr('DATE(referral_date)'), '>=', $startDate)->where(DB::expr('DATE(referral_date)'), '<=', $endDate);
         }
         else
         {
-            $externalReferrals->where(DB::expr('MONTH(referral_date)'), '=', $startDate);
+            $externalReferrals->where(DB::expr('DATE(referral_date)'), '=', $startDate);
         }
         
         $externalReferrals->get();
