@@ -934,7 +934,14 @@ GROUP BY
 	    $staff = Model_Staff::query()->where( 'active', 1)->where('department_id', 1);
 	    if (!is_null($center))
 	    {
-    	    $staff->where('center_id', $call_center->id);
+	        if ($center = 'INTERNAL')
+	        {
+    	        $staff->where('center_id', 'IN', array(1,2));
+	        }
+	        else
+	        {
+    	        $staff->where('center_id', $call_center->id);
+    	    }
 	    }
 	    $totalStaff = $staff->count();
 	    $staff = $staff->get();
