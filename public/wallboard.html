@@ -122,9 +122,11 @@
         			var shortcode = $(this).attr('id');
         			
         			// Check to see if the element exists
-    			    if ($('#extra'+shortcode).length != 0) {
+    			    if ($('#extra'+shortcode).length != 0 && $('#extra'+shortcode).is(":hidden")) {
         			    $('.extraStatHolder').hide();
-        			    $('#extra'+shortcode).slideDown();
+        			    $('#extra'+shortcode).show();
+                    } else {
+                        $('.extraStatHolder').hide();
                     }
     			});
 			
