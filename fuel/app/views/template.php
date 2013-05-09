@@ -129,7 +129,8 @@
 					<ul>
 						<?php if (Auth::has_access('ppi.menu')): ?><li><?php echo Html::anchor('crm', 'Find Client'); ?></li><?php endif; ?>
 						<?php if (Auth::has_access('ppi.menu')): ?><li><?php echo Html::anchor('crm/reports/ppi/chase', 'Client Chase List'); ?></li><?php endif; ?>
-            <?php if (Auth::has_access('ppi.menu')): ?><li><?php echo Html::anchor('crm/reports/ppi/claim_report', 'PPI Claim Report'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('ppi.menu')): ?><li><?php echo Html::anchor('crm/reports/ppi/claim_report', 'PPI Claim Report'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('ppi.admin')): ?><li><?php echo Html::anchor('crm/creditor/add', 'Add Creditor'); ?></li><?php endif; ?>
 					</ul>
 				</li>
 				<?php endif; ?>
