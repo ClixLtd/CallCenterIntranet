@@ -934,7 +934,7 @@ GROUP BY
 	    $staff = Model_Staff::query()->where( 'active', 1)->where('department_id', 1);
 	    if (!is_null($center))
 	    {
-	        if ($center = 'INTERNAL')
+	        if ($center == 'INTERNAL')
 	        {
     	        $staff->where('center_id', 'IN', array(1,2));
 	        }
