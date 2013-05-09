@@ -157,6 +157,10 @@
 		
 		public function get_mobile_wallboard()
 		{	
+		
+		    $hq_this_month = GAB\Debtsolv::get_referral_count('GAB', date("01-m-Y"), date("t-m-Y"), 300);
+			$hq_this_week = GAB\Debtsolv::get_referral_count('GAB', date("d-m-Y", strtotime("monday this week")), date("d-m-Y"), 300);
+		
 			$hq_today = GAB\Debtsolv::get_referral_count('GAB');
 			$burton_today = GAB\Debtsolv::get_referral_count('RESOLVE');
 			$pcc_today = GAB\Debtsolv::get_referral_count('GBS');
@@ -284,9 +288,13 @@
 				
 				
 				'HQweek' => array(
-					'referrals' => number_format(($hq_today['referrals'] / $perPerson['GAB']),2),
-					'pack_out' => number_format(($hq_today['pack_outs'] / $perPerson['GAB']),2),
-					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
+					'referrals' => $hq_this_week['referrals'],
+					'pack_out' => $hq_this_week['pack_outs'],
+					'pack_out_percentage' => ($hq_this_week['referrals']==0) ? 0 : number_format((($hq_this_week['pack_outs']/$hq_this_week['referrals'])*100),2),
+					
+					'di' => ($hq_this_week['pack_outs']==0) ? 0 : number_format($hq_this_week['pack_outs_value'] / $hq_this_week['pack_outs'],2),
+					'pack_out_percentage' => ($hq_this_week['referrals']==0) ? 0 : number_format((($hq_this_week['pack_outs']/$hq_today['referrals'])*100),2),
+					'pack_out_value' => number_format($hq_this_week['pack_outs_value'],2),
 				),
 				'PCCweek' => array(
 					'referrals' => number_format(($hq_today['referrals'] / $perPerson['GAB']),2),
