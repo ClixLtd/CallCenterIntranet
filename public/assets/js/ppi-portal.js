@@ -1,6 +1,6 @@
 $(function () {
 	
-	var portalAddress = "/crm/portal/";
+	var portalAddress = "https://intranet.gregsonandbrooke.co.uk/crm/portal/";
 	var decisionMade = false;
 	var questionArray = [];
 	
