@@ -282,6 +282,38 @@
 					'pack_out_percentage' => (($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals']) < 1) ? 0 : number_format((($hq_today['pack_outs'] + $burton_today['pack_outs'] + $pcc_today['pack_outs']) / ($hq_today['referrals'] + $burton_today['referrals'] + $pcc_today['referrals'])) / $perPerson['COMBINED'],2),
 				),
 				
+				
+				'HQweek' => array(
+					'referrals' => number_format(($hq_today['referrals'] / $perPerson['GAB']),2),
+					'pack_out' => number_format(($hq_today['pack_outs'] / $perPerson['GAB']),2),
+					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
+				),
+				'PCCweek' => array(
+					'referrals' => number_format(($hq_today['referrals'] / $perPerson['GAB']),2),
+					'pack_out' => number_format(($hq_today['pack_outs'] / $perPerson['GAB']),2),
+					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
+				),
+				'RESOLVEweek' => array(
+					'referrals' => number_format(($hq_today['referrals'] / $perPerson['GAB']),2),
+					'pack_out' => number_format(($hq_today['pack_outs'] / $perPerson['GAB']),2),
+					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
+				),
+				'HQmonth' => array(
+					'referrals' => number_format(($hq_today['referrals'] / $perPerson['GAB']),2),
+					'pack_out' => number_format(($hq_today['pack_outs'] / $perPerson['GAB']),2),
+					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
+				),
+				'PCCmonth' => array(
+					'referrals' => number_format(($hq_today['referrals'] / $perPerson['GAB']),2),
+					'pack_out' => number_format(($hq_today['pack_outs'] / $perPerson['GAB']),2),
+					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
+				),
+				'RESOLVEmonth' => array(
+					'referrals' => number_format(($hq_today['referrals'] / $perPerson['GAB']),2),
+					'pack_out' => number_format(($hq_today['pack_outs'] / $perPerson['GAB']),2),
+					'pack_out_percentage' => ($hq_today['referrals']==0) ? 0 : number_format((($hq_today['pack_outs']/$hq_today['referrals'])*100),2),
+				),
+				
 			));
 			
 		}
