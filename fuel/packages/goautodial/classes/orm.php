@@ -12,8 +12,6 @@
 		
 		public static $_connection_choices = array(
 			1 => 'gabdialler',
-			2 => 'resolvedialler',
-			4 => 'rj5',
 		);
 		
 		

@@ -1,20 +1,11 @@
 <?php
 use Orm\Model;
 
-class Model_Staff extends Model
+class Model_Staff_Department extends Model
 {
-
 	protected static $_properties = array(
 		'id',
-		'first_name',
-		'last_name',
-		'intranet_id',
-		'dialler_id',
-		'debtsolv_id',
-		'network_id',
-		'center_id',
-		'department_id',
-		'active',
+		'title',
 		'created_at',
 		'updated_at',
 	);
@@ -29,10 +20,11 @@ class Model_Staff extends Model
 			'mysql_timestamp' => false,
 		),
 	);
-	
+
 	public static function validate($factory)
 	{
 		$val = Validation::forge($factory);
+		$val->add_field('title', 'Title', 'required|max_length[255]');
 
 		return $val;
 	}

@@ -49,11 +49,59 @@
 
 			</div>
 		</div>
+
+		
+		
+		<div class="clearfix">
+			<?php echo Form::label('Department', 'department'); ?>
+
+			<div class="input">
+    			
+    			<select name="department_id">
+    			    <?php foreach ($departments AS $department): ?>
+    			    <?php 
+        			    $staff_department_id = (isset($staff)) ? $staff->department_id : '';
+    			    ?>
+    			    <option value="<?php echo $department->id; ?>" <?php if ($staff_department_id == $department->id) { echo "SELECTED"; } ?>><?php echo $department->title; ?></option>
+    			    <?php endforeach; ?>
+    			</select>
+
+			</div>
+		</div>
+		
+		<div class="clearfix">
+			<?php echo Form::label('Center', 'center'); ?>
+
+			<div class="input">
+    			
+    			<select name="center_id">
+    			    <?php foreach ($centers AS $center): ?>
+    			    <?php 
+        			    $staff_center_id = (isset($staff)) ? $staff->center_id : '';
+    			    ?>
+    			    <option value="<?php echo $center->id; ?>" <?php if ($staff_center_id == $center->id) { echo "SELECTED"; } ?>><?php echo $center->title; ?></option>
+    			    <?php endforeach; ?>
+    			</select>
+
+			</div>
+		</div>
+		
+		
+		
 		<div class="clearfix">
 			<?php echo Form::label('Active', 'active'); ?>
 
 			<div class="input">
-				<?php echo Form::input('active', Input::post('active', isset($staff) ? $staff->active : ''), array('class' => 'span6')); ?>
+			
+			<?php
+    			$staff_active = (isset($staff)) ? $staff->active : 1;
+			?>
+			
+			<select name="active">
+    			<option value="1" <?php if ($staff_active == 1) { echo "SELECTED"; } ?>>Active</option>
+    			<option value="0" <?php if ($staff_active == 0) { echo "SELECTED"; } ?>>Disabled</option>
+			</select>
+			
 
 			</div>
 		</div>

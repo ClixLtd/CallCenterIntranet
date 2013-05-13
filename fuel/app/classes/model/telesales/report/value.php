@@ -1,22 +1,18 @@
 <?php
-use Orm\Model;
 
-class Model_Staff extends Model
+class Model_Telesales_Report_Value extends \Orm\Model
 {
-
 	protected static $_properties = array(
 		'id',
-		'first_name',
-		'last_name',
-		'intranet_id',
-		'dialler_id',
-		'debtsolv_id',
-		'network_id',
 		'center_id',
-		'department_id',
-		'active',
+		'referral_points',
+		'pack_out_points',
+		'di_pound_point',
+		'pack_out_commission',
+		'pack_out_bonus',
+		'payment_percentage',
 		'created_at',
-		'updated_at',
+		'updated_at'
 	);
 
 	protected static $_observers = array(
@@ -29,12 +25,4 @@ class Model_Staff extends Model
 			'mysql_timestamp' => false,
 		),
 	);
-	
-	public static function validate($factory)
-	{
-		$val = Validation::forge($factory);
-
-		return $val;
-	}
-
 }

@@ -1,0 +1,137 @@
+/* CSS file for the Telesales report */
+
+.subDetails
+{
+    display: none;
+}
+
+.allTelesales
+{
+    list-style: none;
+    list-style-image: none;
+    list-style-type: none;
+    
+    background: none;
+
+    margin: 0px;
+    padding: 0px;
+    
+}
+
+    .allTelesales li
+    {
+        background: none;
+        margin: 0px;
+        padding: 0px;
+        cursor: pointer;
+    }
+    
+        .allTelesales ul
+        {
+            clear: both;
+            height: 30px;
+            padding: 0px;
+            margin: 2px 0px;
+            
+        }
+        
+        .allTelesales ul.titles
+        {
+            padding: 0px !important;
+            background-color: #BBBBBB;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px RGBA(255,255,255,0.5);
+        }
+        .allTelesales ul.alt1, .allTelesales ul.alt1 li.subDetails
+        {
+            background-color: #EEEEEE;
+        }
+        .allTelesales ul.alt2, .allTelesales ul.alt2 li.subDetails
+        {
+            background-color: #E5E5E5;
+        }
+        
+            .allTelesales ul li
+            {
+                float: left;
+                line-height: 24px;
+                padding: 3px 0px;
+                width: 8%;
+                text-align: center;
+            }
+            
+            .allTelesales ul li:first-child
+            {
+                padding-left: 1%;
+                font-weight: bold;
+                text-align: left;
+                width: 11%;
+            }     
+                       
+                .allTelesales ul li.subDetails
+                {
+                    max-height: 300px;
+                    overflow-x: hidden;
+                    overflow-y: scroll;
+                    box-sizing: border-box;
+                    padding: 0px;
+                    margin: 1%;
+                    margin-top: 0px;
+                    margin-bottom: 10px;
+                    
+                    
+                    width: 98%;
+                    
+                    border-radius: 0px 0px 8px 8px;
+                    border-color: #DDDDDD;
+                    border-width: 0px 1px 1px 1px;
+                    border-style: solid;
+                }
+                
+                    .allTelesales ul li.subDetails ul li
+                    {
+                        width: 100%;
+                    }
+                    
+                        .allTelesales ul li.subDetails ul li ul.titles
+                        {
+                            background-color: #DDDDDD;
+                            padding: 0px !important;
+                            margin: 0px !important;
+                        }
+                        
+                        .allTelesales ul li.subDetails ul li ul li
+                        {
+                            margin: 0px;
+                            padding: 0px;
+                            line-height: 24px;
+                            width: 11%;
+                            overflow: hidden;
+                            height: 24px;
+                            display: block;
+                            
+                            padding: 3px 0px;
+                        }
+                        
+                        .allTelesales ul li.subDetails ul li ul li:first-child
+                        {
+                            padding-left: 1%;
+                            width: 11%;
+                        }
+                        
+                        .allTelesales ul li.subDetails ul li ul.alt1
+                        {
+                            background-color: #F5F5F5;
+                        }
+                        .allTelesales ul li.subDetails ul li ul.alt2
+                        {
+                            background-color: #E9E9E9;
+                        }
+                        
+                                
+                
+                
+                
+                
+                
+                

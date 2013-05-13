@@ -36,6 +36,8 @@ class Controller_Staff extends Controller_Base
 					'dialler_id' => Input::post('dialler_id'),
 					'debtsolv_id' => Input::post('debtsolv_id'),
 					'network_id' => Input::post('network_id'),
+					'center_id' => Input::post('center_id'),
+					'department_id' => Input::post('department_id'),
 					'active' => Input::post('active'),
 				));
 
@@ -56,6 +58,12 @@ class Controller_Staff extends Controller_Base
 				Session::set_flash('error', $val->error());
 			}
 		}
+
+		$departments = Model_Staff_Department::find('all');
+		$centers = Model_Call_Center::find('all');
+		
+		$this->template->set_global('departments', $departments, false);
+		$this->template->set_global('centers', $centers, false);
 
 		$this->template->title = "Staffs";
 		$this->template->content = View::forge('staff/create');
@@ -78,6 +86,8 @@ class Controller_Staff extends Controller_Base
 			$staff->dialler_id = Input::post('dialler_id');
 			$staff->debtsolv_id = Input::post('debtsolv_id');
 			$staff->network_id = Input::post('network_id');
+			$staff->center_id = Input::post('center_id');
+			$staff->department_id = Input::post('department_id');
 			$staff->active = Input::post('active');
 
 			if ($staff->save())
@@ -103,6 +113,8 @@ class Controller_Staff extends Controller_Base
 				$staff->dialler_id = $val->validated('dialler_id');
 				$staff->debtsolv_id = $val->validated('debtsolv_id');
 				$staff->network_id = $val->validated('network_id');
+				$staff->center_id = $val->validated('center_id');
+				$staff->department_id = $val->validated('department_id');
 				$staff->active = $val->validated('active');
 
 				Session::set_flash('error', $val->error());
@@ -110,7 +122,13 @@ class Controller_Staff extends Controller_Base
 
 			$this->template->set_global('staff', $staff, false);
 		}
-
+		
+		$departments = Model_Staff_Department::find('all');
+		$centers = Model_Call_Center::find('all');
+		
+		$this->template->set_global('departments', $departments, false);
+		$this->template->set_global('centers', $centers, false);
+		
 		$this->template->title = "Staffs";
 		$this->template->content = View::forge('staff/edit');
 

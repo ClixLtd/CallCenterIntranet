@@ -57,6 +57,13 @@ return array(
 				48 => '050_add_api_key_to_call_centers',
 				49 => '051_create_calendar_holidays',
 				50 => '052_create_staffs',
+				51 => '053_create_staff_departments',
+				52 => '054_add_center_id_to_staff',
+				53 => '055_add_department_id_to_staff',
+				54 => '056_create_telesales_report_values',
+				55 => '057_add_pack_out_commission_to_telesales_report_values',
+				56 => '058_add_pack_out_bonus_to_telesales_report_values',
+				57 => '059_add_payment_percentage_to_telesales_report_values',
 			),
 		),
 		'module' => 
@@ -74,6 +81,7 @@ return array(
 				5 => '006_drop_crm_client_access_log',
 				6 => '007_alter_crm_client_details_add_created',
 				7 => '008_create_crm_client_partner_details',
+				8 => '009_alter_crm_client_partner_detailsautoid',
 			),
 			'sexyticket' => 
 			array(
@@ -130,6 +138,12 @@ return array(
 				6 => '007_create_crm_type_ppi_refund_method',
 				7 => '008_alter_crm_ppi_clients_add_packs',
 				8 => '009_alter_crm_ppi_claims_add_account_info',
+				9 => '010_alter_crm_type_ppi_claim_status_change_name',
+				10 => '011_alter_crm_ppi_correspondence_addfields',
+				11 => '012_alter_crm_ppi_clients_packout_fields',
+				12 => '013_alter_crm_ppi_correspondence_changenotes',
+				13 => '014_alter_crm_ppi_claims_addedsignatory',
+				14 => '015_alter_crm_ppi_clients_addpartner',
 			),
 			'crm_product' => 
 			array(
