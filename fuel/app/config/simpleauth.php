@@ -58,19 +58,20 @@ return array(
 		 
 		 10   => array('name' => 'Telesales', 'roles' => array()),
 		 
-		 11   => array('name' => 'Queen Bee', 'roles' => array('ppi', 'ppireports')),
+		 11   => array('name' => 'Queen Bee', 'roles' => array('ppi', 'ppi_admin', 'ppireports')),
 		 
 		 15   => array('name' => 'Consolidator', 'roles' => array('ppi')),
 		 30   => array('name' => 'Admin', 'roles' => array()),
 		 40   => array('name' => 'Legal', 'roles' => array()),
 		 
 		 
-		 50   => array('name' => 'CDS', 'roles' =>array('ppi')),
+		 50   => array('name' => 'CDS', 'roles' =>array('ppi', 'ppi_admin')),
 		 
+		 55   => array('name' => 'Data Analyst', 'roles' => array('introducer')),
 		 
 		 61   => array('name' => 'Manager', 'roles' => array('manager')),
 		 
-		 65   => array('name' => 'External Support Rep', 'roles' => array('telesales_manager', 'area_manager', 'ppi', 'ppireports')),
+		 65   => array('name' => 'External Support Rep', 'roles' => array('telesales_manager', 'area_manager', 'ppi', 'ppi_admin', 'ppireports')),
 		 
 		 69   => array('name' => 'Telesales Manager', 'roles' => array('telesales_manager', 'ppi', 'ppireports')),
 		 
@@ -85,6 +86,8 @@ return array(
 		 75	  => array('name' => 'Area Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi', 'ppireports')),
 		 
 		 80   => array('name' => 'Director', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi', 'ppireports')),
+		 
+		 85   => array('name' => 'Dialler Administrator', 'roles' => array('supplier')),
 		 
 		 96   => array('name' => 'Database Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi', 'ppireports')),
 		 
@@ -135,6 +138,10 @@ return array(
 		 'ppi' => array(
 		 	'ppi' => array('menu','referrals'),
 		 ),
+     
+     'ppi_admin' => array(
+       'ppi' => array('admin'),
+     ),
 		 
 		 
 		 'ppireports' => array(

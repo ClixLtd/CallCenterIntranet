@@ -85,6 +85,11 @@ $(function () {
 					$("#ppiClientID").html(data['client_type']['clientID']);
 					$("#ppiClient").animate({bottom: '0'}, 300);
 				}
+				else
+				if (data['client_type']['type'] == "DONE")
+				{
+					$("#thankYou").animate({bottom: '0'}, 300);
+				}
 				
 				decisionMade = true;
 				$(".questionSelect").attr('disabled', 'disabled');

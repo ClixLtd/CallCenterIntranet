@@ -12,9 +12,9 @@ return array(
 		 */
 		'useragent'	=> 'FuelPHP, PHP 5.3 Framework',
 		/**
-		 * Mail driver (mail, smtp, sendmail)
+		 * Mail driver (mail, smtp, sendmail, noop)
 		 */
-		'driver'		=> 'mail',
+		'driver'		=> 'smtp',
 
 		/**
 		 * Whether to send as html, set to null for autodetection.
@@ -89,17 +89,17 @@ return array(
 		 * SMTP settings
 		 */
 		'smtp'	=> array(
-			'host'		=> '',
-			'port'		=> 25,
-			'username'	=> '',
-			'password'	=> '',
+			'host'		=> 'ssl://smtp.gmail.com',
+			'port'		=> 465,
+			'username'	=> 'noreply@expertmoneysolutions.co.uk',
+			'password'	=> 'Wvts231ct6D',
 			'timeout'	=> 5,
 		),
 
 		/**
 		 * Newline
 		 */
-		'newline'	=> "\n",
+		'newline'	=> "\r\n",
 
 		/**
 		 * Attachment paths

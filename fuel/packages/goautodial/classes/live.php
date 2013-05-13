@@ -9,7 +9,17 @@
 		public static function dialable_leads($campaign=null)
 		{
 			$get_campaign_calls = Model_Vicidial_Campaign_Stats::find()->where('campaign_id', $campaign)->get_one();
-			return $get_campaign_calls->dialable_leads;
+			
+			if (is_object($get_campaign_calls))
+			{
+    			return $get_campaign_calls->dialable_leads;
+			}
+			else
+			{
+    			return null;
+			}
+			
+			
 		}
 		
 		
@@ -114,9 +124,12 @@
 			return $get_agents->count();
 		}
 		
-		public static function closers($campaign=null)
+		public static function closers($campaign=null, $connection=null)
 		{
-			$get_sales = Model_Vicidial_Live_Agents::find()->where('status', 'CLOSER');
+		
+		    $connection = (is_null($connection)) ? "gabdialler" : $connection;
+		
+			$get_sales = Model_Vicidial_Live_Agents::find(null,array(),$connection)->where('status', 'CLOSER');
 			if (!is_null($campaign))
 			{
 				$get_sales->where('campaign_id',$campaign);
@@ -125,10 +138,13 @@
 		}
 		
 		
-		public static function inbound_queue($campaigns=null)
+		public static function inbound_queue($campaigns=null, $connection=null)
 		{
 			
-			$get_inbound = Model_Vicidial_Auto_Calls::find()->where('call_type', 'IN')->where('status', 'LIVE')->where('campaign_id', 'IN', array('GABDRSeniors','GBSDRSeniors','RESOLVEDRSeniors'));
+			$connection = (is_null($connection)) ? "gabdialler" : $connection;
+			
+			
+			$get_inbound = Model_Vicidial_Auto_Calls::find(null,array(),$connection)->where('call_type', 'IN')->where('status', 'LIVE')->where('campaign_id', 'IN', array('GABDRSeniors','GBSDRSeniors','RESOLVEDRSeniors'));
 	
 	
 			return $get_inbound->get();

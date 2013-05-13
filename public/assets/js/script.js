@@ -1,5 +1,206 @@
 $(function () {
-
+  
+  // -- Find Address
+  // ---------------
+  $("#findAddress").click(function()
+  {
+    
+    if($("#post_code").val() == '')
+    {
+      alert("Enter a Post Code First");
+      return false;
+    }
+    
+     $.post('/crm/find_address/0.json',
+     {
+       postCode: $("#post_code").val(),
+     },
+	   function(data)
+      {
+			  if (data['status'] == 'done')
+			  {
+				  if(data['results'])
+          {
+            $("#Address1").val(data['results'][0]['address_1']);
+            $("#Address2").val(data['results'][0]['address_2']);
+            $("#Town").val(data['results'][0]['town']);
+            $("#County").val(data['results'][0]['county']);
+          }
+          else
+          {
+            alert('Address Not Found!');
+          }
+			  }
+			  else
+			  {
+				  alert("Creditor's contact details could not be saved");
+			  }
+		  });
+  });
+  
+  // -- Edit a creditors address
+  // ---------------------------
+  $('#editCredContact').click(function()
+  {
+    var creditorID = $(this).attr('rel');
+    
+    var newDialog = $("#EditCreditorContactBox").dialog();
+    
+    newDialog.dialog( { 
+       autoOpen: false, 
+       modal: true, 
+       resizable: false,
+       width: 600,
+       height: 500,
+       title: "Edit Creditor's Contact Details",
+       buttons: 
+         [ 
+             { 
+                 text: "Save", 
+                 click: function() { 
+                     
+                     $.post('/crm/creditor/save_creditor_details/' + creditorID +'.json',
+              		     $('#EditCreditorContactFrom').serialize(),
+                   		   function(data)
+                          {
+                    			  if (data['status'] == 'done')
+                    			  {
+                    				  alert("Creditor's contact have been saved");
+                              location.reload();
+                    			  }
+                    			  else
+                    			  {
+                    				  alert("Creditor's contact details could not be saved");
+                    			  }
+                    		  });
+                 } 
+             },
+             { 
+                 text: "Cancel", 
+                 click: function()
+                 { 
+                   $( this ).dialog( "close" );
+                 } 
+             }
+         ] 
+       });
+	
+	   newDialog.dialog( "open" );
+  });
+  
+  // -- Print PPI Form
+  // -----------------
+  $('.printPPIForm').click(function()
+  {
+    var formName = $(this).attr('rel');
+    
+    $.getJSON('/crm/letter/manage/print_form/' + formName, function(data)
+    {
+      if(data['status'] == 'success')
+      {
+        alert(data['message']);
+      }
+      else
+      {
+        alert('Error: ' + data['message']);
+      }
+    });
+  });
+  
+  // -- Display the PPI Invoice Total
+  // --------------------------------
+  $("#Invoice_Charge").change(function()
+  {
+    addInvoiceTotal();
+  });
+  
+  $("#Invoice_Qty").change(function()
+  {
+    addInvoiceTotal();
+  });
+  
+  function addInvoiceTotal()
+  {
+    var total = 0;
+    var vat = 0;
+    
+    total = ($("#Invoice_Charge").val() / 100) * $("#Invoice_Fee").val();
+    total = total * $("#Invoice_Qty").val();
+    vat = total / 100 * $("#VAT_Percentage").val();
+    total = total + vat;
+    
+    $("#Invoice_VAT").val(vat);
+    $("#Invoice_Total").val(total.toFixed(2));
+  }
+  
+  // -- Create an Invoice - David
+  // ----------------------------
+  $('#createInvoice').click(function()
+  {
+    // -- Validate Form
+    // ----------------
+    var msg = '';
+    
+    if($('#Invoice_Description').val() == '')
+    {
+      msg += "Invoice Description is empty\n";
+    }
+    
+    if($('#Invoice_Charge').val() == '')
+    {
+      msg += "Invoice Charge is empty\n";
+    }
+    
+    if(msg != '')
+    {
+      alert(msg);
+    }
+    else
+    {
+      var clientID = $('#Invoice_ClientID').val();
+      
+      $.post('/crm/invoice/create_invoice/' + clientID + '.json',
+  		$('#Create-Invoice').serialize(),
+  		function(data){
+  			if (data['status'] == 'done')
+  			{
+  				alert('Invoice #' + data['message'] + ', has been created and sent to the print queue');
+          $("#createInvoice").hide();
+          location.reload();
+  			}
+  			else
+  			{
+  				alert('Error: Unable to create an Invoice. Please contact I.T. Support');
+  			}
+  		});
+    }
+    
+    return false;
+  });
+  
+  // -- Pay Invoice
+  // --------------
+  $("#paidInvoice").click(function()
+  {
+    var invoiceID = $(this).attr('rel');
+    
+    if(confirm('Are you sure the client has paid?') == true)
+    {
+      $.getJSON('/crm/invoice/pay_invoice/' + invoiceID, function(data)
+      {
+        if(data['status'] == 'done')
+        {
+          alert('Invoice has been marked paid');
+          location.reload();
+        }
+      });
+    }
+    else
+    {
+      return;
+    }
+  });
+  
 	// Simon's functions
 	$('#dateRangeDisposition').click(
 		function() {
@@ -29,6 +230,8 @@ $(function () {
 		}
 	);
   
+  // -- Enable Editing of the Client's Details
+  // -----------------------------------------
   $("#Edit-Client-Details").click(function()
   {
     $(".Client-Edit-Input").removeAttr('readonly');
@@ -36,6 +239,8 @@ $(function () {
     $("#saveClientDetails").show();
   });
   
+  // -- Enable Editing of the Partner Details
+  // ----------------------------------------
   $("#Edit-Partner-Details").click(function()
   {
     $(".Partner-Edit-Input").removeAttr('readonly');

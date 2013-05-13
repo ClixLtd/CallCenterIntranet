@@ -26,7 +26,7 @@
 			$surname = Datascrape::get_new_surname();
 			
 			
-			$proxy_count = \Model_Proxy::find()->where('fail_count', '<', static::$current_max_count);
+			$proxy_count = \Model_Proxy::find()->where('fail_count', '<', static::$current_max_count)->order_by('created_at', 'DESC');
 			
 			while ($proxy_count->count() == 0)
 			{
@@ -49,7 +49,7 @@
 				} 
 				else 
 				{
-					$pagesArray = $html->find(".pages a");
+					$pagesArray = $html->find(".page_nav a");
 					
 					if (count($pagesArray) > 0) {
 						$totalPages = $pagesArray[count($pagesArray)-2];
@@ -59,7 +59,7 @@
 						$totalPageNumbers = 1;
 					}
 					
-					echo $surname['surname']."'s in ".$town['town']."\n";
+					echo $totalPageNumbers." pages of ".$surname['surname']."'s in ".$town['town']."\n";
 					@ob_flush();
 					
 					$results = Array();
@@ -67,7 +67,7 @@
 					
 					$got_error = FALSE;
 					for ($i = 1; $i <= $totalPageNumbers; $i++) {
-						$proxy_count = \Model_Proxy::find()->where('fail_count', '<', static::$current_max_count);
+						$proxy_count = \Model_Proxy::find()->where('fail_count', '<', static::$current_max_count)->order_by('created_at', 'DESC');
 						if ($i > 1) {
 							$html = Datascrape::get_html_dom($surname['surname'], $town['town'], $i);
 						}
@@ -79,26 +79,30 @@
 						else
 						{
 						
-							foreach ($html->find(".searchResult") AS $e) {
+							foreach ($html->find(".record") AS $e) {
 		
-								$name = explode(" ", Datascrape::cleanString(@$e->find("h2",0)->plaintext));
+								$name = array_reverse(explode(" ", Datascrape::cleanString(@$e->find(".name",0)->plaintext)));
 		
 								$singleResult['surname'] = array_shift($name);
 								$singleResult['forename'] = implode(" ", $name);
 		
-								$address = explode("<br />", Datascrape::cleanString(@$e->find(".address",0)->innertext));
+								$address = explode(", ", Datascrape::cleanString(@$e->find(".address",0)->innertext));
 		
 								$singleResult['add1'] = (isset($address[0])) ? $address[0] : "";
-								$singleResult['add2'] = (isset($address[1])) ? $address[1] : "";
-								$singleResult['postcode'] = (isset($address[2])) ? Datascrape::cleanString($address[2], TRUE) : '';
+								$singleResult['add2'] = (isset($address[2]) && substr($address[2],0,11) != "<span class") ? $address[2] : $address[1];
+								$singleResult['postcode'] = @Datascrape::cleanString($e->find(".postcode",0)->plaintext, TRUE);
 		
-								$tmpTel = @Datascrape::cleanString($e->find(".telephoneNumber",0)->plaintext, TRUE);
+								$tmpTel = str_replace(array('(',')',' '),array('','',''), @Datascrape::cleanString($e->find(".telnum",0)->plaintext, TRUE));
 		
 								$singleResult['telephone'] = (substr($tmpTel, 0, 1) == 0) ? substr($tmpTel, 1) : $tmpTel;
 		
 								$results[] = $singleResult;
 								echo ".";
 								@ob_flush();
+								
+								
+								
+								print_r($singleResult);
 							}
 				
 						}
@@ -236,7 +240,7 @@
 					$proxy = $proxy_query->get_one();
 					echo "Trying Proxy (from ".$count.") - " . $proxy->host.":".$proxy->port;
 					$html = \Simple_Html_Dom\helper::file_get_html(
-						'http://www.118.com/people-search.mvc?Supplied=true&Name='.$surname.'&Location='.$town.'&pageSize=50&pageNumber='.$page_number, 
+						'http://www.ukphonebook.com/telephone_directory/search?data_source=osis&name='.$surname.'&place='.$town.'&er_years%5B0%5D=pre-2013&er_years%5B1%5D=2013&page='.$page_number, 
 						false,
 						stream_context_create(
 							array(

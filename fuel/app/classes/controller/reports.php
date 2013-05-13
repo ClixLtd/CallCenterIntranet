@@ -2,11 +2,630 @@
 
 class Controller_Reports extends Controller_BaseHybrid
 {
-
+    
+    
+    
+    public static function generate_externals_report($introducer=null, $_startDate=null, $_endDate=null)
+    {
+        
+        $startDate = (is_null($_startDate)) ? date('Y-m-d') : $_startDate;
+        $endDate = (is_null($_endDate)) ? date('Y-m-d') : $_endDate;
+        
+        $externalReferrals = \Model_Crmreferral::query();
+        
+        if (!is_null($introducer))
+        {
+            if (is_array($introducer))
+            {
+                $externalReferrals->where('introducer_id', "IN", $introducer);
+            }
+            else
+            {
+                $externalReferrals->where('introducer_id', (int)$introducer);
+            }
+        }
+        else
+        {
+            return null;
+        }
+        
+        if (!is_null($_endDate))
+        {
+            $externalReferrals->where(DB::expr('DATE(referral_date)'), '>=', $startDate)->where(DB::expr('DATE(referral_date)'), '<=', $endDate);
+        }
+        else
+        {
+            $externalReferrals->where(DB::expr('DATE(referral_date)'), '=', $startDate);
+        }
+        
+        $externalReferralResult = $externalReferrals->get();
+        
+        
+        $allReferrals = array();
+        foreach ($externalReferralResult as $referral)
+        {
+            $responses = \Model_Survey_Response::query()->where('reference', $referral->id)->get();
+            
+            $responseList = array();
+            foreach ($responses as $singleResponse)
+            {
+                $responseList[$singleResponse->question_id] = array(
+                    $singleResponse->answer_id,
+                    $singleResponse->extra,
+                );
+            }
+            
+            $allReferrals[] = array(
+                $referral->id,
+                $referral->title." ".$externalReferrals->forename." ".$externalReferrals->surname,
+                $referral->introducer_agent_name,
+                $referral->dialler_list_id,
+                $responseList,
+            );
+        }
+        
+        return $allReferrals;
+        
+    }
+    
+    
+    public function action_externals()
+    {
+        $externalReport = Controller_Reports::generate_externals_report(array(17,16));
+        
+        print_r($externalReport);
+    }
+    
+    
+    
+    
+	/* ********************
+	 * Start Agent Report *
+	 **********************/    
+    
+    /* Function to build the query for the agent report
+     *
+     * Send Array is as follows...
+     *
+     * array(
+     *   'agent' => array(
+     *     'agent1',
+     *     'agent2',
+     *   ),
+     *   'comparison' => array(
+     *     'agent1',
+     *     'agent2',
+     *   ),
+     *   'included' => array(
+     *     'referrals',
+     *     'packout',
+     *     'packin',
+     *     'paid',
+     *   ),
+     * );
+     */
+    public static function build_agent_report_query($_requirements=null)
+    {
+        if (is_null($_requirements))
+        {
+            return false;
+        }
+        else
+        {
+            
+        }
+    }
+    
+    
+    public function action_agent()
+    {
+	    
+	    // Get a list of all current active agents
+	    $staff = Model_Staff::query()->where('active', 1)->order_by('last_name')->get();
+	    
+	    
+	    $this->template->title = 'Agent Report &raquo; Reports';
+		$this->template->content = View::forge('reports/agent_generate', array(
+		    'all_active_agents' => $staff,
+		));	
+    }
+    
+    
+	/* ******************
+	 * End Agent Report *
+	 ********************/  
+    
+    
+    
 	public function action_dialler_test()
 	{
 		print count(Goautodial\Live::closers());
 	}
+	
+	
+	
+	/* ******************************
+	 * Start Monthly Payment Report *
+	 ********************************/
+	
+	public static function generate_monthly_payment_report($center=null, $_startDate=null, $_endDate=null)
+	{
+    	$startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m')-1, 1, (int)date('Y'))) : $_startDate;
+	    $endDate = (is_null($_endDate))? date('Y-m-d', mktime(0,0,0,(int)date('m')-1, 1, (int)date('Y'))) : $_endDate;
+	    
+	    
+	    
+	    $db_choice                  = array(
+	       'GAB' => array('DS'     => 'Debtsolv',
+	                      'LP'     => 'Leadpool_DM',
+	                      'QU'     => 'Office <> \'RESOLVE\''),
+	       'RESOLVE' => array('DS' => 'BS_Debtsolv_DM',
+	                      'LP'     => 'BS_Leadpool_DM',
+	                      'QU'     => 'Office = \'RESOLVE\''),
+	    );
+	    
+	    $thisDB = $db_choice[(is_null($center)) ? 'GAB' : $center];
+	    
+	    
+	    
+	    
+	    
+	    $quickViewStartDate = strtotime("-18 months");
+	    
+	    $quickViewCountQuery = "SELECT
+	  REPLACE(CONVERT(VARCHAR(7), P_R.Date, 111), '/', '-') AS Month
+	, COUNT(DISTINCT P_R.ClientID) as totalCount
+FROM 
+	".$thisDB['DS'].".dbo.Payment_Receipt AS P_R
+WHERE
+	P_R.Date >= '".date('Y-m-01',$quickViewStartDate)."' AND P_R.Date <= '".date('Y-m-d')."'
+GROUP BY
+	REPLACE(CONVERT(VARCHAR(7), P_R.Date, 111), '/', '-')
+ORDER BY
+	REPLACE(CONVERT(VARCHAR(7), P_R.Date, 111), '/', '-')";
+	
+	    $getGraphDetails = DB::query($quickViewCountQuery)->cached(300)->execute('debtsolv');
+	    
+	    
+	    $expectedPaymentsQuery = "SELECT
+	  CC.ID as ClientID
+	, (CC.Forename + ' ' + CC.Surname) AS ClientName
+	, ps.DateExpected
+	, (ps.Amount+ps.OvertimeAmount+ps.AdditionalAmount)/100 AS AmountExpected
+	, ISNULL(PR.Amount,0)/100 AS AmountReceived
+	, ISNULL(PR.Date,'31 dec 1899') AS 'Date Received'
+	, CASE WHEN PR.ID IS null THEN 'Migrated Payment' ELSE 'Client Payment' END As 'Receipt Type'
+FROM 
+	".$thisDB['DS'].".dbo.Payment_Schedule AS ps
+INNER JOIN
+	".$thisDB['DS'].".dbo.Client_Contact AS CC ON ps.ClientID = CC.ID
+INNER JOIN 
+	".$thisDB['DS'].".dbo.Client_LeadData AS CLD ON CC.ID = CLD.Client_ID
+LEFT OUTER JOIN 
+	".$thisDB['DS'].".dbo.PaymentSchedule_AllocationHistory AS psah ON ps.ID = psah.ScheduleID
+LEFT OUTER JOIN
+	".$thisDB['DS'].".dbo.Payment_Receipt AS PR ON psah.ReceiptID = PR.ID
+INNER JOIN
+	".$thisDB['DS'].".dbo.Users AS Admin ON CLD.Administrator = Admin.ID
+INNER JOIN
+	".$thisDB['DS'].".dbo.Users AS Credit ON CLD.CreditController = Credit.ID 
+WHERE
+	(ps.DateExpected >= '".$startDate."' AND ps.DateExpected < '".$endDate."')
+	AND CC.status = 9
+ORDER BY 
+	ps.DateExpected";
+    
+        $expectedPaymentDetails = DB::query($expectedPaymentsQuery)->cached(300)->execute('debtsolv');
+	    
+	    
+	    
+	    
+	    
+	    $monthPaymentsQuery = "SELECT
+	  D_PA.ClientID
+	, (D_CC.Forename + ' ' + D_CC.Surname) AS Name
+	, D_PA.Amount/100 AS AmountIn
+	, D_CPD.NormalExpectedPayment/100 AS NormalExpectedPayment
+	, D_LI.Name AS Introducer
+	, ISNULL(L_CLD.LeadRef2, 'NONE') AS Shortcode
+	, (SELECT SUM(CASE WHEN EstimatedBalance > 0 THEN EstimatedBalance ELSE AmountOwed END)/100 FROM ".$thisDB['DS'].".[dbo].[Finstat_Debt] WHERE ClientID = D_PA.ClientID) AS TotalOwed
+FROM
+	".$thisDB['DS'].".dbo.Payment_Receipt AS D_PA
+LEFT JOIN
+	".$thisDB['DS'].".dbo.Client_PaymentData AS D_CPD ON D_PA.ClientID = D_CPD.ClientID
+LEFT JOIN
+	".$thisDB['DS'].".dbo.Client_Contact AS D_CC ON D_PA.ClientID = D_CC.ID
+LEFT JOIN
+    ".$thisDB['DS'].".dbo.Client_LeadData AS D_CLD ON D_PA.ClientID = D_CLD.Client_ID
+LEFT JOIN
+    ".$thisDB['DS'].".dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID=D_TLS.ID
+LEFT JOIN
+    ".$thisDB['DS'].".dbo.Lead_Introducers AS D_LI ON D_TLS.IntroducerID=D_LI.ID
+LEFT JOIN 
+    ".$thisDB['LP'].".dbo.Client_LeadDetails AS L_CLD ON D_CLD.LeadPoolReference = L_CLD.ClientID
+WHERE
+	(D_PA.Date >= '".$startDate."' AND D_PA.Date < '".$endDate."')";
+	    
+	    $getPayments = DB::query($monthPaymentsQuery)->cached(300)->execute('debtsolv');
+	    
+	    $monthFirstPaymentsQuery = "SELECT
+      REPLACE(CONVERT(VARCHAR(7), FirstPaymentDate, 111), '/', '-') AS Month
+    , COUNT(DISTINCT ClientID) AS Total
+FROM 
+	[Dialler].[dbo].[client_dates]
+WHERE 
+	".$thisDB['QU']."
+	AND (FirstPaymentDate >= '".date('Y-m-01',$quickViewStartDate)."' AND FirstPaymentDate <= '".date('Y-m-d')."')
+GROUP BY
+	REPLACE(CONVERT(VARCHAR(7), FirstPaymentDate, 111), '/', '-')";
+	    
+	    $getFirstPayments = DB::query($monthFirstPaymentsQuery)->cached(300)->execute('debtsolv');
+	    
+	    
+	    $clientPayments = array();
+	    $introducerPayments = array();
+	    $completedClients = array();
+	    foreach ($getPayments AS $payment)
+	    {
+	    
+	        if (!in_array($payment['ClientID'], $completedClients))
+	        {
+    	    
+    	        $paymentTotal = (isset($clientPayments[$payment['ClientID']]['AmountIn'])) ? $clientPayments[$payment['ClientID']]['AmountIn'] + $payment['AmountIn'] : $payment['AmountIn'];
+    	        $paymentCount = (isset($clientPayments[$payment['ClientID']]['count'])) ? $clientPayments[$payment['ClientID']]['count'] + 1 : 1;
+    	        
+    	        
+    	        
+    	        
+    	        $shortCodeChange = array(
+    	           "Games Blaster"                => "GAB",
+    	           "Gregson and Brooke"           => "GAB",
+    	           "Phillipines"                  => "GBS",
+    	           "PPI - 03-11-2011"             => "GAB",
+    	           "PPI - 17-11-2011"             => "GAB",
+    	           "PPI - 19-11-2011"             => "GAB",
+    	           "PPI - 21-11-2011"             => "GAB",
+    	           "Teleprospects"                => "GAB",
+    	           "UCS"                          => "GAB",
+    	           "Unique Prospects"             => "GAB",
+    	           "60k Home Owner"               => "GAB",
+    	           "Data Compiled 2011"           => "GAB",
+    	           "Data Compiled 2012"           => "GAB",
+    	           "Dialler Manual Dial"          => "GAB",
+    	           "Digos Call Centre"            => "GBS",
+    	           "Digos Call Centre (Post PPI)" => "GBS",
+    	           "DK101"                        => "GAB",
+    	           "GAB Debt Hotkeys"             => "GAB",
+    	           "JPO"                          => "GAB",
+    	           "DLG"                          => "GAB",
+    	           
+    	        );
+    	        
+    	        
+    	        
+    	        
+    	        if ($payment['Shortcode'] <> 'NONE' && $payment['Shortcode'] <> '' && $payment['Shortcode'] <> ' ')
+    	        {
+        	        if ( isset($shortCodeChange[(string)$payment['Shortcode']]) )
+        	        {
+            	        $introducerTitle = $shortCodeChange[(string)$payment['Shortcode']];
+        	        }
+        	        else
+        	        {
+            	        $introducerTitle = (string)$payment['Shortcode'];
+        	        }
+    	        }
+    	        else
+    	        {
+        	        if ( isset($shortCodeChange[(string)$payment['Introducer']]) )
+        	        {
+            	        $introducerTitle = $shortCodeChange[(string)$payment['Introducer']];
+        	        }
+        	        else
+        	        {
+            	        $introducerTitle = (string)$payment['Introducer'];
+        	        }
+    	        }
+    	        
+    	            	    
+        	    $introducerPayments[$introducerTitle] = array(
+        	       'amount' => (isset($introducerPayments[$introducerTitle])) ? $introducerPayments[$introducerTitle]['amount'] + $payment['AmountIn'] : $payment['AmountIn'],
+        	       'total' => (isset($clientPayments[$payment['ClientID']])) ? $introducerPayments[$introducerTitle]['total'] : $introducerPayments[$introducerTitle]['total'] + 1,
+        	    );
+
+        	    $clientPayments[] = array(
+        	       $payment['ClientID'],
+        	       $payment['Name'],
+        	       $introducerTitle,
+        	       $paymentTotal,
+        	       $payment['NormalExpectedPayment'],
+        	       $payment['TotalOwed'],
+        	       //$paymentCount,
+        	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
+        	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
+        	    );
+        	    
+        	    
+        	    $completedClients[] = $payment['ClientID'];
+        	    
+    	    }
+    	    
+
+	    }
+	    
+	    
+	    
+	    
+	    // Parse Graph
+	    $graphDetails = array();
+	    foreach ($getGraphDetails AS $graph)
+	    {
+	        $date = explode('-', $graph['Month']);
+    	    $graphDetails[date("M Y",mktime(0,0,0,(int)$date[1],1,$date[0]))] = $graph['totalCount'];
+	    }
+	    
+	    $graphDetails2 = array();
+	    $graphDetails3 = array();
+	    foreach ($getFirstPayments AS $graph)
+	    {
+	        $date = explode('-', $graph['Month']);
+    	    $graphDetails2[date("M Y",mktime(0,0,0,(int)$date[1],1,$date[0]))] = (int)$graphDetails[date("M Y",mktime(0,0,0,(int)$date[1],1,$date[0]))] - (int)$graph['Total'];
+    	    $graphDetails3[date("M Y",mktime(0,0,0,(int)$date[1],1,$date[0]))] = (int)$graph['Total'];
+	    }
+	    
+	    
+	    
+	    $report = Report\Create::forge(array(
+	        'monthlyStats' => array(
+	            'reportResults' => array(
+	               'Unique Payments' => $graphDetails,
+	               'Regular Payments' => $graphDetails2,
+	               'First Payments' => $graphDetails3,
+	            ),
+	            'displayType' => 'chart',
+	        ),
+	        
+	    ),3600);
+
+	    
+	    $introducerPaymentsReturn = array();
+	    foreach ($introducerPayments AS $inpayName => $inpayValues)
+	    {
+    	    $introducerPaymentsReturn[] = array(
+    	        $inpayName,
+    	        number_format($inpayValues['total'],0),
+    	        "&pound;".number_format($inpayValues['amount'],2),
+    	        ($inpayValues['total'] < 0.1) ? "&pound;0.00" : "&pound;".number_format(($inpayValues['amount'] / $inpayValues['total']),2),
+    	    );
+	    }
+	    
+	    
+	    $expectedPayments = array();
+	    foreach ($expectedPaymentDetails AS $expected)
+	    {
+    	    $expectedPayments[] = array(
+    	        $expected['ClientID'],
+    	        $expected['ClientName'],
+    	        $expected['DateExpected'],
+    	        $expected['AmountExpected'],
+    	        $expected['AmountReceived'],
+    	        ((int)$expected['AmountReceived'] >= (int)$expected['AmountExpected']) ? TRUE : FALSE,
+    	    );
+	    }
+	    
+	    
+	    
+	    
+	    return array(
+	       'reports'    => $report->generate(),
+	       'clients'    => $clientPayments,
+	       'expected'   => $expectedPayments,
+	       'introducer' => $introducerPaymentsReturn,
+	    );
+
+	}
+	
+	
+	
+	
+	
+	public function get_get_monthly_payment($center=null)
+	{
+    	
+        $startDate = null;
+    	$endDate = null;
+    	
+    	$month = $this->param('month');
+    	if (!is_null($month))
+    	{
+        	$monthSplit = explode('-', $month);
+        	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
+        	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
+    	}
+    	
+    	
+    	$reportArray = Controller_Reports::generate_monthly_payment_report($center, $startDate, $endDate);
+    	
+    	return $this->response(array(
+		    'reports' => $reportArray['reports'],
+		    'payments' => array(
+		        "aaData" => $reportArray['clients'],
+            	"bDestroy" => true,
+            	"bPaginate" => true,
+            	"bProcessing" => true,
+    			"aoColumnDefs" => array(
+    				array(
+    					"iDataSort" => 2,
+    					"asSorting" => array("asc"),
+    					"aTargets" => array(0),
+    				),
+    			),
+    			"aoColumns" => array(
+    				array(
+    					"sTitle" => "Client ID",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Client Name", 
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle"    => "Introducer",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle"    => "Amount In",
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle" => "Expected", 
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle"    => "Remaining Debt",
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle"    => "Notes",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Reached", 
+    					"bSortable" => false,
+    				),
+    			),
+            ),
+		    
+		    
+		    'expected' => array(
+		        "aaData" => $reportArray['expected'],
+            	"bDestroy" => true,
+            	"bPaginate" => true,
+            	"bProcessing" => true,
+    			"aoColumnDefs" => array(
+    				array(
+    					"iDataSort" => 2,
+    					"asSorting" => array("asc"),
+    					"aTargets" => array(0),
+    				),
+    			),
+    			"aoColumns" => array(
+    				array(
+    					"sTitle" => "Client ID",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Client Name", 
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Expected", 
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle" => "Amount Expected", 
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle"    => "Received",
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle"    => "Completed",
+    					"sType"		=> "numeric",
+    				),
+    			),
+            ),
+            //$reportArray['expected'],
+		    'introducer' => array(
+		        "aaData" => $reportArray['introducer'],
+            	"bDestroy" => true,
+            	"bPaginate" => false,
+            	"bProcessing" => true,
+    			"aoColumnDefs" => array(
+    				array(
+    					"iDataSort" => 2,
+    					"asSorting" => array("asc"),
+    					"aTargets" => array(0),
+    				),
+    			),
+    			"aoColumns" => array(
+    				array(
+    					"sTitle" => "Introducer",
+    					"sType"		=> "string",
+    				),
+    				array(
+    					"sTitle" => "Unique Payers", 
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle" => "Total Value", 
+    					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle" => "Average Payment", 
+    					"sType"		=> "numeric",
+    				),
+    			),
+            ),
+
+            //$reportArray['introducer'],
+		    
+		    
+		    
+		    
+		));
+	}
+	
+	
+	
+	public function action_monthly_payment($center=null)
+	{
+    	
+        $startDate = null;
+    	$endDate = null;
+    	
+    	$monthUrl = "/reports/get_monthly_payment";
+    	
+    	$monthUrl .= (is_null($center)) ? "/GAB" : "/".$center;
+    	
+    	$month = $this->param('month');
+    	if (!is_null($month))
+    	{
+    	    $monthUrl .= "/".$month;
+        	$monthSplit = explode('-', $month);
+        	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
+        	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
+    	}
+    	
+    	
+	   // $reportArray = Controller_Reports::generate_monthly_payment_report($center, "2013-03-01", "2013-04-01");
+	    
+	    
+	    
+	    $this->template->title = 'Reports &raquo; Monthly Payments';
+		$this->template->content = View::forge('reports/month_payments', array(
+    	    'report_url' => $monthUrl.".json",
+		    'reports' => $reportArray['reports'],
+		    'payments' => $reportArray['clients'],
+		    'expected' => $reportArray['expected'],
+		    'introducer' => $reportArray['introducer'],
+		));	
+
+	    
+	}
+	
+	/* ****************************
+	 * End Monthly Payment Report *
+	 ******************************/
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -215,8 +834,6 @@ class Controller_Reports extends Controller_BaseHybrid
         	$monthSplit = explode('-', $month);
         	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
         	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
-        	
-        	
     	}
     	
 	
@@ -317,7 +934,14 @@ class Controller_Reports extends Controller_BaseHybrid
 	    $staff = Model_Staff::query()->where( 'active', 1)->where('department_id', 1);
 	    if (!is_null($center))
 	    {
-    	    $staff->where('center_id', $call_center->id);
+	        if ($center == 'INTERNAL')
+	        {
+    	        $staff->where('center_id', 'IN', array(1,2));
+	        }
+	        else
+	        {
+    	        $staff->where('center_id', $call_center->id);
+    	    }
 	    }
 	    $totalStaff = $staff->count();
 	    $staff = $staff->get();
@@ -369,7 +993,7 @@ class Controller_Reports extends Controller_BaseHybrid
                           LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
                           LEFT JOIN LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                           WHERE DR.user_login IN (" . $inList . ")
-                              AND DR.short_code IN ('GAB','GBS')
+                              AND DR.short_code IN ('GAB','GBS', '1TICK', '1TICK-GBS')
                               AND TCR.[Description] <> 'Referred'
                               AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
                               AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
@@ -391,7 +1015,7 @@ class Controller_Reports extends Controller_BaseHybrid
         			      	SELECT Top (1)
         			      		ResponseVal
         			      	FROM
-        			      		Debtsolv.dbo.Client_CustomQuestionResponses
+        			      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
         			      	WHERE
         			      		QuestionID = 10007
         			      		AND ClientID = D_CLD.Client_ID
@@ -421,7 +1045,7 @@ class Controller_Reports extends Controller_BaseHybrid
                           LEFT JOIN Debtsolv.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
-                              AND D_R.short_code IN ('GAB','GBS')
+                              AND D_R.short_code IN ('GAB','GBS', '1TICK', '1TICK-GBS')
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . $endDate . "'";
     	
@@ -460,53 +1084,70 @@ class Controller_Reports extends Controller_BaseHybrid
     	$reportArray = array();
     	foreach ($reportResults AS $result)
     	{
-    	    if ( isset($reportArray[$result['user_login']]) )
+    	
+    	
+    	    if ( ($result['Description'] == "Lead Completed" AND $result['DI'] < 10) OR (string)$result['ProductType']=='2' )
     	    {
-        	    $reportArray[$result['user_login']]['referrals']++;
-        	    $reportArray[$result['user_login']]['totalDI'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['totalDI'] + $result['DI'] : 0;
-        	    $reportArray[$result['user_login']]['packOuts'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['packOuts']+1 : $reportArray[$result['user_login']]['packOuts'];
-    	    }
-    	    else
-    	    {
-                $singleResult = array(
-                    'referrals' => 1,
-                    'totalDI' => ($result['Description'] == "Lead Completed") ? $result['DI'] : 0,
-                    'packOuts' => ($result['Description'] == "Lead Completed") ? 1 : 0,
-                );
+        	    // It's a PPI
+        	    
+            } else {
+        	
+        	    if ( isset($reportArray[$result['user_login']]) )
+        	    {
+            	    $reportArray[$result['user_login']]['referrals']++;
+            	    $reportArray[$result['user_login']]['totalDI'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['totalDI'] + $result['DI'] : 0;
+            	    $reportArray[$result['user_login']]['packOuts'] = ($result['Description'] == "Lead Completed") ? $reportArray[$result['user_login']]['packOuts']+1 : $reportArray[$result['user_login']]['packOuts'];
+        	    }
+        	    else
+        	    {
+                    $singleResult = array(
+                        'referrals' => 1,
+                        'totalDI' => ($result['Description'] == "Lead Completed") ? $result['DI'] : 0,
+                        'packOuts' => ($result['Description'] == "Lead Completed") ? 1 : 0,
+                    );
+                    
+                    $reportArray[$result['user_login']] = $singleResult;
+        	    }
+        	    
+        	    
+        	    $pdtype = "";
+    						  
+                switch ((string)$result['ProductType']) {
                 
-                $reportArray[$result['user_login']] = $singleResult;
-    	    }
+                  CASE '0':
+                      $pdtype = "DR";
+                      break;
+                  CASE '1':
+                      $pdtype = "DMPLUS";
+                      break;
+                  CASE '2':
+                      $pdtype = "PPI";
+                      break;
+                  CASE '3':
+                      $pdtype = "DRPLUS";
+                      break;
+                  CASE '':
+                      $pdtype = "";
+                      break;
+                 }
+        	    
+    
+        	    
     	    
-    	    
-    	    $pdtype = "";
-						  
-            switch ((string)$result['ProductType']) {
+        	    
+        	    $reportArray[$result['user_login']]['allReferrals'][] = array(
+                    'Name'        => $result['Name'],
+                    'leadID'      => $result['leadpool_id'],
+                    'LeadName'    => 'Leadpool Name',
+                    'Result'      => $result['Description'],
+                    'DI'          => ((int)$result['DI'] < 10) ? "" : "£".number_format((float)$result['DI'], 2),
+                    'Product'     => $pdtype,
+                    'referred'    => date("d/m/Y", strtotime($result['referral_date'])),
+                    'lastContact' => (strlen($result['Last Contact Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Last Contact Date'])),
+                    'callBack'    => (strlen($result['Call Back Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Call Back Date'])),
+                );
             
-              CASE '0':
-                  $pdtype = "DR";
-                  break;
-              CASE '1':
-                  $pdtype = "DMPLUS";
-                  break;
-              CASE '2':
-                  $pdtype = "PPI";
-                  break;
-              CASE '':
-                  $pdtype = "";
-                  break;
-             }
-    	    
-    	    $reportArray[$result['user_login']]['allReferrals'][] = array(
-                'Name'        => $result['Name'],
-                'leadID'      => $result['leadpool_id'],
-                'LeadName'    => 'Leadpool Name',
-                'Result'      => $result['Description'],
-                'DI'          => ((int)$result['DI'] < 10) ? "" : "£".number_format((float)$result['DI'], 2),
-                'Product'     => $pdtype,
-                'referred'    => date("d/m/Y", strtotime($result['referral_date'])),
-                'lastContact' => (strlen($result['Last Contact Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Last Contact Date'])),
-                'callBack'    => (strlen($result['Call Back Date']) < 4) ? '' : date("d/m/Y", strtotime($result['Call Back Date'])),
-            );
+            }
 
     	}
     	
@@ -570,7 +1211,10 @@ class Controller_Reports extends Controller_BaseHybrid
     	);
     	    	
 	}
-	
+
+
+
+
 	public function get_get_telesales_report($center=null)
 	{
 	    
@@ -1500,15 +2144,23 @@ class Controller_Reports extends Controller_BaseHybrid
 				list($driver, $user_id) = Auth::get_user_id();
 				$this_user = Model_User::find($user_id);
 				
-				$call_center = Model_Call_Center::find($this_user->call_center_id);
+    			// ## START - Pull an array of call centers this user can access
+    			$call_center_array = array();
+    			$sall_call_centers = Model_User_Center::query()->where('user', $user_id)->get();
+    			foreach ($sall_call_centers AS $acc)
+    			{
+    				$call_center_check = Model_Call_Center::find($acc->center);
+    				$call_center_array[] = $call_center_check->shortcode;
+    			}
+    			// ## END - Pull an array of call centers this user can access
 				
-				if (is_null($call_center->shortcode)) {
+				if (count($call_center_array) < 1) {
 					return(array(
 		            	'status' => 'FAIL',
 		            	'message' => 'You do not have access to the disposition report.',
 		            ));
 				} else {
-					$center = $call_center->shortcode;
+					$center = $call_center_array;
 				}				
 			}
 			
@@ -1539,9 +2191,29 @@ class Controller_Reports extends Controller_BaseHybrid
 				
 				$pack_in_duration = "(D_CLD.DatePackReceived >= CONVERT(datetime, '". $start_date ."', 105) AND D_CLD.DatePackReceived <= CONVERT(datetime, '". $end_date ."', 105)) ";
 				
+				if (is_array($center))
+				{
+    				// Multiple call centers allowed
+    				
+    				$flatList = "";
+    				$total = count($center);
+    				$i=1;
+    				foreach ($center AS $sCenter)
+    				{
+        				$flatList .= $sCenter;
+        				$flatList .= ($i < $total) ? "', '" : "";
+        				$i++;
+    				}
+    				
+    				
+    				$call_center_choice = "AND DI_REF.short_code IN ('".$flatList."')";
+				}
+				else
+				{
+    				$call_center_choice = (!is_null($center)) ? "AND DI_REF.short_code = '".$center."'" : "";
+				}
 				
 				
-				$call_center_choice = (!is_null($center)) ? "AND DI_REF.short_code = '".$center."'" : "";
 				
 				$results1 = DB::query("SELECT CLD.ClientID
 				  ,CLD.LeadRef AS 'Dialler Lead ID'
@@ -1846,6 +2518,9 @@ class Controller_Reports extends Controller_BaseHybrid
 						      CASE '2':
 						          $pdtype = "PPI";
 						          break;
+						      CASE '3':
+						          $pdtype = "DRPLUS";
+						          break;
 						      CASE '':
 						          $pdtype = "";
 						          break;
@@ -1892,6 +2567,11 @@ class Controller_Reports extends Controller_BaseHybrid
 						          break;
 						      CASE '2':
 						          $pdtype = "PPI";
+						          break;
+						      CASE '3':
+						          $pdtype = "DRPLUS";
+						          $totals['dr_pack_outs']['count']++;
+						          $totals['dr_pack_outs']['value']=$totals['dr_pack_outs']['value']+$result['DI'];
 						          break;
 						      DEFAULT:
 						          $pdtype = "";
@@ -2324,6 +3004,9 @@ class Controller_Reports extends Controller_BaseHybrid
     				      CASE '2':
     				          $pdtype = "PPI";
     				          break;
+    				      CASE '3':
+    				          $pdtype = "DRPLUS";
+    				          break;
     				      CASE '':
     				          $pdtype = "";
     				          break;
@@ -2367,6 +3050,9 @@ class Controller_Reports extends Controller_BaseHybrid
         				          break;
         				      CASE '2':
         				          $pdtype = "PPI";
+        				          break;
+        				      CASE '3':
+        				          $pdtype = "DRPLUS";
         				          break;
         				      CASE '':
         				          $pdtype = "";

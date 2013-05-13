@@ -71,7 +71,7 @@
 		// Private functions
 		function addText(text)
 		{
-			var fontSize = ((24/100)*(radius+lineWidth))*2;
+			var fontSize = ((21/100)*(radius+lineWidth))*2;
 			context.fillStyle = settings['text'];
 			context.font = 'bold '+fontSize+'px verdana';
 	        context.textAlign = "center";
@@ -79,7 +79,7 @@
 			context.fillText(settings['specialText'], x, y-(y/5.5));
 			
 			
-			var fontSize = ((24/150)*(radius+lineWidth))*2;
+			var fontSize = ((21/150)*(radius+lineWidth))*2;
 			context.fillStyle = settings['inner'];
 			context.font = 'bold '+fontSize+'px verdana';
 	        context.textAlign = "center";

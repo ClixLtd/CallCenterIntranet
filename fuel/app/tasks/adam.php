@@ -4,7 +4,7 @@
 	
 	class Adam
 	{
-		
+
 		
 		public static $casual_introductions = array(
 			'Hiya. ',
@@ -45,9 +45,52 @@
 			"What shoud I do this evening? Suggestions in an e-mail please! Good night!",
 		);
 		
+		public function testMail()
+		{
+    		$email = \Email::forge();
+			
+			$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+			
+			$email->to(array(
+			    's.skinner@expertmoneysolutions.co.uk' => 'Simon Skinner',
+			));
+			
+	
+			$email->priority(\Email::P_HIGH);
+			
+			$email->subject('Recent No Contacts');
+			
+			$email->html_body("Testing, Oh Yeah");
+									
+			$email->send();
+
+
+			Adam::submit_ticket("Incorrect DI Value", "I have found a client in Debtsolv with a DI value of £0. The Client ID is ");
+
+		}
+		
 		public function run()
 		{
-			echo "Test";
+		
+		    for ($i = 100; $i <= 299; $i++) {
+    		    $todayPayments = \DB::query("INSERT INTO `asterisk`.`vicidial_conferences` (`conf_exten`, `server_ip`, `extension`, `leave_3way`, `leave_3way_datetime`) VALUES ('8600".$i."', '10.1.0.101', NULL, '0', NULL)")->execute('gabdialler');
+			}
+		
+		    for ($i = 300; $i <= 499; $i++) {
+    		    $todayPayments = \DB::query("INSERT INTO `asterisk`.`vicidial_conferences` (`conf_exten`, `server_ip`, `extension`, `leave_3way`, `leave_3way_datetime`) VALUES ('8600".$i."', '192.168.5.2', NULL, '0', NULL)")->execute('gabdialler');
+			}
+		
+		
+		    for ($i = 500; $i <= 699; $i++) {
+    		    $todayPayments = \DB::query("INSERT INTO `asterisk`.`vicidial_conferences` (`conf_exten`, `server_ip`, `extension`, `leave_3way`, `leave_3way_datetime`) VALUES ('8600".$i."', '10.1.0.131', NULL, '0', NULL)")->execute('gabdialler');
+			}
+			
+			
+		    for ($i = 700; $i <= 899; $i++) {
+    		    $todayPayments = \DB::query("INSERT INTO `asterisk`.`vicidial_conferences` (`conf_exten`, `server_ip`, `extension`, `leave_3way`, `leave_3way_datetime`) VALUES ('8600".$i."', '10.1.0.132', NULL, '0', NULL)")->execute('gabdialler');
+			}
+			
+			
 		}
 		
 		
@@ -57,11 +100,11 @@
     		date_default_timezone_set('Europe/London');
     		
     		
-    		$submitUrl = "http://www.gregsonandbrooke.co.uk/support/open.php";
+    		$submitUrl = "http://support.expertmoneysolutions.co.uk/open.php";
     		
     		$openTicket = array(
     		  'name'      => 'A.D.A.M.',
-    		  'email'     => 'a.d.a.m@gregsonandbrooke.co.uk',
+    		  'email'     => 'a.d.a.m@expertmoneysolutions.co.uk',
     		  'phone'     => '01204860900',
     		  'phone_ext' => '4000',
     		  'topicId'   => $department,
@@ -431,7 +474,7 @@
 				
 				
 				
-				// gipltd
+				/* gipltd
 				
 				$minute_message .= @Adam::gipltd_guess_dial_rate('UKCam', TRUE, "gipltd")."\n";
 				$minute_message .= @Adam::gipltd_guess_dial_rate('Training', TRUE, "gipltd")."\n";
@@ -439,7 +482,7 @@
 				$minute_message .= @Adam::gipltd_guess_dial_rate('Inbound', TRUE, "gipltd")."\n";
 				$minute_message .= @Adam::gipltd_guess_dial_rate('clixtest', TRUE, "gipltd")."\n";
 				
-				
+				*/
 				
 				
 				// Monitor the External diallers
@@ -476,13 +519,13 @@
 			//@Adam::log_minute_stats('UK', TRUE, "rj5");
 				
 			
-			// gipltd
+			/* gipltd
 			@Adam::gipltd_log_minute_stats('UKCam');
 			@Adam::gipltd_log_minute_stats('Training');
 			@Adam::gipltd_log_minute_stats('INSURANC');
 			@Adam::gipltd_log_minute_stats('Inbound');
 			@Adam::gipltd_log_minute_stats('clixtest');
-			
+			*/
 			
 		}
 		
@@ -798,15 +841,13 @@ WHERE
 				
 				$email = \Email::forge();
 			
-				$email->from('noreply@gregsonandbrooke.co.uk', 'Gregson and Brooke');
+				$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
 				
 				$email->to(array(
-					'l.davenport@gregsonandbrooke.co.uk'  => 'Laura Davenport',
-					'r.knowles@gregsonandbrooke.co.uk'    => 'Richard Knowles',
-				));
+					'l.davenport@expertmoneysolutions.co.uk'  => 'Laura Davenport',				));
 				
 				$email->bcc(array(
-					'support@gregsonandbrooke.co.uk'      => 'Gregson and Brooke Support',
+					'support@expertmoneysolutions.co.uk'      => 'EMS Support',
 				));
 				
 				$email->priority(\Email::P_HIGH);
@@ -871,12 +912,12 @@ Gregson and Brooke.');
 					
 						$email = \Email::forge();
 			
-						$email->from('noreply@gregsonandbrooke.co.uk', 'Gregson and Brooke');
+						$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
 						
 						$email->to($emails);
 						
 						$email->bcc(array(
-							'support@gregsonandbrooke.co.uk'      => 'Gregson and Brooke Support',
+							'support@expertmoneysolutions.co.uk'      => 'EMS Support',
 						));
 				
 						$email->priority(\Email::P_HIGH);
@@ -1404,9 +1445,41 @@ Gregson and Brooke.');
                 		}
                 		
                 		
-                		$result = @\DB::query("INSERT INTO Dialler.dbo.client_dates (ClientID, FirstPaymentDate, Office) VALUES (".$clientID.", '".$firstPaymentDate."', '".$office."')")->execute('debtsolv');
+                		
+                		
+                		// Send an e-mail to the group announcing the first payment!
+                		
+                		
+                		$email = \Email::forge();
+			
+        				$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+        				
+        				$email->to(array(
+        					'firstpayments@expertmoneysolutions.co.uk'  => 'First Payments List',
+        				));
+        				
+        				
+        				$email->priority(\Email::P_HIGH);
+        				
+        				$email->subject('New First Payment');
+        				
+        				$email->html_body(\View::forge('emails/firstpayment/first-payment', array(
+        					'email_data' => array(
+        					   'clientID' => $clientID,
+        					   'di' => "£" . number_format(($di/100),2),
+        					   'office' => $office,
+        					),
+        				)));
+        				
+        				$email->send();
+        				
+                		// Print to console
                 		
                 		print "Client ID " . $clientID . " first DI of £" . number_format(($di/100),2) . " paid on " . $firstPaymentDate . "\n";
+
+                		$result = @\DB::query("INSERT INTO Dialler.dbo.client_dates (ClientID, FirstPaymentDate, Office) VALUES (".$clientID.", '".$firstPaymentDate."', '".$office."')")->execute('debtsolv');
+                		
+                		
             		}
             		
         		}

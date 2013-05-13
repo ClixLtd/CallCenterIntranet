@@ -45,7 +45,7 @@
 					For further details on these transfers please view the <a href="https://intranet.gregsonandbrooke.co.uk/reports/disposition">Disposition Report</a>.<br /><br />
 					
 					Regards<br />
-					Gregson and Brooke
+					Expert Money Solutions
 					
 				</TD>
 			</TR>

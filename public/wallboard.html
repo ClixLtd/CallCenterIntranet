@@ -2,10 +2,10 @@
 	<HEAD>
 		<TITLE>Wallboard</TITLE>
 		
-		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jquery-1.5.1.min.js"></script>
-		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jqtouch.js"></script>
-		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jqtouch-jquery.min.js"></script>
-		<script src="https://intranet.gregsonandbrooke.co.uk/assets/js/jquery/jquery.circleval.js"></script>
+		<script src="/assets/js/jquery/jquery-1.5.1.min.js"></script>
+		<script src="/assets/js/jquery/jqtouch.js"></script>
+		<script src="/assets/js/jquery/jqtouch-jquery.min.js"></script>
+		<script src="/assets/js/jquery/jquery.circleval.js"></script>
 		<script>
 		
 			var savedStats = {};
@@ -31,38 +31,104 @@
 					'outer' : '#1b6b0d',
 					'text'	: '#1b6b0d',
 				},
-				'RJ5' : {
-					'inner' : '#c3e5b0',
-					'outer' : '#1b6b0d',
-					'text'	: '#1b6b0d',
+				'HQPP' : {
+					'inner' : '#a2cde9',
+					'outer' : '#426097',
+					'text'	: '#426097',
 				},
-				'SIXELEVEN' : {
-					'inner' : '#c3e5b0',
-					'outer' : '#1b6b0d',
-					'text'	: '#1b6b0d',
-				},
-				'SO' : {
-					'inner' : '#c3e5b0',
-					'outer' : '#1b6b0d',
-					'text'	: '#1b6b0d',
-				},
-				'SMS' : {
+				'RESOLVEPP' : {
 					'inner' : '#eeae5b',
 					'outer' : '#c28212',
 					'text'	: '#c28212',
 				},
-			};
+				'PCCPP' : {
+					'inner' : '#c3e5b0',
+					'outer' : '#1b6b0d',
+					'text'	: '#1b6b0d',
+				},
+				'HQP' : {
+					'inner' : '#a2cde9',
+					'outer' : '#426097',
+					'text'	: '#426097',
+				},
+				'RESOLVEP' : {
+					'inner' : '#eeae5b',
+					'outer' : '#c28212',
+					'text'	: '#c28212',
+				},
+				'PCCP' : {
+					'inner' : '#c3e5b0',
+					'outer' : '#1b6b0d',
+					'text'	: '#1b6b0d',
+				},
+				
+				
+				'COMBINED' : {
+					'inner' : '#AAAAAA',
+					'outer' : '#555555',
+					'text'	: '#555555',
+				},
+				'COMBINEDPP' : {
+					'inner' : '#AAAAAA',
+					'outer' : '#555555',
+					'text'	: '#555555',
+				},
+				
+				
+				'HQweek' : {
+					'inner' : '#a2cde9',
+					'outer' : '#426097',
+					'text'	: '#426097',
+				},
+				'RESOLVEweek' : {
+					'inner' : '#eeae5b',
+					'outer' : '#c28212',
+					'text'	: '#c28212',
+				},
+				'PCCweek' : {
+					'inner' : '#c3e5b0',
+					'outer' : '#1b6b0d',
+					'text'	: '#1b6b0d',
+				},
+				'HQmonth' : {
+					'inner' : '#a2cde9',
+					'outer' : '#426097',
+					'text'	: '#426097',
+				},
+				'RESOLVEmonth' : {
+					'inner' : '#eeae5b',
+					'outer' : '#c28212',
+					'text'	: '#c28212',
+				},
+				'PCCmonth' : {
+					'inner' : '#c3e5b0',
+					'outer' : '#1b6b0d',
+					'text'	: '#1b6b0d',
+				},
 
+
+			};
 			$.jQTouch({
 			    icon: 'jqtouch.png',
 			    statusBar: 'black-translucent',
 			    preloadImages: []
 			});
-			
 			function updateJson()
 			{
 			
-
+    			$('.circleValue').click(function() {
+    			    
+    			    // Get the required shortcode from the clicked circle
+        			var shortcode = $(this).attr('id');
+        			
+        			// Check to see if the element exists
+    			    if ($('#extra'+shortcode).length != 0 && $('#extra'+shortcode).is(":hidden")) {
+        			    $('.extraStatHolder').hide();
+        			    $('#extra'+shortcode).show();
+                    } else {
+                        $('.extraStatHolder').hide();
+                    }
+    			});
 			
 			
 				$.getJSON('https://intranet.gregsonandbrooke.co.uk/dialler/api/mobile_wallboard.json', function(data) {
@@ -95,39 +161,13 @@
 
 						
 					});
-					
-					
-					$('.totalVal').each(function() {
-						var shortcode = $(this).attr('id');
-						$(this).html('&pound;' + data[shortcode]['pack_out_value']);
-					});
-					
-					$('.averageDI').each(function() {
-						var shortcode = $(this).attr('id');
-						$(this).html('&pound;' + data[shortcode]['di']);
-					});
 										
-					
-					$('#weekreferrals').html(data['this_week']['referrals']);
-					$('#weekpackout').html(data['this_week']['pack_out']);
-					$('#weekvalue').html('&pound;' + data['this_week']['pack_out_value']);
-					
-					$('#thismonthreferrals').html(data['this_month']['referrals']);
-					$('#thismonthpackout').html(data['this_month']['pack_out']);
-					$('#thismonthvalue').html('&pound;' + data['this_month']['pack_out_value']);
-					
-					$('#lastmonthreferrals').html(data['last_month']['referrals']);
-					$('#lastmonthpackout').html(data['last_month']['pack_out']);
-					$('#lastmonthvalue').html('&pound;' + data['last_month']['pack_out_value']);
-					
-					
-					
 				});
 			}
 
 			$(document).ready(function(){
 				
-				// Detect swipes on the circle layer
+				/* Detect swipes on the circle layer
 		
 				$('#scrollArea').swipe(function(evt, data) {
 				
@@ -142,7 +182,7 @@
 				
                 });
 			
-								
+				*/			
 				
 				updateJson()
 				
@@ -177,10 +217,10 @@
 				text-align: center;
 				font-family: verdana;
 				font-weight: bold;
-				font-size: 18px;
+				font-size: 14px;
 				color: #777;
-				height: 40px;
-				line-height: 40px;
+				height: 25px;
+				line-height: 25px;
 				border-bottom: 1px #DDD solid;
 			}
 			
@@ -188,6 +228,18 @@
 			{
 				width: 320px;
 				overflow: hidden;
+			}
+			
+			.half
+			{
+    			width: 160px;
+			}
+			
+			.circleValueHalf
+			{
+    			height: 140px !important;
+				padding-top: 10px;
+				padding-bottom: 10px;
 			}
 			
 			.statHolder
@@ -291,6 +343,36 @@
 						line-height: 25px;
 						text-align: center;
 					}
+            
+            .extraStatHolder
+            {
+                background-color: #EFEFEF;
+                display: none;
+                width: 320px;
+            }
+            
+            .extraStatHolder#extraRESOLVE
+            {
+                border-top: 5px #eeae5b solid;
+            }
+            
+            .extraStatHolder#extraPCC
+            {
+                border-top: 5px #c3e5b0 solid;
+            }
+            
+            .extraStatHolder#extraHQ
+            {
+                border-top: 5px #a2cde9 solid;
+            }
+            
+                .extraStatHolder .thirdLeft,
+                .extraStatHolder .thirdRight,
+                .extraStatHolder .third
+                {
+                    border: 0px !important;
+                }
+            
 		</STYLE>
 		
 	</HEAD>
@@ -299,99 +381,78 @@
 		<div id="holder">
 			<div class="minihold">
 				<div class="minihold bluebg floatLeft third"></div>
-				<div class="minihold orangebg floatLeft third"></div>
 				<div class="minihold greenbg floatLeft third"></div>
-			</div>
-			<div class="title">
-				Gregson and Brooke
+				<div class="minihold orangebg floatLeft third"></div>
 			</div>
 			
 			<div id="scrollArea">
 				
 				<div class="statHolder">
-					<div class="statTitle thirdLeftStat" style="float: left;">INTERNAL</div>
-					<div class="statTitle thirdLeftStat" style="float: left;">HQ</div>
-					<div class="statTitle thirdRightStat" style="float: left;" id="PCC">PCC</div>
-					<div class="statTitle third" style="float: left;" id="RESOLVE">RESOLVE</div>
-					
-					<!-- Externals -->
-					<div class="statTitle thirdRightStat" style="float: left;" id="RJ5">RJ5</div>
-					<div class="statTitle thirdRightStat" style="float: left;" id="SIXELEVEN">SIXELEVEN</div>
-					<div class="statTitle thirdRightStat" style="float: left;" id="SO">SO</div>
+					<div class="statTitle thirdLeftStat" style="float: left;">Bolton</div>
+					<div class="statTitle third" style="float: left;">Digos</div>
+					<div class="statTitle thirdRightStat" style="float: left;">Burton</div>
 					
 					<br style="clear: both;" />
 				</div>
 				
 				<div class="statHolder">
-					<div class="circleValueBlue circleValue thirdLeft" style="float: left;" id="INTERNAL"></div>
 					<div class="circleValueBlue circleValue thirdLeft" style="float: left;" id="HQ"></div>
-					<div class="circleValueGreen circleValue thirdRight" style="float: left;" id="PCC"></div>
-					<div class="circleValueOrange circleValue third" style="float: left;" id="RESOLVE"></div>
-					
-					<!-- Externals -->
-					<div class="circleValueGreen circleValue thirdRight" style="float: left;" id="RJ5"></div>
-					<div class="circleValueGreen circleValue thirdRight" style="float: left;" id="SIXELEVEN"></div>
-					<div class="circleValueGreen circleValue thirdRight" style="float: left;" id="SO"></div>
+					<div class="circleValueGreen circleValue third" style="float: left;" id="PCC"></div>
+					<div class="circleValueOrange circleValue thirdRight" style="float: left;" id="RESOLVE"></div>
 					
 					<br style="clear: both;" />
+				
+    				<div id="extraHQ" class="extraStatHolder">
+    				    <div class="circleValueBlue circleValue half" style="float: left;" id="HQweek"></div>
+    				    <div class="circleValueGreen circleValue half" style="float: left;" id="HQmonth"></div>
+    				    <br style="clear: both;" />
+    				</div>
+				
+    				<div id="extraPCC" class="extraStatHolder">
+    				    <div class="circleValueBlue circleValue half" style="float: left;" id="PCCweek"></div>
+    				    <div class="circleValueGreen circleValue half" style="float: left;" id="PCCmonth"></div>
+    				    <br style="clear: both;" />
+    				</div>
+				
+    				<div id="extraRESOLVE" class="extraStatHolder">
+    				    <div class="circleValueBlue circleValue half" style="float: left;" id="RESOLVEweek"></div>
+    				    <div class="circleValueGreen circleValue half" style="float: left;" id="RESOLVEmonth"></div>
+    				    <br style="clear: both;" />
+    				</div>
+    				
 				</div>
-				<div class="statHolder">
-					<div class="stat thirdLeftStat totalVal" style="float: left;" id="INTERNAL">&pound;0.00</div>
-					<div class="stat thirdLeftStat totalVal" style="float: left;" id="HQ">&pound;0.00</div>
-					<div class="stat thirdRightStat totalVal" style="float: left;" id="PCC">&pound;0.00</div>
-					<div class="stat third totalVal" style="float: left;" id="RESOLVE">&pound;0.00</div>
-					
-					<!-- Externals -->
-					<div class="stat thirdRightStat totalVal" style="float: left;" id="RJ5">&pound;0.00</div>
-					<div class="stat thirdRightStat totalVal" style="float: left;" id="SIXELEVEN">&pound;0.00</div>
-					<div class="stat thirdRightStat totalVal" style="float: left;" id="SO">&pound;0.00</div>
-					
-					<br style="clear: both;" />
-				</div>
-				<div class="statHolder">
-					<div class="stat thirdLeftStat averageDI" style="float: left;" id="INTERNAL">&pound;0.00</div>
-					<div class="stat thirdLeftStat averageDI" style="float: left;" id="HQ">&pound;0.00</div>
-					<div class="stat thirdRightStat averageDI" style="float: left;" id="PCC">&pound;0.00</div>
-					<div class="stat third averageDI" style="float: left;" id="RESOLVE">&pound;0.00</div>
-					
-					<!-- Externals -->
-					<div class="stat thirdRightStat averageDI" style="float: left;" id="RJ5">&pound;0.00</div>
-					<div class="stat thirdRightStat averageDI" style="float: left;" id="SIXELEVEN">&pound;0.00</div>
-					<div class="stat thirdRightStat averageDI" style="float: left;" id="SO">&pound;0.00</div>
-					
-					<br style="clear: both;" />
+				
+				<div class="title">
+				Current Per Agent
 				</div>
 			
+				<div class="statHolder">
+					<div class="circleValueBlue circleValue thirdLeft" style="float: left;" id="HQP"></div>
+					<div class="circleValueGreen circleValue third" style="float: left;" id="PCCP"></div>
+					<div class="circleValueOrange circleValue thirdRight" style="float: left;" id="RESOLVEP"></div>
+					
+					<br style="clear: both;" />
+				</div>
+				
+				<div class="title">
+				Estimated Per Agent for day
+				</div>
+			
+				<div class="statHolder">
+					<div class="circleValueBlue circleValue thirdLeft" style="float: left;" id="HQPP"></div>
+					<div class="circleValueGreen circleValue third" style="float: left;" id="PCCPP"></div>
+					<div class="circleValueOrange circleValue thirdRight" style="float: left;" id="RESOLVEPP"></div>
+					
+					<br style="clear: both;" />
+				</div>
+						
 			</div>
 			
-			<div class="entry">
-				<div class="etitle">Week</div>
-				<div class="info">
-					<div class="referrals" id="weekreferrals">0</div>
-					<div class="pack_out" id="weekpackout">0</div>
-					<div class="value" id="weekvalue">&pound;0.00</div>
-				</div>
-			</div>
-			<div class="entry">
-				<div class="etitle">This Month</div>
-				<div class="info">
-					<div class="referrals" id="thismonthreferrals">0</div>
-					<div class="pack_out" id="thismonthpackout">0</div>
-					<div class="value" id="thismonthvalue">&pound;0.00</div>
-				</div>
-			</div>
-			<div class="entry">
-				<div class="etitle">Last Month</div>
-				<div class="info">
-					<div class="referrals" id="lastmonthreferrals">0</div>
-					<div class="pack_out" id="lastmonthpackout">0</div>
-					<div class="value" id="lastmonthvalue">&pound;0.00</div>
-				</div>
-			</div>
+						
 			<div class="minihold">
 				<div class="minihold bluebg floatLeft third"></div>
-				<div class="minihold orangebg floatLeft third"></div>
 				<div class="minihold greenbg floatLeft third"></div>
+				<div class="minihold orangebg floatLeft third"></div>
 			</div>
 		</div>
 		

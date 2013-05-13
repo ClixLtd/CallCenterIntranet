@@ -20,6 +20,17 @@ return array(
 		        'persistent'     => false,
 		),
 	),
+	// GAB Databases
+	'gabdialler' => array(
+		'type'       => 'pdo',
+		'table_prefix' => '',
+		'connection'  => array(
+			'dsn'        => 'mysql:host=192.168.5.215;dbname=asterisk',
+			'username'   => 'cron',
+			'password'   => '1234',
+		),
+	),
+	/* GAB Databases
 	'gabdialler' => array(
 		'type'       => 'pdo',
 		'table_prefix' => '',
@@ -29,6 +40,7 @@ return array(
 			'password'   => '1234',
 		),
 	),
+	*/
 	'pccdialler' => array(
 		'type'       => 'pdo',
 		'table_prefix' => '',
