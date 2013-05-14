@@ -72,7 +72,7 @@ class Controller_Reports extends Controller_BaseHybrid
                 \Model_Call_Center::find($referral->introducer_id)->title,
                 $referral->dialler_list_id,
                 date("d/m/Y", strtotime($referral->referral_date)),
-                date("h:i", strtotime($referral->referral_date)),
+                date("H:i", strtotime($referral->referral_date)),
                 $questionCount,
                 $responseList,
             );
