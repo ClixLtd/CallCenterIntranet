@@ -88,6 +88,7 @@ return array(
 				6 => '007_alter_crm_client_details_add_created',
 				7 => '008_create_crm_client_partner_details',
 				8 => '009_alter_crm_client_partner_detailsautoid',
+				9 => '010_create_crm_post_codes_list',
 			),
 			'sms' => 
 			array(
