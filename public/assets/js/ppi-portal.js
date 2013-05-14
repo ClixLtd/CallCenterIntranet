@@ -32,7 +32,7 @@ $(function () {
 		else
 		{
 			// Make sure we haven't shown the continue button.
-			$("#ppiChecker").animate({bottom: '-60'}, 300);
+			//$("#ppiChecker").animate({bottom: '-60'}, 300);
 		}
 		
 		

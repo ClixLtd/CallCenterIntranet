@@ -50,7 +50,8 @@ class Controller_Reports extends Controller_BaseHybrid
             foreach ($responses as $singleResponse)
             {
                 $responseList[$singleResponse->question_id] = array(
-                    $singleResponse->answer_id,
+                    Model_Survey_Question::find($singleResponse->question_id)->question,
+                    Model_Survey_Question_Answer::find($singleResponse->answer_id)->answer,
                     $singleResponse->extra,
                 );
             }
@@ -62,9 +63,12 @@ class Controller_Reports extends Controller_BaseHybrid
                 \Model_Call_Center::find($referral->introducer_id)->title,
                 $referral->dialler_list_id,
                 date("d/m/Y", strtotime($referral->referral_date)),
+                date("h:i", strtotime($referral->referral_date)),
                 $responseList,
             );
         }
+        
+        print_r($allReferrals);
         
         return $allReferrals;
         

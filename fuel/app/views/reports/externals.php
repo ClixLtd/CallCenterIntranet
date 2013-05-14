@@ -39,7 +39,8 @@
     				        <th>Agent Name</th>
     				        <th>Center</th>
     				        <th>List ID</th>
-    				        <th>Referral Date</th>
+    				        <th>Date</th>
+    				        <th>Time</th>
     				        <th>Status</th>
     				    </tr>
     				</thead>
@@ -53,6 +54,7 @@
     				        <td><?php echo $result[3]; ?></td>
     				        <td><?php echo $result[4]; ?></td>
     				        <td><?php echo $result[5]; ?></td>
+    				        <td><?php echo $result[6]; ?></td>
     				        <td>Status</td>
     				    </tr>
     				    <?php endforeach; ?>
