@@ -68,7 +68,7 @@ class Controller_Reports extends Controller_BaseHybrid
             );
         }
         
-        print_r($allReferrals);
+        //print_r($allReferrals);
         
         return $allReferrals;
         
