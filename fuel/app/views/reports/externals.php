@@ -41,6 +41,7 @@
     				        <th>List ID</th>
     				        <th>Date</th>
     				        <th>Time</th>
+    				        <th>Questions</th>
     				        <th>Status</th>
     				    </tr>
     				</thead>
@@ -55,6 +56,9 @@
     				        <td><?php echo $result[4]; ?></td>
     				        <td><?php echo $result[5]; ?></td>
     				        <td><?php echo $result[6]; ?></td>
+    				        <td><span title="<?php foreach($result[8] as $answer): ?>
+    				            <?php echo $answer[0]." : ".$answer[1]; ?><?php echo (strlen($answer[2]) > 1) ? " (".$answer[2].")" : ""; ?><br/>
+    				        <?php endforeach; ?>" rel="tooltip"><?php echo $result[7]; ?></span></td>
     				        <td>Status</td>
     				    </tr>
     				    <?php endforeach; ?>

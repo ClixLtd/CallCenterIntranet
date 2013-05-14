@@ -286,7 +286,7 @@ $(function () {
 	);
 
 	// jQuery Tipsy
-	$('[rel=tooltip], #main-nav span, .loader').tipsy({gravity:'s', fade:true}); // Tooltip Gravity Orientation: n | w | e | s
+	$('[rel=tooltip], #main-nav span, .loader').tipsy({html: true, gravity:$.fn.tipsy.autoNS, fade:true}); // Tooltip Gravity Orientation: n | w | e | s
 
 	// jQuery Facebox Modal
 	$('.open-modal').nyroModal();

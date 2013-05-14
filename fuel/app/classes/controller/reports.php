@@ -42,18 +42,27 @@ class Controller_Reports extends Controller_BaseHybrid
         
 
         $allReferrals = array();
+        
         foreach ($externalReferralResult as $referral)
         {
+            $questionCount = 0;
             $responses = \Model_Survey_Response::query()->where('reference', $referral->id)->get();
+            
             
             $responseList = array();
             foreach ($responses as $singleResponse)
             {
-                $responseList[$singleResponse->question_id] = array(
-                    Model_Survey_Question::find($singleResponse->question_id)->question,
-                    Model_Survey_Question_Answer::find($singleResponse->answer_id)->answer,
-                    $singleResponse->extra,
-                );
+            
+                if ($singleResponse->answer_id <> 0)
+                {
+                    $questionCount++;
+                    $responseList[$singleResponse->question_id] = array(
+                        Model_Survey_Question::find($singleResponse->question_id)->question,
+                        Model_Survey_Question_Answer::find($singleResponse->answer_id)->answer,
+                        $singleResponse->extra,
+                    );
+                }
+
             }
             
             $allReferrals[] = array(
@@ -64,6 +73,7 @@ class Controller_Reports extends Controller_BaseHybrid
                 $referral->dialler_list_id,
                 date("d/m/Y", strtotime($referral->referral_date)),
                 date("h:i", strtotime($referral->referral_date)),
+                $questionCount,
                 $responseList,
             );
         }
