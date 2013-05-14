@@ -40,7 +40,7 @@ class Controller_Reports extends Controller_BaseHybrid
         
         $externalReferralResult = $externalReferrals->get();
         
-        
+
         $allReferrals = array();
         foreach ($externalReferralResult as $referral)
         {
@@ -57,9 +57,11 @@ class Controller_Reports extends Controller_BaseHybrid
             
             $allReferrals[] = array(
                 $referral->id,
-                $referral->title." ".$externalReferrals->forename." ".$externalReferrals->surname,
+                trim(ucwords(trim($referral->title)." ".trim($referral->forename)." ".trim($referral->surname))),
                 $referral->introducer_agent_name,
+                \Model_Call_Center::find($referral->introducer_id)->title,
                 $referral->dialler_list_id,
+                date("d/m/Y", strtotime($referral->referral_date)),
                 $responseList,
             );
         }
@@ -71,9 +73,12 @@ class Controller_Reports extends Controller_BaseHybrid
     
     public function action_externals()
     {
-        $externalReport = Controller_Reports::generate_externals_report(array(17,16));
+        $externalReport = Controller_Reports::generate_externals_report(array(1,15,16,17,18));
         
-        print_r($externalReport);
+        $this->template->title = 'Reports &raquo; External Survey Report';
+		$this->template->content = View::forge('reports/externals', array(
+		    'results' => $externalReport,
+		));	
     }
     
     
