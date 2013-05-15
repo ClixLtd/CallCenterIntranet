@@ -87,7 +87,9 @@ class Controller_Reports extends Controller_BaseHybrid
     
     public function action_externals()
     {
-        $externalReport = Controller_Reports::generate_externals_report(array(1,15,16,17,18));
+        $externalReport = Controller_Reports::generate_externals_report(array(1,15,16,17,18), (strlen(Input::post('startdate', null)) > 2) ? substr(Input::post('startdate', null), 6,4)."-".substr(Input::post('startdate', null), 3,2)."-".substr(Input::post('startdate', null), 0,2) : null, (strlen(Input::post('enddate', null)) > 2) ? substr(Input::post('enddate', null), 6,4)."-".substr(Input::post('enddate', null), 3,2)."-".substr(Input::post('enddate', null), 0,2) : null);
+        
+        
         
         $this->template->title = 'Reports &raquo; External Survey Report';
 		$this->template->content = View::forge('reports/externals', array(

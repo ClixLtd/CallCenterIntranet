@@ -1,7 +1,8 @@
 <div style="float: right;">
+<form method="post">
 <input type="text" class="datepicker" name="startdate" id="startdate" rel="tooltip" title="Start Date" value="<?php echo (!is_null($start_date)) ? $start_date : "" ; ?>">
 <input type="text" class="datepicker" name="enddate" id="enddate" rel="tooltip" title="End Date" value="<?php echo (!is_null($end_date)) ? $end_date : "" ; ?>">
-<a href='#' class="button" id="dateRangeDisposition">View Date Range</a><br />
+<input type="submit" class="button" id="dateRangeExternals" value="View Date Range"><br />
 <?php if($view_all): ?>
 <select name="center" rel="tooltip" title="Call Center" class="cd-dropdown cd-select" id="center" >
 	<option value="-1">All Centers</option>
@@ -10,6 +11,7 @@
 	<?php endforeach; ?>
 </select>
 <?php endif; ?>
+</form>
 </div>
 
 <article class="full-block clearfix">
