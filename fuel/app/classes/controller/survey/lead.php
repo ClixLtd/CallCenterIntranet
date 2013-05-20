@@ -28,7 +28,14 @@ class Controller_Survey_Lead extends Controller_Template
     
     public function checkLeads()
     {
-        $startDate = strtotime('now -48 hours');
+    }
+    
+    
+    
+	public function action_index()
+	{
+	    
+	            $startDate = strtotime('now -48 hours');
 	    $endDate = strtotime('now -2 weeks');
 	    
 	    // Get a list of all responses for this date range
@@ -234,14 +241,7 @@ class Controller_Survey_Lead extends Controller_Template
 	    }
 
 
-    }
-    
-    
-    
-	public function action_index()
-	{
-	    
-	    Controller_Survey_Lead::checkLeads();
+
 	    
 		$this->template->title = 'Survey lead &raquo; Index';
 		$this->template->content = View::forge('survey/lead/index');
