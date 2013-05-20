@@ -70,6 +70,9 @@ return array(
 				61 => '065_create_survey_responses',
 				62 => '066_add_required_to_survey_questions',
 				63 => '067_add_survey_to_call_centers',
+				64 => '068_create_survey_lead_batches',
+				65 => '069_create_survey_lead_suppliers',
+				66 => '070_create_survey_lead_logs',
 			),
 		),
 		'module' => 
