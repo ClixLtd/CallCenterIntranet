@@ -148,11 +148,11 @@ class Controller_Survey_Lead extends Controller_Template
         	        'dob' => date('d-m-Y', strtotime($singleLead->date_of_birth)),
         	    );
         	    
-        	    $lead = new \Model_Survey_Lead_Dialler();
-        	    $lead->referral_id = (int)$lead;
-        	    $lead->dialler_id = (int)$insertID;
-        	    $lead->type = "PPI";
-        	    $lead->save();
+        	    $leadInsert = new \Model_Survey_Lead_Dialler();
+        	    $leadInsert->referral_id = (int)$lead;
+        	    $leadInsert->dialler_id = (int)$insertID;
+        	    $leadInsert->type = "PPI";
+        	    $leadInsert->save();
     	    
     	    }
     	    
@@ -227,11 +227,11 @@ class Controller_Survey_Lead extends Controller_Template
         	        'dob' => date('d-m-Y', strtotime($singleLead->date_of_birth)),
         	    );
         	    
-        	    $lead = new \Model_Survey_Lead_Dialler();
-        	    $lead->referral_id = (int)$lead;
-        	    $lead->dialler_id = (int)$insertID;
-        	    $lead->type = "DR";
-        	    $lead->save();
+        	    $leadInsert = new \Model_Survey_Lead_Dialler();
+        	    $leadInsert->referral_id = (int)$lead;
+        	    $leadInsert->dialler_id = (int)$insertID;
+        	    $leadInsert->type = "DR";
+        	    $leadInsert->save();
         	    
     	    }
     	    
