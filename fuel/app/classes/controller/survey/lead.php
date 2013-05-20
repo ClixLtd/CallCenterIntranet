@@ -28,15 +28,8 @@ class Controller_Survey_Lead extends Controller_Template
     
     public function checkLeads()
     {
-    }
-    
-    
-    
-	public function action_index()
-	{
-	    
-	            $startDate = strtotime('now -48 hours');
-	    $endDate = strtotime('now -2 weeks');
+        $startDate = strtotime('now -2 weeks');
+	    $endDate = strtotime('now -48 hours');
 	    
 	    // Get a list of all responses for this date range
 	    $externalReferrals = \DB::query('SELECT * FROM survey_responses WHERE created_at >= '.$startDate.' AND created_at <= '.$endDate.';')->execute();
@@ -241,7 +234,14 @@ class Controller_Survey_Lead extends Controller_Template
 	    }
 
 
-
+    }
+    
+    
+    
+	public function action_index()
+	{
+	    
+	    Controller_Survey_Lead::checkLeads();
 	    
 		$this->template->title = 'Survey lead &raquo; Index';
 		$this->template->content = View::forge('survey/lead/index');
