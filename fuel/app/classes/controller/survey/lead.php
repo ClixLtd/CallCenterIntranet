@@ -196,7 +196,7 @@ class Controller_Survey_Lead extends Controller_Template
     	    
     	    // Add leads directly to the dialler
     	    
-            list($insertID, $rowsChanged) = \DB::insert('vicidial_list')->set($ppiLeadInsert)->execute('gabdialler');
+            list($insertID, $rowsChanged) = \DB::insert('vicidial_list')->set($drLeadInsert)->execute('gabdialler');
             
             $drAllLeads[] = array(
                 'diallerid' => $insertID,
