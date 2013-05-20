@@ -73,6 +73,7 @@ return array(
 				64 => '068_create_survey_lead_batches',
 				65 => '069_create_survey_lead_suppliers',
 				66 => '070_create_survey_lead_logs',
+				67 => '071_create_survey_lead_diallers',
 			),
 		),
 		'module' => 
