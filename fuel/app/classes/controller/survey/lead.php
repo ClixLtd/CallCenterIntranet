@@ -162,7 +162,7 @@ class Controller_Survey_Lead extends Controller_Template
 	    foreach ($drLeads as $lead)
 	    {
 
-    	    $thisCheck = Model_Survey_Lead_Dialler::query()->where('referral_id', $lead)->get();
+    	    $thisCheck = Model_Survey_Lead_Dialler::query()->where('referral_id', $lead);
     	    
     	    if ($thisCheck->count() < 1)
     	    {
