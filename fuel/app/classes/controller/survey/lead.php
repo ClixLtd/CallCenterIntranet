@@ -83,9 +83,9 @@ class Controller_Survey_Lead extends Controller_Template
 	    
 	    foreach ($ppiLeads as $lead)
 	    {
-	        $thisCheck = Model_Survey_Lead_Dialler::query()->where('referral_id', $lead)->get();
+	        $thisCheck = Model_Survey_Lead_Dialler::query()->where('referral_id', $lead);
 
-    	    if (!isset($thisCheck->referral_id))
+    	    if ($thisCheck->count() < 1)
     	    {
         	    
         	    $singleLead = \Model_Crmreferral::find($lead);
@@ -164,7 +164,7 @@ class Controller_Survey_Lead extends Controller_Template
 
     	    $thisCheck = Model_Survey_Lead_Dialler::query()->where('referral_id', $lead)->get();
     	    
-    	    if (!isset($thisCheck->referral_id))
+    	    if ($thisCheck->count() < 1)
     	    {
         	    
         	    $singleLead = \Model_Crmreferral::find($lead);
