@@ -83,6 +83,8 @@ class Controller_Survey_Lead extends Controller_Template
 	    
 	    foreach ($ppiLeads as $lead)
 	    {
+	        print $lead;
+	    
 	        $thisCheck = Model_Survey_Lead_Dialler::query()->where('referral_id', $lead);
     	    
     	    $totalCheck = $thisCheck->count();
