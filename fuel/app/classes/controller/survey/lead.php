@@ -85,7 +85,11 @@ class Controller_Survey_Lead extends Controller_Template
 	    {
 	        $thisCheck = Model_Survey_Lead_Dialler::query()->where('referral_id', $lead);
     	    
-    	    if ($thisCheck->count() < 1)
+    	    $totalCheck = $thisCheck->count();
+    	    
+    	    print $totalCheck;
+    	    
+    	    if ($totalCheck < 1)
     	    {
         	    
         	    $singleLead = \Model_Crmreferral::find($lead);
@@ -164,7 +168,11 @@ class Controller_Survey_Lead extends Controller_Template
 
     	    $thisCheck = Model_Survey_Lead_Dialler::query()->where('referral_id', $lead);
     	    
-    	    if ($thisCheck->count() < 1)
+    	    $totalCheck = $thisCheck->count();
+    	    
+    	    print $totalCheck;
+    	    
+    	    if ($totalCheck < 1)
     	    {
         	    
         	    $singleLead = \Model_Crmreferral::find($lead);
