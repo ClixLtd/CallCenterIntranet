@@ -26,11 +26,10 @@ class Controller_Survey_Lead extends Controller_Template
     }
     
     
-	public function action_index()
-	{
-	    
-	    $startDate = strtotime('2013-05-10 00:00:00');
-	    $endDate = strtotime('2013-05-19 23:59:00');
+    public function checkLeads()
+    {
+        $startDate = strtotime('now -48 hours');
+	    $endDate = strtotime('now -2 weeks');
 	    
 	    // Get a list of all responses for this date range
 	    $externalReferrals = \DB::query('SELECT * FROM survey_responses WHERE created_at >= '.$startDate.' AND created_at <= '.$endDate.';')->execute();
@@ -78,9 +77,6 @@ class Controller_Survey_Lead extends Controller_Template
 	    // Create a CSV file for the lead type
 	    $ppiAllLeads = Array();
 	    
-	    print_r($ppiLeads);
-	    print_r($drLeads);
-	    
 	    foreach ($ppiLeads as $lead)
 	    {
 	        $thisCheck = Model_Survey_Lead_Dialler::query()->where('referral_id', $lead);
@@ -120,7 +116,7 @@ class Controller_Survey_Lead extends Controller_Template
                     'alt_phone'               => ((int)$singleLead->tel_mobile == 0) ? "" : (int)$singleLead->tel_mobile,
                     'email'                   => "",
                     'security_phrase'         => "",
-                    'comments'                => "!!! SURVEY LEAD !!! - PPI QUALIFIED",
+                    'comments'                => "!!! SURVEY LEAD !!! - PPI QUALIFIED - Survey Taken on : ".date("jS F Y",strtotime($singleLead->referral_date)),
                     'called_count'            => 0,
                     'last_local_call_time'    => "2009-01-01 00:00:00",
                     'rank'                    => 0,
@@ -199,7 +195,7 @@ class Controller_Survey_Lead extends Controller_Template
                     'alt_phone'               => ((int)$singleLead->tel_mobile == 0) ? "" : (int)$singleLead->tel_mobile,
                     'email'                   => "",
                     'security_phrase'         => "",
-                    'comments'                => "!!! SURVEY LEAD !!! - DR QUALIFIED",
+                    'comments'                => "!!! SURVEY LEAD !!! - DR QUALIFIED - Survey Taken on : ".date("jS F Y",strtotime($singleLead->referral_date)),
                     'called_count'            => 0,
                     'last_local_call_time'    => "2009-01-01 00:00:00",
                     'rank'                    => 0,
@@ -237,7 +233,15 @@ class Controller_Survey_Lead extends Controller_Template
     	    
 	    }
 
-            
+
+    }
+    
+    
+    
+	public function action_index()
+	{
+	    
+	    Controller_Survey_Lead::checkLeads();
 	    
 		$this->template->title = 'Survey lead &raquo; Index';
 		$this->template->content = View::forge('survey/lead/index');
