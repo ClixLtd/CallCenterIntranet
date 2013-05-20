@@ -85,7 +85,7 @@ class Controller_Survey_Lead extends Controller_Template
 	    {
 	        $thisCheck = Model_Survey_Lead_Dialler::query()->where('referral_id', $lead)->get();
 
-    	    if (count($thisCheck) < 1)
+    	    if (!isset($thisCheck->referral_id))
     	    {
         	    
         	    $singleLead = \Model_Crmreferral::find($lead);
@@ -164,7 +164,7 @@ class Controller_Survey_Lead extends Controller_Template
 
     	    $thisCheck = Model_Survey_Lead_Dialler::query()->where('referral_id', $lead)->get();
     	    
-    	    if (count($thisCheck) < 1)
+    	    if (!isset($thisCheck->referral_id))
     	    {
         	    
         	    $singleLead = \Model_Crmreferral::find($lead);
