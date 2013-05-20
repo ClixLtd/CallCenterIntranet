@@ -141,7 +141,12 @@ class Controller_Survey_Lead extends Controller_Template
     	        'email' => $singleLead->email,
     	        'dob' => date('d-m-Y', strtotime($singleLead->date_of_birth)),
     	    );
-
+    	    
+    	    $lead = new \Model_Survey_Lead_Dialler();
+    	    $lead->referral_id = $lead;
+    	    $lead->dialler_id = $insertID;
+    	    $lead->type = "PPI";
+    	    $lead->save();
     	    
 	    }
 	    
@@ -207,6 +212,13 @@ class Controller_Survey_Lead extends Controller_Template
     	        'email' => $singleLead->email,
     	        'dob' => date('d-m-Y', strtotime($singleLead->date_of_birth)),
     	    );
+    	    
+    	    $lead = new \Model_Survey_Lead_Dialler();
+    	    $lead->referral_id = $lead;
+    	    $lead->dialler_id = $insertID;
+    	    $lead->type = "DR";
+    	    $lead->save();
+    	    
 	    }
 
             
