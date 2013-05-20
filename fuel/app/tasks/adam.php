@@ -45,6 +45,14 @@
 			"What shoud I do this evening? Suggestions in an e-mail please! Good night!",
 		);
 		
+		
+		
+		public function checkLeads()
+		{
+    		\Controller_Survey_Lead::checkLeads();
+		}
+		
+		
 		public function testMail()
 		{
     		$email = \Email::forge();

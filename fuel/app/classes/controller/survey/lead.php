@@ -3,7 +3,7 @@
 class Controller_Survey_Lead extends Controller_Template
 {
     
-    public function checkAnswer($_question=null, $_required=null, $details=array())
+    public static function checkAnswer($_question=null, $_required=null, $details=array())
     {
         $required = (is_array($_required)) ? $_required : array($_required);
         
@@ -26,7 +26,7 @@ class Controller_Survey_Lead extends Controller_Template
     }
     
     
-    public function checkLeads()
+    public static function checkLeads()
     {
         $startDate = strtotime('now -2 weeks');
 	    $endDate = strtotime('now -48 hours');
