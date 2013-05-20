@@ -79,6 +79,7 @@ class Controller_Survey_Lead extends Controller_Template
 	    $ppiAllLeads = Array();
 	    
 	    print_r($ppiLeads);
+	    print_r($drLeads);
 	    
 	    foreach ($ppiLeads as $lead)
 	    {
@@ -143,8 +144,8 @@ class Controller_Survey_Lead extends Controller_Template
     	    );
     	    
     	    $lead = new \Model_Survey_Lead_Dialler();
-    	    $lead->referral_id = $lead;
-    	    $lead->dialler_id = $insertID;
+    	    $lead->referral_id = (int)$lead;
+    	    $lead->dialler_id = (int)$insertID;
     	    $lead->type = "PPI";
     	    $lead->save();
     	    
@@ -214,8 +215,8 @@ class Controller_Survey_Lead extends Controller_Template
     	    );
     	    
     	    $lead = new \Model_Survey_Lead_Dialler();
-    	    $lead->referral_id = $lead;
-    	    $lead->dialler_id = $insertID;
+    	    $lead->referral_id = (int)$lead;
+    	    $lead->dialler_id = (int)$insertID;
     	    $lead->type = "DR";
     	    $lead->save();
     	    
