@@ -544,6 +544,9 @@
 		
 		public function five_minute_tasks()
 		{
+		
+		
+		    \Controller_Survey_Lead::checkLeads();
 			
 			Adam::check_no_contacts();
 			
