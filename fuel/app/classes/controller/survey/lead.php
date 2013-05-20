@@ -61,7 +61,8 @@ class Controller_Survey_Lead extends Controller_Template
     	    {
         	    $drLeads[] = $referral;
     	    } 
-    	    else if (
+    	    
+    	    if (
     	           Controller_Survey_Lead::checkAnswer(15, 66, $referralDetails) AND 
     	           Controller_Survey_Lead::checkAnswer(16, 69, $referralDetails) AND
     	           !in_array($referral, $drLeads)
@@ -82,21 +83,6 @@ class Controller_Survey_Lead extends Controller_Template
 	    foreach ($ppiLeads as $lead)
 	    {
     	    $singleLead = \Model_Crmreferral::find($lead);
-    	    
-    	    $ppiAllLeads[] = array(
-    	        'forename' => $singleLead->forename,
-    	        'surname' => $singleLead->surname,
-    	        'address1' => $singleLead->street_and_number,
-    	        'address2' => $singleLead->area,
-    	        'address3' => $singleLead->district,
-    	        'town' => $singleLead->town,
-    	        'county' => $singleLead->county,
-    	        'postcode' => $singleLead->post_code,
-    	        'home' => $singleLead->tel_home,
-    	        'mobile' => $singleLead->tel_mobile,
-    	        'email' => $singleLead->email,
-    	        'dob' => date('d-m-Y', strtotime($singleLead->date_of_birth)),
-    	    );
     	    
     	    $ppiLeadInsert = array(
                 'lead_id'                 => "",
@@ -124,7 +110,7 @@ class Controller_Survey_Lead extends Controller_Template
                 'postal_code'             => $singleLead->post_code,
                 'country_code'            => "UK",
                 'gender'                  => "U",
-                'date_of_birth'           => "",
+                'date_of_birth'           => date('Y-m-d', strtotime($singleLead->date_of_birth)),
                 'alt_phone'               => ((int)$singleLead->tel_mobile == 0) ? "" : (int)$singleLead->tel_mobile,
                 'email'                   => "",
                 'security_phrase'         => "",
@@ -139,18 +125,9 @@ class Controller_Survey_Lead extends Controller_Template
     	    // Add leads directly to the dialler
     	    
             list($insertID, $rowsChanged) = \DB::insert('vicidial_list')->set($ppiLeadInsert)->execute('gabdialler');
-            
-            
-            print_r($ppiLeadInsert);
-    	    
-	    }
-	    
-	    $drAllLeads = Array();
-	    foreach ($drLeads as $lead)
-	    {
-    	    $singleLead = \Model_Crmreferral::find($lead);
-    	    
-    	    $drAllLeads[] = array(
+                	    
+    	    $ppiAllLeads[] = array(
+                'diallerid' => $insertID,
     	        'forename' => $singleLead->forename,
     	        'surname' => $singleLead->surname,
     	        'address1' => $singleLead->street_and_number,
@@ -164,8 +141,15 @@ class Controller_Survey_Lead extends Controller_Template
     	        'email' => $singleLead->email,
     	        'dob' => date('d-m-Y', strtotime($singleLead->date_of_birth)),
     	    );
-    	    	    
+
+    	    
+	    }
 	    
+	    $drAllLeads = Array();
+	    foreach ($drLeads as $lead)
+	    {
+    	    $singleLead = \Model_Crmreferral::find($lead);
+
     	    $drLeadInsert = array(
                 'lead_id'                 => "",
                 'entry_date'              => date("Y-m-d H:i:s",strtotime($singleLead->referral_date)),
@@ -192,7 +176,7 @@ class Controller_Survey_Lead extends Controller_Template
                 'postal_code'             => $singleLead->post_code,
                 'country_code'            => "UK",
                 'gender'                  => "U",
-                'date_of_birth'           => "",
+                'date_of_birth'           => date('Y-m-d', strtotime($singleLead->date_of_birth)),
                 'alt_phone'               => ((int)$singleLead->tel_mobile == 0) ? "" : (int)$singleLead->tel_mobile,
                 'email'                   => "",
                 'security_phrase'         => "",
@@ -207,6 +191,22 @@ class Controller_Survey_Lead extends Controller_Template
     	    // Add leads directly to the dialler
     	    
             list($insertID, $rowsChanged) = \DB::insert('vicidial_list')->set($ppiLeadInsert)->execute('gabdialler');
+            
+            $drAllLeads[] = array(
+                'diallerid' => $insertID,
+    	        'forename' => $singleLead->forename,
+    	        'surname' => $singleLead->surname,
+    	        'address1' => $singleLead->street_and_number,
+    	        'address2' => $singleLead->area,
+    	        'address3' => $singleLead->district,
+    	        'town' => $singleLead->town,
+    	        'county' => $singleLead->county,
+    	        'postcode' => $singleLead->post_code,
+    	        'home' => $singleLead->tel_home,
+    	        'mobile' => $singleLead->tel_mobile,
+    	        'email' => $singleLead->email,
+    	        'dob' => date('d-m-Y', strtotime($singleLead->date_of_birth)),
+    	    );
 	    }
 
             
