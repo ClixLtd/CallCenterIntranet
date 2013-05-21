@@ -65,6 +65,51 @@ class Controller_Reports extends Controller_BaseHybrid
 
             }
             
+            // Check if the lead has been referred
+            $thisCheck = Model_Survey_Lead_Dialler::query()->where('referral_id', $referral->id);
+            
+            if ($thisCheck->count() > 0)
+            {
+                $details = $thisCheck->get_one();
+                $status = $details->type;
+                
+                $goDetails = \Goautodial\Model_Vicidial_List::find($details->dialler_id);
+                
+                $completed = array('PPINON', 'SALE');
+                
+                $failed = array('PPICLM', 'DNC', 'DNCL', 'HUNGUP', 'TPS');
+                
+                if (in_array($goDetails->status, $completed))
+                {
+                    $statusMessage = "Success. This referral continued with the ".$status." package.";
+                    
+                    
+                }
+                else if (in_array($goDetails->status, $failed))
+                {
+                    $statusMessage = "Unfortunately this referral did not continue with the ".$status." package.";
+                    $status .= "no";
+                }
+                else
+                {
+                    $statusMessage = "Referral has qualified for ".$status.". This status will change when we have more information.";
+                }
+            }
+            else
+            {
+                if ( strtotime("now -48 hours") < strtotime($referral->referral_date) )
+                {
+                    $status = null;
+                    $statusMessage = "Referral has not yet been passed to the Consumer. Please wait, this will change.";
+                }
+                else
+                {
+                    $status = null;
+                    $statusMessage = "Referral has not yet qualified for any services. This status may change in the future.";
+                }
+            }
+            
+            
             $allReferrals[] = array(
                 $referral->id,
                 trim(ucwords(trim($referral->title)." ".trim($referral->forename)." ".trim($referral->surname))),
@@ -75,6 +120,8 @@ class Controller_Reports extends Controller_BaseHybrid
                 date("H:i", strtotime($referral->referral_date)),
                 $questionCount,
                 $responseList,
+                $status,
+                $statusMessage
             );
         }
         

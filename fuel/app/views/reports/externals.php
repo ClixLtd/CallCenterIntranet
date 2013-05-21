@@ -61,7 +61,19 @@
     				        <td><span title="<?php foreach($result[8] as $answer): ?>
     				            <?php echo $answer[0]." : ".$answer[1]; ?><?php echo (strlen($answer[2]) > 1) ? " (".$answer[2].")" : ""; ?><br/>
     				        <?php endforeach; ?>" rel="tooltip"><?php echo $result[7]; ?></span></td>
-    				        <td>Status</td>
+    				        <td>
+    				            <?php
+        				        if (!is_null($result[9]))
+        				        {
+            				        echo Asset::img('externals/'.strtolower($result[9]).'.png', array('rel' => 'tooltip', 'title'=>$result[10]));
+        				        }
+        				        else
+        				        {
+            				        echo Asset::img('externals/notyet.png', array('rel' => 'tooltip', 'title'=>$result[10]));
+        				        }
+        				        ?>
+        				        
+    				        </td>
     				    </tr>
     				    <?php endforeach; ?>
     				</tbody>
