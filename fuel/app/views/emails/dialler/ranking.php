@@ -15,9 +15,9 @@
 						<THEAD>
 							<TR style="background-color: #FFFFFF; border-bottom: #CCCCCC 1px solid; border-top: #CCCCCC 1px solid;">
 								<TH>Name</TH>
-								<TH>Referrals</TH>
-								<TH>Pack Outs</TH>
-								<TH>Points</TH>
+								<TH width="100">Referrals</TH>
+								<TH width="100">Pack Outs</TH>
+								<TH width="100">Points</TH>
 							</TR>
 						</THEAD>
 						
@@ -43,8 +43,9 @@
 						<THEAD>
 							<TR style="background-color: #FFFFFF; border-bottom: #CCCCCC 1px solid; border-top: #CCCCCC 1px solid;">
 								<TH>Name</TH>
-								<TH>Referrals</TH>
-								<TH>Pack Outs</TH>
+								<TH width="100">Referrals</TH>
+								<TH width="100">Pack Outs</TH>
+								<TH width="100">Points</TH>
 							</TR>
 						</THEAD>
 						
