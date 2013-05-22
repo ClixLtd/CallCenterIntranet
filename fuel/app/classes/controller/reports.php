@@ -134,13 +134,54 @@ class Controller_Reports extends Controller_BaseHybrid
     
     public function action_externals()
     {
-        $externalReport = Controller_Reports::generate_externals_report(array(1,15,16,17,18), (strlen(Input::post('startdate', null)) > 2) ? substr(Input::post('startdate', null), 6,4)."-".substr(Input::post('startdate', null), 3,2)."-".substr(Input::post('startdate', null), 0,2) : null, (strlen(Input::post('enddate', null)) > 2) ? substr(Input::post('enddate', null), 6,4)."-".substr(Input::post('enddate', null), 3,2)."-".substr(Input::post('enddate', null), 0,2) : null);
+    
+        $viewAll = (Auth::has_access('reports.all_centers')) ? true : false;
+        
+		list($driver, $user_id) = Auth::get_user_id();
+		$this_user = Model_User::find($user_id);
+		
+		// ## START - Pull an array of call centers this user can access
+		$call_center_array = array();
+		$call_center_ids = array();
+		$sall_call_centers = ($viewAll) ? Model_Call_Center::find('all') : Model_User_Center::query()->where('user', $user_id)->get();
+		foreach ($sall_call_centers AS $acc)
+		{
+		    $call_center_ids[] = ($viewAll) ? $acc->id : $acc->center;
+			$call_center_check = Model_Call_Center::find(($viewAll) ? $acc->id : $acc->center);
+			$call_center_array[$call_center_check->shortcode] = $call_center_check->title;
+		}
+		// ## END - Pull an array of call centers this user can access
+		
+		if (count($call_center_array) < 1) {
+			return(array(
+            	'status' => 'FAIL',
+            	'message' => 'You do not have access to this report.',
+            ));
+		} else {
+			$center = $call_center_array;
+		}
+		
+		$chosenCenter = Input::post('center', -1);
+		if ($chosenCenter <> -1 && strlen((string)$chosenCenter) > 1)
+		{
+    		$chosenDetails = Model_Call_Center::query()->where('shortcode', $chosenCenter)->get_one();
+    		$call_center_ids = array($chosenDetails->id);
+		}
+		
+		$startDate = Input::post('startdate', null);
+		$endDate = Input::post('enddate', null);
+
+        $externalReport = Controller_Reports::generate_externals_report($call_center_ids, (strlen($startDate) > 2) ? substr($startDate, 6,4)."-".substr($startDate, 3,2)."-".substr($startDate, 0,2) : null, (strlen($endDate) > 2) ? substr($endDate, 6,4)."-".substr($endDate, 3,2)."-".substr(Input::post('enddate', null), 0,2) : null);
         
         
         
         $this->template->title = 'Reports &raquo; External Survey Report';
 		$this->template->content = View::forge('reports/externals', array(
 		    'results' => $externalReport,
+		    'centers' => $call_center_array,
+		    'center' => $chosenCenter,
+		    'start_date' => $startDate,
+		    'end_date' => $endDate,
 		));	
     }
     
