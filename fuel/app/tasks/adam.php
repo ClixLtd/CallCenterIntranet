@@ -1560,7 +1560,13 @@ Gregson and Brooke.');
     		for ($i=0; $i<=($topStaffCount-1); $i++)
     		{
         		$thisStaff = \Model_Staff::find($staffList[$i]['staff_id']);
-        		$newArrangement['top'][] = $thisStaff->dialler_id;
+        		$newArrangement['top'][] = array(
+        		    'name' => $thisStaff->first_name." ".$thisStaff->last_name,
+        		    'dialler_id' => $thisStaff->dialler_id,
+        		    'referrals' => $staffList[$i]['referrals'],
+        		    'packouts' => $staffList[$i]['packouts'],
+        		    'points' => $staffList[$i]['points'],
+        		);
     		}
     		
     		
@@ -1568,7 +1574,14 @@ Gregson and Brooke.');
     		for ($i=$topStaffCount; $i<=count($staffList)-1; $i++)
     		{
         		$thisStaff = \Model_Staff::find($staffList[$i]['staff_id']);
-        		$newArrangement['bottom'][] = $thisStaff->dialler_id;
+        		$newArrangement['bottom'][] = array(
+        		    'name' => $thisStaff->first_name." ".$thisStaff->last_name,
+        		    'dialler_id' => $thisStaff->dialler_id,
+        		    'referrals' => $staffList[$i]['referrals'],
+        		    'packouts' => $staffList[$i]['packouts'],
+        		    'points' => $staffList[$i]['points'],
+        		);
+
     		}
     		
     		
