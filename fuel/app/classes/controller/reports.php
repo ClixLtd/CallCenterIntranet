@@ -338,6 +338,7 @@ ORDER BY
 	, D_LI.Name AS Introducer
 	, ISNULL(L_CLD.LeadRef2, 'NONE') AS Shortcode
 	, (SELECT SUM(CASE WHEN EstimatedBalance > 0 THEN EstimatedBalance ELSE AmountOwed END)/100 FROM ".$thisDB['DS'].".[dbo].[Finstat_Debt] WHERE ClientID = D_PA.ClientID) AS TotalOwed
+	, (SELECT Top (1) ResponseVal FROM Debtsolv.dbo.Client_CustomQuestionResponses WHERE QuestionID = 10007 AND ClientID = D_CLD.Client_ID) AS 'ProductType'
 FROM
 	".$thisDB['DS'].".dbo.Payment_Receipt AS D_PA
 LEFT JOIN
@@ -382,8 +383,7 @@ GROUP BY
     	    
     	        $paymentTotal = (isset($clientPayments[$payment['ClientID']]['AmountIn'])) ? $clientPayments[$payment['ClientID']]['AmountIn'] + $payment['AmountIn'] : $payment['AmountIn'];
     	        $paymentCount = (isset($clientPayments[$payment['ClientID']]['count'])) ? $clientPayments[$payment['ClientID']]['count'] + 1 : 1;
-    	        
-    	        
+
     	        
     	        
     	        $shortCodeChange = array(
@@ -442,6 +442,29 @@ GROUP BY
         	       'total' => (isset($clientPayments[$payment['ClientID']])) ? $introducerPayments[$introducerTitle]['total'] : $introducerPayments[$introducerTitle]['total'] + 1,
         	    );
 
+
+    	        
+    	        $pdtype = "";
+                
+                switch ((string)$payment['ProductType']) {
+                
+                  CASE '0':
+                      $pdtype = "DR";
+                      break;
+                  CASE '1':
+                      $pdtype = "DMPLUS";
+                      break;
+                  CASE '2':
+                      $pdtype = "PPI";
+                      break;
+                  CASE '3':
+                      $pdtype = "DRPLUS";
+                      break;
+                  CASE '':
+                      $pdtype = "";
+                      break;
+                }
+
         	    $clientPayments[] = array(
         	       $payment['ClientID'],
         	       $payment['Name'],
@@ -449,7 +472,7 @@ GROUP BY
         	       $paymentTotal,
         	       $payment['NormalExpectedPayment'],
         	       $payment['TotalOwed'],
-        	       //$paymentCount,
+        	       $pdtype,
         	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
         	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
         	    );
@@ -593,6 +616,10 @@ GROUP BY
     				array(
     					"sTitle"    => "Remaining Debt",
     					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle"    => "Product",
+    					"sType"		=> "string",
     				),
     				array(
     					"sTitle"    => "Notes",
