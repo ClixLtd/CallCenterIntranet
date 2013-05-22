@@ -1545,7 +1545,9 @@ Gregson and Brooke.');
 		 */
 		public function move_telesales_staff()
 		{
-    		
+            $topStaffCount = 12;
+            
+            
     		// Get list of top staff
     		$staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",strtotime('now')), date("Y-m-d",strtotime('now')));
     		$staffList = $staffListRequest['report'];
@@ -1556,7 +1558,6 @@ Gregson and Brooke.');
     		);
     		
     		// Move top staff into the correct campaign
-    		$topStaffCount = 12;
     		for ($i=0; $i<=($topStaffCount-1); $i++)
     		{
         		$thisStaff = \Model_Staff::find($staffList[$i]['staff_id']);
@@ -1588,6 +1589,26 @@ Gregson and Brooke.');
     		// E-Mail Managers with new campaign lists
     		
     		print_r($newArrangement);
+    		
+    		$email = \Email::forge();
+			
+    		$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+    		
+    		$email->to(array(
+    			's.skinner@expertmoneysolutions.co.uk'  => 'Simon Skinner',
+    		));
+    		
+    		$email->priority(\Email::P_HIGH);
+    		
+    		$email->subject('Dialler Staff Ranking Update');
+    		
+    		$email->html_body(\View::forge('emails/dialler/ranking', array(
+    			'top'    => $newArrangement['top'],
+    			'bottom' => $newArrangement['bottom'],
+    		)));
+    		
+    		$email->send();
+
     		
     		
 		}
