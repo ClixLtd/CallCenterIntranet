@@ -1523,6 +1523,61 @@ Gregson and Brooke.');
         		\Log::write('ADAM', "First Payment Table updated");
     		
 		}
-				
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/**
+		 * Function to move telesales staff based on performance.
+		 * 
+		 * @access public
+		 * @return void
+		 */
+		public function move_telesales_staff()
+		{
+    		
+    		// Get list of top staff
+    		$staffListRequest = \Controller_Reports::generate_telesales_report();
+    		$staffList = $staffListRequest['report'];
+    		
+    		$newArrangement = array(
+    		    'top'    => array(),
+    		    'bottom' => array(),
+    		);
+    		
+    		// Move top staff into the correct campaign
+    		$topStaffCount = 12;
+    		for ($i=0; $i<=($topStaffCount-1); $i++)
+    		{
+        		$thisStaff = \Model_Staff::find($staffList[$i]['staff_id']);
+        		$newArrangement['top'][] = $thisStaff->dialler_id;
+    		}
+    		
+    		
+    		// Move remaining staff into lower campaign
+    		for ($i=$topStaffCount; $i<=count($staffList)-1; $i++)
+    		{
+        		$thisStaff = \Model_Staff::find($staffList[$i]['staff_id']);
+        		$newArrangement['bottom'][] = $thisStaff->dialler_id;
+    		}
+    		
+    		
+    		// E-Mail Managers with new campaign lists
+    		
+    		print_r($newArrangement);
+    		
+    		
+		}
+		
 		
 	}
