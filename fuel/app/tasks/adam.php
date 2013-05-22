@@ -1547,7 +1547,7 @@ Gregson and Brooke.');
 		{
     		
     		// Get list of top staff
-    		$staffListRequest = \Controller_Reports::generate_telesales_report();
+    		$staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",strtotime('now')), date("Y-m-d",strtotime('now')));
     		$staffList = $staffListRequest['report'];
     		
     		$newArrangement = array(
