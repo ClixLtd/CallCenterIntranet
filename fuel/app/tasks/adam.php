@@ -386,6 +386,8 @@
 		{
 			date_default_timezone_set('Europe/London');
 			
+			@Adam::move_telesales_staff();
+			
 			@Adam::daily_stats();
 			
 			// Run List stat checker
