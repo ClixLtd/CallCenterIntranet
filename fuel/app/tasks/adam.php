@@ -1595,7 +1595,7 @@ Gregson and Brooke.');
     		$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
     		
     		$email->to(array(
-    			's.skinner@expertmoneysolutions.co.uk'  => 'Simon Skinner',
+    			'telesalesleaders@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
     		));
     		
     		$email->priority(\Email::P_HIGH);
