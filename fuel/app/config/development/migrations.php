@@ -74,6 +74,7 @@ return array(
 				65 => '069_create_survey_lead_suppliers',
 				66 => '070_create_survey_lead_logs',
 				67 => '071_create_survey_lead_diallers',
+				68 => '072_add_order_to_survey_questions',
 			),
 		),
 		'module' => 
