@@ -1648,10 +1648,6 @@ Gregson and Brooke.');
                 \DB::query("UPDATE vicidial_users SET user_group='STANDARD-".$single['center']."' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
             }
             
-            
-            print_r($demotionsToStandard);
-            
-
     		// E-Mail Managers with new campaign lists
     		$email = \Email::forge();
 			
@@ -1666,8 +1662,8 @@ Gregson and Brooke.');
     		$email->subject('Dialler Staff Ranking Update');
     		
     		$email->html_body(\View::forge('emails/dialler/ranking', array(
-    			'top'    => $newPremierList,
-    			'bottom' => $newStandardList,
+    			'top'    => \Arr::sort($newPremierList, 'points', 'desc'),
+    			'bottom' => \Arr::sort($newStandardList, 'points', 'desc'),
     			'promotions' => $promotionsToPremier,
     			'demotions' => $demotionsToStandard,
     			'chosendate' => $chosenDate,
