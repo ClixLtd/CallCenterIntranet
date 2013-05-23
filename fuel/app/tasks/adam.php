@@ -1548,6 +1548,7 @@ Gregson and Brooke.');
 		public function move_telesales_staff()
 		{
 		    $chosenDate = strtotime('17th May 2013');
+		    $earlyDate = strtotime('3rd May 2013');
 	    
             $boltonStaffCount = 7;
             $extraStaffCount  = 7;
@@ -1561,7 +1562,7 @@ Gregson and Brooke.');
                 $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",$chosenDate), date("Y-m-d",$chosenDate));
                 
                 // Get list of details over the past 14 days for extra checking purposes
-                $staffListRequestSecondary = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",$chosenDate." -14days"), date("Y-m-d",$chosenDate));
+                $staffListRequestSecondary = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d", $earlyDate), date("Y-m-d",$chosenDate));
                 
                 $staffDiallerList = array();
         		$staffList = $staffListRequest['report'];
