@@ -1565,27 +1565,28 @@ Gregson and Brooke.');
             
             // Get PREMIER-GBS
             $premierGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GBS';")->cached(60)->execute('gabdialler');
-            foreach ($premierGBS as $single) $premierAll[] = $single['user'];
+            foreach ($premierGBS as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GBS');
             
             // Get PREMIER-GAB
             $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(60)->execute('gabdialler');
-            foreach ($premierGAB as $single) $premierAll[] = $single['user'];
+            foreach ($premierGAB as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GAB');
             
             // Get STANDARD-GBS
             $standardGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GBS';")->cached(60)->execute('gabdialler');
-            foreach ($standardGBS as $single) $standardAll[] = $single['user'];
+            foreach ($standardGBS as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GBS');
             
             // Get STANDARD-GAB
             $standardGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GAB';")->cached(60)->execute('gabdialler');
-            foreach ($standardGAB as $single) $standardAll[] = $single['user'];
+            foreach ($standardGAB as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GAB');
             
             // Add scores to premier users and sort them by points
             $premierAllWithScores = array();
             foreach ($premierAll as $single)
             {
-                if (isset($staffDiallerList[$single])) 
+                if (isset($staffDiallerList[$single['user']])) 
                 {
-                    $premierAllWithScores[$staffDiallerList[$single]] = $staffList[$staffDiallerList[$single]];
+                    $premierAllWithScores[$staffDiallerList[$single['user']]] = $staffList[$staffDiallerList[$single['user']]];
+                    $premierAllWithScores[$staffDiallerList[$single['user']]]['center'] = $single['center'];
                 }
             }
             $premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'desc');
@@ -1595,9 +1596,10 @@ Gregson and Brooke.');
             $standardAllWithScores = array();
             foreach ($standardAll as $single)
             {
-                if (isset($staffDiallerList[$single])) 
+                if (isset($staffDiallerList[$single['user']])) 
                 {
-                    $standardAllWithScores[$staffDiallerList[$single]] = $staffList[$staffDiallerList[$single]];
+                    $standardAllWithScores[$staffDiallerList[$single['user']]] = $staffList[$staffDiallerList[$single['user']]];
+                    $standardAllWithScores[$staffDiallerList[$single['user']]]['center'] = $single['center'];
                 }
             }
             $standardAllWithScores = \Arr::sort($standardAllWithScores, 'points', 'desc');
@@ -1606,13 +1608,13 @@ Gregson and Brooke.');
             // Work out Demotions and Promotions
             $demotionsToStandard = array_splice($premierAllWithScores, ($requiredPremier-3));
             $promotionsToPremier = array_slice($standardAllWithScores, 0, 3);
-                        
+            
+            // Generate new User group lists
             $newPremierList = array_merge($premierAllWithScores,$promotionsToPremier);
             $newStandardList = array_merge($standardAllWithScores,$demotionsToStandard);
             
             
-            
-            print_r($newStandardList);
+            // Update the dialler with the new groups
             
             
             /*
