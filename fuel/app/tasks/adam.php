@@ -1536,7 +1536,10 @@ Gregson and Brooke.');
 		
 		
 		
-		
+		public function moveTeleSalesYear()
+		{
+    		Adam::move_telesales_staff('14th May 2013');
+		}
 		
 		
 		/**
@@ -1545,10 +1548,10 @@ Gregson and Brooke.');
 		 * @access public
 		 * @return void
 		 */
-		public function move_telesales_staff()
+		public function move_telesales_staff($chosenDay=null)
 		{
-		    $chosenDate = strtotime('16th May 2013');
-		    $earlyDate = strtotime('9th May 2013');
+		    $chosenDate = (is_null($chosenDay)) ? strtotime('today')         : strtotime($chosenDay);
+		    $earlyDate  = (is_null($chosenDay)) ? strtotime('today -7 days') : strtotime($chosenDay ' -7 days');
 	    
             $boltonStaffCount = 7;
             $extraStaffCount  = 7;
