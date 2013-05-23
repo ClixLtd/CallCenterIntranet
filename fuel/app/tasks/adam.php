@@ -1559,11 +1559,15 @@ Gregson and Brooke.');
                 $staffDiallerList[$single['dialler_id']] = $key;
             }
             
+            $premierAll = array();
+            
             // Get PREMIER-GBS
             $premierGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GBS';")->cached(60)->execute('gabdialler');
+            foreach ($premierGBS as $single) $premierAll[] = $single['user'];
             
             // Get PREMIER-GAB
             $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(60)->execute('gabdialler');
+            foreach ($premierGAB as $single) $premierAll[] = $single['user'];
             
             // Combine premier users and sort by score
             $premierAll = array_merge((is_array($premierGAB)) ? $premierGAB : array(), (is_array($premierGAB)) ? $premierGBS : array());
