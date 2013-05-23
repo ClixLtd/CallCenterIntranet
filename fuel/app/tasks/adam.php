@@ -1547,7 +1547,7 @@ Gregson and Brooke.');
 		 */
 		public function move_telesales_staff()
 		{
-		    $chosenDate = strtotime('21st May 2013');
+		    $chosenDate = strtotime('22nd May 2013');
             $boltonStaffCount = 7;
             $extraStaffCount  = 7;
             $promotionCount = 3;
