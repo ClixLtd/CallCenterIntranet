@@ -1676,6 +1676,8 @@ Gregson and Brooke.');
                 }
                 
                 
+                print_r($newPremierList);
+                
         		// E-Mail Managers with new campaign lists
         		$email = \Email::forge();
     			
