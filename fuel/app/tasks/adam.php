@@ -1607,10 +1607,12 @@ Gregson and Brooke.');
             $demotionsToStandard = array_splice($premierAllWithScores, ($requiredPremier-3));
             $promotionsToPremier = array_slice($standardAllWithScores, 0, 3);
                         
+            $newPremierList = array_merge($premierAllWithScores,$promotionsToPremier);
+            $newStandardList = array_merge($standardAllWithScores,$demotionsToStandard);
             
             
-            print_r($demotionsToStandard);
-            print_r($promotionsToPremier);
+            
+            print_r($newPremierList);
             
             
             /*
