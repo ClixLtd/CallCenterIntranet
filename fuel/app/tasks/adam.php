@@ -1612,13 +1612,16 @@ Gregson and Brooke.');
                         \DB::query("UPDATE vicidial_users SET user_group='".$single['center']."AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
                     }
                 }
+                
+                print_r($premierAllWithScores);
+                
                 /*$premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'asc');
                 
                 $premierAllWithScores = \Arr::multisort($premierAllWithScores, array(
                     'points' => SORT_ASC,
                     'backup.points' => SORT_ASC,
                 ), true);
-                */
+                
                 
                 // Add scores to standard users and sort them by points
                 $standardAllWithScores = array();
@@ -1635,13 +1638,13 @@ Gregson and Brooke.');
                         \DB::query("UPDATE vicidial_users SET user_group=".$single['center']."'AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
                     }
                 }
-                /*$standardAllWithScores = \Arr::sort($standardAllWithScores, 'points', 'desc');
+                //$standardAllWithScores = \Arr::sort($standardAllWithScores, 'points', 'desc');
                 
                 $standardAllWithScores = \Arr::multisort($standardAllWithScores, array(
                     'points' => SORT_DESC,
                     'backup.points' => SORT_ASC,
                 ), true);
-                */
+                
                 // Work out Demotions and Promotions
                 print $totalInPremierATM = count($premierAllWithScores);
                 $demotionsToStandard = array();
@@ -1704,6 +1707,7 @@ Gregson and Brooke.');
         		)));
         		
         		$email->send();
+        		*/
     		
     		}
     		
