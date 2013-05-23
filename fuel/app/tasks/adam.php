@@ -1565,19 +1565,19 @@ Gregson and Brooke.');
             $standardAll = array();
             
             // Get PREMIER-GBS
-            $premierGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GBS';")->cached(60)->execute('gabdialler');
+            $premierGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GBS';")->cached(0)->execute('gabdialler');
             foreach ($premierGBS as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GBS');
             
             // Get PREMIER-GAB
-            $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(60)->execute('gabdialler');
+            $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(0)->execute('gabdialler');
             foreach ($premierGAB as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GAB');
             
             // Get STANDARD-GBS
-            $standardGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GBS';")->cached(60)->execute('gabdialler');
+            $standardGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GBS';")->cached(0)->execute('gabdialler');
             foreach ($standardGBS as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GBS');
             
             // Get STANDARD-GAB
-            $standardGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GAB';")->cached(60)->execute('gabdialler');
+            $standardGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GAB';")->cached(0)->execute('gabdialler');
             foreach ($standardGAB as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GAB');
             
             // Add scores to premier users and sort them by points
