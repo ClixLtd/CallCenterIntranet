@@ -1562,6 +1562,8 @@ Gregson and Brooke.');
             // Get PREMIER-GBS
             $premierGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GBS';")->cached(60)->execute('gabdialler');
             
+            print_r($premierGBS);
+            
             // Get PREMIER-GAB
             $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(60)->execute('gabdialler');
             
