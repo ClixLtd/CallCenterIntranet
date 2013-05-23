@@ -1704,7 +1704,6 @@ Gregson and Brooke.');
         		)));
         		
         		$email->send();
-        		*/
     		
     		}
     		
