@@ -1637,10 +1637,6 @@ Gregson and Brooke.');
                 }
                 //$standardAllWithScores = \Arr::sort($standardAllWithScores, 'points', 'desc');
                 
-                $standardAllWithScores = \Arr::multisort($standardAllWithScores, array(
-                    'points' => SORT_DESC,
-                    'backup.points' => SORT_ASC,
-                ), true);
                 
                 // Work out Demotions and Promotions
                 print $totalInPremierATM = count($premierAllWithScores);
