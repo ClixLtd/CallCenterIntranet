@@ -1604,7 +1604,7 @@ Gregson and Brooke.');
                     if (isset($staffDiallerList[$single['user']])) 
                     {
                         $premierAllWithScores[$staffDiallerList[$single['user']]] = $staffList[$staffDiallerList[$single['user']]];
-                        $premierAllWithScores[$staffDiallerList[$single['user']]]['backup'] = $staffSecondList[$staffSecondDiallerList[$single['user']]];
+                        $premierAllWithScores[$staffDiallerList[$single['user']]]['backup'] = $staffSecondList[$staffSecondDiallerList[$single['user']]]['points'];
                         $premierAllWithScores[$staffDiallerList[$single['user']]]['center'] = $single['center'];
                     }
                     else
