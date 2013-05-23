@@ -1547,8 +1547,8 @@ Gregson and Brooke.');
 		 */
 		public function move_telesales_staff()
 		{
-		    $chosenDate = strtotime('17th May 2013');
-		    $earlyDate = strtotime('3rd May 2013');
+		    $chosenDate = strtotime('18th May 2013');
+		    $earlyDate = strtotime('11th May 2013');
 	    
             $boltonStaffCount = 7;
             $extraStaffCount  = 7;
@@ -1643,7 +1643,7 @@ Gregson and Brooke.');
                 ), true);
                 
                 // Work out Demotions and Promotions
-                print $totalInPremierATM = count($premierAllWithScores);
+                $totalInPremierATM = count($premierAllWithScores);
                 $demotionsToStandard = array();
                 for ($i = 0; $i <= (($promotionCount-1)+($totalInPremierATM-$requiredPremier)); $i++)
                 {
@@ -1674,12 +1674,6 @@ Gregson and Brooke.');
                 {
                     \DB::query("UPDATE vicidial_users SET user_group='STANDARD-".$single['center']."' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
                 }
-                
-                
-                
-                print_r($premierAllWithScores);
-                print_r($standardAllWithScores);
-                
                 
                 
         		// E-Mail Managers with new campaign lists
