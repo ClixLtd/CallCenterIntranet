@@ -1547,131 +1547,164 @@ Gregson and Brooke.');
 		 */
 		public function move_telesales_staff()
 		{
-		    $chosenDate = strtotime('22nd May 2013');
+		    $chosenDate = strtotime('17th May 2013');
+	    
             $boltonStaffCount = 7;
             $extraStaffCount  = 7;
-            $promotionCount = 3;
-            $requiredPremier = $boltonStaffCount + $extraStaffCount;
+            $promotionCount   = 3;
             
-            // Get list of top staff
-            $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",$chosenDate), date("Y-m-d",$chosenDate));
-            $staffDiallerList = array();
-    		$staffList = $staffListRequest['report'];
-            foreach ($staffList as $key => $single)
-            {
-                $staffDiallerList[$single['dialler_id']] = $key;
-            }
-            
-            $premierAll = array();
-            $standardAll = array();
-            
-            // Get PREMIER-GBS
-            $premierGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GBS';")->cached(0)->execute('gabdialler');
-            foreach ($premierGBS as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GBS');
-            
-            // Get PREMIER-GAB
-            $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(0)->execute('gabdialler');
-            foreach ($premierGAB as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GAB');
-            
-            // Get STANDARD-GBS
-            $standardGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GBS';")->cached(0)->execute('gabdialler');
-            foreach ($standardGBS as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GBS');
-            
-            // Get STANDARD-GAB
-            $standardGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GAB';")->cached(0)->execute('gabdialler');
-            foreach ($standardGAB as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GAB');
-            
-            // Add scores to premier users and sort them by points
-            $premierAllWithScores = array();
-            foreach ($premierAll as $single)
-            {
-                if (isset($staffDiallerList[$single['user']])) 
+		    if ((int)date("N", $chosenDate) < 6)
+		    {
+                $requiredPremier = $boltonStaffCount + $extraStaffCount;
+                
+                // Get list of top staff
+                $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",$chosenDate), date("Y-m-d",$chosenDate));
+                
+                // Get list of details over the past 14 days for extra checking purposes
+                $staffListRequestSecondary = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",$chosenDate." -14days"), date("Y-m-d",$chosenDate));
+                
+                $staffDiallerList = array();
+        		$staffList = $staffListRequest['report'];
+                foreach ($staffList as $key => $single)
                 {
-                    $premierAllWithScores[$staffDiallerList[$single['user']]] = $staffList[$staffDiallerList[$single['user']]];
-                    $premierAllWithScores[$staffDiallerList[$single['user']]]['center'] = $single['center'];
+                    $staffDiallerList[$single['dialler_id']] = $key;
                 }
-                else
+                
+                $staffSecondDiallerList = array();
+        		$staffSecondList = $staffListRequestSecondary['report'];
+                foreach ($staffSecondList as $key => $single)
                 {
-                    \DB::query("UPDATE vicidial_users SET user_group='".$single['center']."AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
+                    $staffSecondDiallerList[$single['dialler_id']] = $key;
                 }
-            }
-            $premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'asc');
-            
-            
-            // Add scores to standard users and sort them by points
-            $standardAllWithScores = array();
-            foreach ($standardAll as $single)
-            {
-                if (isset($staffDiallerList[$single['user']])) 
+                
+                $premierAll = array();
+                $standardAll = array();
+                
+                // Get PREMIER-GBS
+                $premierGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GBS';")->cached(0)->execute('gabdialler');
+                foreach ($premierGBS as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GBS');
+                
+                // Get PREMIER-GAB
+                $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(0)->execute('gabdialler');
+                foreach ($premierGAB as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GAB');
+                
+                // Get STANDARD-GBS
+                $standardGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GBS';")->cached(0)->execute('gabdialler');
+                foreach ($standardGBS as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GBS');
+                
+                // Get STANDARD-GAB
+                $standardGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GAB';")->cached(0)->execute('gabdialler');
+                foreach ($standardGAB as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GAB');
+                
+                // Add scores to premier users and sort them by points
+                $premierAllWithScores = array();
+                foreach ($premierAll as $single)
                 {
-                    $standardAllWithScores[$staffDiallerList[$single['user']]] = $staffList[$staffDiallerList[$single['user']]];
-                    $standardAllWithScores[$staffDiallerList[$single['user']]]['center'] = $single['center'];
+                    if (isset($staffDiallerList[$single['user']])) 
+                    {
+                        $premierAllWithScores[$staffDiallerList[$single['user']]] = $staffList[$staffDiallerList[$single['user']]];
+                        $premierAllWithScores[$staffDiallerList[$single['user']]]['backup'] = $staffSecondList[$staffSecondDiallerList[$single['user']]];
+                        $premierAllWithScores[$staffDiallerList[$single['user']]]['center'] = $single['center'];
+                    }
+                    else
+                    {
+                        \DB::query("UPDATE vicidial_users SET user_group='".$single['center']."AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
+                    }
                 }
-                else
+                //$premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'asc');
+                
+                $premierAllWithScores = \Arr::multisort($premierAllWithScores, array(
+                    'points' => SORT_ASC,
+                    'backup.points' => SORT_ASC,
+                ), true);
+                
+                
+                // Add scores to standard users and sort them by points
+                $standardAllWithScores = array();
+                foreach ($standardAll as $single)
                 {
-                    \DB::query("UPDATE vicidial_users SET user_group=".$single['center']."'AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
+                    if (isset($staffDiallerList[$single['user']])) 
+                    {
+                        $standardAllWithScores[$staffDiallerList[$single['user']]] = $staffList[$staffDiallerList[$single['user']]];
+                        $standardAllWithScores[$staffDiallerList[$single['user']]]['backup'] = $staffSecondList[$staffSecondDiallerList[$single['user']]];
+                        $standardAllWithScores[$staffDiallerList[$single['user']]]['center'] = $single['center'];
+                    }
+                    else
+                    {
+                        \DB::query("UPDATE vicidial_users SET user_group=".$single['center']."'AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
+                    }
                 }
-            }
-            $standardAllWithScores = \Arr::sort($standardAllWithScores, 'points', 'desc');
-            
-            
-            // Work out Demotions and Promotions
-            print $totalInPremierATM = count($premierAllWithScores);
-            $demotionsToStandard = array();
-            for ($i = 0; $i <= (($promotionCount-1)+($totalInPremierATM-$requiredPremier)); $i++)
-            {
-                $demotionsToStandard[] = $premierAllWithScores[$i];
-                unset($premierAllWithScores[$i]);
-            }
-            
-            $promotionsToPremier = array();
-            for ($i = 0; $i <= ($promotionCount-1); $i++)
-            {
-                $promotionsToPremier[] = $standardAllWithScores[$i];
-                unset($standardAllWithScores[$i]);
-            }
-            
-            
-            // Generate new User group lists
-            $newPremierList = array_merge(array_reverse($premierAllWithScores), $promotionsToPremier);
-            $newStandardList = array_merge($demotionsToStandard, $standardAllWithScores);
-            
-            
-            // Update the dialler with the new groups
-            foreach ($newPremierList as $single)
-            {
-                \DB::query("UPDATE vicidial_users SET user_group='PREMIER-".$single['center']."' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
-            }
-            
-            foreach ($newStandardList as $single)
-            {
-                \DB::query("UPDATE vicidial_users SET user_group='STANDARD-".$single['center']."' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
-            }
-            
-    		// E-Mail Managers with new campaign lists
-    		$email = \Email::forge();
-			
-    		$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+                //$standardAllWithScores = \Arr::sort($standardAllWithScores, 'points', 'desc');
+                
+                $standardAllWithScores = \Arr::multisort($standardAllWithScores, array(
+                    'points' => SORT_DESC,
+                    'backup.points' => SORT_ASC,
+                ), true);
+                
+                // Work out Demotions and Promotions
+                print $totalInPremierATM = count($premierAllWithScores);
+                $demotionsToStandard = array();
+                for ($i = 0; $i <= (($promotionCount-1)+($totalInPremierATM-$requiredPremier)); $i++)
+                {
+                    $demotionsToStandard[] = $premierAllWithScores[$i];
+                    unset($premierAllWithScores[$i]);
+                }
+                
+                $promotionsToPremier = array();
+                for ($i = 0; $i <= ($promotionCount-1); $i++)
+                {
+                    $promotionsToPremier[] = $standardAllWithScores[$i];
+                    unset($standardAllWithScores[$i]);
+                }
+                
+                
+                // Generate new User group lists
+                $newPremierList = array_merge(array_reverse($premierAllWithScores), $promotionsToPremier);
+                $newStandardList = array_merge($demotionsToStandard, $standardAllWithScores);
+                
+                
+                // Update the dialler with the new groups
+                foreach ($newPremierList as $single)
+                {
+                    \DB::query("UPDATE vicidial_users SET user_group='PREMIER-".$single['center']."' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
+                }
+                
+                foreach ($newStandardList as $single)
+                {
+                    \DB::query("UPDATE vicidial_users SET user_group='STANDARD-".$single['center']."' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
+                }
+                
+                
+                
+                print_r($premierAllWithScores);
+                print_r($standardAllWithScores);
+                
+                
+                
+        		// E-Mail Managers with new campaign lists
+        		$email = \Email::forge();
+    			
+        		$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+        		
+        		$email->to(array(
+        			's.skinner@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
+        		));
+        		
+        		$email->priority(\Email::P_HIGH);
+        		
+        		$email->subject('Dialler Staff Ranking Update');
+        		
+        		$email->html_body(\View::forge('emails/dialler/ranking', array(
+        			'top'    => \Arr::sort($newPremierList, 'points', 'desc'),
+        			'bottom' => \Arr::sort($newStandardList, 'points', 'desc'),
+        			'promotions' => $promotionsToPremier,
+        			'demotions' => $demotionsToStandard,
+        			'chosendate' => $chosenDate,
+        		)));
+        		
+        		$email->send();
     		
-    		$email->to(array(
-    			's.skinner@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
-    		));
-    		
-    		$email->priority(\Email::P_HIGH);
-    		
-    		$email->subject('Dialler Staff Ranking Update');
-    		
-    		$email->html_body(\View::forge('emails/dialler/ranking', array(
-    			'top'    => \Arr::sort($newPremierList, 'points', 'desc'),
-    			'bottom' => \Arr::sort($newStandardList, 'points', 'desc'),
-    			'promotions' => $promotionsToPremier,
-    			'demotions' => $demotionsToStandard,
-    			'chosendate' => $chosenDate,
-    		)));
-    		
-    		$email->send();
-    		
-    		
+    		}
     		
 		}
 		
