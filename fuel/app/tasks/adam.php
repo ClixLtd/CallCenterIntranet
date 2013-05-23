@@ -1588,6 +1588,10 @@ Gregson and Brooke.');
                     $premierAllWithScores[$staffDiallerList[$single['user']]] = $staffList[$staffDiallerList[$single['user']]];
                     $premierAllWithScores[$staffDiallerList[$single['user']]]['center'] = $single['center'];
                 }
+                else
+                {
+                    \DB::query("UPDATE vicidial_users SET user_group=".$single['center']."'AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
+                }
             }
             $premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'desc');
             
@@ -1603,7 +1607,7 @@ Gregson and Brooke.');
                 }
                 else
                 {
-                    \DB::query("UPDATE vicidial_users SET user_group='GABAGENT' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
+                    \DB::query("UPDATE vicidial_users SET user_group=".$single['center']."'AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
                 }
             }
             $standardAllWithScores = \Arr::sort($standardAllWithScores, 'points', 'desc');
