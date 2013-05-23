@@ -1616,7 +1616,7 @@ Gregson and Brooke.');
             
             // Work out Demotions and Promotions
             $demotionsToStandard = array();
-            for ($i = ($requiredPremier-($promotionCount+1); $i <= count($premierAllWithScores)-1; $i++)
+            for ($i = ($requiredPremier-($promotionCount+1)); $i <= count($premierAllWithScores)-1; $i++)
             {
                 $demotionsToStandard[] = $premierAllWithScores[$i];
                 unset($premierAllWithScores[$i]);
