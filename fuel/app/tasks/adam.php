@@ -1615,7 +1615,15 @@ Gregson and Brooke.');
             
             
             // Update the dialler with the new groups
-            print_r($newPremierList);
+            foreach ($newPremierList as $single)
+            {
+                \DB::query("UPDATE vicidial_users SET user_group='PREMIER-".$single['center']."' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
+            }
+            
+            foreach ($newStandardList as $single)
+            {
+                \DB::query("UPDATE vicidial_users SET user_group='STANDARD-".$single['center']."' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
+            }
             
             /*
     		
