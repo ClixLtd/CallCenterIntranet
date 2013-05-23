@@ -1552,7 +1552,7 @@ Gregson and Brooke.');
             $requiredPremier = $boltonStaffCount + $extraStaffCount;
             
             // Get list of top staff
-            $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",strtotime('Friday 17th May')), date("Y-m-d",strtotime('Friday 17th May')));
+            $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",strtotime('20th May 2013')), date("Y-m-d",strtotime('20th May 2013')));
             $staffDiallerList = array();
     		$staffList = $staffListRequest['report'];
             foreach ($staffList as $key => $single)
@@ -1625,6 +1625,8 @@ Gregson and Brooke.');
                 \DB::query("UPDATE vicidial_users SET user_group='STANDARD-".$single['center']."' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
             }
             
+            
+            print_r($demotionsToStandard);
             
 
     		// E-Mail Managers with new campaign lists
