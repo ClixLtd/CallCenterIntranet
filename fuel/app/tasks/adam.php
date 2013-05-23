@@ -1549,6 +1549,7 @@ Gregson and Brooke.');
 		{
             $boltonStaffCount = 7;
             $extraStaffCount  = 7;
+            $requiredPremier = $boltonStaffCount + $extraStaffCount;
             
             // Get list of top staff
             $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",strtotime('yesterday')), date("Y-m-d",strtotime('yesterday')));
@@ -1572,8 +1573,6 @@ Gregson and Brooke.');
             
             
             $premierAllWithScores = array();
-            
-            
             foreach ($premierAll as $single)
             {
                 if (isset($staffDiallerList[$single])) 
@@ -1584,6 +1583,8 @@ Gregson and Brooke.');
             $premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'desc');
             
             
+            $standardUsersAllWithScores = array_splice($premierAllWithScores, ($requiredPremier-3));
+                        
             
             print_r($premierAllWithScores);
             
