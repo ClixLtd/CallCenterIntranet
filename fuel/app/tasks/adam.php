@@ -1570,13 +1570,13 @@ Gregson and Brooke.');
             foreach ($premierGAB as $single) $premierAll[] = $single['user'];
             
             
+            
             $premierAllWithScores = array();
             
-            print_r($premierAll);
             
             foreach ($premierAll as $single)
             {
-                $premierAllWithScores[$staffDiallerList[$single['user']]] = $staffList[$staffDiallerList[$single['user']]];
+                $premierAllWithScores[$staffDiallerList[$single]] = $staffList[$staffDiallerList[$single]];
             }
             $premierAllWithScores = \Arr::sort($premierAllWithScores, 'points');
             
