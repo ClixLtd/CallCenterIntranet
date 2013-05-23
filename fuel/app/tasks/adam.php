@@ -1581,7 +1581,7 @@ Gregson and Brooke.');
                     $premierAllWithScores[$staffDiallerList[$single]] = $staffList[$staffDiallerList[$single]];
                 }
             }
-            $premierAllWithScores = \Arr::sort($premierAllWithScores, 'points');
+            $premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'desc');
             
             
             
