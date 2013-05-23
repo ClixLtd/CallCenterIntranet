@@ -1552,7 +1552,7 @@ Gregson and Brooke.');
             $requiredPremier = $boltonStaffCount + $extraStaffCount;
             
             // Get list of top staff
-            $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",strtotime('now -48')), date("Y-m-d",strtotime('now -48')));
+            $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",strtotime('Friday 17th May')), date("Y-m-d",strtotime('Friday 17th May')));
             $staffDiallerList = array();
     		$staffList = $staffListRequest['report'];
             foreach ($staffList as $key => $single)
