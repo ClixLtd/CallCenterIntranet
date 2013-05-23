@@ -1538,6 +1538,7 @@ Gregson and Brooke.');
 		
 		public function moveTeleSalesYear()
 		{
+		    /*
 		    print "Starting January\n";
 		    for ($i = 1; $i <= 31; $i++)
 		    {
@@ -1572,6 +1573,15 @@ Gregson and Brooke.');
             
             print "\nStarting May\n";
 		    for ($i = 1; $i <= 19; $i++)
+		    {
+    		    $checkDay = mktime(0,0,0,2,$i,2013);
+    		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+    		    print date("jS F Y", $checkDay)." Done\n";
+            }
+            */
+            
+            print "\nStarting May\n";
+		    for ($i = 20; $i <= 22; $i++)
 		    {
     		    $checkDay = mktime(0,0,0,2,$i,2013);
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
@@ -1724,7 +1734,7 @@ Gregson and Brooke.');
         		$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
         		
         		$email->to(array(
-        			's.skinner@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
+        			'telesalesleaders@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
         		));
         		
         		$email->priority(\Email::P_HIGH);
