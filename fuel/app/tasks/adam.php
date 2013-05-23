@@ -1551,7 +1551,7 @@ Gregson and Brooke.');
 		public function move_telesales_staff($chosenDay=null)
 		{
 		    $chosenDate = (is_null($chosenDay)) ? strtotime('today')         : strtotime($chosenDay);
-		    $earlyDate  = (is_null($chosenDay)) ? strtotime('today -7 days') : strtotime($chosenDay ' -7 days');
+		    $earlyDate  = (is_null($chosenDay)) ? strtotime('today -7 days') : strtotime($chosenDay . ' -7 days');
 	    
             $boltonStaffCount = 7;
             $extraStaffCount  = 7;
