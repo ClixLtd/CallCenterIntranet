@@ -1538,7 +1538,46 @@ Gregson and Brooke.');
 		
 		public function moveTeleSalesYear()
 		{
-    		Adam::move_telesales_staff('14th May 2013');
+		    print "Starting January\n";
+		    for ($i = 1; $i <= 31; $i++)
+		    {
+    		    $checkDay = mktime(0,0,0,1,$i,2013);
+    		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+    		    print date("jS F Y", $checkDay)." Done\n";
+            }
+            
+            print "\nStarting Feburary\n";
+		    for ($i = 1; $i <= 28; $i++)
+		    {
+    		    $checkDay = mktime(0,0,0,2,$i,2013);
+    		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+    		    print date("jS F Y", $checkDay)." Done\n";
+            }
+            
+            print "\nStarting March\n";
+		    for ($i = 1; $i <= 31; $i++)
+		    {
+    		    $checkDay = mktime(0,0,0,2,$i,2013);
+    		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+    		    print date("jS F Y", $checkDay)." Done\n";
+            }
+            
+            print "\nStarting April\n";
+		    for ($i = 1; $i <= 30; $i++)
+		    {
+    		    $checkDay = mktime(0,0,0,2,$i,2013);
+    		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+    		    print date("jS F Y", $checkDay)." Done\n";
+            }
+            
+            print "\nStarting May\n";
+		    for ($i = 1; $i <= 19; $i++)
+		    {
+    		    $checkDay = mktime(0,0,0,2,$i,2013);
+    		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+    		    print date("jS F Y", $checkDay)." Done\n";
+            }
+    		
 		}
 		
 		
