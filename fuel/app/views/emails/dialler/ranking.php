@@ -7,7 +7,7 @@
 		<TABLE width="600" style="font-family: verdana; border-radius: 5px; background-color: #FFFFFF;">
 			<TR>
 				<TD>
-					The dialler has been updated with the following rankings for staff.<br /><br />
+					Based on the sales statistics for <?php echo date('d/m/Y', $chosendate); ?> the dialler groups have been updated as shown below.<br /><br />
 					
 					<center>
 					<h2>Promotions and Demotions</h2>
@@ -20,7 +20,7 @@
     					</THEAD>
     					<TBODY>
         					<TR>
-            					<TD><TABLE width="100%" cellpadding="2" cellspacing="0">
+            					<TD valign="top"><TABLE width="100%" cellpadding="2" cellspacing="0">
                 					<TBODY>
                     				    <?php foreach($promotions as $single): ?>
                     				    <TR>
@@ -30,7 +30,7 @@
                         				<?php endforeach; ?>
                 					</TBODY>
             					</TABLE></TD>
-            					<TD><TABLE width="100%" cellpadding="2" cellspacing="0">
+            					<TD valign="top"><TABLE width="100%" cellpadding="2" cellspacing="0">
                 					<TBODY>
                     				    <?php foreach($demotions as $single): ?>
                     				    <TR>
@@ -103,9 +103,8 @@
 					</TABLE>
 					</center>
 					
+					<br />
 					
-					Regards<br />
-					Expert Money Solutions
 					
 				</TD>
 			</TR>

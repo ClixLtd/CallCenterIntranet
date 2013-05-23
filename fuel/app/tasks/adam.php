@@ -1547,13 +1547,14 @@ Gregson and Brooke.');
 		 */
 		public function move_telesales_staff()
 		{
+		    $chosenDate = strtotime('21st May 2013');
             $boltonStaffCount = 7;
             $extraStaffCount  = 7;
             $promotionCount = 3;
             $requiredPremier = $boltonStaffCount + $extraStaffCount;
             
             // Get list of top staff
-            $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",strtotime('20th May 2013')), date("Y-m-d",strtotime('20th May 2013')));
+            $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",$chosenDate), date("Y-m-d",$chosenDate));
             $staffDiallerList = array();
     		$staffList = $staffListRequest['report'];
             foreach ($staffList as $key => $single)
@@ -1669,6 +1670,7 @@ Gregson and Brooke.');
     			'bottom' => $newStandardList,
     			'promotions' => $promotionsToPremier,
     			'demotions' => $demotionsToStandard,
+    			'chosendate' => $chosenDate,
     		)));
     		
     		$email->send();
