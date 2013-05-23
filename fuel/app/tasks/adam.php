@@ -1586,7 +1586,7 @@ Gregson and Brooke.');
             $standardUsersAllWithScores = array_splice($premierAllWithScores, ($requiredPremier-3));
                         
             
-            print_r($premierAllWithScores);
+            print_r($standardUsersAllWithScores);
             
             
             /*
