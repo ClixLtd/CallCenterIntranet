@@ -13,14 +13,14 @@
 					<h2>Promotions and Demotions</h2>
 					<TABLE width="550" cellpadding="2" cellspacing="0">
     					<THEAD>
-        					<TR>
-            					<TH width="275">Promotions</TH>
-            					<TH width="275">Demotions</TH>
+        					<TR style="background-color: #FFFFFF; border-bottom: #CCCCCC 1px solid; border-top: #CCCCCC 1px solid;">
+            					<TH width="50%">Promotions</TH>
+            					<TH width="50%">Demotions</TH>
         					</TR>
     					</THEAD>
     					<TBODY>
         					<TR>
-            					<TD><TABLE width="275" cellpadding="0" cellspacing="0">
+            					<TD><TABLE width="100%" cellpadding="2" cellspacing="0">
                 					<TBODY>
                     				    <?php foreach($promotions as $single): ?>
                     				    <TR>
@@ -30,7 +30,7 @@
                         				<?php endforeach; ?>
                 					</TBODY>
             					</TABLE></TD>
-            					<TD><TABLE width="275" cellpadding="0" cellspacing="0">
+            					<TD><TABLE width="100%" cellpadding="2" cellspacing="0">
                 					<TBODY>
                     				    <?php foreach($demotions as $single): ?>
                     				    <TR>

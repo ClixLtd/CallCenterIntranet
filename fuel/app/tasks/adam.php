@@ -1549,6 +1549,7 @@ Gregson and Brooke.');
 		{
             $boltonStaffCount = 7;
             $extraStaffCount  = 7;
+            $promotionCount = 3;
             $requiredPremier = $boltonStaffCount + $extraStaffCount;
             
             // Get list of top staff
@@ -1614,8 +1615,22 @@ Gregson and Brooke.');
             
             
             // Work out Demotions and Promotions
-            $demotionsToStandard = array_splice($premierAllWithScores, ($requiredPremier-3));
-            $promotionsToPremier = array_slice($standardAllWithScores, 0, 3);
+            $demotionsToStandard = array();
+            for ($i = ($requiredPremier-($promotionCount+1); $i <= count($premierAllWithScores)-1; $i++)
+            {
+                $demotionsToStandard[] = $premierAllWithScores[$i];
+                unset($premierAllWithScores[$i]);
+            }
+            
+            $promotionsToPremier = array();
+            for ($i = 0; $i <= ($promotionCount-1); $i++)
+            {
+                $promotionsToPremier[] = $standardAllWithScores[$i];
+                unset($standardAllWithScores[$i]);
+            }
+            
+            //$demotionsToStandard = array_splice($premierAllWithScores, ($requiredPremier-3));
+            //$promotionsToPremier = array_slice($standardAllWithScores, 0, 3);
             
             // Generate new User group lists
             $newPremierList = array_merge($premierAllWithScores,$promotionsToPremier);
