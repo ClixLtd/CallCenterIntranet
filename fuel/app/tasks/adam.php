@@ -1599,8 +1599,8 @@ Gregson and Brooke.');
 		 */
 		public function move_telesales_staff($chosenDay=null)
 		{
-		    $chosenDate = (is_null($chosenDay)) ? strtotime('today')         : strtotime($chosenDay);
-		    $earlyDate  = (is_null($chosenDay)) ? strtotime('today -7 days') : strtotime($chosenDay . ' -7 days');
+		    $chosenDate = (is_null($chosenDay)) ? strtotime('yesterday')         : strtotime($chosenDay);
+		    $earlyDate  = (is_null($chosenDay)) ? strtotime('yesterday -7 days') : strtotime($chosenDay . ' -7 days');
 	    
             $boltonStaffCount = 7;
             $extraStaffCount  = 7;
@@ -1651,18 +1651,20 @@ Gregson and Brooke.');
                 
                 // Add scores to premier users and sort them by points
                 $premierAllWithScores = array();
+                $premierCount = 0;
                 foreach ($premierAll as $single)
                 {
                     if (isset($staffDiallerList[$single['user']])) 
                     {
-                        $premierAllWithScores[$staffDiallerList[$single['user']]] = $staffList[$staffDiallerList[$single['user']]];
-                        $premierAllWithScores[$staffDiallerList[$single['user']]]['backup'] = $staffSecondList[$staffSecondDiallerList[$single['user']]]['points'];
-                        $premierAllWithScores[$staffDiallerList[$single['user']]]['center'] = $single['center'];
+                        $premierAllWithScores[$premierCount] = $staffList[$staffDiallerList[$single['user']]];
+                        $premierAllWithScores[$premierCount]['backup'] = $staffSecondList[$staffSecondDiallerList[$single['user']]]['points'];
+                        $premierAllWithScores[$premierCount]['center'] = $single['center'];
                     }
                     else
                     {
                         \DB::query("UPDATE vicidial_users SET user_group='".$single['center']."AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
                     }
+                    $premierCount++;
                 }
                 //$premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'asc');
                 
@@ -1674,18 +1676,20 @@ Gregson and Brooke.');
                 
                 // Add scores to standard users and sort them by points
                 $standardAllWithScores = array();
+                $standardCount = 0;
                 foreach ($standardAll as $single)
                 {
                     if (isset($staffDiallerList[$single['user']])) 
                     {
-                        $standardAllWithScores[$staffDiallerList[$single['user']]] = $staffList[$staffDiallerList[$single['user']]];
-                        $standardAllWithScores[$staffDiallerList[$single['user']]]['backup'] = $staffSecondList[$staffSecondDiallerList[$single['user']]]['points'];
-                        $standardAllWithScores[$staffDiallerList[$single['user']]]['center'] = $single['center'];
+                        $standardAllWithScores[$standardCount] = $staffList[$staffDiallerList[$single['user']]];
+                        $standardAllWithScores[$standardCount]['backup'] = $staffSecondList[$staffSecondDiallerList[$single['user']]]['points'];
+                        $standardAllWithScores[$standardCount]['center'] = $single['center'];
                     }
                     else
                     {
                         \DB::query("UPDATE vicidial_users SET user_group=".$single['center']."'AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
                     }
+                    $standardCount++;
                 }
                 //$standardAllWithScores = \Arr::sort($standardAllWithScores, 'points', 'desc');
                 
@@ -1734,7 +1738,7 @@ Gregson and Brooke.');
         		$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
         		
         		$email->to(array(
-        			'telesalesleaders@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
+        			's.skinner@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
         		));
         		
         		$email->priority(\Email::P_HIGH);
