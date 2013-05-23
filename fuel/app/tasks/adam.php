@@ -1681,7 +1681,7 @@ Gregson and Brooke.');
                 
                 $standardAllWithScores = \Arr::multisort($standardAllWithScores, array(
                     'points' => SORT_DESC,
-                    'backup' => SORT_ASC,
+                    'backup' => SORT_DESC,
                 ), true);
                 
                 // Work out Demotions and Promotions
@@ -1732,8 +1732,8 @@ Gregson and Brooke.');
         		$email->subject('Dialler Staff Ranking Update');
         		
         		$email->html_body(\View::forge('emails/dialler/ranking', array(
-        			'top'    => \Arr::sort($newPremierList, 'points', 'desc'),
-        			'bottom' => \Arr::sort($newStandardList, 'points', 'desc'),
+        			'top'    => \Arr::multisort($newPremierList, array('points' => SORT_ASC, 'backup' => SORT_ASC,), true),
+        			'bottom' => \Arr::multisort($newStandardList, array('points' => SORT_DESC, 'backup' => SORT_DESC,), true),
         			'promotions' => $promotionsToPremier,
         			'demotions' => $demotionsToStandard,
         			'chosendate' => $chosenDate,
