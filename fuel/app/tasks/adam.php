@@ -1628,9 +1628,6 @@ Gregson and Brooke.');
             
 
     		// E-Mail Managers with new campaign lists
-    		
-    		print_r($newArrangement);
-    		
     		$email = \Email::forge();
 			
     		$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
