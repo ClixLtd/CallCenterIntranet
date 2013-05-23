@@ -22,20 +22,20 @@
         					<TR>
             					<TD><TABLE width="275" cellpadding="0" cellspacing="0">
                 					<TBODY>
-                    					<TR>
-                    					    <?php foreach($promotions as $single): ?>
+                    				    <?php foreach($promotions as $single): ?>
+                    				    <TR>
                         					<TD><?php echo $single['name']; ?></TD>
-                        					<?php endforeach; ?>
-                    					</TR>
+                        				</TR>
+                        				<?php endforeach; ?>
                 					</TBODY>
             					</TABLE></TD>
             					<TD><TABLE width="275" cellpadding="0" cellspacing="0">
                 					<TBODY>
-                    					<TR>
-                    					    <?php foreach($demotions as $single): ?>
+                    				    <?php foreach($demotions as $single): ?>
+                    				    <TR>
                         					<TD><?php echo $single['name']; ?></TD>
-                        					<?php endforeach; ?>
-                    					</TR>
+                        				</TR>
+                        				<?php endforeach; ?>
                 					</TBODY>
             					</TABLE></TD>
         					</TR>
