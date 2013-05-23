@@ -1576,7 +1576,7 @@ Gregson and Brooke.');
             
             
             
-            
+            print_r($premierAllWithScores);
             
             
             /*
