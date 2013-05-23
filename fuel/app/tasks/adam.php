@@ -1547,8 +1547,8 @@ Gregson and Brooke.');
 		 */
 		public function move_telesales_staff()
 		{
-		    $chosenDate = strtotime('18th May 2013');
-		    $earlyDate = strtotime('11th May 2013');
+		    $chosenDate = strtotime('16th May 2013');
+		    $earlyDate = strtotime('9th May 2013');
 	    
             $boltonStaffCount = 7;
             $extraStaffCount  = 7;
@@ -1675,8 +1675,6 @@ Gregson and Brooke.');
                     \DB::query("UPDATE vicidial_users SET user_group='STANDARD-".$single['center']."' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
                 }
                 
-                
-                print_r($newPremierList);
                 
         		// E-Mail Managers with new campaign lists
         		$email = \Email::forge();
