@@ -1594,7 +1594,7 @@ Gregson and Brooke.');
                     \DB::query("UPDATE vicidial_users SET user_group='".$single['center']."AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
                 }
             }
-            $premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'desc');
+            $premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'asc');
             
             
             // Add scores to standard users and sort them by points
@@ -1616,7 +1616,7 @@ Gregson and Brooke.');
             
             // Work out Demotions and Promotions
             $demotionsToStandard = array();
-            for ($i = ($requiredPremier-($promotionCount)); $i <= count($premierAllWithScores)-1; $i++)
+            for ($i = 0; $i <= ($promotionCount-1); $i++)
             {
                 $demotionsToStandard[] = $premierAllWithScores[$i];
                 unset($premierAllWithScores[$i]);
@@ -1629,12 +1629,10 @@ Gregson and Brooke.');
                 unset($standardAllWithScores[$i]);
             }
             
-            //$demotionsToStandard = array_splice($premierAllWithScores, ($requiredPremier-3));
-            //$promotionsToPremier = array_slice($standardAllWithScores, 0, 3);
             
             // Generate new User group lists
-            $newPremierList = array_merge($premierAllWithScores,$promotionsToPremier);
-            $newStandardList = array_merge($standardAllWithScores,$demotionsToStandard);
+            $newPremierList = array_merge(array_reverse($premierAllWithScores), $promotionsToPremier);
+            $newStandardList = array_merge($demotionsToStandard, $standardAllWithScores);
             
             
             // Update the dialler with the new groups
