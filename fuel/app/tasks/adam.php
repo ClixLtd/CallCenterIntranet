@@ -1561,6 +1561,7 @@ Gregson and Brooke.');
             }
             
             $premierAll = array();
+            $standardAll = array();
             
             // Get PREMIER-GBS
             $premierGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GBS';")->cached(60)->execute('gabdialler');
@@ -1570,8 +1571,15 @@ Gregson and Brooke.');
             $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(60)->execute('gabdialler');
             foreach ($premierGAB as $single) $premierAll[] = $single['user'];
             
+            // Get STANDARD-GBS
+            $standardGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GBS';")->cached(60)->execute('gabdialler');
+            foreach ($standardGBS as $single) $standardAll[] = $single['user'];
             
+            // Get STANDARD-GAB
+            $standardGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GAB';")->cached(60)->execute('gabdialler');
+            foreach ($standardGAB as $single) $standardAll[] = $single['user'];
             
+            // Add scores to premier users and sort them by points
             $premierAllWithScores = array();
             foreach ($premierAll as $single)
             {
@@ -1583,10 +1591,26 @@ Gregson and Brooke.');
             $premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'desc');
             
             
-            $standardUsersAllWithScores = array_splice($premierAllWithScores, ($requiredPremier-3));
+            // Add scores to standard users and sort them by points
+            $standardAllWithScores = array();
+            foreach ($standardAll as $single)
+            {
+                if (isset($staffDiallerList[$single])) 
+                {
+                    $standardAllWithScores[$staffDiallerList[$single]] = $staffList[$staffDiallerList[$single]];
+                }
+            }
+            $standardAllWithScores = \Arr::sort($standardAllWithScores, 'points', 'desc');
+            
+            
+            // Work out Demotions and Promotions
+            $demotionsToStandard = array_splice($premierAllWithScores, ($requiredPremier-3));
+            $promotionsToPremier = array_slice($standardAllWithScores, 0, 3);
                         
             
-            print_r($standardUsersAllWithScores);
+            
+            print_r($demotionsToStandard);
+            print_r($promotionsToPremier);
             
             
             /*
