@@ -10,6 +10,40 @@
 					The dialler has been updated with the following rankings for staff.<br /><br />
 					
 					<center>
+					<h2>Promotions and Demotions</h2>
+					<TABLE width="550" cellpadding="2" cellspacing="0">
+    					<THEAD>
+        					<TR>
+            					<TH width="275">Promotions</TH>
+            					<TH width="275">Demotions</TH>
+        					</TR>
+    					</THEAD>
+    					<TBODY>
+        					<TR>
+            					<TD><TABLE width="275" cellpadding="0" cellspacing="0">
+                					<TBODY>
+                    					<TR>
+                    					    <?php foreach($promotions as $single): ?>
+                        					<TD><?php echo $single['name']; ?></TD>
+                        					<?php endforeach; ?>
+                    					</TR>
+                					</TBODY>
+            					</TABLE></TD>
+            					<TD><TABLE width="275" cellpadding="0" cellspacing="0">
+                					<TBODY>
+                    					<TR>
+                    					    <?php foreach($demotions as $single): ?>
+                        					<TD><?php echo $single['name']; ?></TD>
+                        					<?php endforeach; ?>
+                    					</TR>
+                					</TBODY>
+            					</TABLE></TD>
+        					</TR>
+    					</TBODY>
+					</TABLE>
+					
+					<hr size="1" color="#EEEEEE" width="500">
+					
 					<h2>Premier Campaign</h2>
 					<TABLE width="550" cellpadding="2" cellspacing="0">
 						<THEAD>

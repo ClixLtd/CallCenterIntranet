@@ -1625,42 +1625,8 @@ Gregson and Brooke.');
                 \DB::query("UPDATE vicidial_users SET user_group='STANDARD-".$single['center']."' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
             }
             
-            /*
-    		
-    		$newArrangement = array(
-    		    'top'    => array(),
-    		    'bottom' => array(),
-    		);
-    		
-    		// Move top staff into the correct campaign
-    		for ($i=0; $i<=($topStaffCount-1); $i++)
-    		{
-        		$thisStaff = \Model_Staff::find($staffList[$i]['staff_id']);
-        		$newArrangement['top'][] = array(
-        		    'name' => $thisStaff->first_name." ".$thisStaff->last_name,
-        		    'dialler_id' => $thisStaff->dialler_id,
-        		    'referrals' => $staffList[$i]['referrals'],
-        		    'packouts' => $staffList[$i]['packouts'],
-        		    'points' => $staffList[$i]['points'],
-        		);
-    		}
-    		
-    		
-    		// Move remaining staff into lower campaign
-    		for ($i=$topStaffCount; $i<=count($staffList)-1; $i++)
-    		{
-        		$thisStaff = \Model_Staff::find($staffList[$i]['staff_id']);
-        		$newArrangement['bottom'][] = array(
-        		    'name' => $thisStaff->first_name." ".$thisStaff->last_name,
-        		    'dialler_id' => $thisStaff->dialler_id,
-        		    'referrals' => $staffList[$i]['referrals'],
-        		    'packouts' => $staffList[$i]['packouts'],
-        		    'points' => $staffList[$i]['points'],
-        		);
+            
 
-    		}
-    		
-    		
     		// E-Mail Managers with new campaign lists
     		
     		print_r($newArrangement);
@@ -1670,7 +1636,7 @@ Gregson and Brooke.');
     		$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
     		
     		$email->to(array(
-    			'telesalesleaders@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
+    			's.skinner@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
     		));
     		
     		$email->priority(\Email::P_HIGH);
@@ -1678,13 +1644,14 @@ Gregson and Brooke.');
     		$email->subject('Dialler Staff Ranking Update');
     		
     		$email->html_body(\View::forge('emails/dialler/ranking', array(
-    			'top'    => $newArrangement['top'],
-    			'bottom' => $newArrangement['bottom'],
+    			'top'    => $newPremierList,
+    			'bottom' => $newStandardList,
+    			'promotions' => $promotionsToPremier,
+    			'demotions' => $demotionsToStandard,
     		)));
     		
     		$email->send();
     		
-    		*/
     		
     		
 		}
