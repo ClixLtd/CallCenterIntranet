@@ -1576,7 +1576,7 @@ Gregson and Brooke.');
             
             foreach ($premierAll as $single)
             {
-                if (isset($staffList[$staffDiallerList[$single]])) 
+                if (isset($staffDiallerList[$single])) 
                 {
                     $premierAllWithScores[$staffDiallerList[$single]] = $staffList[$staffDiallerList[$single]];
                 }
