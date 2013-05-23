@@ -1576,7 +1576,10 @@ Gregson and Brooke.');
             
             foreach ($premierAll as $single)
             {
-                $premierAllWithScores[$staffDiallerList[$single]] = $staffList[$staffDiallerList[$single]];
+                if (isset($staffList[$staffDiallerList[$single]])) 
+                {
+                    $premierAllWithScores[$staffDiallerList[$single]] = $staffList[$staffDiallerList[$single]];
+                }
             }
             $premierAllWithScores = \Arr::sort($premierAllWithScores, 'points');
             
