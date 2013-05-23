@@ -10,7 +10,7 @@
 					The dialler has been updated with the following rankings for staff.<br /><br />
 					
 					<center>
-					<h2>Top Staff</h2>
+					<h2>Premier Campaign</h2>
 					<TABLE width="550" cellpadding="2" cellspacing="0">
 						<THEAD>
 							<TR style="background-color: #FFFFFF; border-bottom: #CCCCCC 1px solid; border-top: #CCCCCC 1px solid;">
@@ -38,7 +38,7 @@
 					<br />
 					
 				    <center>
-					<h2>Bottom Staff</h2>
+					<h2>Standard Campaign</h2>
 					<TABLE width="550" cellpadding="2" cellspacing="0">
 						<THEAD>
 							<TR style="background-color: #FFFFFF; border-bottom: #CCCCCC 1px solid; border-top: #CCCCCC 1px solid;">

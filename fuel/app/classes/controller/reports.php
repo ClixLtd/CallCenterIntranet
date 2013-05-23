@@ -1325,6 +1325,7 @@ GROUP BY
     	       'commission'     => isset($reportArray[$member->dialler_id]['commission']) ? number_format($reportArray[$member->dialler_id]['commission'], 2) : 0.00,
     	       'allReferrals'   => isset($reportArray[$member->dialler_id]['allReferrals']) ? $reportArray[$member->dialler_id]['allReferrals'] : array(),
     	       'staff_id'     => $member->id,
+    	       'dialler_id'     => $member->dialler_id,
     	    );
     	}
     	

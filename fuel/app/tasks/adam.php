@@ -1547,12 +1547,39 @@ Gregson and Brooke.');
 		 */
 		public function move_telesales_staff()
 		{
-            $topStaffCount = 12;
+            $boltonStaffCount = 7;
+            $extraStaffCount  = 7;
             
-            
-    		// Get list of top staff
-    		$staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",strtotime('now')), date("Y-m-d",strtotime('now')));
+            // Get list of top staff
+            $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",strtotime('now')), date("Y-m-d",strtotime('now')));
+            $staffDiallerList = array();
     		$staffList = $staffListRequest['report'];
+            foreach ($staffList as $key => $single)
+            {
+                $staffDiallerList[$single['dialler_id']] = $key;
+            }
+            
+            // Get PREMIER-GBS
+            $premierGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GBS';")->cached(60)->execute
+            
+            // Get PREMIER-GAB
+            $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(60)->execute
+            
+            // Combine premier users and sort by score
+            $premierAll = array_merge($premierGAB, $premierGBS);
+            $premierAllWithScores = array();
+            foreach ($premierAll as $single)
+            {
+                $premierAllWithScores[$staffDiallerList[$single['user']]] = $staffList[$staffDiallerList[$single['user']]];
+            }
+            $premierAllWithScores = \Arr::sort($premierAllWithScores, 'points');
+            
+            
+            
+            
+            
+            
+            /*
     		
     		$newArrangement = array(
     		    'top'    => array(),
@@ -1610,7 +1637,8 @@ Gregson and Brooke.');
     		)));
     		
     		$email->send();
-
+    		
+    		*/
     		
     		
 		}
