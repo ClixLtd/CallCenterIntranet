@@ -1560,10 +1560,10 @@ Gregson and Brooke.');
             }
             
             // Get PREMIER-GBS
-            $premierGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GBS';")->cached(60)->execute
+            $premierGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GBS';")->cached(60)->execute();
             
             // Get PREMIER-GAB
-            $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(60)->execute
+            $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(60)->execute();
             
             // Combine premier users and sort by score
             $premierAll = array_merge($premierGAB, $premierGBS);
