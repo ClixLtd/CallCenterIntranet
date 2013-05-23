@@ -1612,7 +1612,7 @@ Gregson and Brooke.');
             
             
             
-            print_r($newPremierList);
+            print_r($newStandardList);
             
             
             /*
