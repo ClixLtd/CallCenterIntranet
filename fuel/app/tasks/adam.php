@@ -1612,14 +1612,11 @@ Gregson and Brooke.');
                         \DB::query("UPDATE vicidial_users SET user_group='".$single['center']."AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
                     }
                 }
-                
-                print_r($premierAllWithScores);
-                
-                /*$premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'asc');
+                //$premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'asc');
                 
                 $premierAllWithScores = \Arr::multisort($premierAllWithScores, array(
                     'points' => SORT_ASC,
-                    'backup.points' => SORT_ASC,
+                    'backup' => SORT_ASC,
                 ), true);
                 
                 
@@ -1630,7 +1627,7 @@ Gregson and Brooke.');
                     if (isset($staffDiallerList[$single['user']])) 
                     {
                         $standardAllWithScores[$staffDiallerList[$single['user']]] = $staffList[$staffDiallerList[$single['user']]];
-                        $standardAllWithScores[$staffDiallerList[$single['user']]]['backup'] = $staffSecondList[$staffSecondDiallerList[$single['user']]];
+                        $standardAllWithScores[$staffDiallerList[$single['user']]]['backup'] = $staffSecondList[$staffSecondDiallerList[$single['user']]]['points'];
                         $standardAllWithScores[$staffDiallerList[$single['user']]]['center'] = $single['center'];
                     }
                     else
@@ -1642,7 +1639,7 @@ Gregson and Brooke.');
                 
                 $standardAllWithScores = \Arr::multisort($standardAllWithScores, array(
                     'points' => SORT_DESC,
-                    'backup.points' => SORT_ASC,
+                    'backup' => SORT_ASC,
                 ), true);
                 
                 // Work out Demotions and Promotions
