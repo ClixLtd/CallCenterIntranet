@@ -1569,8 +1569,7 @@ Gregson and Brooke.');
             $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(60)->execute('gabdialler');
             foreach ($premierGAB as $single) $premierAll[] = $single['user'];
             
-            // Combine premier users and sort by score
-            $premierAll = array_merge((is_array($premierGAB)) ? $premierGAB : array(), (is_array($premierGAB)) ? $premierGBS : array());
+            
             $premierAllWithScores = array();
             
             print_r($premierAll);
