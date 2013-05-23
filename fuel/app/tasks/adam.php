@@ -1551,7 +1551,7 @@ Gregson and Brooke.');
             $extraStaffCount  = 7;
             
             // Get list of top staff
-            $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",strtotime('now')), date("Y-m-d",strtotime('now')));
+            $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",strtotime('yesterday')), date("Y-m-d",strtotime('yesterday')));
             $staffDiallerList = array();
     		$staffList = $staffListRequest['report'];
             foreach ($staffList as $key => $single)
