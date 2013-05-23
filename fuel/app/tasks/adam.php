@@ -1732,7 +1732,7 @@ Gregson and Brooke.');
         		$email->subject('Dialler Staff Ranking Update');
         		
         		$email->html_body(\View::forge('emails/dialler/ranking', array(
-        			'top'    => \Arr::multisort($newPremierList, array('points' => SORT_ASC, 'backup' => SORT_ASC,), true),
+        			'top'    => \Arr::multisort($newPremierList, array('points' => SORT_DESC, 'backup' => SORT_DESC,), true),
         			'bottom' => \Arr::multisort($newStandardList, array('points' => SORT_DESC, 'backup' => SORT_DESC,), true),
         			'promotions' => $promotionsToPremier,
         			'demotions' => $demotionsToStandard,
