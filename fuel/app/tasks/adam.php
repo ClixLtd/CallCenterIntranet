@@ -1615,7 +1615,7 @@ Gregson and Brooke.');
             
             
             // Update the dialler with the new groups
-            
+            print_r($newPremierList);
             
             /*
     		
