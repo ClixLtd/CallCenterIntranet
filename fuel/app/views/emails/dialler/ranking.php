@@ -24,6 +24,7 @@
                 					<TBODY>
                     				    <?php foreach($promotions as $single): ?>
                     				    <TR>
+                        					<TD><b><?php echo $single['center']; ?></b></TD>
                         					<TD><?php echo $single['name']; ?></TD>
                         				</TR>
                         				<?php endforeach; ?>
@@ -33,6 +34,7 @@
                 					<TBODY>
                     				    <?php foreach($demotions as $single): ?>
                     				    <TR>
+                        					<TD><b><?php echo $single['center']; ?></b></TD>
                         					<TD><?php echo $single['name']; ?></TD>
                         				</TR>
                         				<?php endforeach; ?>
