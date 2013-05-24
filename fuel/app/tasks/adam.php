@@ -1590,23 +1590,31 @@ Gregson and Brooke.');
 		 */
 		public function move_telesales_staff($chosenDay=null)
 		{
+		    // Work out days are required
 		    $chosenDate = (is_null($chosenDay)) ? strtotime('today')         : strtotime($chosenDay);
 		    $earlyDate  = (is_null($chosenDay)) ? strtotime('today -7 days') : strtotime($chosenDay . ' -7 days');
-	    
+		    
+		    // How many Bolton staff
             $boltonStaffCount = 7;
+            // How many other staff
             $extraStaffCount  = 7;
+            // Number of agents promoted / demoted daily
             $promotionCount   = 3;
             
+            // Providing the day is not a weekend we run the script
 		    if ((int)date("N", $chosenDate) < 6)
 		    {
+		        // Number of staff required for the premier campaign
                 $requiredPremier = $boltonStaffCount + $extraStaffCount;
                 
                 // Get list of top staff
                 $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",$chosenDate), date("Y-m-d",$chosenDate));
                 
-                // Get list of details over the past 14 days for extra checking purposes
+                // Get list of details over the past 7 days for extra checking purposes
                 $staffListRequestSecondary = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d", $earlyDate), date("Y-m-d",$chosenDate));
                 
+                // Create a list of user IDs so we can easily pull the keys required from the main array
+                // First one is for the daily results
                 $staffDiallerList = array();
         		$staffList = $staffListRequest['report'];
                 foreach ($staffList as $key => $single)
@@ -1614,6 +1622,7 @@ Gregson and Brooke.');
                     $staffDiallerList[$single['dialler_id']] = $key;
                 }
                 
+                // Second is for the 7 day results
                 $staffSecondDiallerList = array();
         		$staffSecondList = $staffListRequestSecondary['report'];
                 foreach ($staffSecondList as $key => $single)
@@ -1640,7 +1649,7 @@ Gregson and Brooke.');
                 $standardGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GAB';")->cached(0)->execute('gabdialler');
                 foreach ($standardGAB as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GAB');
                 
-                // Add scores to premier users and sort them by points
+                // Add scores to premier users
                 $premierAllWithScores = array();
                 $premierCount = 0;
                 foreach ($premierAll as $single)
@@ -1657,15 +1666,14 @@ Gregson and Brooke.');
                     }
                     $premierCount++;
                 }
-                //$premierAllWithScores = \Arr::sort($premierAllWithScores, 'points', 'asc');
-                
+                // Sort premier users by daily points and weekly points as a backup
                 $premierAllWithScores = \Arr::multisort($premierAllWithScores, array(
                     'points' => SORT_ASC,
                     'backup' => SORT_ASC,
                 ), true);
                 
                 
-                // Add scores to standard users and sort them by points
+                // Add scores to standard users
                 $standardAllWithScores = array();
                 $standardCount = 0;
                 foreach ($standardAll as $single)
@@ -1682,14 +1690,13 @@ Gregson and Brooke.');
                     }
                     $standardCount++;
                 }
-                //$standardAllWithScores = \Arr::sort($standardAllWithScores, 'points', 'desc');
-                
+                // Sort standard users by daily points and weekly points as a backup
                 $standardAllWithScores = \Arr::multisort($standardAllWithScores, array(
                     'points' => SORT_DESC,
                     'backup' => SORT_DESC,
                 ), true);
                 
-                // Work out Demotions and Promotions
+                // Work out Demotions
                 $totalInPremierATM = count($premierAllWithScores);
                 $demotionsToStandard = array();
                 for ($i = 0; $i <= (($promotionCount-1)+($totalInPremierATM-$requiredPremier)); $i++)
@@ -1697,7 +1704,7 @@ Gregson and Brooke.');
                     $demotionsToStandard[] = $premierAllWithScores[$i];
                     unset($premierAllWithScores[$i]);
                 }
-                
+                // Work out Promotions
                 $promotionsToPremier = array();
                 for ($i = 0; $i <= ($promotionCount-1); $i++)
                 {

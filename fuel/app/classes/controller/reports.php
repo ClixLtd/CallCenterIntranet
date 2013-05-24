@@ -2786,7 +2786,7 @@ GROUP BY
 				      ,D_CPD.NormalExpectedPayment / 100 AS DI
 				      ,(
 				      	SELECT Top (1)
-				      		ResponseVal
+				      		ResponseText
 				      	FROM
 				      		Debtsolv.dbo.Client_CustomQuestionResponses
 				      	WHERE
