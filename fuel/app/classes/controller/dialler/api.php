@@ -200,9 +200,9 @@
 			 $multiplier = ($multiplier < 1) ? 1 : $multiplier;
 			 
 			
-			$gbsCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('GBSAGENT', 'GBSSPECIAL') AND DATE(VDL.event_date)=DATE(NOW());";
+			$gbsCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PREMIER-GBS', 'STANDARD-GBS', 'GBSAGENT', 'GBSSPECIAL') AND DATE(VDL.event_date)=DATE(NOW());";
 			
-			$gabCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('GABAGENT') AND DATE(VDL.event_date)=DATE(NOW());";
+			$gabCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PREMIER-GAB', 'STANDARD-GAB', 'GABAGENT') AND DATE(VDL.event_date)=DATE(NOW());";
 			
 			$resolveCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('AGENTS') AND DATE(VDL.event_date)=DATE(NOW());";
 			
