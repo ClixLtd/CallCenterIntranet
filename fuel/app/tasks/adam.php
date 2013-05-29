@@ -1687,7 +1687,7 @@ Gregson and Brooke.');
                     }
                     else
                     {
-                        \DB::query("UPDATE vicidial_users SET user_group=".$single['center']."'AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
+                        \DB::query("UPDATE vicidial_users SET user_group='".$single['center']."AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
                     }
                     $standardCount++;
                 }
