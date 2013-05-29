@@ -1665,6 +1665,7 @@ Gregson and Brooke.');
                         \DB::query("UPDATE vicidial_users SET user_group='".$single['center']."AGENT' WHERE user='".$single['user']."';")->execute('gabdialler');
                     }
                     $premierCount++;
+                    
                 }
                 // Sort premier users by daily points and weekly points as a backup
                 $premierAllWithScores = \Arr::multisort($premierAllWithScores, array(
