@@ -1639,6 +1639,10 @@ Gregson and Brooke.');
                 $premierGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GBS';")->cached(0)->execute('gabdialler');
                 foreach ($premierGBS as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GBS');
                 
+                // Get PREMIER-GBS
+                $premierRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVE';")->cached(0)->execute('gabdialler');
+                foreach ($premierRESOLVE as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
+                
                 // Get PREMIER-GAB
                 $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(0)->execute('gabdialler');
                 foreach ($premierGAB as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GAB');
@@ -1646,6 +1650,10 @@ Gregson and Brooke.');
                 // Get STANDARD-GBS
                 $standardGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GBS';")->cached(0)->execute('gabdialler');
                 foreach ($standardGBS as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GBS');
+                
+                // Get STANDARD-GAB
+                $standardRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-RESOLVE';")->cached(0)->execute('gabdialler');
+                foreach ($standardRESOLVE as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
                 
                 // Get STANDARD-GAB
                 $standardGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GAB';")->cached(0)->execute('gabdialler');
@@ -1676,6 +1684,8 @@ Gregson and Brooke.');
                 ), true);
                 
                 
+                print_r($premierAllWithScores);
+                
                 // Add scores to standard users
                 $standardAllWithScores = array();
                 $standardCount = 0;
@@ -1698,6 +1708,10 @@ Gregson and Brooke.');
                     'points' => SORT_DESC,
                     'backup' => SORT_DESC,
                 ), true);
+                
+                
+                print_r($standardAllWithScores);
+                
                 
                 // Work out Demotions
                 $totalInPremierATM = count($premierAllWithScores);
