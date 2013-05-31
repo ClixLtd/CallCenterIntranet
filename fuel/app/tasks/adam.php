@@ -1572,7 +1572,7 @@ Gregson and Brooke.');
             }
             
             \Cli::write("\nStarting May\n");
-		    for ($i = 1; $i <= 31; $i++)
+		    for ($i = 1; $i <= 30; $i++)
 		    {
     		    $checkDay = mktime(0,0,0,5,$i,2013);
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
@@ -1595,9 +1595,7 @@ Gregson and Brooke.');
 		    $earlyDate  = (is_null($chosenDay)) ? strtotime('today -7 days') : strtotime($chosenDay . ' -7 days');
 		    
 		    // How many Bolton staff
-            $boltonStaffCount = 7;
-            // How many other staff
-            $extraStaffCount  = 7;
+            $premierPercent   = 20;
             // Number of agents promoted / demoted daily
             $promotionCount   = 3;
             
@@ -1613,7 +1611,7 @@ Gregson and Brooke.');
                 
                 
 		        // Number of staff required for the premier campaign
-                $requiredPremier = ceil((count($staffListRequest['report']) / 4));
+                $requiredPremier = ceil((count($staffListRequest['report']) * ($premierPercent/100)));
  
                 // Create a list of user IDs so we can easily pull the keys required from the main array
                 // First one is for the daily results
