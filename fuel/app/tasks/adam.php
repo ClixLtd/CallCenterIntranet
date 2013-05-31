@@ -1704,8 +1704,11 @@ Gregson and Brooke.');
                 $demotionsToStandard = array();
                 for ($i = 0; $i <= (($promotionCount-1)+($totalInPremierATM-$requiredPremier)); $i++)
                 {
-                    $demotionsToStandard[] = $premierAllWithScores[$i];
-                    unset($premierAllWithScores[$i]);
+                    if (isset($premierAllWithScores[$i]))
+                    {
+                        $demotionsToStandard[] = $premierAllWithScores[$i];
+                        unset($premierAllWithScores[$i]);
+                    }
                 }
                 // Work out Promotions
                 $promotionsToPremier = array();
