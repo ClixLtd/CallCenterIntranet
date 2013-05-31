@@ -1538,7 +1538,7 @@ Gregson and Brooke.');
 		
 		public function moveTeleSalesYear()
 		{
-		    
+		    /*
 		    \Cli::write("Starting January\n");
 		    for ($i = 1; $i <= 31; $i++)
 		    {
@@ -1554,9 +1554,9 @@ Gregson and Brooke.');
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
     		    \Cli::write(date("jS F Y", $checkDay)." Done\n");
             }
-            
+            */
             \Cli::write("\nStarting March\n");
-		    for ($i = 1; $i <= 31; $i++)
+		    for ($i = 6; $i <= 31; $i++)
 		    {
     		    $checkDay = mktime(0,0,0,3,$i,2013);
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
