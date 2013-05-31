@@ -1604,14 +1604,16 @@ Gregson and Brooke.');
             // Providing the day is not a weekend we run the script
 		    if ((int)date("N", $chosenDate) < 6)
 		    {
-		        // Number of staff required for the premier campaign
-                $requiredPremier = $boltonStaffCount + $extraStaffCount;
                 
                 // Get list of top staff
-                $staffListRequest = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d",$chosenDate), date("Y-m-d",$chosenDate));
+                $staffListRequest = \Controller_Reports::generate_telesales_report(null, date("Y-m-d",$chosenDate), date("Y-m-d",$chosenDate));
                 
                 // Get list of details over the past 7 days for extra checking purposes
-                $staffListRequestSecondary = \Controller_Reports::generate_telesales_report('INTERNAL', date("Y-m-d", $earlyDate), date("Y-m-d",$chosenDate));
+                $staffListRequestSecondary = \Controller_Reports::generate_telesales_report(null, date("Y-m-d", $earlyDate), date("Y-m-d",$chosenDate));
+                
+                
+		        // Number of staff required for the premier campaign
+                $requiredPremier = ceil(($staffListRequestSecondary / 4));
                 
                 // Create a list of user IDs so we can easily pull the keys required from the main array
                 // First one is for the daily results
@@ -1737,7 +1739,7 @@ Gregson and Brooke.');
         		$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
         		
         		$email->to(array(
-        			'telesalesleaders@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
+        			's.skinner@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
         		));
         		
         		$email->priority(\Email::P_HIGH);
