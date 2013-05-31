@@ -1645,7 +1645,7 @@ Gregson and Brooke.');
                 
                 // Get PREMIER-GBS
                 $premierRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVE';")->cached(0)->execute('gabdialler');
-                foreach ($premierRESOLVE as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVEP');
+                foreach ($premierRESOLVE as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
                 
                 // Get PREMIER-GAB
                 $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(0)->execute('gabdialler');
