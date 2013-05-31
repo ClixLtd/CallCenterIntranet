@@ -1613,11 +1613,10 @@ Gregson and Brooke.');
                 
                 
 		        // Number of staff required for the premier campaign
-                $requiredPremier = ceil((count($staffListRequest) / 4));
+                $requiredPremier = ceil((count($staffListRequest['report']) / 4));
                 
                 print "Required in Premier: ".$requiredPremier."\n\n";
                 
-                print_r($staffListRequest);
                 
                 // Create a list of user IDs so we can easily pull the keys required from the main array
                 // First one is for the daily results
