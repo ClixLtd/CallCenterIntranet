@@ -11,7 +11,7 @@
 					
 					<center>
 					<h2>Promotions and Demotions</h2>
-					<TABLE width="550" cellpadding="2" cellspacing="0">
+					<TABLE width="650" cellpadding="2" cellspacing="0">
     					<THEAD>
         					<TR style="background-color: #EEEEEE; border-bottom: #CCCCCC 1px solid;">
             					<TH width="50%">Promotions</TH>
