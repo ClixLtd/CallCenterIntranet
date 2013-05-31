@@ -1539,44 +1539,44 @@ Gregson and Brooke.');
 		public function moveTeleSalesYear()
 		{
 		    
-		    print "Starting January\n";
+		    \Cli::write("Starting January\n");
 		    for ($i = 1; $i <= 31; $i++)
 		    {
     		    $checkDay = mktime(0,0,0,1,$i,2013);
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
-    		    Cli::write(date("jS F Y", $checkDay)." Done\n");
+    		    \Cli::write(date("jS F Y", $checkDay)." Done\n");
             }
             
-            print "\nStarting Feburary\n";
+            \Cli::write("\nStarting Feburary\n");
 		    for ($i = 1; $i <= 28; $i++)
 		    {
     		    $checkDay = mktime(0,0,0,2,$i,2013);
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
-    		    Cli::write(date("jS F Y", $checkDay)." Done\n");
+    		    \Cli::write(date("jS F Y", $checkDay)." Done\n");
             }
             
-            print "\nStarting March\n";
+            \Cli::write("\nStarting March\n");
 		    for ($i = 1; $i <= 31; $i++)
 		    {
     		    $checkDay = mktime(0,0,0,3,$i,2013);
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
-    		    Cli::write(date("jS F Y", $checkDay)." Done\n");
+    		    \Cli::write(date("jS F Y", $checkDay)." Done\n");
             }
             
-            print "\nStarting April\n";
+            \Cli::write("\nStarting April\n");
 		    for ($i = 1; $i <= 30; $i++)
 		    {
     		    $checkDay = mktime(0,0,0,4,$i,2013);
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
-    		    Cli::write(date("jS F Y", $checkDay)." Done\n");
+    		    \Cli::write(date("jS F Y", $checkDay)." Done\n");
             }
             
-            print "\nStarting May\n";
+            \Cli::write("\nStarting May\n");
 		    for ($i = 1; $i <= 31; $i++)
 		    {
     		    $checkDay = mktime(0,0,0,5,$i,2013);
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
-    		    Cli::write(date("jS F Y", $checkDay)." Done\n");
+    		    \Cli::write(date("jS F Y", $checkDay)." Done\n");
             }
     		
 		}
