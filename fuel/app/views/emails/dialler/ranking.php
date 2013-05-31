@@ -47,15 +47,15 @@
 					<hr size="1" color="#EEEEEE" width="500">
 					
 					<h2>Premier Campaign</h2>
-					<TABLE width="550" cellpadding="2" cellspacing="0">
+					<TABLE width="650" cellpadding="2" cellspacing="0">
 						<THEAD>
 							<TR style="background-color: #EEEEEE; border-bottom: #CCCCCC 1px solid;">
 								<TH width="50">Center</TH>
 								<TH>Name</TH>
-								<TH width="80">Referrals</TH>
+								<TH width="100">Referrals</TH>
 								<TH width="80">Pack Outs</TH>
-								<TH width="80">Points</TH>
-								<TH width="80">Week</TH>
+								<TH width="50">Points</TH>
+								<TH width="50">Week</TH>
 							</TR>
 						</THEAD>
 						
@@ -79,15 +79,15 @@
 					
 				    <center>
 					<h2>Standard Campaign</h2>
-					<TABLE width="550" cellpadding="2" cellspacing="0">
+					<TABLE width="650" cellpadding="2" cellspacing="0">
 						<THEAD>
 							<TR style="background-color: #EEEEEE; border-bottom: #CCCCCC 1px solid;">
-							    <TH width="50">Center</TH>
+							    <TH width="100">Center</TH>
 								<TH>Name</TH>
 								<TH width="80">Referrals</TH>
 								<TH width="80">Pack Outs</TH>
-								<TH width="80">Points</TH>
-								<TH width="80">Week</TH>
+								<TH width="50">Points</TH>
+								<TH width="50">Week</TH>
 							</TR>
 						</THEAD>
 						
