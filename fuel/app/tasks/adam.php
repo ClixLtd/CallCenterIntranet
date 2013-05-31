@@ -1615,6 +1615,8 @@ Gregson and Brooke.');
 		        // Number of staff required for the premier campaign
                 $requiredPremier = ceil((count($staffListRequestSecondary) / 4));
                 
+                print "Required in Premier: ".$requiredPremier."\n\n";
+                
                 // Create a list of user IDs so we can easily pull the keys required from the main array
                 // First one is for the daily results
                 $staffDiallerList = array();
@@ -1684,8 +1686,6 @@ Gregson and Brooke.');
                 ), true);
                 
                 
-                print_r($premierAllWithScores);
-                
                 // Add scores to standard users
                 $standardAllWithScores = array();
                 $standardCount = 0;
@@ -1710,7 +1710,6 @@ Gregson and Brooke.');
                 ), true);
                 
                 
-                print_r($standardAllWithScores);
                 
                 
                 // Work out Demotions
