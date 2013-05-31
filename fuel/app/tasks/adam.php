@@ -1544,7 +1544,7 @@ Gregson and Brooke.');
 		    {
     		    $checkDay = mktime(0,0,0,1,$i,2013);
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
-    		    print date("jS F Y", $checkDay)." Done\n";
+    		    Cli::write(date("jS F Y", $checkDay)." Done\n");
             }
             
             print "\nStarting Feburary\n";
@@ -1552,31 +1552,31 @@ Gregson and Brooke.');
 		    {
     		    $checkDay = mktime(0,0,0,2,$i,2013);
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
-    		    print date("jS F Y", $checkDay)." Done\n";
+    		    Cli::write(date("jS F Y", $checkDay)." Done\n");
             }
             
             print "\nStarting March\n";
 		    for ($i = 1; $i <= 31; $i++)
 		    {
-    		    $checkDay = mktime(0,0,0,2,$i,2013);
+    		    $checkDay = mktime(0,0,0,3,$i,2013);
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
-    		    print date("jS F Y", $checkDay)." Done\n";
+    		    Cli::write(date("jS F Y", $checkDay)." Done\n");
             }
             
             print "\nStarting April\n";
 		    for ($i = 1; $i <= 30; $i++)
 		    {
-    		    $checkDay = mktime(0,0,0,2,$i,2013);
+    		    $checkDay = mktime(0,0,0,4,$i,2013);
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
-    		    print date("jS F Y", $checkDay)." Done\n";
+    		    Cli::write(date("jS F Y", $checkDay)." Done\n");
             }
             
             print "\nStarting May\n";
 		    for ($i = 1; $i <= 31; $i++)
 		    {
-    		    $checkDay = mktime(0,0,0,2,$i,2013);
+    		    $checkDay = mktime(0,0,0,5,$i,2013);
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
-    		    print date("jS F Y", $checkDay)." Done\n";
+    		    Cli::write(date("jS F Y", $checkDay)." Done\n");
             }
     		
 		}
@@ -1614,10 +1614,7 @@ Gregson and Brooke.');
                 
 		        // Number of staff required for the premier campaign
                 $requiredPremier = ceil((count($staffListRequest['report']) / 4));
-                
-                print "Required in Premier: ".$requiredPremier."\n\n";
-                
-                
+ 
                 // Create a list of user IDs so we can easily pull the keys required from the main array
                 // First one is for the daily results
                 $staffDiallerList = array();
@@ -1643,8 +1640,12 @@ Gregson and Brooke.');
                 foreach ($premierGBS as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GBS');
                 
                 // Get PREMIER-GBS
+                $premierRESOLVEPART = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVEPART';")->cached(0)->execute('gabdialler');
+                foreach ($premierRESOLVEPART as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVEPART');
+                
+                // Get PREMIER-GBS
                 $premierRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVE';")->cached(0)->execute('gabdialler');
-                foreach ($premierRESOLVE as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
+                foreach ($premierRESOLVE as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVEP');
                 
                 // Get PREMIER-GAB
                 $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(0)->execute('gabdialler');
@@ -1653,6 +1654,10 @@ Gregson and Brooke.');
                 // Get STANDARD-GBS
                 $standardGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GBS';")->cached(0)->execute('gabdialler');
                 foreach ($standardGBS as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GBS');
+                
+                // Get STANDARD-GAB
+                $standardRESOLVEPART = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-RESOLVEPART';")->cached(0)->execute('gabdialler');
+                foreach ($standardRESOLVEPART as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'RESOLVEPART');
                 
                 // Get STANDARD-GAB
                 $standardRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-RESOLVE';")->cached(0)->execute('gabdialler');
