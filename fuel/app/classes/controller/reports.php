@@ -75,9 +75,9 @@ class Controller_Reports extends Controller_BaseHybrid
                 
                 $goDetails = \Goautodial\Model_Vicidial_List::find($details->dialler_id);
                 
-                $completed = array('PPINON', 'SALE');
+                $completed = array('DMPLUS', 'DR', 'PPICOM');
                 
-                $failed = array('PPICLM', 'DNC', 'DNCL', 'HUNGUP', 'TPS');
+                $failed = array('PPICLM', 'DNC', 'DNCL', 'HUNGUP', 'TPS', 'NI', 'DNQ', 'DEC', 'ALLRDY', 'NP');
                 
                 if (in_array($goDetails->status, $completed))
                 {
