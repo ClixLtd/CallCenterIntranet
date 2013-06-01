@@ -1785,6 +1785,7 @@ Gregson and Brooke.');
 		public function tps_check($list)
 		{
 		    $startTime = strtotime("NOW");
+		    $tpsIDList = array();
     		$numbersToCheck = \DB::select('lead_id', 'phone_number', 'alt_phone')->from('vicidial_list')->where('list_id', $list)->where('status', 'NOT IN', array(
     		    'TPS',
     		    'DNC',
@@ -1797,7 +1798,6 @@ Gregson and Brooke.');
     		    'DMPLUS',
     		    'DR',
     		))->execute('gabdialler');
-    		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
     		$tpsMatchCount = 0;
     		
     		$i = 0;
@@ -1809,18 +1809,19 @@ Gregson and Brooke.');
         		if (count($tpsCheck) > 0)
         		{
         		    $tpsMatchCount++;
-            		$leadID = $lead['lead_id'];
-            		\Cli::write(\Cli::color($i.') TPS Match on Lead ID: '.$lead['lead_id'], 'red'));
-        		}
-        		else
-        		{
-            		\Cli::write(\Cli::color($i.') No TPS Match on Lead ID: '.$lead['lead_id'], 'green'));
+            		$tpsIDList[] = $lead['lead_id'];
+            		\Cli::write(\Cli::color('TPS Match on Lead ID: '.$lead['lead_id'], 'red'));
         		}
         		
     		}
+    		
+    		$result = \DB::update('vicidial_list')->set(array('status'=>'TPS'))->where('lead_id', 'IN', $tpsIDList)->execute('gabdialler');
+    		
     		$endTime = strtotime("NOW");
-    		\Cli::write('Total TPS matches: '.$tpsMatchCount);
-    		\Cli::write('Time taken: '.($endTime-$startTime)."seconds");
+    		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
+    		\Cli::write('Total TPS matches: '.count($tpsIDList));
+    		\Cli::write('Time taken: '.($endTime-$startTime)." seconds");
+    		\Cli::write('Time per lead: '.(($endTime-$startTime)/count($numbersToCheck))." seconds");
     		
 		}
 		
