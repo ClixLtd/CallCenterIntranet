@@ -1841,7 +1841,7 @@ Gregson and Brooke.');
         		    $tpsCheckQuery->where('number', $lead['alt_phone']);
         		}
         		
-        		$tpsCheck = $tpsCheckQuery->execute('gabdialler');
+        		$tpsCheck = $tpsCheckQuery->execute();
         		
         		if (count($tpsCheck) > 0)
         		{
