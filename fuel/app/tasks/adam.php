@@ -1816,6 +1816,8 @@ Gregson and Brooke.');
     		$j = 0;
     		$p = 0;
     		
+    		$tpsCount = 0;
+    		
     		$temptps = 0;
     		$tempok = 0;
     		foreach ($numbersToCheck as $lead)
@@ -1861,6 +1863,13 @@ Gregson and Brooke.');
         		    $remaining = count($numbersToCheck) - $j;
         		    $remainingTime = number_format(($remaining*$perLead)/60,2);
         		    
+        		    
+            		if (count($tpsIDList) > 0)
+            		{
+                		$result = \DB::update('vicidial_list')->set(array('status'=>'TPS'))->where('lead_id', 'IN', $tpsIDList)->execute('gabdialler');
+                		$tpsIDList = array();
+            		}
+        		    
         		    $p = $p+$alertPercent;
             		\Cli::write($j.' numbers checked (~'.$p.'%) - OK: '.$tempok.' TPS:'.$temptps.' Remaining: '.$remainingTime.' minutes.');
             		$i=0;
@@ -1869,14 +1878,10 @@ Gregson and Brooke.');
         		}
         		
     		}
-    		if (count($tpsIDList) > 0)
-    		{
-        		$result = \DB::update('vicidial_list')->set(array('status'=>'TPS'))->where('lead_id', 'IN', $tpsIDList)->execute('gabdialler');
-    		}
     		
     		$endTime = strtotime("NOW");
     		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
-    		\Cli::write('Total TPS matches: '.count($tpsIDList));
+    		\Cli::write('Total TPS matches: '.$tpsCount);
     		\Cli::write('Time taken: '.($endTime-$startTime)." seconds");
     		\Cli::write('Time per lead: '.(($endTime-$startTime)/count($numbersToCheck))." seconds");
     		
