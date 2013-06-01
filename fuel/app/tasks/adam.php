@@ -1814,8 +1814,10 @@ Gregson and Brooke.');
         		}
         		
     		}
-    		
-    		$result = \DB::update('vicidial_list')->set(array('status'=>'TPS'))->where('lead_id', 'IN', $tpsIDList)->execute('gabdialler');
+    		if (count($tpsIDList) > 0)
+    		{
+        		$result = \DB::update('vicidial_list')->set(array('status'=>'TPS'))->where('lead_id', 'IN', $tpsIDList)->execute('gabdialler');
+    		}
     		
     		$endTime = strtotime("NOW");
     		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
