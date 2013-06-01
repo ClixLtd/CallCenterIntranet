@@ -1815,6 +1815,9 @@ Gregson and Brooke.');
     		$i = 0;
     		$j = 0;
     		$p = 0;
+    		
+    		$temptps = 0;
+    		$tempok = 0;
     		foreach ($numbersToCheck as $lead)
     		{
     		    $i++;
@@ -1842,14 +1845,21 @@ Gregson and Brooke.');
         		{
         		    $tpsMatchCount++;
             		$tpsIDList[] = $lead['lead_id'];
+            		$temptps++;
             		// \Cli::write(\Cli::color('TPS Match on Lead ID: '.$lead['lead_id'], 'red'));
+        		}
+        		else
+        		{
+            		$tempok++;
         		}
         		
         		if ($i==$alertNumber)
         		{
         		    $p = $p+$alertPercent;
-            		\Cli::write($j.' numbers checked (~'.$p.'%).');
+            		\Cli::write($j.' numbers checked (~'.$p.'%) - OK: '.$tempok.' TPS:'.$temptps.'.');
             		$i=0;
+            		$temptps = 0;
+            		$tempok = 0;
         		}
         		
     		}
