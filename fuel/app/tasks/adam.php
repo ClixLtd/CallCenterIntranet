@@ -1814,6 +1814,7 @@ Gregson and Brooke.');
     		
     		$i = 0;
     		$j = 0;
+    		$p = 0;
     		foreach ($numbersToCheck as $lead)
     		{
     		    $i++;
@@ -1829,7 +1830,8 @@ Gregson and Brooke.');
         		
         		if ($i==$alertNumber)
         		{
-            		\Cli::write($j.' numbers checked ('.$alertPercent.'%).');
+        		    $p = $p+$alertPercent;
+            		\Cli::write($j.' numbers checked ('.$p.'%).');
             		$i=0;
         		}
         		
