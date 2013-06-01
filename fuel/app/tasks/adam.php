@@ -1798,11 +1798,11 @@ Gregson and Brooke.');
         		{
         		    $tpsMatchCount++;
             		$leadID = $lead['lead_id'];
-            		\Cli::color($i.') TPS Match on Lead ID: '.$lead['lead_id'], 'red');
+            		\Cli::write(\Cli::color($i.') TPS Match on Lead ID: '.$lead['lead_id'], 'red'));
         		}
         		else
         		{
-            		\Cli::color($i.') No TPS Match on Lead ID: '.$lead['lead_id'], 'green');
+            		\Cli::write(\Cli::color($i.') No TPS Match on Lead ID: '.$lead['lead_id'], 'green'));
         		}
         		
     		}
