@@ -1784,7 +1784,19 @@ Gregson and Brooke.');
 		
 		public function tps_check($list)
 		{
-    		$numbersToCheck = \DB::select('lead_id', 'phone_number', 'alt_phone')->from('vicidial_list')->where('list_id', $list)->execute('gabdialler');
+		    $startTime = strtotime("NOW");
+    		$numbersToCheck = \DB::select('lead_id', 'phone_number', 'alt_phone')->from('vicidial_list')->where('list_id', $list)->where('status', 'NOT IN', array(
+    		    'TPS',
+    		    'DNC',
+    		    'DNCL',
+    		    'EXISCL',
+    		    'SALE',
+    		    'PPI',
+    		    'PPICLM',
+    		    'PPICOM',
+    		    'DMPLUS',
+    		    'DR',
+    		))->execute('gabdialler');
     		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
     		$tpsMatchCount = 0;
     		
@@ -1806,8 +1818,9 @@ Gregson and Brooke.');
         		}
         		
     		}
-    		
+    		$endTime = strtotime("NOW");
     		\Cli::write('Total TPS matches: '.$tpsMatchCount);
+    		\Cli::write('Time taken: '.($endTime-$startTime)."seconds");
     		
 		}
 		
