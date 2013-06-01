@@ -1831,7 +1831,7 @@ Gregson and Brooke.');
         		if ($i==$alertNumber)
         		{
         		    $p = $p+$alertPercent;
-            		\Cli::write($j.' numbers checked ('.$p.'%).');
+            		\Cli::write($j.' numbers checked (~'.$p.'%).');
             		$i=0;
         		}
         		
