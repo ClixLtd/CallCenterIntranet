@@ -1808,7 +1808,7 @@ Gregson and Brooke.');
     		))->execute('gabdialler');
     		$tpsMatchCount = 0;
     		
-    		$alertPercent = 5;
+    		$alertPercent = 0.1;
     		$alertNumber = floor(count($numbersToCheck)*($alertPercent/100));
     		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
     		
