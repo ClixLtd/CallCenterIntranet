@@ -1784,6 +1784,7 @@ Gregson and Brooke.');
 		
 		public function tps_check($list)
 		{
+		    ini_set('memory_limit', '-1');
 		    $startTime = strtotime("NOW");
 		    $tpsIDList = array();
     		$numbersToCheck = \DB::select('lead_id', 'phone_number', 'alt_phone')->from('vicidial_list')->where('list_id', $list)->where('status', 'NOT IN', array(
