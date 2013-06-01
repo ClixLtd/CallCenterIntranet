@@ -1791,7 +1791,7 @@ Gregson and Brooke.');
     		
     		if (!is_null($list))
     		{
-        		$numbersToCheck->where('list_id', $list)
+        		$numbersToCheck->where('list_id', $list);
     		}
     		
     		$numbersToCheck->where('status', 'NOT IN', array(
