@@ -1819,7 +1819,24 @@ Gregson and Brooke.');
     		{
     		    $i++;
     		    $j++;
-        		$tpsCheck = \DB::select('number')->from('tps')->where('number', $lead['phone_number'])->or_where('number', $lead['alt_phone'])->execute('gabdialler');
+        		$tpsCheckQuery = \DB::select('number')->from('tps');
+        		
+        		if (strlen($lead['phone_number']) > 6)
+        		{
+            		$tpsCheckQuery->where('number', $lead['phone_number']);
+        		}
+        		
+        		if (strlen($lead['phone_number']) > 6 && strlen($lead['alt_phone']) > 6)
+        		{
+        		    $tpsCheckQuery->or_where('number', $lead['alt_phone']);
+        		}
+        		
+        		if (strlen($lead['phone_number']) < 6 && strlen($lead['alt_phone']) > 6)
+        		{
+        		    $tpsCheckQuery->where('number', $lead['alt_phone']);
+        		}
+        		
+        		$tpsCheck = $tpsCheckQuery->execute('gabdialler');
         		
         		if (count($tpsCheck) > 0)
         		{
