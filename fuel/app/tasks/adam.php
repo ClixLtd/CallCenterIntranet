@@ -1787,14 +1787,14 @@ Gregson and Brooke.');
 		    ini_set('memory_limit', '-1');
 		    $startTime = strtotime("NOW");
 		    $tpsIDList = array();
-    		$numbersToCheck = \DB::select('lead_id', 'phone_number', 'alt_phone')->from('vicidial_list');
+    		$numberQuery = \DB::select('lead_id', 'phone_number', 'alt_phone')->from('vicidial_list');
     		
     		if (!is_null($list))
     		{
-        		$numbersToCheck->where('list_id', $list);
+        		$numberQuery->where('list_id', $list);
     		}
     		
-    		$numbersToCheck->where('status', 'NOT IN', array(
+    		$numbersToCheck = $numbersQuery->where('status', 'NOT IN', array(
     		    'TPS',
     		    'DNC',
     		    'DNCL',
