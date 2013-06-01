@@ -1785,7 +1785,7 @@ Gregson and Brooke.');
 		public function tps_check($list)
 		{
     		$numbersToCheck = \DB::select('lead_id', 'phone_number', 'alt_phone')->from('vicidial_list')->where('list_id', $list)->execute('gabdialler');
-    		\Cli::write('Total Numbers to Check: '.$numbersToCheck);
+    		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
     		$tpsMatchCount = 0;
     		
     		foreach ($numbersToCheck as $lead)
