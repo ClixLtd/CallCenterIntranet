@@ -1855,8 +1855,14 @@ Gregson and Brooke.');
         		
         		if ($i==$alertNumber)
         		{
+        		    $endTime = strtotime("NOW");
+        		    
+        		    $perLead = (($endTime-$startTime)/count($j));
+        		    $remaining = count($numbersToCheck) - $j;
+        		    $remainingTime = number_format(($remaining*$perLead)/60,2);
+        		    
         		    $p = $p+$alertPercent;
-            		\Cli::write($j.' numbers checked (~'.$p.'%) - OK: '.$tempok.' TPS:'.$temptps.'.');
+            		\Cli::write($j.' numbers checked (~'.$p.'%) - OK: '.$tempok.' TPS:'.$temptps.' Remaining: '.$remainingTime.' minutes.');
             		$i=0;
             		$temptps = 0;
             		$tempok = 0;
