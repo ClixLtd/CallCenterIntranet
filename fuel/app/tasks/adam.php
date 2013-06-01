@@ -1794,7 +1794,7 @@ Gregson and Brooke.');
         		$numberQuery->where('list_id', $list);
     		}
     		
-    		$numbersToCheck = $numbersQuery->where('status', 'NOT IN', array(
+    		$numbersToCheck = $numberQuery->where('status', 'NOT IN', array(
     		    'TPS',
     		    'DNC',
     		    'DNCL',
