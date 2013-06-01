@@ -1857,7 +1857,7 @@ Gregson and Brooke.');
         		{
         		    $endTime = strtotime("NOW");
         		    
-        		    $perLead = (($endTime-$startTime)/count($j));
+        		    $perLead = (($endTime-$startTime)/$j);
         		    $remaining = count($numbersToCheck) - $j;
         		    $remainingTime = number_format(($remaining*$perLead)/60,2);
         		    
