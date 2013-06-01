@@ -1781,4 +1781,30 @@ Gregson and Brooke.');
 		}
 		
 		
+		
+		public function tps_check($list)
+		{
+    		$numbersToCheck = \DB::select('lead_id', 'phone_number', 'alt_phone')->from('vicidial_list')->where('list_id', $list)->execute('gabdialler');
+    		\Cli::write('Total Numbers to Check: '.$numbersToCheck);
+    		$tpsMatchCount = 0;
+    		
+    		foreach ($numbersToCheck as $lead)
+    		{
+        		$tpsCheck = \DB::select('number')->from('tps')->where('number', $lead['phone_number'])->or_where('number', $lead['alt_number'])->execute('gabdialler');
+        		
+        		if (count($tpsCheck) > 0)
+        		{
+        		    $tpsMatchCount++;
+            		$leadID = $lead['lead_id'];
+            		\Cli::write('TPS Match on Lead ID: '.$lead['lead_id']);
+        		}
+        		
+    		}
+    		
+    		\Cli::write('Total TPS matches: '.$tpsMatchCount);
+    		
+		}
+		
+		
+		
 	}
