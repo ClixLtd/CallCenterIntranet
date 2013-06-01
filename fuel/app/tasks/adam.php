@@ -1790,7 +1790,7 @@ Gregson and Brooke.');
     		
     		foreach ($numbersToCheck as $lead)
     		{
-        		$tpsCheck = \DB::select('number')->from('tps')->where('number', $lead['phone_number'])->or_where('number', $lead['alt_number'])->execute('gabdialler');
+        		$tpsCheck = \DB::select('number')->from('tps')->where('number', $lead['phone_number'])->or_where('number', $lead['alt_phone'])->execute('gabdialler');
         		
         		if (count($tpsCheck) > 0)
         		{
