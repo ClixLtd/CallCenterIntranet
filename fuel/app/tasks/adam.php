@@ -1808,7 +1808,8 @@ Gregson and Brooke.');
     		))->execute('gabdialler');
     		$tpsMatchCount = 0;
     		
-    		
+    		$alertPercent = 5;
+    		$alertNumber = floor(count($numbersToCheck)*($alertPercent/100));
     		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
     		
     		$i = 0;
@@ -1826,9 +1827,9 @@ Gregson and Brooke.');
             		// \Cli::write(\Cli::color('TPS Match on Lead ID: '.$lead['lead_id'], 'red'));
         		}
         		
-        		if ($i==10000)
+        		if ($i==$alertNumber)
         		{
-            		\Cli::write($j.' numbers checked.');
+            		\Cli::write($j.' numbers checked ('.$alertPercent.'%).');
             		$i=0;
         		}
         		
