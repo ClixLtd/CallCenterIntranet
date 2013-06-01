@@ -1782,12 +1782,19 @@ Gregson and Brooke.');
 		
 		
 		
-		public function tps_check($list)
+		public function tps_check($list=null)
 		{
 		    ini_set('memory_limit', '-1');
 		    $startTime = strtotime("NOW");
 		    $tpsIDList = array();
-    		$numbersToCheck = \DB::select('lead_id', 'phone_number', 'alt_phone')->from('vicidial_list')->where('list_id', $list)->where('status', 'NOT IN', array(
+    		$numbersToCheck = \DB::select('lead_id', 'phone_number', 'alt_phone')->from('vicidial_list');
+    		
+    		if (!is_null($list))
+    		{
+        		$numbersToCheck->where('list_id', $list)
+    		}
+    		
+    		$numbersToCheck->where('status', 'NOT IN', array(
     		    'TPS',
     		    'DNC',
     		    'DNCL',
@@ -1801,17 +1808,28 @@ Gregson and Brooke.');
     		))->execute('gabdialler');
     		$tpsMatchCount = 0;
     		
+    		
+    		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
+    		
     		$i = 0;
+    		$j = 0;
     		foreach ($numbersToCheck as $lead)
     		{
     		    $i++;
+    		    $j++;
         		$tpsCheck = \DB::select('number')->from('tps')->where('number', $lead['phone_number'])->or_where('number', $lead['alt_phone'])->execute('gabdialler');
         		
         		if (count($tpsCheck) > 0)
         		{
         		    $tpsMatchCount++;
             		$tpsIDList[] = $lead['lead_id'];
-            		\Cli::write(\Cli::color('TPS Match on Lead ID: '.$lead['lead_id'], 'red'));
+            		// \Cli::write(\Cli::color('TPS Match on Lead ID: '.$lead['lead_id'], 'red'));
+        		}
+        		
+        		if ($i==10000)
+        		{
+            		\Cli::write($j.' numbers checked.');
+            		$i=0;
         		}
         		
     		}
