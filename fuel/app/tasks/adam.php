@@ -1788,15 +1788,21 @@ Gregson and Brooke.');
     		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
     		$tpsMatchCount = 0;
     		
+    		$i = 0;
     		foreach ($numbersToCheck as $lead)
     		{
+    		    $i++;
         		$tpsCheck = \DB::select('number')->from('tps')->where('number', $lead['phone_number'])->or_where('number', $lead['alt_phone'])->execute('gabdialler');
         		
         		if (count($tpsCheck) > 0)
         		{
         		    $tpsMatchCount++;
             		$leadID = $lead['lead_id'];
-            		\Cli::write('TPS Match on Lead ID: '.$lead['lead_id']);
+            		\Cli::color($i.') TPS Match on Lead ID: '.$lead['lead_id'], 'red');
+        		}
+        		else
+        		{
+            		\Cli::color($i.') No TPS Match on Lead ID: '.$lead['lead_id'], 'green');
         		}
         		
     		}
