@@ -1794,7 +1794,7 @@ Gregson and Brooke.');
         		$numberQuery->where('list_id', $list);
     		}
     		
-    		$numbersToCheck = $numberQuery->where('status', 'NOT IN', array(
+    		$numberQuery->where('status', 'NOT IN', array(
     		    'TPS',
     		    'DNC',
     		    'DNCL',
@@ -1805,7 +1805,12 @@ Gregson and Brooke.');
     		    'PPICOM',
     		    'DMPLUS',
     		    'DR',
-    		))->where('security_phrase', '!=', 'Y')->execute('gabdialler');
+    		))->where('security_phrase', '!=', 'Y');
+    		
+    		$numbersToCheck = $numbersQuery->execute('gabdialler');
+    		
+    		print_r($numbersToCheck);
+    		
     		$tpsMatchCount = 0;
     		
     		$alertPercent = $percentAlert;
