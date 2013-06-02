@@ -1809,8 +1809,6 @@ Gregson and Brooke.');
     		
     		$numbersToCheck = $numberQuery->execute('gabdialler');
     		
-    		print_r($numbersToCheck);
-    		
     		$tpsMatchCount = 0;
     		
     		$alertPercent = $percentAlert;
