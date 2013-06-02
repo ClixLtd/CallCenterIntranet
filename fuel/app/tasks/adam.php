@@ -1846,7 +1846,7 @@ Gregson and Brooke.');
             		$tpsCheck = $tpsCheckQuery->execute();
         		}
         		
-        		if (is_array($tpsCheck) && count($tpsCheck) > 0)
+        		if (count($tpsCheck) > 0)
         		{
         		    $tpsMatchCount++;
             		$tpsIDList[] = $lead['lead_id'];
