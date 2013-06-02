@@ -1841,9 +1841,12 @@ Gregson and Brooke.');
         		    $tpsCheckQuery->where('number', $lead['alt_phone']);
         		}
         		
-        		$tpsCheck = $tpsCheckQuery->execute();
+        		if (strlen($lead['phone_number']) > 6 || strlen($lead['alt_phone']) > 6)
+        		{
+            		$tpsCheck = $tpsCheckQuery->execute();
+        		}
         		
-        		if (count($tpsCheck) > 0)
+        		if (is_array($tpsCheck) && count($tpsCheck) > 0)
         		{
         		    $tpsMatchCount++;
             		$tpsIDList[] = $lead['lead_id'];
