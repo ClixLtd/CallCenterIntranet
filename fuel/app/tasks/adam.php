@@ -1782,14 +1782,14 @@ Gregson and Brooke.');
 		
 		
 		
-		public function tps_check($list=null, $percentAlert=1)
+		public function tps_check($list=0, $percentAlert=1)
 		{
 		    ini_set('memory_limit', '-1');
 		    $startTime = strtotime("NOW");
 		    $tpsIDList = array();
     		$numberQuery = \DB::select('lead_id', 'phone_number', 'alt_phone')->from('vicidial_list');
     		
-    		if (!is_null($list))
+    		if ($list > 0)
     		{
         		$numberQuery->where('list_id', $list);
     		}
