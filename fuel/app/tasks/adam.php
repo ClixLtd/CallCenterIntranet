@@ -1807,7 +1807,7 @@ Gregson and Brooke.');
     		    'DR',
     		))->where('security_phrase', '!=', 'Y');
     		
-    		$numbersToCheck = $numbersQuery->execute('gabdialler');
+    		$numbersToCheck = $numberQuery->execute('gabdialler');
     		
     		print_r($numbersToCheck);
     		
