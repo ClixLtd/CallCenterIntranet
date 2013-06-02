@@ -1782,7 +1782,7 @@ Gregson and Brooke.');
 		
 		
 		
-		public function tps_check($list=null)
+		public function tps_check($list=null, $percentAlert=1)
 		{
 		    ini_set('memory_limit', '-1');
 		    $startTime = strtotime("NOW");
@@ -1808,7 +1808,7 @@ Gregson and Brooke.');
     		))->execute('gabdialler');
     		$tpsMatchCount = 0;
     		
-    		$alertPercent = 0.1;
+    		$alertPercent = $percentAlert;
     		$alertNumber = floor(count($numbersToCheck)*($alertPercent/100));
     		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
     		
