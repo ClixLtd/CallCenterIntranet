@@ -1892,10 +1892,13 @@ Gregson and Brooke.');
     		}
     		
     		$endTime = strtotime("NOW");
+    		
+    		$perLead = ($tpsMatchCount>0) ? (($endTime-$startTime)/$tpsMatchCount) : 0;
+    		
     		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
     		\Cli::write('Total TPS matches: '.$tpsMatchCount);
     		\Cli::write('Time taken: '.($endTime-$startTime)." seconds");
-    		\Cli::write('Time per lead: '.($tpsMatchCount>0) ? (($endTime-$startTime)/$tpsMatchCount) : 0 ." seconds");
+    		\Cli::write('Time per lead: '. $perLead ." seconds");
     		
 		}
 		
