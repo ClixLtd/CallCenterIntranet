@@ -1884,7 +1884,7 @@ Gregson and Brooke.');
     		
     		$endTime = strtotime("NOW");
     		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
-    		\Cli::write('Total TPS matches: '.$tpsCount);
+    		\Cli::write('Total TPS matches: '.$tpsMatchCount);
     		\Cli::write('Time taken: '.($endTime-$startTime)." seconds");
     		\Cli::write('Time per lead: '.(($endTime-$startTime)/count($numbersToCheck))." seconds");
     		
