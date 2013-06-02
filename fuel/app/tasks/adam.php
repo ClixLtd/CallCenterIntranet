@@ -1805,7 +1805,7 @@ Gregson and Brooke.');
     		    'PPICOM',
     		    'DMPLUS',
     		    'DR',
-    		))->execute('gabdialler');
+    		))->where('security_phrase', '!=', 'Y')->execute('gabdialler');
     		$tpsMatchCount = 0;
     		
     		$alertPercent = $percentAlert;
