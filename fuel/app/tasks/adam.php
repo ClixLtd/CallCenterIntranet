@@ -1885,11 +1885,17 @@ Gregson and Brooke.');
         		
     		}
     		
+    		if (count($tpsIDList) > 0)
+    		{
+        		$result = \DB::update('vicidial_list')->set(array('status'=>'TPS'))->where('lead_id', 'IN', $tpsIDList)->execute('gabdialler');
+        		$tpsIDList = array();
+    		}
+    		
     		$endTime = strtotime("NOW");
     		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
     		\Cli::write('Total TPS matches: '.$tpsMatchCount);
     		\Cli::write('Time taken: '.($endTime-$startTime)." seconds");
-    		\Cli::write('Time per lead: '.(($endTime-$startTime)/count($numbersToCheck))." seconds");
+    		\Cli::write('Time per lead: '.(($endTime-$startTime)/$tpsMatchCount)." seconds");
     		
 		}
 		
