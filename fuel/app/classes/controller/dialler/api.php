@@ -211,8 +211,8 @@
 			
 			$gabResults = DB::query($gabCountQuery)->cached(60)->execute('gabdialler');
 			$gbsResults = DB::query($gbsCountQuery)->cached(60)->execute('gabdialler');
-			$resolveResults = DB::query($resolveCountQuery)->cached(60)->execute('resolvedialler');
-			$resolveResultsPartTime = DB::query($resolveCountQueryPartTime)->cached(60)->execute('resolvedialler');
+			$resolveResults = DB::query($resolveCountQuery)->cached(60)->execute('gabdialler');
+			$resolveResultsPartTime = DB::query($resolveCountQueryPartTime)->cached(60)->execute('gabdialler');
 			
 			
 			$perPerson = array(
