@@ -204,9 +204,9 @@
 			
 			$gabCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PREMIER-GAB', 'STANDARD-GAB', 'GABAGENT') AND DATE(VDL.event_date)=DATE(NOW());";
 			
-			$resolveCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('AGENTS') AND DATE(VDL.event_date)=DATE(NOW());";
+			$resolveCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PREMIER-RESOLVE','STANDARD-RESOLVE') AND DATE(VDL.event_date)=DATE(NOW());";
 			
-			$resolveCountQueryPartTime = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PARTTIME') AND DATE(VDL.event_date)=DATE(NOW());";
+			$resolveCountQueryPartTime = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PREMIER-RESOLVEPART','STANDARD-RESOLVEPART') AND DATE(VDL.event_date)=DATE(NOW());";
 			
 			
 			$gabResults = DB::query($gabCountQuery)->cached(60)->execute('gabdialler');
