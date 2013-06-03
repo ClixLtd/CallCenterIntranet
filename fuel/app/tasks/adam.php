@@ -118,7 +118,7 @@
     		  'topicId'   => $department,
     		  'subject'   => $subject,
     		  'message'   => $message,
-    		  'pri'       => $priority,
+    		  'priorityId'       => $priority,
     		);
     		
     		
