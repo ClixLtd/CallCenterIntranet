@@ -2254,11 +2254,30 @@ GROUP BY
 			$this->param('lead'), 
 			$this->param('office')
 		);
-	
-		$this->response(array(
-			'result' => ($result['success']) ? 'success' : 'FAIL',
-			'message' => $result['message'],
-		));
+		
+		
+		if ($result['success'])
+		{
+    		$this->response(array(
+			    'result' => 'success',
+			    'message' => $result['message'],
+			));
+		}
+		else
+		{
+    		$burResult = \GAB\Debtsolv::change_center_resolve(
+    			$this->param('lead'), 
+    			$this->param('office')
+    		);
+			
+    		$this->response(array(
+    			'result' => ($burResult['success']) ? 'success' : 'FAIL',
+    			'message' => $burResult['message'],
+    		));
+		}
+		
+		
+		
 	}
 	
 	

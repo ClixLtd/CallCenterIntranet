@@ -1794,6 +1794,66 @@ Gregson and Brooke.');
 		
 		
 		
+		
+		
+		public function transfer_leads()
+		{
+    		
+    		
+    		
+    		
+    		
+    		
+    		
+            $leadInsert = array(
+                'lead_id'                 => "",
+                'entry_date'              => date("Y-m-d H:i:s",strtotime($singleLead->referral_date)),
+                'modify_date'             => date("Y-m-d H:i:s",strtotime($singleLead->referral_date)),
+                'status'                  => "NEW",
+                'user'                    => "",
+                'vendor_lead_code'        => "",
+                'source_id'               => "",
+                'list_id'                 => 199999,
+                'gmt_offset_now'          => 0.00,
+                'called_since_last_reset' => "N",
+                'phone_code'              => "9",
+                'phone_number'            => (int)(is_null($singleLead->tel_home)) ? $singleLead->tel_mobile : $singleLead->tel_home,
+                'title'                   => "",
+                'first_name'              => $singleLead->forename,
+                'middle_initial'          => "",
+                'last_name'               => $singleLead->surname,
+                'address1'                => $singleLead->street_and_number,
+                'address2'                => $singleLead->area,
+                'address3'                => $singleLead->district,
+                'city'                    => $singleLead->town,
+                'state'                   => "",
+                'province'                => $singleLead->county,
+                'postal_code'             => $singleLead->post_code,
+                'country_code'            => "UK",
+                'gender'                  => "U",
+                'date_of_birth'           => date('Y-m-d', strtotime($singleLead->date_of_birth)),
+                'alt_phone'               => ((int)$singleLead->tel_mobile == 0) ? "" : (int)$singleLead->tel_mobile,
+                'email'                   => "",
+                'security_phrase'         => "Y",
+                'comments'                => "!!! SURVEY LEAD !!! - PPI QUALIFIED - Referral ID: ".$lead." - Survey Taken on : ".date("jS F Y",strtotime($singleLead->referral_date)),
+                'called_count'            => 0,
+                'last_local_call_time'    => "2009-01-01 00:00:00",
+                'rank'                    => 0,
+                'owner'                   => "",
+                'entry_list_id'           => 0,
+            );
+            
+            // Add leads directly to the dialler
+            
+            list($insertID, $rowsChanged) = \DB::insert('vicidial_list')->set($leadInsert)->execute('gabdialler');
+                
+		}
+		
+		
+		
+		
+		
+		
 		public function tps_check($list=0, $percentAlert=1)
 		{
 		    ini_set('memory_limit', '-1');
