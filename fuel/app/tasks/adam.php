@@ -1803,7 +1803,7 @@ Gregson and Brooke.');
     		
     		$results = \DB::select('*')->from('vicidial_list')->execute('resolvedialler')->as_array();
     		
-    		\Cli::write("Total Leads to Import:  ".count($results);
+    		\Cli::write("Total Leads to Import:  ".count($results));
     		
     		
     		foreach ($results as $singleLead)
