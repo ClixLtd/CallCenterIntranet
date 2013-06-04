@@ -1803,6 +1803,7 @@ Gregson and Brooke.');
     		
     		$results = \DB::select('*')->from('vicidial_list')->execute('resolvedialler')->as_array();
     		
+    		\Cli::write("Total Leads to Import:  ".count($results);
     		
     		
     		foreach ($results as $singleLead)
@@ -1847,7 +1848,12 @@ Gregson and Brooke.');
                 
                 // Add leads directly to the dialler
                 
+                
                 list($insertID, $rowsChanged) = \DB::insert('vicidial_list')->set($leadInsert)->execute('gabdialler');
+                
+
+                \DB::update('vicidial_callbacks')->set(array('lead_id'=>$insertID))->where('lead_id', $singleLead['lead_id']);
+                
                 
                 \Cli::write("New Lead ".$insertID." added.");
         		
