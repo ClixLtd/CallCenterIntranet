@@ -1803,7 +1803,7 @@ Gregson and Brooke.');
     		$limit = 10000;
     		
     		
-    		$count = \DB::select(\DB::expr('COUNT(lead_id) as count'))->from('vicidial_list_copy')->execute();
+    		$count = \DB::select(\DB::expr('COUNT(lead_id) as count'))->from('vicidial_list_copy')->execute('resolvedialler');
     		$result_arr = $count->current();
     		$counter = $result_arr['count'];
     		
