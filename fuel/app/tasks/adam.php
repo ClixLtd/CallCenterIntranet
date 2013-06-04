@@ -1865,7 +1865,7 @@ Gregson and Brooke.');
                     \DB::update('vicidial_callbacks_copy')->set(array('lead_id'=>$insertID))->where('lead_id', $singleLead['lead_id']);
                     
                     
-                    \DB::delete('vicidial_list_copy')->where('lead_id', $singleLead['lead_id'])->execute();
+                    \DB::delete('vicidial_list_copy')->where('lead_id', $singleLead['lead_id'])->execute('resolvedialler');
                     
                     
                     \Cli::write("New Lead ".$insertID." added.");
