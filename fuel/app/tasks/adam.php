@@ -1801,51 +1801,59 @@ Gregson and Brooke.');
     		
     		
     		
+    		$results = \DB::select('*')->from('vicidial_list')->execute('resolvedialler')->as_array();
     		
     		
     		
+    		foreach ($results as $singleLead)
+    		{
+        		$leadInsert = array(
+                    'lead_id'                 => "",
+                    'entry_date'              => $singleLead['entry_date'],
+                    'modify_date'             => $singleLead['modify_date'],
+                    'status'                  => $singleLead['status'],
+                    'user'                    => $singleLead['user'],
+                    'vendor_lead_code'        => $singleLead['vendor_lead_code'],
+                    'source_id'               => $singleLead['source_id'],
+                    'list_id'                 => $singleLead['list_id'],
+                    'gmt_offset_now'          => $singleLead['gmt_offset_now'],
+                    'called_since_last_reset' => $singleLead['called_since_last_reset'],
+                    'phone_code'              => $singleLead['phone_code'],
+                    'phone_number'            => $singleLead['phone_number'],
+                    'title'                   => $singleLead['title'],
+                    'first_name'              => $singleLead['first_name'],
+                    'middle_initial'          => $singleLead['middle_initial'],
+                    'last_name'               => $singleLead['last_name'],
+                    'address1'                => $singleLead['address1'],
+                    'address2'                => $singleLead['address2'],
+                    'address3'                => $singleLead['address3'],
+                    'city'                    => $singleLead['city'],
+                    'state'                   => $singleLead['state'],
+                    'province'                => $singleLead['province'],
+                    'postal_code'             => $singleLead['postal_code'],
+                    'country_code'            => $singleLead['country_code'],
+                    'gender'                  => $singleLead['gender'],
+                    'date_of_birth'           => $singleLead['date_of_birth'],
+                    'alt_phone'               => $singleLead['alt_phone'],
+                    'email'                   => $singleLead['email'],
+                    'security_phrase'         => $singleLead['security_phrase'],
+                    'comments'                => $singleLead['comments'],
+                    'called_count'            => $singleLead['called_count'],
+                    'last_local_call_time'    => $singleLead['last_local_call_time'],
+                    'rank'                    => $singleLead['rank'],
+                    'owner'                   => $singleLead['owner'],
+                    'entry_list_id'           => $singleLead['entry_list_id'],
+                );
+                
+                // Add leads directly to the dialler
+                
+                list($insertID, $rowsChanged) = \DB::insert('vicidial_list')->set($leadInsert)->execute('gabdialler');
+                
+                \Cli::write("New Lead ".$insertID." added.");
+        		
+    		}
     		
-            $leadInsert = array(
-                'lead_id'                 => "",
-                'entry_date'              => date("Y-m-d H:i:s",strtotime($singleLead->referral_date)),
-                'modify_date'             => date("Y-m-d H:i:s",strtotime($singleLead->referral_date)),
-                'status'                  => "NEW",
-                'user'                    => "",
-                'vendor_lead_code'        => "",
-                'source_id'               => "",
-                'list_id'                 => 199999,
-                'gmt_offset_now'          => 0.00,
-                'called_since_last_reset' => "N",
-                'phone_code'              => "9",
-                'phone_number'            => (int)(is_null($singleLead->tel_home)) ? $singleLead->tel_mobile : $singleLead->tel_home,
-                'title'                   => "",
-                'first_name'              => $singleLead->forename,
-                'middle_initial'          => "",
-                'last_name'               => $singleLead->surname,
-                'address1'                => $singleLead->street_and_number,
-                'address2'                => $singleLead->area,
-                'address3'                => $singleLead->district,
-                'city'                    => $singleLead->town,
-                'state'                   => "",
-                'province'                => $singleLead->county,
-                'postal_code'             => $singleLead->post_code,
-                'country_code'            => "UK",
-                'gender'                  => "U",
-                'date_of_birth'           => date('Y-m-d', strtotime($singleLead->date_of_birth)),
-                'alt_phone'               => ((int)$singleLead->tel_mobile == 0) ? "" : (int)$singleLead->tel_mobile,
-                'email'                   => "",
-                'security_phrase'         => "Y",
-                'comments'                => "!!! SURVEY LEAD !!! - PPI QUALIFIED - Referral ID: ".$lead." - Survey Taken on : ".date("jS F Y",strtotime($singleLead->referral_date)),
-                'called_count'            => 0,
-                'last_local_call_time'    => "2009-01-01 00:00:00",
-                'rank'                    => 0,
-                'owner'                   => "",
-                'entry_list_id'           => 0,
-            );
-            
-            // Add leads directly to the dialler
-            
-            list($insertID, $rowsChanged) = \DB::insert('vicidial_list')->set($leadInsert)->execute('gabdialler');
+
                 
 		}
 		
