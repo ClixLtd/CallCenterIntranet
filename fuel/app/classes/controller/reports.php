@@ -7,6 +7,8 @@ class Controller_Reports extends Controller_BaseHybrid
     
     public static function generate_externals_report($introducer=null, $_startDate=null, $_endDate=null)
     {
+    
+        ini_set('memory_limit', '-1');
         
         $startDate = (is_null($_startDate)) ? date('Y-m-d') : $_startDate;
         $endDate = (is_null($_endDate)) ? date('Y-m-d') : $_endDate;
@@ -134,7 +136,9 @@ class Controller_Reports extends Controller_BaseHybrid
     
     public function action_externals()
     {
-    
+        
+        ini_set('memory_limit', '-1');
+        
         $viewAll = (Auth::has_access('reports.all_centers')) ? true : false;
         
 		list($driver, $user_id) = Auth::get_user_id();
