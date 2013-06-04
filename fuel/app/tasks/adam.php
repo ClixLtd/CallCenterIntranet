@@ -1798,65 +1798,83 @@ Gregson and Brooke.');
 		
 		public function transfer_leads()
 		{
+    		ini_set('memory_limit', '-1');
+    		
+    		$limit = 10000;
     		
     		
+    		$count = \DB::select(DB::expr('COUNT(lead_id) as count'))->from('vicidial_list_copy')->execute();
+    		$result_arr = $count->current();
+    		$counter = $result_arr['count'];
     		
-    		$results = \DB::select('*')->from('vicidial_list')->execute('resolvedialler')->as_array();
+    		$pages = ceil($counter/$limit);
     		
-    		\Cli::write("Total Leads to Import:  ".count($results));
+    		\Cli::write("Total Leads to Import:  ".$counter);
     		
     		
-    		foreach ($results as $singleLead)
-    		{
-        		$leadInsert = array(
-                    'lead_id'                 => "",
-                    'entry_date'              => $singleLead['entry_date'],
-                    'modify_date'             => $singleLead['modify_date'],
-                    'status'                  => $singleLead['status'],
-                    'user'                    => $singleLead['user'],
-                    'vendor_lead_code'        => $singleLead['vendor_lead_code'],
-                    'source_id'               => $singleLead['source_id'],
-                    'list_id'                 => $singleLead['list_id'],
-                    'gmt_offset_now'          => $singleLead['gmt_offset_now'],
-                    'called_since_last_reset' => $singleLead['called_since_last_reset'],
-                    'phone_code'              => $singleLead['phone_code'],
-                    'phone_number'            => $singleLead['phone_number'],
-                    'title'                   => $singleLead['title'],
-                    'first_name'              => $singleLead['first_name'],
-                    'middle_initial'          => $singleLead['middle_initial'],
-                    'last_name'               => $singleLead['last_name'],
-                    'address1'                => $singleLead['address1'],
-                    'address2'                => $singleLead['address2'],
-                    'address3'                => $singleLead['address3'],
-                    'city'                    => $singleLead['city'],
-                    'state'                   => $singleLead['state'],
-                    'province'                => $singleLead['province'],
-                    'postal_code'             => $singleLead['postal_code'],
-                    'country_code'            => $singleLead['country_code'],
-                    'gender'                  => $singleLead['gender'],
-                    'date_of_birth'           => $singleLead['date_of_birth'],
-                    'alt_phone'               => $singleLead['alt_phone'],
-                    'email'                   => $singleLead['email'],
-                    'security_phrase'         => $singleLead['security_phrase'],
-                    'comments'                => $singleLead['comments'],
-                    'called_count'            => $singleLead['called_count'],
-                    'last_local_call_time'    => $singleLead['last_local_call_time'],
-                    'rank'                    => $singleLead['rank'],
-                    'owner'                   => $singleLead['owner'],
-                    'entry_list_id'           => $singleLead['entry_list_id'],
-                );
-                
-                // Add leads directly to the dialler
-                
-                
-                list($insertID, $rowsChanged) = \DB::insert('vicidial_list')->set($leadInsert)->execute('gabdialler');
-                
-
-                \DB::update('vicidial_callbacks')->set(array('lead_id'=>$insertID))->where('lead_id', $singleLead['lead_id']);
-                
-                
-                \Cli::write("New Lead ".$insertID." added.");
+    		for ($i = 1; $i <= $pages; $i++) {
+    		
+        		$results = \DB::select('*')->from('vicidial_list_copy')->limit($limit)->execute('resolvedialler')->as_array();
         		
+        		foreach ($results as $singleLead)
+        		{
+            		$leadInsert = array(
+                        'lead_id'                 => "",
+                        'entry_date'              => $singleLead['entry_date'],
+                        'modify_date'             => $singleLead['modify_date'],
+                        'status'                  => $singleLead['status'],
+                        'user'                    => $singleLead['user'],
+                        'vendor_lead_code'        => $singleLead['vendor_lead_code'],
+                        'source_id'               => $singleLead['source_id'],
+                        'list_id'                 => $singleLead['list_id'],
+                        'gmt_offset_now'          => $singleLead['gmt_offset_now'],
+                        'called_since_last_reset' => $singleLead['called_since_last_reset'],
+                        'phone_code'              => $singleLead['phone_code'],
+                        'phone_number'            => $singleLead['phone_number'],
+                        'title'                   => $singleLead['title'],
+                        'first_name'              => $singleLead['first_name'],
+                        'middle_initial'          => $singleLead['middle_initial'],
+                        'last_name'               => $singleLead['last_name'],
+                        'address1'                => $singleLead['address1'],
+                        'address2'                => $singleLead['address2'],
+                        'address3'                => $singleLead['address3'],
+                        'city'                    => $singleLead['city'],
+                        'state'                   => $singleLead['state'],
+                        'province'                => $singleLead['province'],
+                        'postal_code'             => $singleLead['postal_code'],
+                        'country_code'            => $singleLead['country_code'],
+                        'gender'                  => $singleLead['gender'],
+                        'date_of_birth'           => $singleLead['date_of_birth'],
+                        'alt_phone'               => $singleLead['alt_phone'],
+                        'email'                   => $singleLead['email'],
+                        'security_phrase'         => $singleLead['security_phrase'],
+                        'comments'                => $singleLead['comments'],
+                        'called_count'            => $singleLead['called_count'],
+                        'last_local_call_time'    => $singleLead['last_local_call_time'],
+                        'rank'                    => $singleLead['rank'],
+                        'owner'                   => $singleLead['owner'],
+                        'entry_list_id'           => $singleLead['entry_list_id'],
+                    );
+                    
+                    // Add leads directly to the dialler
+                    
+                    
+                    list($insertID, $rowsChanged) = \DB::insert('vicidial_list')->set($leadInsert)->execute('gabdialler');
+                    
+    
+                    \DB::update('vicidial_callbacks_copy')->set(array('lead_id'=>$insertID))->where('lead_id', $singleLead['lead_id']);
+                    
+                    
+                    \DB::delete('vicidial_list_copy')->>where('lead_id', $singleLead['lead_id'])->execute();
+                    
+                    
+                    \Cli::write("New Lead ".$insertID." added.");
+                    
+                    
+                    
+            		
+        		}
+    		
     		}
     		
 
