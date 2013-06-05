@@ -316,7 +316,7 @@ class Controller_Survey_Lead extends Controller_Template
         	    $leadInsert = new \Model_Survey_Lead_Dialler();
         	    $leadInsert->referral_id = (int)$lead;
         	    $leadInsert->dialler_id = (int)$insertID;
-        	    $leadInsert->type = "DR";
+        	    $leadInsert->type = "DRLeg";
         	    $leadInsert->save();
         	    
     	    }
