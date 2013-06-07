@@ -1862,7 +1862,7 @@ Gregson and Brooke.');
                     list($insertID, $rowsChanged) = \DB::insert('vicidial_list')->set($leadInsert)->execute('gabdialler');
                     
     
-                    \DB::update('vicidial_callbacks_copy')->set(array('lead_id'=>$insertID))->where('lead_id', $singleLead['lead_id']);
+                    \DB::update('vicidial_callbacks_copy')->set(array('lead_id'=>$insertID))->where('lead_id', $singleLead['lead_id'])->execute('resolvedialler');
                     
                     
                     \DB::delete('vicidial_list_copy')->where('lead_id', $singleLead['lead_id'])->execute('resolvedialler');
