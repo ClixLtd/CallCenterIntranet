@@ -36,6 +36,7 @@ class Controller_Survey_Question extends Controller_Template
 				$survey_question = Model_Survey_Question::forge(array(
 					'survey_id' => Input::post('survey_id'),
 					'question' => Input::post('question'),
+					'order' => Input::post('order'),
 				));
 
 				if ($survey_question and $survey_question->save())
