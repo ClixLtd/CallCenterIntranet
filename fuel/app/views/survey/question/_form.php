@@ -17,6 +17,14 @@
 
 			</div>
 		</div>
+		<div class="clearfix">
+			<?php echo Form::label('Order', 'order'); ?>
+
+			<div class="input">
+				<?php echo Form::input('order', Input::post('order', isset($survey_question) ? $survey_question->order : ''), array('class' => 'span8')); ?>
+
+			</div>
+		</div>
 		<div class="actions">
 			<?php echo Form::submit('submit', 'Save', array('class' => 'btn btn-primary')); ?>
 
