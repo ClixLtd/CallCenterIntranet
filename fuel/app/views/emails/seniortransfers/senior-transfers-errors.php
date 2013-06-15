@@ -5,14 +5,17 @@
   
     <table>
       <tr>
-        <td><b>Date:</b></td>
+        <td width="100"><b>Date:</b></td>
         <td><?=date("d/m/Y");?></td>
       </tr>
       <tr>
         <td><b>Time:</b></td>
         <td><?=(date("H") - 1);?>:00</td>
       </tr>
-        <td align="center">
+      <tr>
+        <td colspan="2"><hr /></td>
+      </tr>
+        <td colspan="2" align="center">
           <table width="100%">
             <thead>
               <tr>
