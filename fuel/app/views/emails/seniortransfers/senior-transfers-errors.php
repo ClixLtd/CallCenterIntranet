@@ -5,13 +5,13 @@
   
     <table>
       <tr>
-        <td width="600">
-          <h2>Senior Transfer Error Report</h2>
-          Date: <?=date("d/m/Y");?><br />
-          Time: <?=(date("H") - 1);?>
-        </td>
+        <td><b>Date:</b></td>
+        <td><?=date("d/m/Y");?></td>
       </tr>
       <tr>
+        <td><b>Time:</b></td>
+        <td><?=(date("H") - 1);?>:00</td>
+      </tr>
         <td align="center">
           <table width="100%">
             <thead>
@@ -22,7 +22,7 @@
                 <th>Completed Time</th>
                 <th>Leadpool ID</th>
                 <th>List ID</th>
-                <td>Errors</td>
+                <th>Errors</th>
                 <th>Status</th>
               </tr>
             </thead>
