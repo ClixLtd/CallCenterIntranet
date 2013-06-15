@@ -31,7 +31,8 @@
               <?php
               if(count($results) > 0)
               {
-                foreach($results as $result) :
+                foreach($results as $result)
+                {
                 ?>
                 <tr>
                   <td align="center"><?=$result['lead_id'];?></td>
@@ -44,7 +45,7 @@
                   <td align="center"><?=$result['status'];?></td>
                 </tr>
                 <?php
-                endforeach;
+                }
               }
               else
               {
