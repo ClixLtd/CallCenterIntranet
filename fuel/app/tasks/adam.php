@@ -1512,6 +1512,83 @@ Gregson and Brooke.');
         		\Log::write('ADAM', "First Payment Table updated");
     		
 		}
+    
+    public function senior_transfer_log_report()
+    {
+      $results = array();
+      $results = @\DB::query("SELECT
+                               LST.lead_id
+                              ,senior_username
+                              ,transfered_date_time
+                              ,completed_date_time
+                              ,leadpool_id
+                              ,VL.list_id
+                              ,IF(error_message != '', 'YES','NO') AS 'has_error'
+                              ,error_message
+                              ,LSTS.description
+                              FROM
+                                gab_log_senior_transfer AS LST
+                              LEFT JOIN
+                                gab_log_senior_transfer_status AS LSTS ON LST.status = LSTS.ID
+                              LEFT JOIN
+                                vicidial_list AS VL ON LST.lead_id = VL.lead_id
+                              WHERE
+                                transfered_date_time >= NOW() - INTERVAL 1 HOUR
+                              ORDER BY
+                                transfered_date_time ASC
+                             ")->execute('gabdialler');
+        
+      $itReport = array();
+                           
+      foreach($results as $result)
+      {
+        if($result['has_error'] == 'YES')
+        {
+          $itReport[] = $result;
+        }
+      }
+      
+      // -- Send Main Transfer Report by email
+      // -------------------------------------
+      $email = \Email::forge();
+      
+      $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+        				
+      $email->to(array(
+        					'd.stansfield@expertmoneysolutions.co.uk'  => 'Senior Transfer Report',
+        				));
+                
+      $email->subject('Senior Transfer Report ' . date("d-m-Y") . ' ' . (date("H") - 1));
+      
+      $email->html_body(\View::forge('emails/seniortransfers/senior-transfers', array(
+              					'results' => $results,
+              					)
+              				));
+                      
+      $email->send();
+      
+      unset($email);
+      
+      // -- If there were any with errors, then send them to I.T.
+      // --------------------------------------------------------
+      if(count($itReport) > 0)
+      {
+        $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+        
+        $email->to(array(
+        					'd.stansfield@expertmoneysolutions.co.uk'  => 'Senior Transfer Error Report',
+        				));
+                
+        $email->subject('Senior Transfer Error Report ' . date("d-m-Y") . ' ' . (date("H") - 1));
+        
+        $email->html_body(\View::forge('emails/seniortransfers/senior-transfers-errors', array(
+              					'results' => $itReport,
+              					)
+              				));
+                      
+        $email->send();
+      }
+    }
 				
 		
 	}
