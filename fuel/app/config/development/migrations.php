@@ -70,10 +70,28 @@ return array(
 				61 => '065_create_survey_responses',
 				62 => '066_add_required_to_survey_questions',
 				63 => '067_add_survey_to_call_centers',
+				64 => '068_create_survey_lead_batches',
+				65 => '069_create_survey_lead_suppliers',
+				66 => '070_create_survey_lead_logs',
+				67 => '071_create_survey_lead_diallers',
+				68 => '072_add_order_to_survey_questions',
 			),
 		),
 		'module' => 
 		array(
+			'data' => 
+			array(
+				0 => '001_create_data',
+				1 => '002_create_data_reset',
+				2 => '003_create_data_reset_type',
+				3 => '004_create_data_holder',
+				4 => '005_create_data_dialler_copy',
+				5 => '006_add_dates_to_data',
+			),
+			'suppliers' => 
+			array(
+				0 => '001_create_suppliers',
+			),
 		),
 		'package' => 
 		array(
@@ -88,6 +106,7 @@ return array(
 				6 => '007_alter_crm_client_details_add_created',
 				7 => '008_create_crm_client_partner_details',
 				8 => '009_alter_crm_client_partner_detailsautoid',
+				9 => '010_create_crm_post_codes_list',
 			),
 			'sms' => 
 			array(

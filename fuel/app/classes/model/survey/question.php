@@ -9,6 +9,7 @@ class Model_Survey_Question extends Model
 		'question',
 		'created_at',
 		'updated_at',
+		'order',
 	);
 	
 	protected static $_has_many = array(

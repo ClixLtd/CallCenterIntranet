@@ -45,6 +45,14 @@
 			"What shoud I do this evening? Suggestions in an e-mail please! Good night!",
 		);
 		
+		
+		
+		public function checkLeads()
+		{
+    		\Controller_Survey_Lead::checkLeads();
+		}
+		
+		
 		public function testMail()
 		{
     		$email = \Email::forge();
@@ -110,7 +118,7 @@
     		  'topicId'   => $department,
     		  'subject'   => $subject,
     		  'message'   => $message,
-    		  'pri'       => $priority,
+    		  'priorityId'       => $priority,
     		);
     		
     		
@@ -378,6 +386,8 @@
 		{
 			date_default_timezone_set('Europe/London');
 			
+			@Adam::move_telesales_staff();
+			
 			@Adam::daily_stats();
 			
 			// Run List stat checker
@@ -448,29 +458,40 @@
 				
 				$minute_message = "";
 				
-				$minute_message .= @Adam::guess_dial_rate('GAB-1', TRUE)."\n";
-				$minute_message .= @Adam::guess_dial_rate('GAB2013', TRUE)."\n";
+				
+				$minute_message .= @Adam::guess_dial_rate('PREMIER', TRUE)."\n";
+				$minute_message .= @Adam::guess_dial_rate('STANDARD', TRUE)."\n";
+				
 				$minute_message .= @Adam::guess_dial_rate('GBS-1', TRUE)."\n";
-				$minute_message .= @Adam::guess_dial_rate('OPT-IN', TRUE)."\n";
 				$minute_message .= @Adam::guess_dial_rate('GAB-3', TRUE)."\n";
-				$minute_message .= @Adam::guess_dial_rate('INTERNAL', TRUE)."\n";
 				
-				@Adam::check_dialable_leads('GAB-1');
+				//$minute_message .= @Adam::guess_dial_rate('GAB-1', TRUE)."\n";
+				//$minute_message .= @Adam::guess_dial_rate('GAB2013', TRUE)."\n";
+				//$minute_message .= @Adam::guess_dial_rate('OPT-IN', TRUE)."\n";
+				//$minute_message .= @Adam::guess_dial_rate('INTERNAL', TRUE)."\n";
+				
+				
+				
+				@Adam::check_dialable_leads('PREMIER');
+				@Adam::check_dialable_leads('STANDARD');
+				
 				@Adam::check_dialable_leads('GBS-1');
-				@Adam::check_dialable_leads('OPT-IN');
-				@Adam::check_dialable_leads('GBS2013');
 				@Adam::check_dialable_leads('GAB-3');
-				@Adam::check_dialable_leads('INTERNAL');
+				
+				//@Adam::check_dialable_leads('GAB-1');
+				//@Adam::check_dialable_leads('OPT-IN');
+				//@Adam::check_dialable_leads('GBS2013');
+				//@Adam::check_dialable_leads('INTERNAL');
 				
 				
-				
+				/*
 				
 				$minute_message .= @Adam::guess_dial_rate('BURTON1', TRUE, "resolvedialler")."\n";
 				@Adam::check_dialable_leads('BURTON1', "resolvedialler");
 				
 				$minute_message .= @Adam::guess_dial_rate('SMS-1', TRUE, "resolvedialler")."\n";
 				@Adam::check_dialable_leads('SMS-1', "resolvedialler");
-				
+				*/
 				
 				
 				
@@ -481,6 +502,7 @@
 				$minute_message .= @Adam::gipltd_guess_dial_rate('INSURANC', TRUE, "gipltd")."\n";
 				$minute_message .= @Adam::gipltd_guess_dial_rate('Inbound', TRUE, "gipltd")."\n";
 				$minute_message .= @Adam::gipltd_guess_dial_rate('clixtest', TRUE, "gipltd")."\n";
+				
 				
 				*/
 				
@@ -508,14 +530,14 @@
 			}
 			
 			
-			@Adam::log_minute_stats('INTERNAL');
-			@Adam::log_minute_stats('GAB-1');
+			//@Adam::log_minute_stats('INTERNAL');
+			//@Adam::log_minute_stats('GAB-1');
 			@Adam::log_minute_stats('GBS-1');
-			@Adam::log_minute_stats('OPT-IN');
+			//@Adam::log_minute_stats('OPT-IN');
 			@Adam::log_minute_stats('GAB-3');
-			@Adam::log_minute_stats('GAB-LIVE');
-			@Adam::log_minute_stats('BURTON1', TRUE, "resolvedialler");
-			@Adam::log_minute_stats('SMS-1', TRUE, "resolvedialler");
+			//@Adam::log_minute_stats('GAB-LIVE');
+			//@Adam::log_minute_stats('BURTON1', TRUE, "resolvedialler");
+			//@Adam::log_minute_stats('SMS-1', TRUE, "resolvedialler");
 			//@Adam::log_minute_stats('UK', TRUE, "rj5");
 				
 			
@@ -536,6 +558,9 @@
 		
 		public function five_minute_tasks()
 		{
+		
+		
+		    \Controller_Survey_Lead::checkLeads();
 			
 			Adam::check_no_contacts();
 			
@@ -1590,5 +1615,475 @@ Gregson and Brooke.');
       }
     }
 				
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		public function moveTeleSalesYear()
+		{
+		    /*
+		    \Cli::write("Starting January\n");
+		    for ($i = 1; $i <= 31; $i++)
+		    {
+    		    $checkDay = mktime(0,0,0,1,$i,2013);
+    		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+    		    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+            
+            \Cli::write("\nStarting Feburary\n");
+		    for ($i = 1; $i <= 28; $i++)
+		    {
+    		    $checkDay = mktime(0,0,0,2,$i,2013);
+    		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+    		    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+            
+            \Cli::write("\nStarting March\n");
+		    for ($i = 1; $i <= 31; $i++)
+		    {
+    		    $checkDay = mktime(0,0,0,3,$i,2013);
+    		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+    		    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+            */
+            \Cli::write("\nStarting April\n");
+		    for ($i = 1; $i <= 30; $i++)
+		    {
+    		    $checkDay = mktime(0,0,0,4,$i,2013);
+    		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+    		    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+            
+            \Cli::write("\nStarting May\n");
+		    for ($i = 1; $i <= 30; $i++)
+		    {
+    		    $checkDay = mktime(0,0,0,5,$i,2013);
+    		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+    		    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+    		
+		}
+		
+		
+		/**
+		 * Function to move telesales staff based on performance.
+		 * 
+		 * @access public
+		 * @return void
+		 */
+		public function move_telesales_staff($chosenDay=null)
+		{
+		    // Work out days are required
+		    $chosenDate = (is_null($chosenDay)) ? strtotime('today')         : strtotime($chosenDay);
+		    $earlyDate  = (is_null($chosenDay)) ? strtotime('today -7 days') : strtotime($chosenDay . ' -7 days');
+		    
+		    // How many Bolton staff
+            $premierPercent   = 20;
+            // Number of agents promoted / demoted daily
+            $promotionCount   = 3;
+            
+            // Providing the day is not a weekend we run the script
+		    if ((int)date("N", $chosenDate) < 6)
+		    {
+                
+                // Get list of top staff
+                $staffListRequest = \Controller_Reports::generate_telesales_report(null, date("Y-m-d",$chosenDate), date("Y-m-d",$chosenDate));
+                
+                // Get list of details over the past 7 days for extra checking purposes
+                $staffListRequestSecondary = \Controller_Reports::generate_telesales_report(null, date("Y-m-d", $earlyDate), date("Y-m-d",$chosenDate));
+                
+                
+		        // Number of staff required for the premier campaign
+                $requiredPremier = ceil((count($staffListRequest['report']) * ($premierPercent/100)));
+ 
+                // Create a list of user IDs so we can easily pull the keys required from the main array
+                // First one is for the daily results
+                $staffDiallerList = array();
+        		$staffList = $staffListRequest['report'];
+                foreach ($staffList as $key => $single)
+                {
+                    $staffDiallerList[$single['dialler_id']] = $key;
+                }
+                
+                // Second is for the 7 day results
+                $staffSecondDiallerList = array();
+        		$staffSecondList = $staffListRequestSecondary['report'];
+                foreach ($staffSecondList as $key => $single)
+                {
+                    $staffSecondDiallerList[$single['dialler_id']] = $key;
+                }
+                
+                $premierAll = array();
+                $standardAll = array();
+                
+                // Get PREMIER-GBS
+                $premierGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GBS';")->cached(0)->execute('gabdialler');
+                foreach ($premierGBS as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GBS');
+                
+                // Get PREMIER-GBS
+                $premierRESOLVEPART = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVEPART';")->cached(0)->execute('gabdialler');
+                foreach ($premierRESOLVEPART as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVEPART');
+                
+                // Get PREMIER-GBS
+                $premierRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVE';")->cached(0)->execute('gabdialler');
+                foreach ($premierRESOLVE as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
+                
+                // Get PREMIER-GAB
+                $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(0)->execute('gabdialler');
+                foreach ($premierGAB as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GAB');
+                
+                // Get STANDARD-GBS
+                $standardGBS = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GBS';")->cached(0)->execute('gabdialler');
+                foreach ($standardGBS as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GBS');
+                
+                // Get STANDARD-GAB
+                $standardRESOLVEPART = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-RESOLVEPART';")->cached(0)->execute('gabdialler');
+                foreach ($standardRESOLVEPART as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'RESOLVEPART');
+                
+                // Get STANDARD-GAB
+                $standardRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-RESOLVE';")->cached(0)->execute('gabdialler');
+                foreach ($standardRESOLVE as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
+                
+                // Get STANDARD-GAB
+                $standardGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GAB';")->cached(0)->execute('gabdialler');
+                foreach ($standardGAB as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GAB');
+                
+                // Add scores to premier users
+                $premierAllWithScores = array();
+                $premierCount = 0;
+                foreach ($premierAll as $single)
+                {
+                    if (isset($staffDiallerList[$single['user']])) 
+                    {
+                        $premierAllWithScores[$premierCount] = $staffList[$staffDiallerList[$single['user']]];
+                        $premierAllWithScores[$premierCount]['backup'] = $staffSecondList[$staffSecondDiallerList[$single['user']]]['points'];
+                        $premierAllWithScores[$premierCount]['center'] = $single['center'];
+                    }
+                    else
+                    {
+                        \DB::query("UPDATE vicidial_users SET user_group='STANDARD-".$single['center']."' WHERE user='".$single['user']."';")->execute('gabdialler');
+                    }
+                    $premierCount++;
+                    
+                }
+                // Sort premier users by daily points and weekly points as a backup
+                $premierAllWithScores = \Arr::multisort($premierAllWithScores, array(
+                    'points' => SORT_ASC,
+                    'backup' => SORT_ASC,
+                ), true);
+                
+                
+                // Add scores to standard users
+                $standardAllWithScores = array();
+                $standardCount = 0;
+                foreach ($standardAll as $single)
+                {
+                    if (isset($staffDiallerList[$single['user']])) 
+                    {
+                        $standardAllWithScores[$standardCount] = $staffList[$staffDiallerList[$single['user']]];
+                        $standardAllWithScores[$standardCount]['backup'] = $staffSecondList[$staffSecondDiallerList[$single['user']]]['points'];
+                        $standardAllWithScores[$standardCount]['center'] = $single['center'];
+                    }
+                    else
+                    {
+                        \DB::query("UPDATE vicidial_users SET user_group='STANDARD-".$single['center']."' WHERE user='".$single['user']."';")->execute('gabdialler');
+                    }
+                    $standardCount++;
+                }
+                // Sort standard users by daily points and weekly points as a backup
+                $standardAllWithScores = \Arr::multisort($standardAllWithScores, array(
+                    'points' => SORT_DESC,
+                    'backup' => SORT_DESC,
+                ), true);
+                
+                
+                
+                
+                // Work out Demotions
+                $totalInPremierATM = count($premierAllWithScores);
+                $demotionsToStandard = array();
+                for ($i = 0; $i <= (($promotionCount-1)+($totalInPremierATM-$requiredPremier)); $i++)
+                {
+                    if (isset($premierAllWithScores[$i]))
+                    {
+                        $demotionsToStandard[] = $premierAllWithScores[$i];
+                        unset($premierAllWithScores[$i]);
+                    }
+                }
+                // Work out Promotions
+                $promotionsToPremier = array();
+                for ($i = 0; $i <= ($promotionCount-1); $i++)
+                {
+                    $promotionsToPremier[] = $standardAllWithScores[$i];
+                    unset($standardAllWithScores[$i]);
+                }
+                
+                
+                // Generate new User group lists
+                $newPremierList = array_merge(array_reverse($premierAllWithScores), $promotionsToPremier);
+                $newStandardList = array_merge($demotionsToStandard, $standardAllWithScores);
+                
+                
+                // Update the dialler with the new groups
+                foreach ($newPremierList as $single)
+                {
+                    \DB::query("UPDATE vicidial_users SET user_group='PREMIER-".$single['center']."' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
+                }
+                
+                foreach ($newStandardList as $single)
+                {
+                    \DB::query("UPDATE vicidial_users SET user_group='STANDARD-".$single['center']."' WHERE user='".$single['dialler_id']."';")->execute('gabdialler');
+                }
+                
+                
+        		// E-Mail Managers with new campaign lists
+        		$email = \Email::forge();
+    			
+        		$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+        		
+        		$email->to(array(
+        			'telesalesleaders@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
+        		));
+        		
+        		$email->priority(\Email::P_HIGH);
+        		
+        		$email->subject('Dialler Staff Ranking Update');
+        		
+        		$email->html_body(\View::forge('emails/dialler/ranking', array(
+        			'top'    => \Arr::multisort($newPremierList, array('points' => SORT_DESC, 'backup' => SORT_DESC,), true),
+        			'bottom' => \Arr::multisort($newStandardList, array('points' => SORT_DESC, 'backup' => SORT_DESC,), true),
+        			'promotions' => $promotionsToPremier,
+        			'demotions' => $demotionsToStandard,
+        			'chosendate' => $chosenDate,
+        		)));
+        		
+        		$email->send();
+    		
+    		}
+    		
+		}
+		
+		
+		
+		
+		
+		public function transfer_leads()
+		{
+    		ini_set('memory_limit', '-1');
+    		
+    		$limit = 10000;
+    		
+    		
+    		$count = \DB::select(\DB::expr('COUNT(lead_id) as count'))->from('vicidial_list_copy')->execute('resolvedialler');
+    		$result_arr = $count->current();
+    		$counter = $result_arr['count'];
+    		
+    		$pages = ceil($counter/$limit);
+    		
+    		\Cli::write("Total Leads to Import:  ".$counter);
+    		
+    		
+    		for ($i = 1; $i <= $pages; $i++) {
+    		
+        		$results = \DB::select('*')->from('vicidial_list_copy')->limit($limit)->execute('resolvedialler')->as_array();
+        		
+        		foreach ($results as $singleLead)
+        		{
+            		$leadInsert = array(
+                        'lead_id'                 => "",
+                        'entry_date'              => $singleLead['entry_date'],
+                        'modify_date'             => $singleLead['modify_date'],
+                        'status'                  => $singleLead['status'],
+                        'user'                    => $singleLead['user'],
+                        'vendor_lead_code'        => $singleLead['vendor_lead_code'],
+                        'source_id'               => $singleLead['source_id'],
+                        'list_id'                 => $singleLead['list_id'],
+                        'gmt_offset_now'          => $singleLead['gmt_offset_now'],
+                        'called_since_last_reset' => $singleLead['called_since_last_reset'],
+                        'phone_code'              => $singleLead['phone_code'],
+                        'phone_number'            => $singleLead['phone_number'],
+                        'title'                   => $singleLead['title'],
+                        'first_name'              => $singleLead['first_name'],
+                        'middle_initial'          => $singleLead['middle_initial'],
+                        'last_name'               => $singleLead['last_name'],
+                        'address1'                => $singleLead['address1'],
+                        'address2'                => $singleLead['address2'],
+                        'address3'                => $singleLead['address3'],
+                        'city'                    => $singleLead['city'],
+                        'state'                   => $singleLead['state'],
+                        'province'                => $singleLead['province'],
+                        'postal_code'             => $singleLead['postal_code'],
+                        'country_code'            => $singleLead['country_code'],
+                        'gender'                  => $singleLead['gender'],
+                        'date_of_birth'           => $singleLead['date_of_birth'],
+                        'alt_phone'               => $singleLead['alt_phone'],
+                        'email'                   => $singleLead['email'],
+                        'security_phrase'         => $singleLead['security_phrase'],
+                        'comments'                => $singleLead['comments'],
+                        'called_count'            => $singleLead['called_count'],
+                        'last_local_call_time'    => $singleLead['last_local_call_time'],
+                        'rank'                    => $singleLead['rank'],
+                        'owner'                   => $singleLead['owner'],
+                        'entry_list_id'           => $singleLead['entry_list_id'],
+                    );
+                    
+                    // Add leads directly to the dialler
+                    
+                    
+                    list($insertID, $rowsChanged) = \DB::insert('vicidial_list')->set($leadInsert)->execute('gabdialler');
+                    
+    
+                    \DB::update('vicidial_callbacks_copy')->set(array('lead_id'=>$insertID))->where('lead_id', $singleLead['lead_id'])->execute('resolvedialler');
+                    
+                    
+                    \DB::delete('vicidial_list_copy')->where('lead_id', $singleLead['lead_id'])->execute('resolvedialler');
+                    
+                    
+                    \Cli::write("New Lead ".$insertID." added.");
+                    
+                    
+                    
+            		
+        		}
+    		
+    		}
+    		
+
+                
+		}
+		
+		
+		
+		
+		
+		
+		public function tps_check($list=0, $percentAlert=1)
+		{
+		    ini_set('memory_limit', '-1');
+		    $startTime = strtotime("NOW");
+		    $tpsIDList = array();
+    		$numberQuery = \DB::select('lead_id', 'phone_number', 'alt_phone')->from('vicidial_list');
+    		
+    		if ($list > 0)
+    		{
+        		$numberQuery->where('list_id', $list);
+    		}
+    		
+    		$numberQuery->where('status', 'NOT IN', array(
+    		    'TPS',
+    		    'DNC',
+    		    'DNCL',
+    		    'EXISCL',
+    		    'SALE',
+    		    'PPI',
+    		    'PPICLM',
+    		    'PPICOM',
+    		    'DMPLUS',
+    		    'DR',
+    		))->where('security_phrase', '!=', 'Y');
+    		
+    		$numbersToCheck = $numberQuery->execute('gabdialler');
+    		
+    		$tpsMatchCount = 0;
+    		
+    		$alertPercent = $percentAlert;
+    		$alertNumber = floor(count($numbersToCheck)*($alertPercent/100));
+    		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
+    		
+    		$i = 0;
+    		$j = 0;
+    		$p = 0;
+    		
+    		$tpsCount = 0;
+    		
+    		$temptps = 0;
+    		$tempok = 0;
+    		foreach ($numbersToCheck as $lead)
+    		{
+    		    $i++;
+    		    $j++;
+        		$tpsCheckQuery = \DB::select('number')->from('tps');
+        		
+        		if (strlen($lead['phone_number']) > 6)
+        		{
+            		$tpsCheckQuery->where('number', $lead['phone_number']);
+        		}
+        		
+        		if (strlen($lead['phone_number']) > 6 && strlen($lead['alt_phone']) > 6)
+        		{
+        		    $tpsCheckQuery->or_where('number', $lead['alt_phone']);
+        		}
+        		
+        		if (strlen($lead['phone_number']) < 6 && strlen($lead['alt_phone']) > 6)
+        		{
+        		    $tpsCheckQuery->where('number', $lead['alt_phone']);
+        		}
+        		
+        		if (strlen($lead['phone_number']) > 6 || strlen($lead['alt_phone']) > 6)
+        		{
+            		$tpsCheck = $tpsCheckQuery->execute();
+        		}
+        		
+        		if (count($tpsCheck) > 0)
+        		{
+        		    $tpsMatchCount++;
+            		$tpsIDList[] = $lead['lead_id'];
+            		$temptps++;
+            		// \Cli::write(\Cli::color('TPS Match on Lead ID: '.$lead['lead_id'], 'red'));
+        		}
+        		else
+        		{
+            		$tempok++;
+        		}
+        		
+        		if ($i==$alertNumber)
+        		{
+        		    $endTime = strtotime("NOW");
+        		    
+        		    $perLead = (($endTime-$startTime)/$j);
+        		    $remaining = count($numbersToCheck) - $j;
+        		    $remainingTime = number_format(($remaining*$perLead)/60,2);
+        		    
+        		    
+            		if (count($tpsIDList) > 0)
+            		{
+                		$result = \DB::update('vicidial_list')->set(array('status'=>'TPS'))->where('lead_id', 'IN', $tpsIDList)->execute('gabdialler');
+                		$tpsIDList = array();
+            		}
+        		    
+        		    $p = $p+$alertPercent;
+            		\Cli::write($j.' numbers checked (~'.$p.'%) - OK: '.$tempok.' TPS:'.$temptps.' Remaining: '.$remainingTime.' minutes.');
+            		$i=0;
+            		$temptps = 0;
+            		$tempok = 0;
+        		}
+        		
+    		}
+    		
+    		if (count($tpsIDList) > 0)
+    		{
+        		$result = \DB::update('vicidial_list')->set(array('status'=>'TPS'))->where('lead_id', 'IN', $tpsIDList)->execute('gabdialler');
+        		$tpsIDList = array();
+    		}
+    		
+    		$endTime = strtotime("NOW");
+    		
+    		$perLead = ($tpsMatchCount>0) ? (($endTime-$startTime)/$tpsMatchCount) : 0;
+    		
+    		\Cli::write('Total Numbers to Check: '.count($numbersToCheck));
+    		\Cli::write('Total TPS matches: '.$tpsMatchCount);
+    		\Cli::write('Time taken: '.($endTime-$startTime)." seconds");
+    		\Cli::write('Time per lead: '. $perLead ." seconds");
+    		
+		}
+		
+		
 		
 	}

@@ -7,6 +7,8 @@ class Controller_Reports extends Controller_BaseHybrid
     
     public static function generate_externals_report($introducer=null, $_startDate=null, $_endDate=null)
     {
+    
+        ini_set('memory_limit', '-1');
         
         $startDate = (is_null($_startDate)) ? date('Y-m-d') : $_startDate;
         $endDate = (is_null($_endDate)) ? date('Y-m-d') : $_endDate;
@@ -40,29 +42,92 @@ class Controller_Reports extends Controller_BaseHybrid
         
         $externalReferralResult = $externalReferrals->get();
         
-        
+
         $allReferrals = array();
+        
         foreach ($externalReferralResult as $referral)
         {
+            $questionCount = 0;
             $responses = \Model_Survey_Response::query()->where('reference', $referral->id)->get();
+            
             
             $responseList = array();
             foreach ($responses as $singleResponse)
             {
-                $responseList[$singleResponse->question_id] = array(
-                    $singleResponse->answer_id,
-                    $singleResponse->extra,
-                );
+            
+                if ($singleResponse->answer_id <> 0)
+                {
+                    $questionCount++;
+                    $responseList[$singleResponse->question_id] = array(
+                        Model_Survey_Question::find($singleResponse->question_id)->question,
+                        Model_Survey_Question_Answer::find($singleResponse->answer_id)->answer,
+                        $singleResponse->extra,
+                    );
+                }
+
             }
+            
+            // Check if the lead has been referred
+            $thisCheck = Model_Survey_Lead_Dialler::query()->where('referral_id', $referral->id);
+            
+            if ($thisCheck->count() > 0)
+            {
+                $details = $thisCheck->get_one();
+                $status = $details->type;
+                
+                $goDetails = \Goautodial\Model_Vicidial_List::find($details->dialler_id);
+                
+                $completed = array('DMPLUS', 'DR', 'PPICOM');
+                
+                $failed = array('PPICLM', 'DNC', 'DNCL', 'HUNGUP', 'TPS', 'NI', 'DNQ', 'DEC', 'ALLRDY', 'NP');
+                
+                if (in_array($goDetails->status, $completed))
+                {
+                    $statusMessage = "Success. This referral continued with the ".$status." package.";
+                    
+                    
+                }
+                else if (in_array($goDetails->status, $failed))
+                {
+                    $statusMessage = "Unfortunately this referral did not continue with the ".$status." package.";
+                    $status .= "no";
+                }
+                else
+                {
+                    $statusMessage = "Referral has qualified for ".$status.". This status will change when we have more information.";
+                }
+            }
+            else
+            {
+                if ( strtotime("now -48 hours") < strtotime($referral->referral_date) )
+                {
+                    $status = null;
+                    $statusMessage = "Referral has not yet been passed to the Consumer. Please wait, this will change.";
+                }
+                else
+                {
+                    $status = null;
+                    $statusMessage = "Referral has not yet qualified for any services. This status may change in the future.";
+                }
+            }
+            
             
             $allReferrals[] = array(
                 $referral->id,
-                $referral->title." ".$externalReferrals->forename." ".$externalReferrals->surname,
+                trim(ucwords(trim($referral->title)." ".trim($referral->forename)." ".trim($referral->surname))),
                 $referral->introducer_agent_name,
+                \Model_Call_Center::find($referral->introducer_id)->title,
                 $referral->dialler_list_id,
+                date("d/m/Y", strtotime($referral->referral_date)),
+                date("H:i", strtotime($referral->referral_date)),
+                $questionCount,
                 $responseList,
+                $status,
+                $statusMessage
             );
         }
+        
+        //print_r($allReferrals);
         
         return $allReferrals;
         
@@ -71,9 +136,57 @@ class Controller_Reports extends Controller_BaseHybrid
     
     public function action_externals()
     {
-        $externalReport = Controller_Reports::generate_externals_report(array(17,16));
         
-        print_r($externalReport);
+        ini_set('memory_limit', '-1');
+        
+        $viewAll = (Auth::has_access('reports.all_centers')) ? true : false;
+        
+		list($driver, $user_id) = Auth::get_user_id();
+		$this_user = Model_User::find($user_id);
+		
+		// ## START - Pull an array of call centers this user can access
+		$call_center_array = array();
+		$call_center_ids = array();
+		$sall_call_centers = ($viewAll) ? Model_Call_Center::find('all') : Model_User_Center::query()->where('user', $user_id)->get();
+		foreach ($sall_call_centers AS $acc)
+		{
+		    $call_center_ids[] = ($viewAll) ? $acc->id : $acc->center;
+			$call_center_check = Model_Call_Center::find(($viewAll) ? $acc->id : $acc->center);
+			$call_center_array[$call_center_check->shortcode] = $call_center_check->title;
+		}
+		// ## END - Pull an array of call centers this user can access
+		
+		if (count($call_center_array) < 1) {
+			return(array(
+            	'status' => 'FAIL',
+            	'message' => 'You do not have access to this report.',
+            ));
+		} else {
+			$center = $call_center_array;
+		}
+		
+		$chosenCenter = Input::post('center', -1);
+		if ($chosenCenter <> -1 && strlen((string)$chosenCenter) > 1)
+		{
+    		$chosenDetails = Model_Call_Center::query()->where('shortcode', $chosenCenter)->get_one();
+    		$call_center_ids = array($chosenDetails->id);
+		}
+		
+		$startDate = Input::post('startdate', null);
+		$endDate = Input::post('enddate', null);
+
+        $externalReport = Controller_Reports::generate_externals_report($call_center_ids, (strlen($startDate) > 2) ? substr($startDate, 6,4)."-".substr($startDate, 3,2)."-".substr($startDate, 0,2) : null, (strlen($endDate) > 2) ? substr($endDate, 6,4)."-".substr($endDate, 3,2)."-".substr(Input::post('enddate', null), 0,2) : null);
+        
+        
+        
+        $this->template->title = 'Reports &raquo; External Survey Report';
+		$this->template->content = View::forge('reports/externals', array(
+		    'results' => $externalReport,
+		    'centers' => $call_center_array,
+		    'center' => $chosenCenter,
+		    'start_date' => $startDate,
+		    'end_date' => $endDate,
+		));	
     }
     
     
@@ -229,6 +342,7 @@ ORDER BY
 	, D_LI.Name AS Introducer
 	, ISNULL(L_CLD.LeadRef2, 'NONE') AS Shortcode
 	, (SELECT SUM(CASE WHEN EstimatedBalance > 0 THEN EstimatedBalance ELSE AmountOwed END)/100 FROM ".$thisDB['DS'].".[dbo].[Finstat_Debt] WHERE ClientID = D_PA.ClientID) AS TotalOwed
+	, (SELECT Top (1) ResponseVal FROM Debtsolv.dbo.Client_CustomQuestionResponses WHERE QuestionID = 10007 AND ClientID = D_CLD.Client_ID) AS 'ProductType'
 FROM
 	".$thisDB['DS'].".dbo.Payment_Receipt AS D_PA
 LEFT JOIN
@@ -273,8 +387,7 @@ GROUP BY
     	    
     	        $paymentTotal = (isset($clientPayments[$payment['ClientID']]['AmountIn'])) ? $clientPayments[$payment['ClientID']]['AmountIn'] + $payment['AmountIn'] : $payment['AmountIn'];
     	        $paymentCount = (isset($clientPayments[$payment['ClientID']]['count'])) ? $clientPayments[$payment['ClientID']]['count'] + 1 : 1;
-    	        
-    	        
+
     	        
     	        
     	        $shortCodeChange = array(
@@ -333,6 +446,29 @@ GROUP BY
         	       'total' => (isset($clientPayments[$payment['ClientID']])) ? $introducerPayments[$introducerTitle]['total'] : $introducerPayments[$introducerTitle]['total'] + 1,
         	    );
 
+
+    	        
+    	        $pdtype = "";
+                
+                switch ((string)$payment['ProductType']) {
+                
+                  CASE '0':
+                      $pdtype = "DR";
+                      break;
+                  CASE '1':
+                      $pdtype = "DMPLUS";
+                      break;
+                  CASE '2':
+                      $pdtype = "PPI";
+                      break;
+                  CASE '3':
+                      $pdtype = "DRPLUS";
+                      break;
+                  CASE '':
+                      $pdtype = "";
+                      break;
+                }
+
         	    $clientPayments[] = array(
         	       $payment['ClientID'],
         	       $payment['Name'],
@@ -340,7 +476,7 @@ GROUP BY
         	       $paymentTotal,
         	       $payment['NormalExpectedPayment'],
         	       $payment['TotalOwed'],
-        	       //$paymentCount,
+        	       $pdtype,
         	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? 'Full payment made in ' . $paymentCount . ' payments.' : 'DI of &pound;'.$payment['NormalExpectedPayment'].' not reached, ' . $paymentCount . ' payments made.',
         	       ($paymentTotal >= $payment['NormalExpectedPayment']) ? TRUE : FALSE,
         	    );
@@ -484,6 +620,10 @@ GROUP BY
     				array(
     					"sTitle"    => "Remaining Debt",
     					"sType"		=> "numeric",
+    				),
+    				array(
+    					"sTitle"    => "Product",
+    					"sType"		=> "string",
     				),
     				array(
     					"sTitle"    => "Notes",
@@ -993,7 +1133,7 @@ GROUP BY
                           LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
                           LEFT JOIN LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                           WHERE DR.user_login IN (" . $inList . ")
-                              AND DR.short_code IN ('GAB','GBS', '1TICK', '1TICK-GBS')
+                              AND DR.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS')
                               AND TCR.[Description] <> 'Referred'
                               AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
                               AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
@@ -1029,7 +1169,7 @@ GROUP BY
                   LEFT JOIN BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
                   LEFT JOIN BS_LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                   WHERE DR.user_login IN (" . $inList . ")
-                      AND DR.short_code IN ('RESOLVE')
+                      AND DR.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS')
                       AND TCR.[Description] <> 'Referred'
                       AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
                       AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
@@ -1045,7 +1185,7 @@ GROUP BY
                           LEFT JOIN Debtsolv.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
-                              AND D_R.short_code IN ('GAB','GBS', '1TICK', '1TICK-GBS')
+                              AND D_R.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS')
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . $endDate . "'";
     	
@@ -1060,7 +1200,7 @@ GROUP BY
                           LEFT JOIN BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
-                              AND D_R.short_code IN ('RESOLVE')
+                              AND D_R.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS')
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . $endDate . "'";
     	
@@ -1188,6 +1328,8 @@ GROUP BY
     	       'points'         => isset($reportArray[$member->dialler_id]['referrals']) ? (($reportArray[$member->dialler_id]['referrals'] * $centerValue['referral']) + ($reportArray[$member->dialler_id]['packOuts'] * $centerValue['pack_out']) + ($reportArray[$member->dialler_id]['totalDI'] * $centerValue['di_point'])) : 0.00,
     	       'commission'     => isset($reportArray[$member->dialler_id]['commission']) ? number_format($reportArray[$member->dialler_id]['commission'], 2) : 0.00,
     	       'allReferrals'   => isset($reportArray[$member->dialler_id]['allReferrals']) ? $reportArray[$member->dialler_id]['allReferrals'] : array(),
+    	       'staff_id'     => $member->id,
+    	       'dialler_id'     => $member->dialler_id,
     	    );
     	}
     	
@@ -2116,11 +2258,30 @@ GROUP BY
 			$this->param('lead'), 
 			$this->param('office')
 		);
-	
-		$this->response(array(
-			'result' => ($result['success']) ? 'success' : 'FAIL',
-			'message' => $result['message'],
-		));
+		
+		
+		if ($result['success'])
+		{
+    		$this->response(array(
+			    'result' => 'success',
+			    'message' => $result['message'],
+			));
+		}
+		else
+		{
+    		$burResult = \GAB\Debtsolv::change_center_resolve(
+    			$this->param('lead'), 
+    			$this->param('office')
+    		);
+			
+    		$this->response(array(
+    			'result' => ($burResult['success']) ? 'success' : 'FAIL',
+    			'message' => $burResult['message'],
+    		));
+		}
+		
+		
+		
 	}
 	
 	
@@ -2648,7 +2809,7 @@ GROUP BY
 				      ,D_CPD.NormalExpectedPayment / 100 AS DI
 				      ,(
 				      	SELECT Top (1)
-				      		ResponseVal
+				      		ResponseText
 				      	FROM
 				      		Debtsolv.dbo.Client_CustomQuestionResponses
 				      	WHERE

@@ -200,19 +200,19 @@
 			 $multiplier = ($multiplier < 1) ? 1 : $multiplier;
 			 
 			
-			$gbsCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('GBSAGENT', 'GBSSPECIAL') AND DATE(VDL.event_date)=DATE(NOW());";
+			$gbsCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PREMIER-GBS', 'STANDARD-GBS', 'GBSAGENT', 'GBSSPECIAL') AND DATE(VDL.event_date)=DATE(NOW());";
 			
-			$gabCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('GABAGENT') AND DATE(VDL.event_date)=DATE(NOW());";
+			$gabCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PREMIER-GAB', 'STANDARD-GAB', 'GABAGENT') AND DATE(VDL.event_date)=DATE(NOW());";
 			
-			$resolveCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('AGENTS') AND DATE(VDL.event_date)=DATE(NOW());";
+			$resolveCountQuery = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PREMIER-RESOLVE','STANDARD-RESOLVE') AND DATE(VDL.event_date)=DATE(NOW());";
 			
-			$resolveCountQueryPartTime = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PARTTIME') AND DATE(VDL.event_date)=DATE(NOW());";
+			$resolveCountQueryPartTime = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PREMIER-RESOLVEPART','STANDARD-RESOLVEPART') AND DATE(VDL.event_date)=DATE(NOW());";
 			
 			
 			$gabResults = DB::query($gabCountQuery)->cached(60)->execute('gabdialler');
 			$gbsResults = DB::query($gbsCountQuery)->cached(60)->execute('gabdialler');
-			$resolveResults = DB::query($resolveCountQuery)->cached(60)->execute('resolvedialler');
-			$resolveResultsPartTime = DB::query($resolveCountQueryPartTime)->cached(60)->execute('resolvedialler');
+			$resolveResults = DB::query($resolveCountQuery)->cached(60)->execute('gabdialler');
+			$resolveResultsPartTime = DB::query($resolveCountQueryPartTime)->cached(60)->execute('gabdialler');
 			
 			
 			$perPerson = array(

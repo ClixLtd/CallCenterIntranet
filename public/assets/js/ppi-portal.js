@@ -27,12 +27,12 @@ $(function () {
 			// Lets show the continue button.
 			$("#mailMessage").fadeIn(300);
 			$("#errorMessage").hide();
-			$("#ppiChecker").animate({bottom: '0'}, 300);
+			//$("#ppiChecker").animate({bottom: '0'}, 300);
 		}
 		else
 		{
 			// Make sure we haven't shown the continue button.
-			$("#ppiChecker").animate({bottom: '-60'}, 300);
+			//$("#ppiChecker").animate({bottom: '-60'}, 300);
 		}
 		
 		
@@ -62,7 +62,7 @@ $(function () {
 			$(".decisionPopup").animate({bottom: '-200'},300);
 		
 			$("#validateSpinner").fadeOut(300);
-			$("#ppiChecker").animate({bottom: '-60'}, 300);
+			//$("#ppiChecker").animate({bottom: '-60'}, 300);
 			
 			if (data['status'] == "FAIL")
 			{
