@@ -79,6 +79,19 @@ return array(
 		),
 		'module' => 
 		array(
+			'data' => 
+			array(
+				0 => '001_create_data',
+				1 => '002_create_data_reset',
+				2 => '003_create_data_reset_type',
+				3 => '004_create_data_holder',
+				4 => '005_create_data_dialler_copy',
+				5 => '006_add_dates_to_data',
+			),
+			'suppliers' => 
+			array(
+				0 => '001_create_suppliers',
+			),
 		),
 		'package' => 
 		array(
