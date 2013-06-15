@@ -51,7 +51,7 @@
               {
                 ?>
                 <td colspan="8">No Transfers</td>
-                <?
+                <?php
               }
               ?>
             </tbody>
