@@ -11,7 +11,7 @@
 		<table>
 			<tr>
 				<th>Leadpool ID</th>
-				<td></td>
+				<td><?php echo $leadpool; ?></td>
 			</tr>
 			<tr>
 				<th>Office</th>
@@ -19,7 +19,12 @@
 			</tr>
 			<tr>
 				<th>Telesales</th>
-				<td></td>
+				<td><select name="agent">
+					<option value="null">-- NO CHANGE</option>
+					<?php foreach ($allAgents as $agent): ?>
+					<option value="<?php echo $agent['debtsolv_id']; ?>"><?php echo $agent['first_name']; ?> <?php echo $agent['last_name']; ?></option>
+					<?php endforeach; ?>
+				</select></td>
 			</tr>
 		</table>
 	
