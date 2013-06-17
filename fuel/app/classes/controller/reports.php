@@ -2428,9 +2428,9 @@ GROUP BY
 			      ,(CD.Forename + ' ' + CD.Surname) AS Name
 			      ,ISNULL(NULLIF(LSO.[Description],'<None>'), DSLSO.[Description]) AS 'Lead Source'
 			      ,CASE WHEN
-			      	ISNULL(DI_REF.short_code,'[None]') = '[None]'
+			      	ISNULL(DI_REF.short_code,'<None>') = '<None>'
 			       THEN
-			       	'[None]'
+			       	('<span id='''+CONVERT(varchar,CLD.ClientID)+''' class=''no-office''></span>')
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
@@ -2540,9 +2540,9 @@ GROUP BY
 			      ,(CD.Forename + ' ' + CD.Surname) AS Name
 			      ,ISNULL(NULLIF(LSO.[Description],'<None>'), DSLSO.[Description]) AS 'Lead Source'
 			      ,CASE WHEN
-			      	ISNULL(DI_REF.short_code,'[None]') = '[None]'
+			      	ISNULL(DI_REF.short_code,'<None>') = '<None>'
 			       THEN
-			       	'[None]'
+			       	('<span id='''+CONVERT(varchar,CLD.ClientID)+''' class=''no-office-resolve''></span>')
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
@@ -2739,8 +2739,8 @@ GROUP BY
 								$result['Dialler Lead ID'],
 								$result['Name'],
 								$result['Lead Source'],
-								($result['Office'] == "[NONE]") ? "IDUNNO" : $result['Office'],
-								$result['Telesales Agent'],
+								'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['Office'].'</a>',
+								'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['Telesales Agent'].'</a>',
 								$result['Consolidator'],
 								'<div class="dispositionName">'.$result['Description'].'</div>',
 								$result['DI'],
