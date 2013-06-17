@@ -2236,6 +2236,9 @@ GROUP BY
 	
 	public function action_change_offices($leadpoolID)
 	{
+		
+		$currentResults = \DB::select('*')->from('Dialler.dbo.referrals')->where('leadpool_id', $leadpoolID)->execute()->as_array();
+		
 		$allAgents = \DB::select('*')->from('staffs')->where('department_id', 1)->execute()->as_array();
 		$allCenters = \DB::select('*')->from('call_centers')->execute()->as_array();
 		
@@ -2244,6 +2247,7 @@ GROUP BY
 		    'allAgents' => $allAgents,
 		    'leadpool' => $leadpoolID,
 		    'centers' => $allCenters,
+		    'current' => $currentResults[0],
 		));	
 		
 	}
@@ -2257,8 +2261,9 @@ GROUP BY
 		/*
 		
 		$result = \GAB\Debtsolv::change_center(
-			$this->param('lead'), 
-			$this->param('office')
+			\Input::post('leadpool'), 
+			\Input::post('center'),
+			\Input::post('agent')
 		);
 		
 		
@@ -2272,8 +2277,9 @@ GROUP BY
 		else
 		{
     		$burResult = \GAB\Debtsolv::change_center_resolve(
-    			$this->param('lead'), 
-    			$this->param('office')
+    			\Input::post('leadpool'), 
+				\Input::post('center'),
+				\Input::post('agent')
     		);
 			
     		$this->response(array(
