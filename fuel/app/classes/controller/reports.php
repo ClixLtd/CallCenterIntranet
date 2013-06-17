@@ -2237,12 +2237,13 @@ GROUP BY
 	public function action_change_offices($leadpoolID)
 	{
 		$allAgents = \DB::select('*')->from('staffs')->where('department_id', 1)->execute()->as_array();
-		
+		$allCenters = \DB::select('*')->from('call_centers')->execute()->as_array();
 		
 		$this->template->title = 'Reports &raquo; Change Office';
 		$this->template->content = View::forge('reports/changeoffice', array(
 		    'allAgents' => $allAgents,
-		    'leadpool' => $leadpoolID,	
+		    'leadpool' => $leadpoolID,
+		    'centers' => $allCenters,
 		));	
 		
 	}

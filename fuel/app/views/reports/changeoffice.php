@@ -15,7 +15,12 @@
 			</tr>
 			<tr>
 				<th>Office</th>
-				<td></td>
+				<td><select name="center">
+					<option value="null">-- NO CHANGE</option>
+					<?php foreach ($centers as $center): ?>
+					<option value="<?php echo $center['shortcode']; ?>"><?php echo $center['title']; ?></option>
+					<?php endforeach; ?>
+				</select></td>
 			</tr>
 			<tr>
 				<th>Telesales</th>
