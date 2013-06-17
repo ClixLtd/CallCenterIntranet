@@ -7,11 +7,11 @@
 	</div>
 	
 	<section>
-	
+		<form method="post">
 		<table>
 			<tr>
 				<th>Leadpool ID</th>
-				<td><?php echo $leadpool; ?></td>
+				<td><?php echo $leadpool; ?><input type="hidden" name="leadpool" value="<?php echo $leadpool; ?>"></td>
 			</tr>
 			<tr>
 				<th>Office</th>
@@ -31,7 +31,11 @@
 					<?php endforeach; ?>
 				</select></td>
 			</tr>
+			<tr>
+				<th></th>
+				<td><input type="submit" value="Save"></td>
+			</tr>
 		</table>
-	
+		</form>
 	</section>
 </article>

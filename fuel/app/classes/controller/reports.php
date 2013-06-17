@@ -2251,6 +2251,10 @@ GROUP BY
 	public function post_change_offices()
 	{
 		
+		print_r($_POST);
+		
+		
+		/*
 		
 		$result = \GAB\Debtsolv::change_center(
 			$this->param('lead'), 
@@ -2278,7 +2282,7 @@ GROUP BY
     		));
 		}
 
-		
+		*/
 		
 	}
 	
