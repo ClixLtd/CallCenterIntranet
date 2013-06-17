@@ -1561,7 +1561,7 @@ Gregson and Brooke.');
                                 transfered_date_time >= NOW() - INTERVAL 1 HOUR
                               ORDER BY
                                 transfered_date_time ASC
-                             ")->execute('gabdialler');
+                             ")->execute('gabdialler')->as_array();
         
       $itReport = array();
                            
