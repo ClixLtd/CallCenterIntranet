@@ -92,6 +92,17 @@ return array(
 			array(
 				0 => '001_create_suppliers',
 			),
+			'clientarea' => 
+			array(
+				0 => '001_create_clientarea_change_password',
+				1 => '002_create_clientarea_client_access_log',
+				2 => '003_create_clientarea_client_change_profile',
+				3 => '004_create_clientarea_companies',
+				4 => '005_create_clientarea_messages',
+				5 => '006_create_clientarea_messages_posts',
+				6 => '007_create_clientarea_messages_statuses',
+				7 => '008_create_clientarea_type_access_log_type',
+			),
 		),
 		'package' => 
 		array(
