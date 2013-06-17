@@ -2234,6 +2234,53 @@ GROUP BY
 	
 	
 	
+	public function action_change_offices($leadpoolID)
+	{
+		$allAgents = \DB::select(*)->from('staffs')->where('department_id', 1)->execute();
+		
+		
+		$this->template->title = 'Reports &raquo; Change Office';
+		$this->template->content = View::forge('reports/changeoffice', array(
+		    'allAgents' => $externalReport,
+		));	
+		
+	}
+	
+	public function post_change_offices()
+	{
+		
+		
+		$result = \GAB\Debtsolv::change_center(
+			$this->param('lead'), 
+			$this->param('office')
+		);
+		
+		
+		if ($result['success'])
+		{
+    		$this->response(array(
+			    'result' => 'success',
+			    'message' => $result['message'],
+			));
+		}
+		else
+		{
+    		$burResult = \GAB\Debtsolv::change_center_resolve(
+    			$this->param('lead'), 
+    			$this->param('office')
+    		);
+			
+    		$this->response(array(
+    			'result' => ($burResult['success']) ? 'success' : 'FAIL',
+    			'message' => $burResult['message'],
+    		));
+		}
+
+		
+		
+	}
+	
+	
 	
 	public function get_change_resolve_office()
 	{
@@ -2702,6 +2749,7 @@ GROUP BY
 								date("d-m-y", strtotime($result['Referred Date'])),
 								date("d-m-y H:i", strtotime($result['Last Contact Date'])),
 								($result['Call Back Date']<>" ") ? date("d-m-y", strtotime($result['Call Back Date'])) : "",
+								"hello",
 								
 							);
 							$totals['referrals']['count']++;
@@ -3444,6 +3492,10 @@ GROUP BY
 							array(
 								"sTitle"    => "Call Back",
 								"sType"		=> "date-uk",
+							),
+							array(
+								"sTitle"    => "",
+								"bSortable" => false,
 							),
 						),
 					),
