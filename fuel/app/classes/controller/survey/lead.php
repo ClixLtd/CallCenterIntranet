@@ -62,9 +62,18 @@ class Controller_Survey_Lead extends Controller_Template
     	    } 
     	    
     	    if (
+    	    	 (
     	           Controller_Survey_Lead::checkAnswer(15, 66, $referralDetails) AND 
     	           Controller_Survey_Lead::checkAnswer(16, 69, $referralDetails) AND
     	           !in_array($referral, $drLeads)
+    	         )
+    	         ||
+    	         (
+    	           Controller_Survey_Lead::checkAnswer(30, 172, $referralDetails) AND 
+    	           Controller_Survey_Lead::checkAnswer(31, 175, $referralDetails) AND
+    	           Controller_Survey_Lead::checkAnswer(40, 217, $referralDetails) AND
+    	           !in_array($referral, $drLeads)
+    	         )
     	       )
     	    {
         	    $ppiLeads[] = $referral;
