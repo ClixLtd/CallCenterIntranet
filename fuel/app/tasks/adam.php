@@ -592,6 +592,8 @@
 			
 			
 			print $message;
+      
+      $this->senior_transfer_log_report();
 			
 		}
 		
@@ -1562,6 +1564,9 @@ Gregson and Brooke.');
                               ORDER BY
                                 transfered_date_time ASC
                              ")->execute('gabdialler')->as_array();
+                             
+      if(count($results) <= 0)
+        return;
         
       $itReport = array();
                            
