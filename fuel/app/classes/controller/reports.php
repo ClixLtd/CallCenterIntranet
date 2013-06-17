@@ -2236,7 +2236,7 @@ GROUP BY
 	
 	public function action_change_offices($leadpoolID)
 	{
-		$allAgents = \DB::select(*)->from('staffs')->where('department_id', 1)->execute();
+		$allAgents = \DB::select('*')->from('staffs')->where('department_id', 1)->execute();
 		
 		
 		$this->template->title = 'Reports &raquo; Change Office';
