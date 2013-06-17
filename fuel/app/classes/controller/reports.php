@@ -2255,10 +2255,6 @@ GROUP BY
 	public function post_change_offices()
 	{
 		
-		print_r(\Input::post());
-		
-		
-		/*
 		
 		$result = \GAB\Debtsolv::change_center(
 			\Input::post('leadpool'), 
@@ -2269,10 +2265,7 @@ GROUP BY
 		
 		if ($result['success'])
 		{
-    		$this->response(array(
-			    'result' => 'success',
-			    'message' => $result['message'],
-			));
+    		\Response::redirect('reports/disposition');
 		}
 		else
 		{
@@ -2282,13 +2275,10 @@ GROUP BY
 				\Input::post('agent')
     		);
 			
-    		$this->response(array(
-    			'result' => ($burResult['success']) ? 'success' : 'FAIL',
-    			'message' => $burResult['message'],
-    		));
+    		\Response::redirect('reports/disposition');
 		}
 
-		*/
+		\Response::redirect('reports/disposition');
 		
 	}
 	
