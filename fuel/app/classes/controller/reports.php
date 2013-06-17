@@ -2739,7 +2739,7 @@ GROUP BY
 								$result['Dialler Lead ID'],
 								$result['Name'],
 								$result['Lead Source'],
-								(strlen($result['Office']) < 2) ? "IDUNNO" : $result['Office'],
+								(strlen($result['Office']) < 2) ? "IDUNNO" : strlen($result['Office']),
 								$result['Telesales Agent'],
 								$result['Consolidator'],
 								'<div class="dispositionName">'.$result['Description'].'</div>',
