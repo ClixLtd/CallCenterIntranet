@@ -31,16 +31,17 @@
             </thead>
             <tbody>
               <?php foreach($results as $result) : ?>
-              <tr>
+              <tr style="background-color: <?php echo ($background==0) ? "#DDDDDD" : "#EEEEEE"; ?>; border-bottom: #CCCCCC 1px solid;">
                 <td align="center"><?=$result['lead_id'];?></td>
                 <td><?=$result['senior_username'];?></td>
-                <td><?=$result['transfered_date_time'];?></td>
-                <td><?=$result['completed_date_time'];?></td>
+                <td align="center"><?=$result['transfered_date_time'];?></td>
+                <td align="center"><?=$result['completed_date_time'];?></td>
                 <td align="center"><?=$result['leadpool_id'];?></td>
                 <td align="center"><?=$result['list_id'];?></td>
                 <td align="center"><?=unserialize($result['error_message']);?></td>
                 <td align="center"><?=$result['description'];?></td>
               </tr>
+              <?php $background = ($background==0) ? 1 : 0;?>
               <?php endforeach; ?>
             </tbody>
           </table>

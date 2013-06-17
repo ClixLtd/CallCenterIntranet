@@ -1546,8 +1546,8 @@ Gregson and Brooke.');
       $results = @\DB::query("SELECT
                                LST.lead_id
                               ,senior_username
-                              ,DATE_FORMAT(transfered_date_time, '%d-%m-%Y %T') AS transfered_date_time
-                              ,IF(completed_date_time = '0000-00-00 00:00:00', 'Not Completed', DATE_FORMAT(completed_date_time, '%d-%m-%Y %T')) AS completed_date_time
+                              ,DATE_FORMAT(transfered_date_time, '%H:%i') AS transfered_date_time
+                              ,IF(completed_date_time = '0000-00-00 00:00:00', 'Not Completed', DATE_FORMAT(completed_date_time, '%H:%i')) AS completed_date_time
                               ,leadpool_id
                               ,VL.list_id
                               ,IF(error_message != '', 'YES','NO') AS 'has_error'
@@ -1585,7 +1585,7 @@ Gregson and Brooke.');
       $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
         				
       $email->to(array(
-        					'd.stansfield@expertmoneysolutions.co.uk'  => 'Senior Transfer Report',
+        					'senior-transfers@expertmoneysolutions.co.uk'  => 'Senior Transfer Report',
         				));
                 
       $email->subject('Senior Transfer Report ' . date("d-m-Y") . ' ' . (date("H") - 1));
@@ -1606,7 +1606,7 @@ Gregson and Brooke.');
         $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
         
         $email->to(array(
-        					'd.stansfield@expertmoneysolutions.co.uk'  => 'Senior Transfer Error Report',
+        					'it@expertmoneysolutions.co.uk'  => 'Senior Transfer Error Report',
         				));
                 
         $email->subject('Senior Transfer Error Report ' . date("d-m-Y") . ' ' . (date("H") - 1));
