@@ -2739,7 +2739,7 @@ GROUP BY
 								$result['Dialler Lead ID'],
 								$result['Name'],
 								$result['Lead Source'],
-								$result['Office'],
+								($result['Office'] == "<NONE>") ? "IDUNNO" : $result['Office'],
 								$result['Telesales Agent'],
 								$result['Consolidator'],
 								'<div class="dispositionName">'.$result['Description'].'</div>',
@@ -2749,7 +2749,6 @@ GROUP BY
 								date("d-m-y", strtotime($result['Referred Date'])),
 								date("d-m-y H:i", strtotime($result['Last Contact Date'])),
 								($result['Call Back Date']<>" ") ? date("d-m-y", strtotime($result['Call Back Date'])) : "",
-								"hello",
 								
 							);
 							$totals['referrals']['count']++;
@@ -3492,10 +3491,6 @@ GROUP BY
 							array(
 								"sTitle"    => "Call Back",
 								"sType"		=> "date-uk",
-							),
-							array(
-								"sTitle"    => "",
-								"bSortable" => false,
 							),
 						),
 					),
