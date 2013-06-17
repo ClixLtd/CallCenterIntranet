@@ -11,7 +11,7 @@
 		<table>
 			<tr>
 				<th>Leadpool ID</th>
-				<td><?php echo $leadpoolID; ?></td>
+				<td></td>
 			</tr>
 			<tr>
 				<th>Office</th>
@@ -19,7 +19,7 @@
 			</tr>
 			<tr>
 				<th>Telesales</th>
-				<td><?php echo $leadpoolID; ?></td>
+				<td></td>
 			</tr>
 		</table>
 	
