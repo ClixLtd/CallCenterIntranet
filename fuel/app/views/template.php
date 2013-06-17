@@ -114,6 +114,18 @@
 					</ul>
 				</li>
 				<?php endif; ?>
+        
+        <!-- Client Area Menu -->
+        <!--
+        <li>
+          <a href="" title="" class="clientarea">Client Area</a>
+          <ul>
+            <li><?php echo Html::anchor('/clientarea/client_change_details', 'Client Details Change Request');?></li>
+            <li><?php echo Html::anchor('/clientarea/messages', 'Messages');?></li>
+          </ul>
+        </li>
+        -->
+        <!-- // -->
 				
 				<?php if (Auth::has_access('ppi.menu')): ?>
 				<li>
