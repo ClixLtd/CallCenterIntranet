@@ -91,7 +91,7 @@ class Debtsolv {
 				{
 					$getStaffDetails = \DB::select('first_name', 'last_name')->from('staffs')->where('debtsolv_id', $new_agent)->execute();
 					$updateArray['user_login'] = $new_agent;
-					$updateArray['referral_date'] = $getStaffDetails[0]['first_name'].' '.$getStaffDetails[0]['last_name'];
+					$updateArray['full_name'] = $getStaffDetails[0]['first_name'].' '.$getStaffDetails[0]['last_name'];
 				}
 				
 				\DB::update('Dialler.dbo.referrals')->set($updateArray)->where('leadpool_id', $ds_lead_id)->execute(static::$_connection);
@@ -204,7 +204,7 @@ class Debtsolv {
 				{
 					$getStaffDetails = \DB::select('first_name', 'last_name')->from('staffs')->where('debtsolv_id', $new_agent)->execute();
 					$updateArray['user_login'] = $new_agent;
-					$updateArray['referral_date'] = $getStaffDetails[0]['first_name'].' '.$getStaffDetails[0]['last_name'];
+					$updateArray['full_name'] = $getStaffDetails[0]['first_name'].' '.$getStaffDetails[0]['last_name'];
 				}
 				
 				\DB::update('Dialler.dbo.referrals')->set($updateArray)->where('leadpool_id', $ds_lead_id)->execute(static::$_connection);
