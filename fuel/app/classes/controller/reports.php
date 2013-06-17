@@ -2428,9 +2428,9 @@ GROUP BY
 			      ,(CD.Forename + ' ' + CD.Surname) AS Name
 			      ,ISNULL(NULLIF(LSO.[Description],'<None>'), DSLSO.[Description]) AS 'Lead Source'
 			      ,CASE WHEN
-			      	ISNULL(DI_REF.short_code,'<None>') = '<None>'
+			      	ISNULL(DI_REF.short_code,'[None]') = '[None]'
 			       THEN
-			       	'<None>'
+			       	'[None]'
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
@@ -2540,9 +2540,9 @@ GROUP BY
 			      ,(CD.Forename + ' ' + CD.Surname) AS Name
 			      ,ISNULL(NULLIF(LSO.[Description],'<None>'), DSLSO.[Description]) AS 'Lead Source'
 			      ,CASE WHEN
-			      	ISNULL(DI_REF.short_code,'<None>') = '<None>'
+			      	ISNULL(DI_REF.short_code,'[None]') = '[None]'
 			       THEN
-			       	'<None>'
+			       	'[None]'
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
@@ -2739,7 +2739,7 @@ GROUP BY
 								$result['Dialler Lead ID'],
 								$result['Name'],
 								$result['Lead Source'],
-								(strlen($result['Office']) < 2) ? "IDUNNO" : strlen($result['Office']),
+								($result['Office'] == "[NONE]") ? "IDUNNO" : $result['Office'],
 								$result['Telesales Agent'],
 								$result['Consolidator'],
 								'<div class="dispositionName">'.$result['Description'].'</div>',
