@@ -2251,7 +2251,7 @@ GROUP BY
 	public function post_change_offices()
 	{
 		
-		print_r($_POST);
+		print_r(\Input::post());
 		
 		
 		/*
