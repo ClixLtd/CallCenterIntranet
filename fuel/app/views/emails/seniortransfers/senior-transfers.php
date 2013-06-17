@@ -45,7 +45,7 @@
                   <td align="center"><?=$result['leadpool_id'];?></td>
                   <td align="center"><?=$result['list_id'];?></td>
                   <td align="center"><?=$result['has_error'];?></td>
-                  <td align="center"><?=$result['status'];?></td>
+                  <td align="center"><?=$result['description'];?></td>
                 </tr>
                 <?php
                 }

@@ -39,7 +39,7 @@
                 <td align="center"><?=$result['leadpool_id'];?></td>
                 <td align="center"><?=$result['list_id'];?></td>
                 <td align="center"><?=unserialize($result['error_message']);?></td>
-                <td align="center"><?=$result['status'];?></td>
+                <td align="center"><?=$result['description'];?></td>
               </tr>
               <?php endforeach; ?>
             </tbody>
