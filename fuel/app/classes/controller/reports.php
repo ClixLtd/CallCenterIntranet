@@ -2430,7 +2430,7 @@ GROUP BY
 			      ,CASE WHEN
 			      	ISNULL(DI_REF.short_code,'<None>') = '<None>'
 			       THEN
-			       	('<span id='''+CONVERT(varchar,CLD.ClientID)+''' class=''no-office''></span>')
+			       	'<None>'
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
@@ -2542,7 +2542,7 @@ GROUP BY
 			      ,CASE WHEN
 			      	ISNULL(DI_REF.short_code,'<None>') = '<None>'
 			       THEN
-			       	('<span id='''+CONVERT(varchar,CLD.ClientID)+''' class=''no-office-resolve''></span>')
+			       	'<None>'
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
