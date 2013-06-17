@@ -3,7 +3,7 @@
   <head></head>
   <body>
   
-    <table>
+    <table cellpadding="5" width="100%">
       <tr>
         <td width="100"><b>Date:</b></td>
         <td><?=date("d/m/Y");?></td>
@@ -17,7 +17,7 @@
         <td colspan="2"><hr /></td>
       </tr>
         <td colspan="2" align="center">
-          <table width="100%">
+          <table cellpadding="5" width="100%">
             <thead>
               <tr>
                 <th>Lead ID</th>
