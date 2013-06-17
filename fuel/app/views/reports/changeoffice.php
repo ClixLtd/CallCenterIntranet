@@ -7,10 +7,21 @@
 	</div>
 	
 	<section>
-		<ul>
-			<li>Leadpool ID: </li>
-			<li>Office: </li>
-			<li>Telesales: </li>
-		</ul>
+	
+		<table>
+			<tr>
+				<th>Leadpool ID</th>
+				<td><?php echo $leadpool; ?></td>
+			</tr>
+			<tr>
+				<th>Office</th>
+				<td></td>
+			</tr>
+			<tr>
+				<th>Telesales</th>
+				<td><?php echo $leadpool; ?></td>
+			</tr>
+		</table>
+	
 	</section>
 </article>

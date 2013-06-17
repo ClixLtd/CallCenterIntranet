@@ -2241,7 +2241,8 @@ GROUP BY
 		
 		$this->template->title = 'Reports &raquo; Change Office';
 		$this->template->content = View::forge('reports/changeoffice', array(
-		    'allAgents' => $externalReport,
+		    'allAgents' => $allAgents,
+		    'leadpool' => $leadpoolID,
 		));	
 		
 	}
