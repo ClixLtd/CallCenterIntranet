@@ -2239,7 +2239,7 @@ GROUP BY
 		
 		$currentResults = \DB::select('*')->from('Dialler.dbo.referrals')->where('leadpool_id', $leadpoolID)->execute('debtsolv')->as_array();
 		
-		$allAgents = \DB::select('*')->from('staffs')->where('department_id', 1)->execute()->as_array();
+		$allAgents = \DB::select('*')->from('staffs')->where('department_id', 1)->or_where('department_id', 2)->order_by('first_name', 'asc')->order_by('last_name', 'asc')->execute()->as_array();
 		$allCenters = \DB::select('*')->from('call_centers')->execute()->as_array();
 		
 		$this->template->title = 'Reports &raquo; Change Office';
