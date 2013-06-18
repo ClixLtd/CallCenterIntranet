@@ -2448,7 +2448,7 @@ GROUP BY
 				         Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
 				       WHERE
 				         D_CLD.LeadPoolReference = CLD.ClientID
-				     ), 'NONE')
+				     ), '')
 			       ELSE
 			         ISNULL(DI_REF.full_name, '') END AS 'Telesales Agent',
 			      
@@ -2564,7 +2564,7 @@ GROUP BY
 				         Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
 				       WHERE
 				         D_CLD.LeadPoolReference = CLD.ClientID
-				     ), 'NONE')
+				     ), '')
 			       ELSE
 			         ISNULL(DI_REF.full_name, '') END AS 'Telesales Agent',
 			      
