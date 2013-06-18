@@ -131,6 +131,8 @@ return array(
 		 ),
 		 
 		 'support' => array(
+		 	'user' => array('menu', 'view'),
+		 	'reports' => array('menu', 'disposition', 'all_centers'),
 		 	'support' => array('menu','heartbeat_monitor'),
 		 ),
 		 
