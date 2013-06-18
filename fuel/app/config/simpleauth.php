@@ -87,7 +87,7 @@ return array(
 		 
 		 80   => array('name' => 'Director', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi', 'ppireports')),
 		 
-		 85   => array('name' => 'Dialler Administrator', 'roles' => array('supplier')),
+		 85   => array('name' => 'Dialler Administrator', 'roles' => array('support')),
 		 
 		 96   => array('name' => 'Database Manager', 'roles' => array('telesales_manager', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi', 'ppireports')),
 		 
@@ -128,6 +128,10 @@ return array(
 		 
 		 'manager' => array(
 		 	'reports' => array('menu', 'disposition', 'all_centers'),
+		 ),
+		 
+		 'support' => array(
+		 	'support' => array('menu','heartbeat_monitor'),
 		 ),
 		 
 		 'area_manager' => array(
