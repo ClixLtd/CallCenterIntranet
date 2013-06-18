@@ -762,7 +762,7 @@ class Debtsolv {
 			    	$return_array['pack_outs_value'] = $return_array['pack_outs_value'] + $result['DI'];
 			    }
 			    
-			    if ((int)$result['MyProduct'] <> 2)
+			    if (isset($result['MyProduct']) AND (int)$result['MyProduct'] <> 2)
 			    {
     			    $return_array['referrals']++;
 			    }
