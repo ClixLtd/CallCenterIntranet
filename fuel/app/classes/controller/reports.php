@@ -2436,7 +2436,21 @@ GROUP BY
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
-			      ,ISNULL(DI_REF.full_name, 'NONE') AS 'Telesales Agent',
+			      ,CASE WHEN
+			      	 DI_REF.short_code = 'REACTIV'
+			       THEN
+				     (
+				       SELECT Top (1)
+				         Undersigned
+				       FROM
+				         Debtsolv.dbo.Users AS D_URS
+				       LEFT JOIN
+				         Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
+				       WHERE
+				         D_CLD.LeadPoolReference = CLD.ClientID
+				     )
+			       ELSE
+			         ISNULL(DI_REF.full_name, 'NONE') AS 'Telesales Agent',
 			      
 			      ISNULL((
 			        SELECT Top (1)
@@ -2538,7 +2552,21 @@ GROUP BY
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
-			      ,ISNULL(DI_REF.full_name, 'NONE') AS 'Telesales Agent',
+			      ,CASE WHEN
+			      	 DI_REF.short_code = 'REACTIV'
+			       THEN
+				     (
+				       SELECT Top (1)
+				         Undersigned
+				       FROM
+				         Debtsolv.dbo.Users AS D_URS
+				       LEFT JOIN
+				         Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
+				       WHERE
+				         D_CLD.LeadPoolReference = CLD.ClientID
+				     )
+			       ELSE
+			         ISNULL(DI_REF.full_name, 'NONE') AS 'Telesales Agent',
 			      
 			      ISNULL((
 			        SELECT Top (1)
