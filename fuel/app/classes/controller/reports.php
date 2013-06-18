@@ -2745,12 +2745,12 @@ GROUP BY
 						  }
 						
 							$result_parse[] = array(
-								$result['ClientID'],
+								'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['ClientID'].'</a>',
 								$result['Dialler Lead ID'],
 								$result['Name'],
 								$result['Lead Source'],
-								'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['Office'].'</a>',
-								'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['Telesales Agent'].'</a>',
+								$result['Office'],
+								$result['Telesales Agent'],
 								$result['Consolidator'],
 								'<div class="dispositionName">'.$result['Description'].'</div>',
 								$result['DI'],
@@ -2797,12 +2797,12 @@ GROUP BY
 						  }
 						
 							$po_result_parse[] = array(
-								$result['ClientID'],
+								'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['ClientID'].'</a>',
 								$result['Dialler Lead ID'],
 								$result['Name'],
 								$result['Lead Source'],
-								'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['Office'].'</a>',
-								'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['Telesales Agent'].'</a>',
+								$result['Office'],
+								$result['Telesales Agent'],
 								$result['Consolidator'],
 								$result['DI'],
 								$result['Delivery'],
@@ -3034,12 +3034,12 @@ GROUP BY
 				foreach ($pack_ins AS $pack_in)
 				{
 					$all_pack_in[] = array(
-						$pack_in['ClientID'],
+						'<a href="/reports/change_offices/'.$pack_in['ClientID'].'/">'.$pack_in['ClientID'].'</a>',
 						$pack_in['Dialler Lead ID'],
 						$pack_in['Name'],
 						$pack_in['Lead Source'],
-						'<a href="/reports/change_offices/'.$pack_in['ClientID'].'/">'.$pack_in['Office'].'</a>',
-						'<a href="/reports/change_offices/'.$pack_in['ClientID'].'/">'.$pack_in['Telesales Agent'].'</a>',
+						$pack_in['Office'],
+						$pack_in['Telesales Agent'],
 						$pack_in['Consolidator'],
 						$pack_in['DI'],
 						$pack_in['Delivery'],
@@ -3232,11 +3232,11 @@ GROUP BY
 				
 				
 				    $all_paid['G'.$paid['ClientID']] = array(
-				        $paid['ClientID'],
+				        '<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['ClientID'].'</a>',
 				        $paid['Name'],
 				        $paid['Lead Source'],
-				        '<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['Office'].'</a>',
-						'<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['Telesales Agent'].'</a>',
+				        $paid['Office'],
+						$paid['Telesales Agent'],
 				        $paid['Consolidator'],
 				        $paid['DI'],
 				        $pdtype,
