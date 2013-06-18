@@ -52,15 +52,26 @@ class Controller_Survey_Lead extends Controller_Template
 	           	    
     	    
     	    if ( 
-    	           Controller_Survey_Lead::checkAnswer(12, 47, $referralDetails) AND 
-    	           Controller_Survey_Lead::checkAnswer(11, array(41,42,43,44,45,46), $referralDetails) AND
-    	         ( Controller_Survey_Lead::checkAnswer(8, 31, $referralDetails) || Controller_Survey_Lead::checkAnswer(5, array(11,12,13), $referralDetails) ) AND
-    	         ( Controller_Survey_Lead::checkAnswer(4, 8, $referralDetails) || Controller_Survey_Lead::checkAnswer(3, 6, $referralDetails) )
+    	         (
+    	             Controller_Survey_Lead::checkAnswer(12, 47, $referralDetails) AND 
+    	             Controller_Survey_Lead::checkAnswer(11, array(41,42,43,44,45,46), $referralDetails) AND
+    	           ( Controller_Survey_Lead::checkAnswer(8, 31, $referralDetails) || Controller_Survey_Lead::checkAnswer(5, array(11,12,13), $referralDetails) ) AND
+    	           ( Controller_Survey_Lead::checkAnswer(4, 8, $referralDetails) || Controller_Survey_Lead::checkAnswer(3, 6, $referralDetails) )
+    	         )
+    	         ||
+    	         (
+    	           ( Controller_Survey_Lead::checkAnswer(27, 166, $referralDetails) || Controller_Survey_Lead::checkAnswer(28, 168, $referralDetails) ) AND
+    	           ( Controller_Survey_Lead::checkAnswer(34, 191, $referralDetails) || 
+    	           	 ( Controller_Survey_Lead::checkAnswer(33, array(185,184,183,182,181), $referralDetails) AND Controller_Survey_Lead::checkAnswer(32, array(179,178,177), $referralDetails) ) 
+    	           ) AND
+    	             Controller_Survey_Lead::checkAnswer(40, 217, $referralDetails)
+    	         )
     	       )
     	    {
         	    $drLeads[] = $referral;
     	    } 
     	    
+
     	    if (
     	    	 (
     	           Controller_Survey_Lead::checkAnswer(15, 66, $referralDetails) AND 
