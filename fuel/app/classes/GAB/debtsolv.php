@@ -116,8 +116,8 @@ class Debtsolv {
 					, " . $ds_lead_id . "
 					, ''
 					, '" . $new_center . "'
-					, '" . (!is_null($new_agent)) ? $new_agent : '' . "'
-					, '" . (!is_null($new_agent)) ? $getStaffDetails[0]['first_name'].' '.$getStaffDetails[0]['last_name'] : '' . "'
+					, ''
+					, ''
 					, '".$our_referral[0]['DateCreated']."'
 					, 'DR')")->execute(static::$_connection);
 			}
@@ -229,8 +229,8 @@ class Debtsolv {
 					, " . $ds_lead_id . "
 					, ''
 					, '" . $new_center . "'
-					, '" . (!is_null($new_agent)) ? $new_agent : '' . "'
-					, '" . (!is_null($new_agent)) ? $getStaffDetails[0]['first_name'].' '.$getStaffDetails[0]['last_name'] : '' . "'
+					, ''
+					, ''
 					, '".$our_referral[0]['DateCreated']."'
 					, 'DR')")->execute(static::$_connection);
 			}
