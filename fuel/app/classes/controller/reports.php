@@ -2441,7 +2441,7 @@ GROUP BY
 			       THEN
 				     ISNULL((
 				       SELECT Top (1)
-				         Undersigned
+				         Undersigned COLLATE DATABASE_DEFAULT 
 				       FROM
 				         Debtsolv.dbo.Users AS D_URS
 				       LEFT JOIN
