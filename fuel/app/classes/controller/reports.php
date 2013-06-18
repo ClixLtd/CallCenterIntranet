@@ -2547,10 +2547,7 @@ GROUP BY
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
-			      ,CASE WHEN
-			      	 DI_REF.short_code = 'REACTIV'
-			       THEN
-				     (
+			      , (
 				       SELECT Top (1)
 				         Undersigned
 				       FROM
@@ -2559,9 +2556,7 @@ GROUP BY
 				         Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
 				       WHERE
 				         D_CLD.LeadPoolReference = CLD.ClientID
-				     )
-			       ELSE
-			         ISNULL(DI_REF.full_name, 'NONE') AS 'Telesales Agent',
+				     ) AS 'Telesales Agent',
 			      
 			      ISNULL((
 			        SELECT Top (1)
