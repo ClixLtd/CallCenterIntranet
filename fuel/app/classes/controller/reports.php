@@ -2705,7 +2705,7 @@ GROUP BY
 					else if ( ($result['ContactResult'] == 0 || $result['ContactResult'] == 900 || $result['ContactResult'] == 721) && !$include_no_contacts )
 					{
 						$lost_parse[] = array(
-							$result['ClientID'],
+							'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['ClientID'].'</a>',
 							$result['Dialler Lead ID'],
 							$result['Name'],
 							$result['Lead Source'],
