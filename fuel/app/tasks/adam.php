@@ -1603,6 +1603,8 @@ Gregson and Brooke.');
       // --------------------------------------------------------
       if(count($itReport) > 0)
       {
+        $email = \Email::forge();
+        
         $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
         
         $email->to(array(
