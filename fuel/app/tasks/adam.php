@@ -1545,9 +1545,12 @@ Gregson and Brooke.');
       $results = array();
       $results = @\DB::query("SELECT
                                LST.lead_id
+                              ,office
+                              ,lead_source
+                              ,tele_agent
                               ,senior_username
                               ,DATE_FORMAT(transfered_date_time, '%H:%i') AS transfered_date_time
-                              ,IF(completed_date_time = '0000-00-00 00:00:00', 'Not Completed', DATE_FORMAT(completed_date_time, '%H:%i')) AS completed_date_time
+                              ,IF(completed_date_time = '0000-00-00 00:00:00', 'Not Clicked Saved', DATE_FORMAT(completed_date_time, '%H:%i')) AS completed_date_time
                               ,leadpool_id
                               ,VL.list_id
                               ,IF(error_message != '', 'YES','NO') AS 'has_error'
