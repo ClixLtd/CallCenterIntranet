@@ -119,15 +119,39 @@
    public function post_change_password()
    {
      $data = array(
-       'currentPassword' => \Input::post('currentPassword'),
-       'newPassword' => \Input::post('newPassword'),
+       'currentPassword'  => \Input::post('currentPassword'),
+       'newPassword'      => \Input::post('newPassword'),
      );
      
      // -- Save the request to the Intranet first
      // -----------------------------------------
-     if(Model_Intranet::saveChangedPassword($data) == true)
+     $ID = 0;
+     $ID = Model_Intranet::saveChangedPassword($data);
+     
+     if($ID > 0)
      {
-       
+       // -- If TRUE then make the change in Debtsolv
+       // -------------------------------------------
+       if(Model_Debtsolv::changePassword($data) === true)
+       {
+         Model_Intranet::updateChangePasswordLog($ID, 'DONE');
+         
+         return Json::output('success');
+       }
+       else
+       {
+         // -- Error
+         // --------
+         Model_Intranet::updateChangePasswordLog($ID, 'ACCOUNT NOT FOUND');
+         
+         return Json::output('failed', 'Your current password was incorrect');
+       }
+     }
+     else
+     {
+       // -- Return Error
+       // ---------------
+       return Json::output('failed', 'Unable to change your password at this time');
      }
    }
    
