@@ -147,14 +147,14 @@
      {       
        foreach($data['newAddress'] as $field => $newValue)
        {
-         $set .= $field . " = " . \DB::quote($newValue) . ",";
+         $set .= $field . " = " . \DB::quote(str_replace("'", "''", $newValue)) . ",";
        }
        
        $set = rtrim($set, ",");
      }
      else
      {
-       $set = $data['field'] . " = " . \DB::quote($data['newValue']);
+       $set = $data['field'] . " = " . \DB::quote(str_replace("'", "''", $data['newValue']));
      }
     
      $result = 0;

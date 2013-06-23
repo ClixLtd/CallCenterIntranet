@@ -43,7 +43,7 @@
                            WHERE
                              Client_ID = " . (int)$clientID . "
                            AND
-                             [Password] = HASHBYTES('sha1', '" . $password . "')
+                             [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $password) . "')
                           ")->execute(static::$database)->as_array();
      
      // -- Check for a returned row, then return it
@@ -64,11 +64,11 @@
      $result = \DB::query("UPDATE Top (1)
                              dbo.Client_LeadData
                            SET
-                             [Password] = HASHBYTES('sha1', '" . $data['newPassword'] . "')
+                             [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $data['newPassword']) . "')
                            WHERE
                              Client_ID = " . static::$clientID . "
                            AND
-                             [Password] = HASHBYTES('sha1', '" . $data['currentPassword'] . "')
+                             [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $data['currentPassword']) . "')
                           ", \DB::UPDATE)->execute(static::$database);
                           
      if($result > 0)
