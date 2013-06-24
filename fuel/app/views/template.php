@@ -114,6 +114,18 @@
 					</ul>
 				</li>
 				<?php endif; ?>
+        
+        <!-- Client Area Menu -->
+        <!--
+        <li>
+          <a href="" title="" class="clientarea">Client Area</a>
+          <ul>
+            <li><?php echo Html::anchor('/clientarea/client_change_details', 'Client Details Change Request');?></li>
+            <li><?php echo Html::anchor('/clientarea/messages', 'Messages');?></li>
+          </ul>
+        </li>
+        -->
+        <!-- // -->
 				
 				<?php if (Auth::has_access('ppi.menu')): ?>
 				<li>
@@ -181,11 +193,11 @@
 				</li>
 				<?php endif; ?>
 				
-				<?php if (Auth::has_access('user.menu')): ?>
+				<?php if (Auth::has_access('cal.menu')): ?>
 				<li>
 					<a href="/users" title="" class="logs">Calendar</a>
 					<ul>
-						<?php if (Auth::has_access('user.view')): ?><li><?php echo Html::anchor('calendar/view', 'View Calendar'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('cal.view')): ?><li><?php echo Html::anchor('calendar/view', 'View Calendar'); ?></li><?php endif; ?>
 					</ul>
 				</li>
 				<?php endif; ?>
@@ -194,7 +206,7 @@
 				<li>
 					<a href="/users" title="" class="logs">Staff</a>
 					<ul>
-						<?php if (Auth::has_access('user.view')): ?><li><?php echo Html::anchor('user/view', 'User List'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('user.view')): ?><li><?php echo Html::anchor('staff', 'Staff List'); ?></li><?php endif; ?>
 					</ul>
 				</li>
 				<?php endif; ?>

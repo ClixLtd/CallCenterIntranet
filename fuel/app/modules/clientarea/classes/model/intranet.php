@@ -78,29 +78,47 @@
     */
    public static function saveChangedPassword($data = array())
    {
-     $result = 0;
-     $result = \DB::query("INSERT INTO
-                             clientarea_change_password
-                           (
-                              id
-                             ,client_id
-                             ,company_id
-                             ,current_password
-                             ,new_password
-                             ,date
-                             ,status
-                           )
-                           VALUES
-                           (
-                              NULL
-                             ," . (int)$data['client_id'] . "
-                             ," . (int)$data['company_id'] . "
-                             ," . sha1(\DB::quote($data['current_password'])) . "
-                             ," . sha1(\DB::quote($data['new_password'])) . "
-                             ,NOW()
-                             ,'PENDING'
-                           )
-                          ");
+     list($lastID, $rows) = \DB::query("INSERT INTO
+                                          clientarea_change_password
+                                        (
+                                           id
+                                          ,client_id
+                                          ,company_id
+                                          ,current_password
+                                          ,new_password
+                                          ,date
+                                          ,status
+                                        )
+                                        VALUES
+                                        (
+                                           NULL
+                                          ," . (int)static::$clientID . "
+                                          ," . (int)static::$companyID . "
+                                          ," . \DB::quote(sha1($data['currentPassword'])) . "
+                                          ," . \DB::quote(sha1($data['newPassword'])) . "
+                                          ,NOW()
+                                          ,'PENDING'
+                                        )
+                                       ", \DB::INSERT)->execute();
+                          
+     return $lastID;
+   }
+   
+   /**
+    * Update the change password log
+    * 
+    * @author David Stansfield
+    */
+   public static function updateChangePasswordLog($ID = 0, $status = '')
+   {
+     \DB::query("UPDATE
+                   clientarea_change_password
+                 SET
+                   status = " . \DB::quote($status) . "
+                 WHERE
+                   id = " . (int)$ID . "
+                 LIMIT 1
+                ", \DB::UPDATE)->execute();
    }
    
    /**

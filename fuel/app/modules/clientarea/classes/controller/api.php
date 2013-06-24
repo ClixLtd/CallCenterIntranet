@@ -25,15 +25,51 @@
      // ------------
      $this->_clientID = (int)\Input::post('clientID');
      
+<<<<<<< HEAD
      // -- Set the database name and client ID
      // --------------------------------------
      Model_Debtsolv::forge($this->_company, $this->_clientID);
      Model_Intranet::forge($this->_company, $this->_clientID);
+=======
+     $this->setDatabases();
+   }
+   
+   private function setDatabases()
+   {
+     $dbName = null;
+     
+     switch($this->_company)
+     {
+       case 'expertmoneysolutions' :
+       case '1-tick' :
+         $dbName = 'Debtsolv';
+       break;
+       case 'clixmedia' :
+         $dbName = 'Debtsolv_Test';
+       break;
+     }
+     
+     if(!is_null($dbName))
+     {
+       // -- Set the database name and client ID
+       // --------------------------------------
+       Model_Debtsolv::forge($dbName, $this->_clientID);
+       Model_Intranet::forge($this->_company, $this->_clientID);
+     }
+     else
+     {
+       return;
+     }
+>>>>>>> 6e41f515e71f78e51337eaaa24c0bcbbf3e8941d
    }
    
    public function action_index()
    {      
+<<<<<<< HEAD
      return Json::success();
+=======
+     return false;
+>>>>>>> 6e41f515e71f78e51337eaaa24c0bcbbf3e8941d
    }
    
    /**
@@ -119,15 +155,50 @@
    public function post_change_password()
    {
      $data = array(
+<<<<<<< HEAD
        'currentPassword' => \Input::post('currentPassword'),
        'newPassword' => \Input::post('newPassword'),
+=======
+       'currentPassword'  => \Input::post('currentPassword'),
+       'newPassword'      => \Input::post('newPassword'),
+>>>>>>> 6e41f515e71f78e51337eaaa24c0bcbbf3e8941d
      );
      
      // -- Save the request to the Intranet first
      // -----------------------------------------
+<<<<<<< HEAD
      if(Model_Intranet::saveChangedPassword($data) == true)
      {
        
+=======
+     $ID = 0;
+     $ID = Model_Intranet::saveChangedPassword($data);
+     
+     if($ID > 0)
+     {
+       // -- If TRUE then make the change in Debtsolv
+       // -------------------------------------------
+       if(Model_Debtsolv::changePassword($data) === true)
+       {
+         Model_Intranet::updateChangePasswordLog($ID, 'DONE');
+         
+         return Json::output('success');
+       }
+       else
+       {
+         // -- Error
+         // --------
+         Model_Intranet::updateChangePasswordLog($ID, 'ACCOUNT NOT FOUND');
+         
+         return Json::output('failed', 'Your current password was incorrect');
+       }
+     }
+     else
+     {
+       // -- Return Error
+       // ---------------
+       return Json::output('failed', 'Unable to change your password at this time');
+>>>>>>> 6e41f515e71f78e51337eaaa24c0bcbbf3e8941d
      }
    }
    

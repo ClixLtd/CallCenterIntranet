@@ -29,7 +29,7 @@ class Debtsolv {
 	
 	
 	
-	public static function change_center($ds_lead_id, $new_center)
+	public static function change_center($ds_lead_id, $new_center, $new_agent=null)
 	{
 		$success = FALSE;
 		$message = "";
@@ -80,7 +80,22 @@ class Debtsolv {
 			if ($referral_table->count() > 0)
 			{
 				// Update the entry
-				\DB::query("UPDATE Dialler.dbo.referrals SET short_code='".$new_center."', referral_date='".$our_referral[0]['DateCreated']."' WHERE leadpool_id = ".$ds_lead_id."")->execute(static::$_connection);
+				// \DB::query("UPDATE Dialler.dbo.referrals SET short_code='".$new_center."', referral_date='".$our_referral[0]['DateCreated']."' WHERE leadpool_id = ".$ds_lead_id."")->execute(static::$_connection);
+				
+				$updateArray = array(
+					'short_code' => $new_center,
+					'referral_date' => $our_referral[0]['DateCreated'],
+				);
+				
+				if (!is_null($new_agent))
+				{
+					$getStaffDetails = \DB::select('first_name', 'last_name')->from('staffs')->where('debtsolv_id', $new_agent)->execute();
+					$updateArray['user_login'] = $new_agent;
+					$updateArray['full_name'] = $getStaffDetails[0]['first_name'].' '.$getStaffDetails[0]['last_name'];
+				}
+				
+				\DB::update('Dialler.dbo.referrals')->set($updateArray)->where('leadpool_id', $ds_lead_id)->execute(static::$_connection);
+				
 			}
 			else
 			{
@@ -126,7 +141,7 @@ class Debtsolv {
 	
 	
 	
-		public static function change_center_resolve($ds_lead_id, $new_center)
+		public static function change_center_resolve($ds_lead_id, $new_center, $new_agent=null, $new_senior=null)
 	{
 		$success = FALSE;
 		$message = "";
@@ -177,7 +192,23 @@ class Debtsolv {
 			if ($referral_table->count() > 0)
 			{
 				// Update the entry
-				\DB::query("UPDATE Dialler.dbo.referrals SET short_code='".$new_center."', referral_date='".$our_referral[0]['DateCreated']."' WHERE leadpool_id = ".$ds_lead_id."")->execute(static::$_connection);
+				// \DB::query("UPDATE Dialler.dbo.referrals SET short_code='".$new_center."', referral_date='".$our_referral[0]['DateCreated']."' WHERE leadpool_id = ".$ds_lead_id."")->execute(static::$_connection);
+				
+				
+				$updateArray = array(
+					'short_code' => $new_center,
+					'referral_date' => $our_referral[0]['DateCreated'],
+				);
+				
+				if (!is_null($new_agent))
+				{
+					$getStaffDetails = \DB::select('first_name', 'last_name')->from('staffs')->where('debtsolv_id', $new_agent)->execute();
+					$updateArray['user_login'] = $new_agent;
+					$updateArray['full_name'] = $getStaffDetails[0]['first_name'].' '.$getStaffDetails[0]['last_name'];
+				}
+				
+				\DB::update('Dialler.dbo.referrals')->set($updateArray)->where('leadpool_id', $ds_lead_id)->execute(static::$_connection);
+				
 			}
 			else
 			{
@@ -731,7 +762,7 @@ class Debtsolv {
 			    	$return_array['pack_outs_value'] = $return_array['pack_outs_value'] + $result['DI'];
 			    }
 			    
-			    if ((int)$result['MyProduct'] <> 2)
+			    if (isset($result['MyProduct']) AND (int)$result['MyProduct'] <> 2)
 			    {
     			    $return_array['referrals']++;
 			    }

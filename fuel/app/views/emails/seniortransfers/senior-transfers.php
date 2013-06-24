@@ -21,11 +21,14 @@
             <thead>
               <tr>
                 <th>Lead ID</th>
+                <th>Office</th>
+                <th>Tele Agent</th>
                 <th>Senior</th>
                 <th>Transfer Time</th>
                 <th>Completed Time</th>
                 <th>Leadpool ID</th>
                 <th>List ID</th>
+                <th>Lead Source</th>
                 <th>Errored</th>
                 <th>Status</th>
               </tr>
@@ -40,11 +43,14 @@
                   ?>
                   <tr style="background-color: <?php echo ($background==0) ? "#DDDDDD" : "#EEEEEE"; ?>; border-bottom: #CCCCCC 1px solid;">
                     <td align="center"><?=$result['lead_id'];?></td>
+                    <td align="center"><?=$result['office'];?></td>
+                    <td align="center"><?=$result['tele_agent'];?></td>
                     <td><?=$result['senior_username'];?></td>
                     <td align="center"><?=$result['transfered_date_time'];?></td>
                     <td align="center"><?=$result['completed_date_time'];?></td>
                     <td align="center"><?=$result['leadpool_id'];?></td>
                     <td align="center"><?=$result['list_id'];?></td>
+                    <td align="center"><?=$result['list_id'] == '970' ? 'Reactive' : $result['lead_source'];?></td>
                     <td align="center"><?=$result['has_error'];?></td>
                     <td align="center"><?=$result['description'];?></td>
                   </tr>

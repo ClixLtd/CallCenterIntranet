@@ -9,15 +9,20 @@
  
  class Model_Debtsolv extends \Model
  {
-   public static $database;
+
+   public static $database = 'debtsolv';
+   public static $databaseName;
    public static $clientID;
    
-   public static function forge($database = null, $clientID = 0)
+   public static function forge($databaseName = null, $clientID = 0)
    {
      // -- Set the database name
      // ------------------------
-     if(!is_null($database))
-       static::$database = 'debtsolv_clientarea_' . $database;
+     #if(!is_null($database))
+     #  static::$database = 'debtsolv_clientarea_' . $database;
+     
+     if(!is_null($databaseName))
+       static::$databaseName = $databaseName;
        
      // -- Set the Client ID
      // --------------------
@@ -39,11 +44,11 @@
      $result = \DB::query("SELECT Top (1)
                              Client_ID
                            FROM
-                             dbo.Client_LeadData
+                             " . static::$databaseName . ".dbo.Client_LeadData
                            WHERE
                              Client_ID = " . (int)$clientID . "
                            AND
-                             [Password] = HASHBYTES('sha1', '" . $password . "')
+                             [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $password) . "')
                           ")->execute(static::$database)->as_array();
      
      // -- Check for a returned row, then return it
@@ -62,13 +67,13 @@
    public static function changePassword($data = array())
    {
      $result = \DB::query("UPDATE Top (1)
-                             dbo.Client_LeadData
+                             " . static::$databaseName . ".dbo.Client_LeadData
                            SET
-                             [Password] = HASHBYTES('sha1', '" . $data['newPassword'] . "')
+                             [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $data['newPassword']) . "')
                            WHERE
                              Client_ID = " . static::$clientID . "
                            AND
-                             [Password] = HASHBYTES('sha1', '" . $data['currentPassword'] . "')
+                             [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $data['currentPassword']) . "')
                           ", \DB::UPDATE)->execute(static::$database);
                           
      if($result > 0)
@@ -106,7 +111,7 @@
                              ,Tel_Mobile
                              ,email
                            FROM
-                             dbo.Client_Contact
+                             " . static::$databaseName . ".dbo.Client_Contact
                            WHERE
                              ID = " . (int)static::$clientID . "
                           ", \DB::select())->execute(static::$database)->as_array();
@@ -130,7 +135,7 @@
      $result = \DB::query("SELECT
     	                       SUM(Amount*1.0)/100 AS Paid_to_Date
                            FROM
-                           	 Debtsolv_Test.dbo.Payment_Receipt
+                           	 " . static::$databaseName . ".dbo.Payment_Receipt
                            WHERE
                              ClientID = " . static::$clientID . "
                            AND
@@ -149,9 +154,9 @@
      $result = \DB::query("SELECT
                              SUM(PO.Amount * 1.0) / 100 AS total_out
                            FROM
-                             dbo.Payment_Out AS PO
+                             " . static::$databaseName . ".dbo.Payment_Out AS PO
                            INNER JOIN
-                             dbo.Finstat_Debt AS FSD ON PO.AccountRef = FSD.AccountReference
+                             " . static::$databaseName . ".dbo.Finstat_Debt AS FSD ON PO.AccountRef = FSD.AccountReference
                            WHERE
                              PO.ClientID = " . static::$clientID . "
                           ", \DB::SELECT)->execute(static::$database)->as_array();
@@ -177,13 +182,13 @@
                                SELECT
                                  SUM(Amount * 1.0)/100
                                FROM
-                                 dbo.Payment_Out
+                                 " . static::$databaseName . ".dbo.Payment_Out
                                WHERE AccountRef = FSD.AccountReference
                              ) AS Paid
                             ,(FSD.AmountOwed * 1.0)/100 AS Owed
                             ,FSD.AccountReference
                           FROM 
-                            dbo.Finstat_Debt AS FSD
+                            " . static::$databaseName . ".dbo.Finstat_Debt AS FSD
                           WHERE 
                             FSD.ClientID = " . static::$clientID
                          , \DB::SELECT)->execute(static::$database)->as_array();
@@ -210,13 +215,13 @@
                                 ,TPT.[Description] AS PaymentTransaction
                                 ,'In' AS Type
                               FROM
-                                [Debtsolv_Test].[dbo].[Payment_Receipt] AS PR
+                                " . static::$databaseName . ".dbo.Payment_Receipt AS PR
                               LEFT JOIN
-                                [Debtsolv_Test].[dbo].Type_Payment_Method AS TPM ON PR.PaymentMethod = TPM.ID
+                                " . static::$databaseName . ".dbo.Type_Payment_Method AS TPM ON PR.PaymentMethod = TPM.ID
                               LEFT JOIN
-                                Debtsolv_Test.dbo.Type_Payment_Transaction AS TPT ON PR.TransactionType = TPT.ID
+                                " . static::$databaseName . ".dbo.Type_Payment_Transaction AS TPT ON PR.TransactionType = TPT.ID
                               LEFT JOIN
-                                Debtsolv_Test.dbo.Type_Payment_Status AS TPS ON PR.[Status] = TPS.ID
+                                " . static::$databaseName . ".dbo.Type_Payment_Status AS TPS ON PR.[Status] = TPS.ID
                               WHERE
                                 ClientID = " . static::$clientID . "
                             )
@@ -232,13 +237,13 @@
                                 ,'' AS PaymentTransaction
                                 ,'Out' AS Type
                               FROM
-                                Debtsolv_Test.dbo.Payment_Out AS PO
+                                " . static::$databaseName . ".dbo.Payment_Out AS PO
                               LEFT JOIN
-                                [Debtsolv_Test].[dbo].Type_Payment_Method AS TPM ON PO.PaymentMethod = TPM.ID
+                                " . static::$databaseName . ".dbo.Type_Payment_Method AS TPM ON PO.PaymentMethod = TPM.ID
                               LEFT JOIN
-                                Debtsolv_Test.dbo.Type_Payment_Status AS TPS ON PO.[Status] = TPS.ID
+                                " . static::$databaseName . ".dbo.Type_Payment_Status AS TPS ON PO.[Status] = TPS.ID
                               LEFT JOIN
-                                Debtsolv_Test.dbo.Finstat_Debt AS FD ON PO.AccountRef = FD.AccountReference
+                                " . static::$databaseName . ".dbo.Finstat_Debt AS FD ON PO.AccountRef = FD.AccountReference
                               WHERE
                                 PO.ClientID = " . static::$clientID . "
                             )

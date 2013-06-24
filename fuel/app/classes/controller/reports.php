@@ -2234,6 +2234,55 @@ GROUP BY
 	
 	
 	
+	public function action_change_offices($leadpoolID)
+	{
+		
+		$currentResults = \DB::select('*')->from('Dialler.dbo.referrals')->where('leadpool_id', $leadpoolID)->execute('debtsolv')->as_array();
+		
+		$allAgents = \DB::select('*')->from('staffs')->where('department_id', 1)->or_where('department_id', 2)->order_by('first_name', 'asc')->order_by('last_name', 'asc')->execute()->as_array();
+		$allCenters = \DB::select('*')->from('call_centers')->execute()->as_array();
+		
+		$this->template->title = 'Reports &raquo; Change Office';
+		$this->template->content = View::forge('reports/changeoffice', array(
+		    'allAgents' => $allAgents,
+		    'leadpool' => $leadpoolID,
+		    'centers' => $allCenters,
+		    'current' => $currentResults[0],
+		));	
+		
+	}
+	
+	public function post_change_offices()
+	{
+		
+		
+		$result = \GAB\Debtsolv::change_center(
+			\Input::post('leadpool'), 
+			\Input::post('center'),
+			\Input::post('agent')
+		);
+		
+		
+		if ($result['success'])
+		{
+    		\Response::redirect('reports/disposition');
+		}
+		else
+		{
+    		$burResult = \GAB\Debtsolv::change_center_resolve(
+    			\Input::post('leadpool'), 
+				\Input::post('center'),
+				\Input::post('agent')
+    		);
+			
+    		\Response::redirect('reports/disposition');
+		}
+
+		\Response::redirect('reports/disposition');
+		
+	}
+	
+	
 	
 	public function get_change_resolve_office()
 	{
@@ -2387,17 +2436,21 @@ GROUP BY
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
-			      ,ISNULL((
-			        SELECT Top (1)
-			          Undersigned
-			        FROM
-			          Debtsolv.dbo.Users AS D_URS
-			        LEFT JOIN
-			          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
-			        WHERE
-			          D_CLD.LeadPoolReference = CLD.ClientID
-			      ), ISNULL(DI_REF.full_name, 'NONE'))
-                  AS 'Telesales Agent',
+			      ,CASE WHEN
+			      	 DI_REF.short_code = 'REACTIV'
+			       THEN
+				     ISNULL((
+				       SELECT Top (1)
+				         Undersigned COLLATE DATABASE_DEFAULT 
+				       FROM
+				         Debtsolv.dbo.Users AS D_URS
+				       LEFT JOIN
+				         Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
+				       WHERE
+				         D_CLD.LeadPoolReference = CLD.ClientID
+				     ), '')
+			       ELSE
+			         ISNULL(DI_REF.full_name, '') END AS 'Telesales Agent',
 			      
 			      ISNULL((
 			        SELECT Top (1)
@@ -2499,17 +2552,21 @@ GROUP BY
 			       ELSE
 			       	DI_REF.short_code
 			       END AS Office
-			      ,ISNULL((
-			        SELECT Top (1)
-			          Undersigned
-			        FROM
-			          Debtsolv.dbo.Users AS D_URS
-			        LEFT JOIN
-			          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
-			        WHERE
-			          D_CLD.LeadPoolReference = CLD.ClientID
-			      ), ISNULL(DI_REF.full_name, 'NONE'))
-                  AS 'Telesales Agent',
+			      ,CASE WHEN
+			      	 DI_REF.short_code = 'REACTIV'
+			       THEN
+				     ISNULL((
+				       SELECT Top (1)
+				         Undersigned COLLATE DATABASE_DEFAULT 
+				       FROM
+				         Debtsolv.dbo.Users AS D_URS
+				       LEFT JOIN
+				         Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
+				       WHERE
+				         D_CLD.LeadPoolReference = CLD.ClientID
+				     ), '')
+			       ELSE
+			         ISNULL(DI_REF.full_name, '') END AS 'Telesales Agent',
 			      
 			      ISNULL((
 			        SELECT Top (1)
@@ -2648,7 +2705,7 @@ GROUP BY
 					else if ( ($result['ContactResult'] == 0 || $result['ContactResult'] == 900 || $result['ContactResult'] == 721) && !$include_no_contacts )
 					{
 						$lost_parse[] = array(
-							$result['ClientID'],
+							'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['ClientID'].'</a>',
 							$result['Dialler Lead ID'],
 							$result['Name'],
 							$result['Lead Source'],
@@ -2688,7 +2745,7 @@ GROUP BY
 						  }
 						
 							$result_parse[] = array(
-								$result['ClientID'],
+								'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['ClientID'].'</a>',
 								$result['Dialler Lead ID'],
 								$result['Name'],
 								$result['Lead Source'],
@@ -2740,7 +2797,7 @@ GROUP BY
 						  }
 						
 							$po_result_parse[] = array(
-								$result['ClientID'],
+								'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['ClientID'].'</a>',
 								$result['Dialler Lead ID'],
 								$result['Name'],
 								$result['Lead Source'],
@@ -2977,7 +3034,7 @@ GROUP BY
 				foreach ($pack_ins AS $pack_in)
 				{
 					$all_pack_in[] = array(
-						$pack_in['ClientID'],
+						'<a href="/reports/change_offices/'.$pack_in['ClientID'].'/">'.$pack_in['ClientID'].'</a>',
 						$pack_in['Dialler Lead ID'],
 						$pack_in['Name'],
 						$pack_in['Lead Source'],
@@ -3175,11 +3232,11 @@ GROUP BY
 				
 				
 				    $all_paid['G'.$paid['ClientID']] = array(
-				        $paid['ClientID'],
+				        '<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['ClientID'].'</a>',
 				        $paid['Name'],
 				        $paid['Lead Source'],
 				        $paid['Office'],
-				        $paid['Telesales Agent'],
+						$paid['Telesales Agent'],
 				        $paid['Consolidator'],
 				        $paid['DI'],
 				        $pdtype,
@@ -3225,8 +3282,8 @@ GROUP BY
     				        $paid['ClientID'],
     				        $paid['Name'],
     				        $paid['Lead Source'],
-    				        $paid['Office'],
-    				        $paid['Telesales Agent'],
+    				        '<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['Office'].'</a>',
+							'<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['Telesales Agent'].'</a>',
     				        $paid['Consolidator'],
     				        $paid['DI'],
     				        $pdtype,
