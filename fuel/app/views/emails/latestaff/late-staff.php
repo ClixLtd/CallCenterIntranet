@@ -12,12 +12,12 @@
         <table cellpadding="5" width="100%">
           <thead>
             <tr style="background-color:#DDDDDD">
-              <td colspan="5"><b><?=$result['full_name'];?></b></td>
+              <td colspan="5" style="font-size: 14px;"><b><?=$result['full_name'];?></b></td>
             </tr>
-            <tr>
+            <tr style="background-color:#DDDDDD">
               <td colspan="5" align="center"><b>Summary</b></td>
             </tr>
-            <tr style="background-color:#EEEEEE">
+            <tr style="background-color:#DDDDDD">
               <th>Group</th>
               <th>Total Time Taken</th>
               <th>Total Overtime</th>
@@ -26,7 +26,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr style="background-color:#EEEEEE">
               <td align="center"><?=$result['user_group'];?></td>
               <td align="center"><?=$result['total_break_time'];?></td>
               <td align="center"><?=$result['time_diff'];?></td>
@@ -34,13 +34,13 @@
               <td align="center"><?=$result['total_lunch_taken'];?></td>
             </tr>
             <tr>
-              <td colspan="5" align="center"><b>Breakdown</b></td>
+              <td colspan="5" align="center" style="background-color:#DDDDDD"><b>Breakdown</b></td>
             </tr>
             <tr>
               <td colspan="5">
                 <table cellpadding="5" width="100%">
                   <thead>
-                    <tr>
+                    <tr style="background-color:#DDDDDD">
                       <th>Break/Lunch</th>
                       <th>Time Taken</th>
                       <th>Is Late</th>
@@ -55,7 +55,7 @@
                       foreach($result['breakDown'] as $break)
                       {
                         ?>
-                        <tr style="background-color: <?php echo ($background2 == 0) ? "#DDDDDD" : "#EEEEEE"; ?>; border-bottom: #CCCCCC 1px solid;">
+                        <tr style="background-color: <?php echo ($background2 == 0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">
                           <td align="center"><?=$break['sub_status'];?></td>
                           <td align="center"><?=$break['total_break_time'];?></td>
                           <td align="center"><?=$break['is_late'];?></td>
