@@ -2191,7 +2191,7 @@ Gregson and Brooke.');
               
       $email->subject('Staff Break/Lunch Late Report ' . date("d-m-Y"));
       
-      $email->html_body(\View::forge('emails/seniortransfers/senior-transfers-errors', array(
+      $email->html_body(\View::forge('emails/latestaff/late-staff', array(
             					'results' => $results,
             					)
             				));

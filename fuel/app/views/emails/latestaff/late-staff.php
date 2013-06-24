@@ -32,7 +32,7 @@
                 foreach($results as $key => $result)
                 {
                   ?>
-                  <tr style="background-color: <?php echo ($background==0) ? "#DDDDDD" : "#EEEEEE"; ?>; border-bottom: #CCCCCC 1px solid;">
+                  <tr style="background-color: <?php echo ($background == 0) ? "#DDDDDD" : "#EEEEEE"; ?>; border-bottom: #CCCCCC 1px solid;">
                     <td align="center"><?=$result['full_name'];?></td>
                     <td align="center"><?=$result['user_group'];?></td>
                     <td align="center"><?=$result['total_break_time'];?></td>
