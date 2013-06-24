@@ -2189,10 +2189,10 @@ Gregson and Brooke.');
       					'd.stansfield@expertmoneysolutions.co.uk'  => 'David Stansfield',
       				));
               
-      $email->subject('Staff Break Late Report ' . date("d-m-Y"));
+      $email->subject('Staff Break/Lunch Late Report ' . date("d-m-Y"));
       
       $email->html_body(\View::forge('emails/seniortransfers/senior-transfers-errors', array(
-            					'results' => $itReport,
+            					'results' => $results,
             					)
             				));
                     
