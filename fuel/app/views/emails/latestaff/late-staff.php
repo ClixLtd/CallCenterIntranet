@@ -9,7 +9,7 @@
       foreach($results as $result)
       {
         ?>
-        <table cellpadding="5" width="100%">
+        <table cellpadding="5" cellspacing="0" width="100%">
           <thead>
             <tr style="background-color:#DDDDDD">
               <td colspan="5" style="font-size: 14px;"><b><?=$result['full_name'];?></b></td>
@@ -37,8 +37,8 @@
               <td colspan="5" align="center" style="background-color:#DDDDDD"><b>Breakdown</b></td>
             </tr>
             <tr>
-              <td colspan="5">
-                <table cellpadding="5" width="100%">
+              <td colspan="5" style="background-color:#EEEEEE">
+                <table cellpadding="5" cellspacing="0" width="100%">
                   <thead>
                     <tr style="background-color:#DDDDDD">
                       <th>Break/Lunch</th>
