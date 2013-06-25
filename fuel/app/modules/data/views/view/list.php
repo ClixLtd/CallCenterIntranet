@@ -4,6 +4,7 @@
 		<thead>
 			<tr>
 				<th>List ID</th>
+				<th>Date</th>
 				<th>Purchased</th>
 				<th>Dialable</th>
 				<th>Contacted</th>
@@ -17,6 +18,7 @@
 			<?php foreach($lists as $list): ?>
 			<tr>
 				<td><?php echo $list['dialler_id']; ?></td>
+				<td><?php echo date("d/m/Y", strtotime($list['added_date'])); ?></td>
 				<td><?php echo $list['purchased_leads']; ?></td>
 				<td><?php echo $list['dialable_leads']; ?></td>
 				<td><?php echo $list['contacted_leads']; ?></td>
