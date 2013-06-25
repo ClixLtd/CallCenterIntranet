@@ -25,12 +25,12 @@ class Controller_Data extends \Controller_Base
      */
     public function action_list($supplier_id=null)
     {
-        $allData = \Data\Model_Data::list_all($supplier_id);
-        
-        print_r($allData);
+        $allData = \Data\Model_Data::list_all($supplier_id, 'id');
         
         $this->template->title = 'Listing all Data';
-        $this->template->content = "hello";
+        $this->template->content = \View::forge('view/list', array(
+        	'lists' => $allData,
+        );
     }
     
     
