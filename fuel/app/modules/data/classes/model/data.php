@@ -27,7 +27,7 @@ class Model_Data
         // If we wish to sort by specific field then do so
         if (!is_null($sort))
         {
-            $dataQuery->sort_by($sort);
+            $dataQuery->order_by($sort);
         }
         
         // If we want a specific result limit then apply it
