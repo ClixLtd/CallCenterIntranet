@@ -612,7 +612,7 @@ class Source
 	    
 	    foreach ($resolveDebtsolvCount as $singleLead)
 	    {
-	    	if ($singleLead['PackOut'] == 'TRUE')
+	    	if ($singleLead['PackOut'] == 'TRUE' || !isset($combinedList[$singleLead['LeadID']]))
 	    	{
 			    $combinedList[$singleLead['LeadID']] = array(
 			    	'PackOut'      => $singleLead['PackOut'],
