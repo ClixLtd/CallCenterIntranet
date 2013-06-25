@@ -2237,9 +2237,7 @@ Gregson and Brooke.');
         $email = \Email::forge();
         $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
       
-        $email->to(array(
-        					$hqEmailDetails['to']  => 'David Stansfield',
-        				));
+        $email->to($hqEmailDetails['to']);
                 
         $email->subject($hqEmailDetails['subject'] . ' ' . date("d-m-Y"));
         
@@ -2260,9 +2258,7 @@ Gregson and Brooke.');
         $email = \Email::forge();
         $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
       
-        $email->to(array(
-        					$resolveEmailDetails['to']  => 'David Stansfield',
-        				));
+        $email->to($resolveEmailDetails['to']);
                 
         $email->subject($resolveEmailDetails['subject'] . ' ' . date("d-m-Y"));
         
