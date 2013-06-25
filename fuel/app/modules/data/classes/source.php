@@ -570,7 +570,7 @@ class Source
 			LEFT JOIN
 				Dialler.dbo.client_dates AS DCD ON D_CLD.Client_ID=DCD.ClientID
 			WHERE 
-				list_id = '145'
+				list_id = '".$this->listID."'
 	    ";
 	    $gabDebtsolvCount 	  = \DB::query($gabDebtsolvCountQuery)->execute('debtsolv')->as_array();
 //	    $resolveDebtsolvCount = \DB::query($gabDebtsolvCountQuery)->execute('debtsolv')->as_array();
