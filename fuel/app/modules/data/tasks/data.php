@@ -8,7 +8,6 @@ class Data
     const       SIMULLISTS      = 3;
 
 
-
 	public static function run()
 	{
 	    

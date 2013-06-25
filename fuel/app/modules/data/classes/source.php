@@ -4,7 +4,6 @@ namespace Data;
 
 class Source
 {
-    
     const      LOAD             = 'load';
     const      IMPORT           = 'import';
     const      COPY             = 'copy';

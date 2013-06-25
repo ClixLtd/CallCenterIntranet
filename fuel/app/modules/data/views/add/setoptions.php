@@ -2,7 +2,6 @@
        
 
 <form class="form-horizontal" method="post" action="/data/startimport/">
-
     <input type="hidden" name="filename" value="<?php echo $dataFilename; ?>">
     
     <fieldset>

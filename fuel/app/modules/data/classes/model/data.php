@@ -5,7 +5,6 @@ namespace Data;
 class Model_Data
 {
     
-    
     /**
      * Return a list of data in the system.
      * 
