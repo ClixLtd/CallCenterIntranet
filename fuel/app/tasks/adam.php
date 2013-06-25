@@ -2131,13 +2131,13 @@ Gregson and Brooke.');
       );
       
       $hqEmailDetails = array(
-        'to' => 'd.stansfield@expertmoneysolutions.co.uk',
+        'to' => array('d.stansfield@expertmoneysolutions.co.uk', 'k.wallwork@expertmoneysolutions.co.uk', 'l.davenport@expertmoneysolutions.co.uk'),
         'subject' => 'HQ: Staff Break/Lunch Late Report',
         'results' => array(),
       );
       
       $resolveEmailDetails = array(
-        'to' => 'd.stansfield@expertmoneysolutions.co.uk',
+        'to' => array('d.stansfield@expertmoneysolutions.co.uk', 'l.baker@resolvemm.co.uk', 'mark@resolvemm.co.uk'),
         'subject' => 'Resolve: Staff Break/Lunch Late Report',
         'results' => array(),
       );
