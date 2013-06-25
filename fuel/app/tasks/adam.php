@@ -397,7 +397,9 @@
 			@Adam::get_tomorrow_list_stats("BURTON1", "resolvedialler");
 			@Adam::get_tomorrow_list_stats("SMS-1", "resolvedialler");
       
-      #$this->staff_late_report();
+      // -- Run staff late report
+      // ------------------------
+      $this->staff_late_report();
 
 		}
 		
