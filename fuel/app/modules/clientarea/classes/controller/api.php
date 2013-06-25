@@ -25,12 +25,6 @@
      // ------------
      $this->_clientID = (int)\Input::post('clientID');
      
-<<<<<<< HEAD
-     // -- Set the database name and client ID
-     // --------------------------------------
-     Model_Debtsolv::forge($this->_company, $this->_clientID);
-     Model_Intranet::forge($this->_company, $this->_clientID);
-=======
      $this->setDatabases();
    }
    
@@ -60,16 +54,11 @@
      {
        return;
      }
->>>>>>> 6e41f515e71f78e51337eaaa24c0bcbbf3e8941d
    }
    
    public function action_index()
    {      
-<<<<<<< HEAD
-     return Json::success();
-=======
      return false;
->>>>>>> 6e41f515e71f78e51337eaaa24c0bcbbf3e8941d
    }
    
    /**
@@ -155,22 +144,12 @@
    public function post_change_password()
    {
      $data = array(
-<<<<<<< HEAD
-       'currentPassword' => \Input::post('currentPassword'),
-       'newPassword' => \Input::post('newPassword'),
-=======
        'currentPassword'  => \Input::post('currentPassword'),
        'newPassword'      => \Input::post('newPassword'),
->>>>>>> 6e41f515e71f78e51337eaaa24c0bcbbf3e8941d
      );
      
      // -- Save the request to the Intranet first
      // -----------------------------------------
-<<<<<<< HEAD
-     if(Model_Intranet::saveChangedPassword($data) == true)
-     {
-       
-=======
      $ID = 0;
      $ID = Model_Intranet::saveChangedPassword($data);
      
@@ -198,7 +177,6 @@
        // -- Return Error
        // ---------------
        return Json::output('failed', 'Unable to change your password at this time');
->>>>>>> 6e41f515e71f78e51337eaaa24c0bcbbf3e8941d
      }
    }
    

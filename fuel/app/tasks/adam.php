@@ -2093,7 +2093,110 @@ Gregson and Brooke.');
     		\Cli::write('Time per lead: '. $perLead ." seconds");
     		
 		}
-		
-		
+    
+    /**
+     * Find out who has been late - Taken from the dialler
+     * 
+     * @author David Stansfield
+     */
+    public function staff_late_report()
+    {
+      // -- Settings
+      // -----------
+      $breakTime = '900';
+      $lunchTime = '3600';
+      
+      $totalMonToThurs = '5400';
+      $totalFri = '4500';
+      
+      $date = date("Y-m-d");
+      $startDateTime = date("Y-m-d 0:00:01");
+      $endDateTime = date("Y-m-d 23:59:59");
+      
+      $results = array();
+      $results = \DB::query("SELECT
+                                VAL.user
+                               ,VU.full_name
+                               ,VAL.user_group
+                               ,SUM(pause_sec) AS total_sec_time
+                               ,SEC_TO_TIME(SUM(pause_sec)) AS total_break_time
+                               ,SEC_TO_TIME(SUM(pause_sec) - IF(DAYNAME('" . $date . "') = 'Friday', " . (int)$totalFri . ", " . (int)$totalMonToThurs . ")) AS time_diff
+                               ,SUM(IF(`sub_status` = 'Break', 1, 0)) AS total_breaks_taken
+                               ,SUM(IF(`sub_status` = 'Lunch', 1, 0)) AS total_lunch_taken
+                             FROM
+                               vicidial_agent_log AS VAL
+                             LEFT JOIN
+                               vicidial_users AS VU ON VAL.user = VU.user
+                             WHERE
+                               event_time >= '" . $startDateTime . "'
+                             AND
+                               event_time <= '" . $endDateTime . "'
+                             AND
+                               sub_status IN ('Break', 'Lunch')
+                             AND
+                               pause_sec > 0
+                             GROUP BY
+                               VAL.user
+                             HAVING
+                               total_sec_time > IF(DAYNAME('" . $date . "') = 'Friday', " . $totalFri . ", " . (int)$totalMonToThurs . ")
+                             ORDER BY
+                               time_diff DESC
+                            ", \DB::SELECT)->execute('gabdialler')->as_array();
+                               
+      if(count($results) <= 0)
+        return false;
+        
+      // -- Get a break down of eack late staff member
+      // ---------------------------------------------
+      foreach($results as $key => $result)
+      {
+        $breakDownResults = array();
+        $breakDownResults = \DB::query("SELECT
+                                           sub_status
+                                          ,pause_sec
+                                          ,SEC_TO_TIME(pause_sec) AS total_break_time
+                                          ,IF(sub_status = 'Lunch' AND pause_sec > " . (int)$lunchTime . ", 'YES', IF(sub_status = 'Break' AND pause_sec > " . (int)$breakTime . ", 'YES', 'NO')) AS is_late
+                                          ,SEC_TO_TIME(IF(sub_status = 'Lunch' AND pause_sec > " . (int)$lunchTime . ", pause_sec - " . (int)$lunchTime . ", IF(sub_status = 'Break' AND pause_sec > " . (int)$breakTime . ", pause_sec - " . (int)$breakTime . ", ''))) AS time_diff
+                                        FROM
+                                          vicidial_agent_log
+                                        WHERE
+                                          user = " . \DB::quote($result['user']) . "
+                                        AND
+                                          sub_status IN ('Break', 'Lunch')
+                                        AND
+                                          event_time >= '" . $startDateTime . "'
+                                        AND
+                                          event_time <= '" . $endDateTime . "'
+                                        AND
+                                          pause_sec > 0
+                                        ORDER BY
+                                          time_diff DESC
+                                       ", \DB::SELECT)->execute('gabdialler')->as_array();
+             
+        // -- Add it to the user results
+        // -----------------------------                          
+        $results[$key]['breakDown'] = $breakDownResults;
+        unset($breakDownResults);
+      }
+      
+      // -- Send an email out
+      // --------------------
+      $email = \Email::forge();
+        
+      $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+      
+      $email->to(array(
+      					'd.stansfield@expertmoneysolutions.co.uk'  => 'David Stansfield',
+      				));
+              
+      $email->subject('Staff Break/Lunch Late Report ' . date("d-m-Y"));
+      
+      $email->html_body(\View::forge('emails/latestaff/late-staff', array(
+            					'results' => $results,
+            					)
+            				));
+                    
+      $email->send();
+    }		
 		
 	}
