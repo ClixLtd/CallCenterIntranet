@@ -134,7 +134,7 @@ class Controller_Data extends \Controller_Base
             $databaseHeadings = array(
                 'title' => 'Title',
                 'first_name' => 'First Name',
-                'middle-initial' => 'Middle Initial',
+                'middle_initial' => 'Middle Initial',
                 'last_name' => 'Surname',
                 'address1' => 'Address 1',
                 'address2' => 'Address 2',
