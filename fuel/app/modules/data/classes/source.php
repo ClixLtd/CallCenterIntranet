@@ -9,6 +9,8 @@ class Source
     const      COPY             = 'copy';
     const      CREATE           = 'create';
     
+    const	   UPDATE			= 'update';
+    
     const      DUPES            = 'dupes';
     const      TPS              = 'tps';
     const      OPTIN            = 'optin';
@@ -544,6 +546,73 @@ class Source
     }
     
     
+    protected function _update()
+    {
+	    // Get contacted leads from dialler
+	    
+	    // Get Debtsolv referrals from this list
+	    $gabDebtsolvCountQuery = "
+			SELECT 
+				DMR.lead_id AS LeadID
+				, CASE WHEN TCR.Description = 'Lead Completed' THEN 'TRUE' ELSE 'FALSE' END AS PackOut
+				, CASE WHEN D_CLD.DatePackReceived >= CONVERT(datetime, '2000-01-01 00:00:00', 105) THEN 'TRUE' ELSE 'FALSE' END AS PackIn
+				, CASE WHEN DCD.FirstPaymentDate >= '2000-01-01' THEN 'TRUE' ELSE 'FALSE' END AS FirstPayment
+			FROM 
+				Dialler.dbo.referrals AS DMR
+			LEFT JOIN
+				LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DMR.leadpool_id=CLD.ClientID
+			LEFT JOIN
+				LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+			LEFT JOIN
+				LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+			LEFT JOIN
+				Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+			LEFT JOIN
+				Dialler.dbo.client_dates AS DCD ON D_CLD.Client_ID=DCD.ClientID
+			WHERE 
+				list_id = '145'
+	    ";
+	    $gabDebtsolvCount 	  = \DB::query($gabDebtsolvCountQuery)->execute('debtsolv')->as_array();
+//	    $resolveDebtsolvCount = \DB::query($gabDebtsolvCountQuery)->execute('debtsolv')->as_array();
+	    
+	    $referralCount = 0;
+	    $packOutCount  = 0;
+	    $packInCount   = 0;
+	    $paidCount     = 0;
+	    
+	    foreach ($gabDebtsolvCount AS $singleLead)
+	    {
+	    
+		    $referralCount++;
+		    
+		    if ($singleLead['PackOut'] == 'TRUE')
+		    {
+			    $packOutCount++;
+		    }
+		    
+		    if ($singleLead['PackIn'] == 'TRUE')
+		    {
+			    $packInCount++;
+		    }
+		    
+		    if ($singleLead['FirstPayment'] == 'TRUE')
+		    {
+			    $paidCount++;
+		    }
+		    
+	    }
+	    
+	    
+	    \DB::update('data')->set(array(
+            'referrals'     => $referralCount,
+            'pack_out'      => $packOutCount,
+            'pack_in'       => $packInCount),
+            'first_payment' => $paidCount,
+        ))->where('id', $this->id)->execute();
+	    
+    }
+    
+    
     /***********************
      * Construct Variables */
     
@@ -584,6 +653,11 @@ class Source
         {
             $this->_create($id);
             $this->_load();
+        }
+        else if ($function == \Data\Source::UPDATE)
+        {
+            $this->_load();
+            $this->_update();
         }
         
     }

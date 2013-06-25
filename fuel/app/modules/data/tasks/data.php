@@ -47,6 +47,28 @@ class Data
     }
     
     
+    public static function updateDataStats($data_id=null)
+    {
+    	$data_lists = array();
+	    if (is_null($data_id))
+	    {
+		    $data_lists = \DB::select('id')->from('data')->execute()->as_array();
+	    }
+	    else
+	    {
+		    $data_lists[] = $data_id;
+	    }
+	    
+	    foreach ($data_lists as $listID)
+	    {
+		    Data::_update($listID);
+	    }
+	    
+    }
+    
+    
+    
+    
     public static function canAct()
     {
         // How many lists can be copied at once
@@ -65,6 +87,10 @@ class Data
     }
     
     
+    public static function _update($data_id=null)
+    {
+        \Data\Source::forge(\Data\Source::UPDATE, $data_id);
+    }
     
     public static function _copy($data_id=null)
     {
