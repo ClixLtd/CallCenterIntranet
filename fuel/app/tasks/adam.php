@@ -397,7 +397,9 @@
 			@Adam::get_tomorrow_list_stats("BURTON1", "resolvedialler");
 			@Adam::get_tomorrow_list_stats("SMS-1", "resolvedialler");
       
-      #$this->staff_late_report();
+      // -- Run staff late report
+      // ------------------------
+      $this->staff_late_report();
 
 		}
 		
@@ -2131,13 +2133,13 @@ Gregson and Brooke.');
       );
       
       $hqEmailDetails = array(
-        'to' => 'd.stansfield@expertmoneysolutions.co.uk',
+        'to' => array('d.stansfield@expertmoneysolutions.co.uk', 'k.wallwork@expertmoneysolutions.co.uk', 'l.davenport@expertmoneysolutions.co.uk'),
         'subject' => 'HQ: Staff Break/Lunch Late Report',
         'results' => array(),
       );
       
       $resolveEmailDetails = array(
-        'to' => 'd.stansfield@expertmoneysolutions.co.uk',
+        'to' => array('d.stansfield@expertmoneysolutions.co.uk', 'l.baker@resolvemm.co.uk', 'mark@resolvemm.co.uk'),
         'subject' => 'Resolve: Staff Break/Lunch Late Report',
         'results' => array(),
       );
