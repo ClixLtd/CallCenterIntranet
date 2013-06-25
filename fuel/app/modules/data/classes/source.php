@@ -622,6 +622,8 @@ class Source
 	    	}
 	    }
 	    
+	    print_r($combinedList);
+	    
 	    
 	    $referralCount = 0;
 	    $packOutCount  = 0;
