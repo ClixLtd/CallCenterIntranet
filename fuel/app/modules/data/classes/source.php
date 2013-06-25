@@ -663,11 +663,11 @@ class Source
 	    
 	    
 	    \DB::update('data')->set(array(
-	    	'contacted'	    => $diallerCount[0]['contacted'],
-            'referrals'     => $referralCount,
-            'pack_out'      => $packOutCount,
-            'pack_in'       => $packInCount,
-            'first_payment' => $paidCount,
+	    	'contacted_leads' => $diallerCount[0]['contacted'],
+            'referrals'       => $referralCount,
+            'pack_out'        => $packOutCount,
+            'pack_in'         => $packInCount,
+            'first_payment'   => $paidCount,
         ))->where('id', $this->id)->execute();
 	    
     }
