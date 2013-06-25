@@ -572,15 +572,63 @@ class Source
 			WHERE 
 				list_id = '".$this->listID."'
 	    ";
+	    
+	    $resolveDebtsolvCountQuery = "
+			SELECT 
+				DMR.lead_id AS LeadID
+				, CASE WHEN TCR.Description = 'Lead Completed' THEN 'TRUE' ELSE 'FALSE' END AS PackOut
+				, CASE WHEN D_CLD.DatePackReceived >= CONVERT(datetime, '2000-01-01 00:00:00', 105) THEN 'TRUE' ELSE 'FALSE' END AS PackIn
+				, CASE WHEN DCD.FirstPaymentDate >= '2000-01-01' THEN 'TRUE' ELSE 'FALSE' END AS FirstPayment
+			FROM 
+				Dialler.dbo.referrals AS DMR
+			LEFT JOIN
+				BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DMR.leadpool_id=CLD.ClientID
+			LEFT JOIN
+				BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+			LEFT JOIN
+				BS_LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+			LEFT JOIN
+				BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+			LEFT JOIN
+				Dialler.dbo.client_dates AS DCD ON D_CLD.Client_ID=DCD.ClientID
+			WHERE 
+				list_id = '".$this->listID."'
+	    ";
+	    
 	    $gabDebtsolvCount 	  = \DB::query($gabDebtsolvCountQuery)->execute('debtsolv')->as_array();
-//	    $resolveDebtsolvCount = \DB::query($gabDebtsolvCountQuery)->execute('debtsolv')->as_array();
+	    $resolveDebtsolvCount = \DB::query($resolveDebtsolvCountQuery)->execute('debtsolv')->as_array();
+	    
+	    $combinedList = array();
+	    
+	    foreach ($gabDebtsolvCount as $singleLead)
+	    {
+		    $combinedList[$singleLead['LeadID']] = array(
+		    	'PackOut'      => $singleLead['PackOut'],
+		    	'PackIn'       => $singleLead['PackIn'],
+		    	'FirstPayment' => $singleLead['FirstPayment'],
+		    );
+	    }
+	    
+	    
+	    foreach ($resolveDebtsolvCount as $singleLead)
+	    {
+	    	if ($singleLead['PackOut'] == 'TRUE')
+	    	{
+			    $combinedList[$singleLead['LeadID']] = array(
+			    	'PackOut'      => $singleLead['PackOut'],
+			    	'PackIn'       => $singleLead['PackIn'],
+			    	'FirstPayment' => $singleLead['FirstPayment'],
+			    );		    	
+	    	}
+	    }
+	    
 	    
 	    $referralCount = 0;
 	    $packOutCount  = 0;
 	    $packInCount   = 0;
 	    $paidCount     = 0;
 	    
-	    foreach ($gabDebtsolvCount AS $singleLead)
+	    foreach ($combinedList AS $singleLead)
 	    {
 	    
 		    $referralCount++;
