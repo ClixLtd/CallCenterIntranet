@@ -450,7 +450,7 @@ class Source
 		$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
 		
 		$email->to(array(
-			's.skinner@expertmoneysolutions.co.uk'  => 'Data Updates',
+			'data-forward@expertmoneysolutions.co.uk'  => 'Data Updates',
 		));
 		
 		$email->priority(\Email::P_HIGH);
@@ -458,7 +458,7 @@ class Source
 		$email->subject('New Data Set Imported');
 		
 		$email->html_body(\View::forge('emails/importcomplete', array(
-		    'supplierName' => "Simon Skinner",
+		    'supplierName' => "BrandAnimal",
 		    'addedDate' => date("d/m/Y", strtotime($this->added_date)),
 		    'listID' => $this->listID,
 		    'leadsPurchased' => $this->purchased_leads,
