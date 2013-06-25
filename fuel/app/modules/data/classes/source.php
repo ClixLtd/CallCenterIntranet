@@ -606,7 +606,7 @@ class Source
 	    \DB::update('data')->set(array(
             'referrals'     => $referralCount,
             'pack_out'      => $packOutCount,
-            'pack_in'       => $packInCount),
+            'pack_in'       => $packInCount,
             'first_payment' => $paidCount,
         ))->where('id', $this->id)->execute();
 	    
