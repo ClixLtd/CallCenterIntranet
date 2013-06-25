@@ -30,7 +30,7 @@ class Controller_Data extends \Controller_Base
         $this->template->title = 'Listing all Data';
         $this->template->content = \View::forge('view/list', array(
         	'lists' => $allData,
-        );
+        ));
     }
     
     
