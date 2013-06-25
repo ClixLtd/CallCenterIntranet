@@ -396,6 +396,8 @@
 			@Adam::get_tomorrow_list_stats("OPT-IN", "gabdialler");
 			@Adam::get_tomorrow_list_stats("BURTON1", "resolvedialler");
 			@Adam::get_tomorrow_list_stats("SMS-1", "resolvedialler");
+      
+      #$this->staff_late_report();
 
 		}
 		
@@ -593,8 +595,7 @@
 			
 			print $message;
       
-      $this->senior_transfer_log_report();
-			
+      $this->senior_transfer_log_report();			
 		}
 		
 		
@@ -1573,11 +1574,11 @@ Gregson and Brooke.');
         
       $itReport = array();
                            
-      foreach($results as $result)
+      foreach($results as $key => $result)
       {
         if($result['has_error'] == 'YES')
         {
-          $itReport[] = $result;
+          $itReport[] = $results[$key];
         }
       }
       
@@ -2113,6 +2114,36 @@ Gregson and Brooke.');
       $startDateTime = date("Y-m-d 0:00:01");
       $endDateTime = date("Y-m-d 23:59:59");
       
+      $hqGroup = array(
+        'PREMIER-GAB',
+        'STANDARD-GAB',
+        'GAB',
+        'GABAGENT',
+        'GABSENIOR',
+      );
+      
+      $resolveGroup = array(
+        'PREMIER-RESOLVE',
+        'PREMIER-RESOLVEPART',
+        'STANDARD-RESOLVE',
+        'STANDARD-RESOLVEPART',
+        'RESOLVE',
+      );
+      
+      $hqEmailDetails = array(
+        'to' => 'd.stansfield@expertmoneysolutions.co.uk',
+        'subject' => 'HQ: Staff Break/Lunch Late Report',
+        'results' => array(),
+      );
+      
+      $resolveEmailDetails = array(
+        'to' => 'd.stansfield@expertmoneysolutions.co.uk',
+        'subject' => 'Resolve: Staff Break/Lunch Late Report',
+        'results' => array(),
+      );
+      
+      // -- Get the Results
+      // ------------------
       $results = array();
       $results = \DB::query("SELECT
                                 VAL.user
@@ -2120,7 +2151,7 @@ Gregson and Brooke.');
                                ,VAL.user_group
                                ,SUM(pause_sec) AS total_sec_time
                                ,SEC_TO_TIME(SUM(pause_sec)) AS total_break_time
-                               ,SEC_TO_TIME(SUM(pause_sec) - IF(DAYNAME('" . $date . "') = 'Friday', " . (int)$totalFri . ", " . (int)$totalMonToThurs . ")) AS time_diff
+                               ,SEC_TO_TIME(SUM(IF(sub_status = 'Lunch' AND pause_sec > " . (int)$lunchTime . ", pause_sec - " . (int)$lunchTime . ", IF(sub_status = 'Break' AND pause_sec > " . (int)$breakTime . ", pause_sec - " . (int)$breakTime . ", '')))) AS time_diff
                                ,SUM(IF(`sub_status` = 'Break', 1, 0)) AS total_breaks_taken
                                ,SUM(IF(`sub_status` = 'Lunch', 1, 0)) AS total_lunch_taken
                              FROM
@@ -2177,26 +2208,69 @@ Gregson and Brooke.');
         // -----------------------------                          
         $results[$key]['breakDown'] = $breakDownResults;
         unset($breakDownResults);
+        
+        // -- Filter out the users into the Office Groups
+        // ----------------------------------------------
+        if(in_array($result['user_group'], $hqGroup))
+        {
+          // -- HQ Group
+          // -----------
+          $hqEmailDetails['results'][] = $results[$key];
+        }
+        else if(in_array($result['user_group'], $resolveGroup))
+        {
+          // -- Resolve Group
+          // ----------------
+          $resolveEmailDetails['results'][] = $results[$key];
+        }
       }
       
-      // -- Send an email out
-      // --------------------
-      $email = \Email::forge();
+      // -- Send the emails out to the sales managers
+      // --------------------------------------------
+      
+      // -- HQ Email
+      // -----------
+      if(count($hqEmailDetails['results']) > 0)
+      {
+        $email = \Email::forge();
+        $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+      
+        $email->to(array(
+        					$hqEmailDetails['to']  => 'David Stansfield',
+        				));
+                
+        $email->subject($hqEmailDetails['subject'] . ' ' . date("d-m-Y"));
         
-      $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+        $email->html_body(\View::forge('emails/latestaff/late-staff', array(
+              					'results' => $hqEmailDetails['results'],
+              					)
+              				));
+                      
+        $email->send();
+      }
       
-      $email->to(array(
-      					'd.stansfield@expertmoneysolutions.co.uk'  => 'David Stansfield',
-      				));
-              
-      $email->subject('Staff Break/Lunch Late Report ' . date("d-m-Y"));
+      unset($email);
       
-      $email->html_body(\View::forge('emails/latestaff/late-staff', array(
-            					'results' => $results,
-            					)
-            				));
-                    
-      $email->send();
+      // -- Resolve Email
+      // ----------------
+      if(count($resolveEmailDetails['results']) > 0)
+      {
+        $email = \Email::forge();
+        $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+      
+        $email->to(array(
+        					$resolveEmailDetails['to']  => 'David Stansfield',
+        				));
+                
+        $email->subject($resolveEmailDetails['subject'] . ' ' . date("d-m-Y"));
+        
+        $email->html_body(\View::forge('emails/latestaff/late-staff', array(
+              					'results' => $resolveEmailDetails['results'],
+              					)
+              				));
+                      
+        $email->send();
+      }
     }		
 		
 	}
