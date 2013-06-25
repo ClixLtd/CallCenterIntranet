@@ -549,6 +549,15 @@ class Source
     protected function _update()
     {
 	    // Get contacted leads from dialler
+	    $diallerCount = \DB::query("
+	    	SELECT 
+	    		count(lead_id) AS contacted
+	    	FROM
+	    		vicidial_list
+	    	WHERE
+	    		status IN ('3RDPAR','BNKRPT','BUSINE','CCJ','CHDB','CREDRA','DECEAS','DIEXCO','DMPLUS','EXISCL','HUNGUP','IVA','NODEBT','NOINDM','NOTAFF','NSTRUG','PPI','SECDBT','WRNAME','CALLBK','CBHOLD','DNC','NI','NP','PPIREF','SALE')
+	    		AND list_id = '".$this->listID."';
+	    ")->execute('dialler')->as_array();
 	    
 	    // Get Debtsolv referrals from this list
 	    $gabDebtsolvCountQuery = "
@@ -654,6 +663,7 @@ class Source
 	    
 	    
 	    \DB::update('data')->set(array(
+	    	'contacted'	    => $diallerCount[0]['contacted'],
             'referrals'     => $referralCount,
             'pack_out'      => $packOutCount,
             'pack_in'       => $packInCount,
