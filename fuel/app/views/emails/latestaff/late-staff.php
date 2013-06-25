@@ -20,7 +20,7 @@
             <tr style="background-color:#DDDDDD">
               <th>Group</th>
               <th>Total Time Taken</th>
-              <th>Total Overtime</th>
+              <th>Total Tardiness</th>
               <th>Total Breaks Taken</th>
               <th>Total Lunches Taken</th>
             </tr>
@@ -44,7 +44,7 @@
                       <th>Break/Lunch</th>
                       <th>Time Taken</th>
                       <th>Is Late</th>
-                      <th>Over Time</th>
+                      <th>Tardiness</th>
                     </tr>
                   </thead>
                   <tbody>
