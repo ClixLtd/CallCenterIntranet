@@ -11,6 +11,15 @@ return array(
 			'password'   => 'Wvts231ct6D',
 		),
 	),
+	'dialler' => array(
+		'type'       => 'pdo',
+		'table_prefix' => '',
+		'connection'  => array(
+			'dsn'        => 'mysql:host=192.168.5.215;dbname=asterisk',
+			'username'   => 'intranet',
+			'password'   => 'Wvts231ct6D',
+		),
+	),
 	'debtsolv' => array(
 		'type'       => 'pdo',
 		'connection' => array(
