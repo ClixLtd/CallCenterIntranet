@@ -2140,7 +2140,7 @@ Gregson and Brooke.');
                       'i.patterson@expertmoneysolutions.co.uk',
                       'g.gregson@expertmoneysolutions.co.uk',
                      ),
-        'subject' => 'HQ: Staff Break/Lunch Late Report',
+        'subject' => 'Bolton: Staff Break/Lunch Late Report',
         'results' => array(),
       );
       
