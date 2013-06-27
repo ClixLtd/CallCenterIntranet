@@ -1390,7 +1390,7 @@ GROUP BY
 				'referrals'       => $singleReport['referrals'],
 				'packouts'        => $singleReport['packouts'],
 				'conversionrate'  => $singleReport['conversionrate'],
-				'totalDI'         => $singleReport['totalDI'],
+				'totalDI'         => "&pound".number_format($singleReport['totalDI'],2),
 				'points'          => $singleReport['points'],
 				'commission'      => $singleReport['commission'],
 				'allReferrals'    => $singleReport['allReferrals']
