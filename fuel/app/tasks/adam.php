@@ -2415,7 +2415,6 @@ Gregson and Brooke.');
 				
 				
 				list($dialler_lead_id, $rows_affected) = \DB::insert('BS_Leadpool_DM.dbo.LeadBatch')->set(array(
-					'ID'    		 => $lastResBat,
 					'Filename'       => '',
 					'LeadSourceID'   => $lastRes,
 					'ImportMethodID' => 0,
