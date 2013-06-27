@@ -2329,7 +2329,7 @@ Gregson and Brooke.');
                 
 			$email->subject("Lists Missing from GAB Debtsolv");
         
-			$email->html_body("The following lists are missing from the GAB Debtsolv\n\n".implode("\n", $gabMissing));
+			$email->html_body("The following lists are missing from the GAB Debtsolv<br /><br />".implode("<br />", $gabMissing));
                       
 			$email->send();
 			
@@ -2346,7 +2346,7 @@ Gregson and Brooke.');
                 
 			$email->subject("Lists Missing from Resolve Debtsolv");
         
-			$email->html_body("The following lists are missing from the Resolve Debtsolv\n\n".implode("\n", $resolveMissing));
+			$email->html_body("The following lists are missing from the Resolve Debtsolv<br /><br />".implode("<br />", $resolveMissing));
                       
 			$email->send();
 			
