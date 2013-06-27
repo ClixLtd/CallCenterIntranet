@@ -2293,7 +2293,7 @@ Gregson and Brooke.');
 		{
 			
 			$gabLists      = \DB::select('ID','Reference')->from('Leadpool_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
-			$gabListsBat   = \DB::select('ID','Reference')->from('Leadpool_DM.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
+			$gabListsBat   = \DB::select('ID')->from('Leadpool_DM.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
 			$resolveLists  = \DB::select('ID','Reference')->from('BS_Leadpool_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
 			
 			$gabAll = $resolveAll = array();
