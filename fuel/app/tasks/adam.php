@@ -2293,8 +2293,13 @@ Gregson and Brooke.');
 		{
 			
 			$gabLists      = \DB::select('ID','Reference')->from('Leadpool_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
+			$gabListsDM    = \DB::select('ID')->from('Debtsolv.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
 			$gabListsBat   = \DB::select('ID')->from('Leadpool_DM.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
+			
+			
 			$resolveLists  = \DB::select('ID','Reference')->from('BS_Leadpool_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
+			$resolveListsDM    = \DB::select('ID')->from('BS_Debtsolv_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
+			$resolveListsBat   = \DB::select('ID')->from('BS_Leadpool_DM.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
 			
 			$gabAll = $resolveAll = array();
 			foreach ($gabLists as $one)
@@ -2323,12 +2328,13 @@ Gregson and Brooke.');
 			
 			$lastGab    = $gabLists[count($gabLists)-1]['ID'];
 			$lastGabBat = $gabListsBat[count($gabListsBat)-1]['ID'];
-			
-			
+			$lastGabDM  = $gabListsDM[count($gabListsDM)-1]['ID'];
+
 			foreach ($gabMissing as $missing)
 			{
 				$lastGab++;
 				$lastGabBat++;
+				$lastGabDM++
 				
 				$listDetails  = \DB::select('list_description')->from('vicidial_lists')->where('list_id', $missing)->execute('dialler');
 				
@@ -2342,8 +2348,22 @@ Gregson and Brooke.');
 					'IntroducerID'   => 42,
 				))->execute('debtsolv');
 				
-				list($dialler_lead_id, $rows_affected) = \DB::insert('Leadpool_DM.dbo.LeadBatch')->set(array(
+				
+				list($leadSourceID, $rows_affected) = \DB::insert('Debtsolv.dbo.Type_Lead_Source')->set(array(
+				 	'ID'             => $lastGabDM,
+					'Alias'          => $listDetails[0]['list_description'],
+					'Reference'      => $missing,
+					'Status'         => 1,
 					'Description'    => $listDetails[0]['list_description'],
+					'Group'          => 0,
+					'IntroducerID'   => 42,
+					'CostPerLead'    => 0,
+					'BrandID'        => 0,
+				))->execute('debtsolv');
+				
+				
+				list($dialler_lead_id, $rows_affected) = \DB::insert('Leadpool_DM.dbo.LeadBatch')->set(array(
+					'ID'    		 => $gabListsDM,
 					'Filename'       => '',
 					'LeadSourceID'   => $lastGab,
 					'ImportMethodID' => 0,
@@ -2354,6 +2374,59 @@ Gregson and Brooke.');
 				
 				
 			}
+			
+			
+			
+			
+			$lastRes    = $resolveLists[count($resolveLists)-1]['ID'];
+			$lastResBat = $resolveListsBat[count($resolveListsBat)-1]['ID'];
+			$lastResDM  = $resolveListsDM[count($resolveListsDM)-1]['ID'];
+
+			foreach ($gabMissing as $missing)
+			{
+				$lastRes++;
+				$lastResBat++;
+				$lastResDM++
+				
+				$listDetails  = \DB::select('list_description')->from('vicidial_lists')->where('list_id', $missing)->execute('dialler');
+				
+				list($leadSourceID, $rows_affected) = \DB::insert('BS_Leadpool_DM.dbo.Type_Lead_Source')->set(array(
+				 	'ID'             => $lastGab,
+					'Description'    => $listDetails[0]['list_description'],
+					'Reference'      => $missing,
+					'Status'         => 1,
+					'ScoreValue'     => 0,
+					'CategoryID'     => 0,
+					'IntroducerID'   => 2003,
+				))->execute('debtsolv');
+				
+				
+				list($leadSourceID, $rows_affected) = \DB::insert('BS_Debtsolv_DM.dbo.Type_Lead_Source')->set(array(
+				 	'ID'             => $lastGabDM,
+					'Alias'          => $listDetails[0]['list_description'],
+					'Reference'      => $missing,
+					'Status'         => 1,
+					'Description'    => $listDetails[0]['list_description'],
+					'Group'          => 0,
+					'IntroducerID'   => 2003,
+					'CostPerLead'    => 0,
+					'BrandID'        => 0,
+				))->execute('debtsolv');
+				
+				
+				list($dialler_lead_id, $rows_affected) = \DB::insert('BS_Leadpool_DM.dbo.LeadBatch')->set(array(
+					'ID'    		 => $gabListsDM,
+					'Filename'       => '',
+					'LeadSourceID'   => $lastGab,
+					'ImportMethodID' => 0,
+					'ImportNotes'    => '',
+					'ActionTakenID'  => 0,
+					'ScoreValue'     => 0,
+				))->execute('debtsolv');
+				
+				
+			}
+			
 			
 			
 			
