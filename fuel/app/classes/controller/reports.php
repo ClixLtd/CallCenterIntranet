@@ -1381,6 +1381,23 @@ GROUP BY
 
 	
     	$reportArray = Controller_Reports::generate_telesales_report($center, $startDate, $endDate);
+    	
+    	$returnReport = array();
+    	foreach ($reportArray['report'] as $key => $singleReport)
+    	{
+	    	$returnReport[$key] = array(
+				'name'            => $singleReport['name'],
+				'referrals'       => $singleReport['referrals'],
+				'packouts'        => $singleReport['packouts'],
+				'conversionrate'  => $singleReport['conversionrate'],
+				'totalDI'         => $singleReport['totalDI'],
+				'points'          => $singleReport['points'],
+				'commission'      => $singleReport['commission'],
+				'allReferrals'    => $singleReport['allReferrals']
+			);
+    	}
+    	
+    	
     	return $this->response(array(
     	    'titles'     => array(
     	        'Name',
@@ -1392,16 +1409,7 @@ GROUP BY
     	        'Commission',
     	    ),
 //    	    'report'     => $reportArray['report'],
-			'report'	 => array(
-				'name' => $reportArray['report']['name'],
-				'referrals' => $reportArray['report']['referrals'],
-				'packouts' => $reportArray['report']['packouts'],
-				'conversionrate' => $reportArray['report']['conversionrate'],
-				'totalDI' => $reportArray['report']['totalDI'],
-				'points' => $reportArray['report']['points'],
-				'commission' => $reportArray['report']['commission'],
-				'allReferrals' => $reportArray['report']['allReferrals']
-			),
+			'report'	 => $returnReport,
     	    'centerVals' => $reportArray['centerVals'],
     	));
 	}
