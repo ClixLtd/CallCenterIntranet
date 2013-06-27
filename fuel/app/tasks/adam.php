@@ -2285,4 +2285,48 @@ Gregson and Brooke.');
       }
     }		
 		
+		
+		
+		
+		
+		public function checkLists()
+		{
+			
+			$gabLists      = \DB::select('Reference')->from('Leadpool_DM.dbo.Type_Lead_Source')->execute('debtsolv');
+			$resolveLists  = \DB::select('Reference')->from('BS_Leadpool_DM.dbo.Type_Lead_Source')->execute('debtsolv');
+			
+			$gabAll = $resolveAll = array();
+			foreach ($gabLists as $one)
+			{
+				$gabAll[] = $one['Reference'];
+			}
+			foreach ($resolveLists as $one)
+			{
+				$resolveAll[] = $one['Reference'];
+			}
+			
+			$diallerLists  = \DB::select('list_id')->from('vicidial_lists')->execute('dialler');
+			
+			$gabMissing = $resolveMissing = array();
+			foreach ($diallerLists as $oneList)
+			{
+				if (!in_array($oneList['list_id'], $gabAll))
+				{
+					$gabMissing[] = $oneList['list_id'];
+				}
+				if (!in_array($oneList['list_id'], $resolveAll))
+				{
+					$resolveMissing[] = $oneList['list_id'];
+				}
+			}
+			
+			
+			print "Missing From Gab Debtsolv\n";
+			print_r($gabMissing);
+			
+			print "Missing From Resolve Debtsolv\n";
+			print_r($resolveMissing);
+			
+		}
+		
 	}
