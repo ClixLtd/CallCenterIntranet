@@ -1393,13 +1393,14 @@ GROUP BY
     	    ),
 //    	    'report'     => $reportArray['report'],
 			'report'	 => array(
-				$reportArray['report']['name'],
-				$reportArray['report']['referrals'],
-				$reportArray['report']['packouts'],
-				$reportArray['report']['conversionrate'],
-				$reportArray['report']['totalDI'],
-				$reportArray['report']['points'],
-				$reportArray['report']['commission'],
+				'name' => $reportArray['report']['name'],
+				'referrals' => $reportArray['report']['referrals'],
+				'packouts' => $reportArray['report']['packouts'],
+				'conversionrate' => $reportArray['report']['conversionrate'],
+				'totalDI' => $reportArray['report']['totalDI'],
+				'points' => $reportArray['report']['points'],
+				'commission' => $reportArray['report']['commission'],
+				'allReferrals' => $reportArray['report']['allReferrals']
 			),
     	    'centerVals' => $reportArray['centerVals'],
     	));
