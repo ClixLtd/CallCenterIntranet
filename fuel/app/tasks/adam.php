@@ -2334,7 +2334,7 @@ Gregson and Brooke.');
 			{
 				$lastGab++;
 				$lastGabBat++;
-				$lastGabDM++
+				$lastGabDM++;
 				
 				$listDetails  = \DB::select('list_description')->from('vicidial_lists')->where('list_id', $missing)->execute('dialler');
 				
@@ -2386,7 +2386,7 @@ Gregson and Brooke.');
 			{
 				$lastRes++;
 				$lastResBat++;
-				$lastResDM++
+				$lastResDM++;
 				
 				$listDetails  = \DB::select('list_description')->from('vicidial_lists')->where('list_id', $missing)->execute('dialler');
 				
