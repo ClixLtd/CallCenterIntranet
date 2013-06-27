@@ -76,10 +76,10 @@ class Source
             if ($number > 0)
             {
                 // First check the intranet database
-                $numberResult = \DB::select('id','data_id')->from('data_holder')->where('data_id', '!=', $this->id)->where_open()
-                    ->where('phone_number', $number)
-                    ->or_where('alt_phone', $number)
-                ->where_close()->execute()->as_array();
+                $numberResult = \DB::select('data_holder.id','data_holder.data_id')->from('data_holder')->join('data', 'LEFT')->on('data.id', '=', 'data_holder.data_id')->where('data_holder.data_id', '!=', $this->id)->where_open()
+                    ->where('data_holder.phone_number', $number)
+                    ->or_where('data_holder.alt_phone', $number)
+                ->where_close()->where('data.completion_date', '>=', date('Y-m-d 00:00:00', strtotime('today -6 months')))->execute()->as_array();
                 
                 if (count($numberResult) > 0)
                 {
@@ -98,7 +98,10 @@ class Source
                 {
                     // As backup, check the dialler database
                     
-                    $diallerResult = \DB::select('list_id')->from('vicidial_list')->where('phone_number', $number)->or_where('alt_phone', $number)->execute('dialler')->as_array();
+                    $diallerResult = \DB::select('list_id')->from('vicidial_list')->where_open()
+                    	->where('phone_number', $number)
+                    	->or_where('alt_phone', $number)
+                    ->where_close()->where('entry_date', '>=', date('Y-m-d 00:00:00', strtotime('today -6 months')))->execute('dialler')->as_array();
                     
                     if (count($diallerResult) > 0)
                     {

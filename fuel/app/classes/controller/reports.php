@@ -1328,6 +1328,7 @@ GROUP BY
     	       'points'         => isset($reportArray[$member->dialler_id]['referrals']) ? (($reportArray[$member->dialler_id]['referrals'] * $centerValue['referral']) + ($reportArray[$member->dialler_id]['packOuts'] * $centerValue['pack_out']) + ($reportArray[$member->dialler_id]['totalDI'] * $centerValue['di_point'])) : 0.00,
     	       'commission'     => isset($reportArray[$member->dialler_id]['commission']) ? number_format($reportArray[$member->dialler_id]['commission'], 2) : 0.00,
     	       'allReferrals'   => isset($reportArray[$member->dialler_id]['allReferrals']) ? $reportArray[$member->dialler_id]['allReferrals'] : array(),
+    	       'totalDI'      => isset($reportArray[$member->dialler_id]['totalDI']) ? $reportArray[$member->dialler_id]['totalDI'] : 0,
     	       'staff_id'     => $member->id,
     	       'dialler_id'     => $member->dialler_id,
     	    );
@@ -1386,10 +1387,20 @@ GROUP BY
     	        'Referrals',
     	        'Pack Outs',
     	        'Conversion Rate',
+    	        'Total DI',
     	        'Points',
     	        'Commission',
     	    ),
-    	    'report'     => $reportArray['report'],
+//    	    'report'     => $reportArray['report'],
+			'report'	 => array(
+				$reportArray['report']['name'],
+				$reportArray['report']['referrals'],
+				$reportArray['report']['packouts'],
+				$reportArray['report']['conversionrate'],
+				$reportArray['report']['totalDI'],
+				$reportArray['report']['points'],
+				$reportArray['report']['commission'],
+			),
     	    'centerVals' => $reportArray['centerVals'],
     	));
 	}
