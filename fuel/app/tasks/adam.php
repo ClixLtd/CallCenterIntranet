@@ -2363,7 +2363,7 @@ Gregson and Brooke.');
 				
 				
 				list($dialler_lead_id, $rows_affected) = \DB::insert('Leadpool_DM.dbo.LeadBatch')->set(array(
-					'ID'    		 => $lastGabBat,
+					'Description'    => $listDetails[0]['list_description'],
 					'Filename'       => '',
 					'LeadSourceID'   => $lastGab,
 					'ImportMethodID' => 0,
@@ -2415,6 +2415,7 @@ Gregson and Brooke.');
 				
 				
 				list($dialler_lead_id, $rows_affected) = \DB::insert('BS_Leadpool_DM.dbo.LeadBatch')->set(array(
+					'Description'    => $listDetails[0]['list_description'],
 					'Filename'       => '',
 					'LeadSourceID'   => $lastRes,
 					'ImportMethodID' => 0,
