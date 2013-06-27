@@ -22,6 +22,7 @@ return array(
 	),
 	'debtsolv' => array(
 		'type'       => 'pdo',
+		'table_prefix' => '',
 		'connection' => array(
 				'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=LeadPool_DM',
 		        'username'       => 'superuser',
