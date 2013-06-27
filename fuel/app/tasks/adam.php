@@ -2327,6 +2327,7 @@ Gregson and Brooke.');
 				$listDetails  = \DB::select('list_description')->from('vicidial_lists')->where('list_id', $missing)->execute('dialler');
 				
 				list($leadSourceID, $rows_affected) = \DB::insert('Leadpool_DM.dbo.Type_Lead_Source')->set(array(
+				 	'ID'             => '',
 					'Description'    => $listDetails[0]['list_description'],
 					'Reference'      => $missing,
 					'Status'         => 1,
@@ -2336,6 +2337,7 @@ Gregson and Brooke.');
 				))->execute('debtsolv');
 				
 				list($dialler_lead_id, $rows_affected) = \DB::insert('Leadpool_DM.dbo.LeadBatch')->set(array(
+					'ID'             => '',
 					'Description'    => $listDetails[0]['list_description'],
 					'Filename'       => '',
 					'LeadSourceID'   => $leadSourceID
