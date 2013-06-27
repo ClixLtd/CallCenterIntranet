@@ -399,7 +399,7 @@
       
       // -- Run staff late report
       // ------------------------
-      $this->staff_late_report();
+      @Adam::staff_late_report();
 
 		}
 		
@@ -597,7 +597,9 @@
 			
 			print $message;
       
-      $this->senior_transfer_log_report();			
+      // -- Senior Transfer Log
+      // ----------------------
+      @Adam::senior_transfer_log_report();			
 		}
 		
 		
