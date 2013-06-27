@@ -2292,8 +2292,9 @@ Gregson and Brooke.');
 		public function checkLists()
 		{
 			
-			$gabLists      = \DB::select('Reference')->from('Leadpool_DM.dbo.Type_Lead_Source')->execute('debtsolv');
-			$resolveLists  = \DB::select('Reference')->from('BS_Leadpool_DM.dbo.Type_Lead_Source')->execute('debtsolv');
+			$gabLists      = \DB::select('ID','Reference')->from('Leadpool_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
+			$gabListsBat   = \DB::select('ID','Reference')->from('Leadpool_DM.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
+			$resolveLists  = \DB::select('ID','Reference')->from('BS_Leadpool_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
 			
 			$gabAll = $resolveAll = array();
 			foreach ($gabLists as $one)
@@ -2320,14 +2321,19 @@ Gregson and Brooke.');
 				}
 			}
 			
+			$lastGab    = $gabLists[count($gabLists)-1]['ID'];
+			$lastGabBat = $gabListsBat[count($gabListsBat)-1]['ID'];
 			
 			
 			foreach ($gabMissing as $missing)
 			{
+				$lastGab++;
+				$lastGabBat++;
+				
 				$listDetails  = \DB::select('list_description')->from('vicidial_lists')->where('list_id', $missing)->execute('dialler');
 				
 				list($leadSourceID, $rows_affected) = \DB::insert('Leadpool_DM.dbo.Type_Lead_Source')->set(array(
-				 	'ID'             => '',
+				 	'ID'             => $lastGab,
 					'Description'    => $listDetails[0]['list_description'],
 					'Reference'      => $missing,
 					'Status'         => 1,
@@ -2337,10 +2343,14 @@ Gregson and Brooke.');
 				))->execute('debtsolv');
 				
 				list($dialler_lead_id, $rows_affected) = \DB::insert('Leadpool_DM.dbo.LeadBatch')->set(array(
-					'ID'             => '',
+					'ID'             => $lastGabBat,
 					'Description'    => $listDetails[0]['list_description'],
 					'Filename'       => '',
-					'LeadSourceID'   => $leadSourceID
+					'LeadSourceID'   => $lastGab,
+					'ImportMethodID' => 0,
+					'ImportNotes'    => '',
+					'ActionTakenID'  => 0,
+					'ScoreValue'     => 0,
 				))->execute('debtsolv');
 				
 				
