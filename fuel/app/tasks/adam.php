@@ -2382,7 +2382,7 @@ Gregson and Brooke.');
 			$lastResBat = $resolveListsBat[count($resolveListsBat)-1]['ID'];
 			$lastResDM  = $resolveListsDM[count($resolveListsDM)-1]['ID'];
 
-			foreach ($gabMissing as $missing)
+			foreach ($resolveMissing as $missing)
 			{
 				$lastRes++;
 				$lastResBat++;
