@@ -2321,11 +2321,35 @@ Gregson and Brooke.');
 			}
 			
 			
-			print "Missing From Gab Debtsolv\n";
-			print_r($gabMissing);
+			$email = \Email::forge();
 			
-			print "Missing From Resolve Debtsolv\n";
-			print_r($resolveMissing);
+			$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+      
+			$email->to("s.skinner@expertmoneysolutions.co.uk");
+                
+			$email->subject("Lists Missing from GAB Debtsolv");
+        
+			$email->html_body("The following lists are missing from the GAB Debtsolv\n\n".implode("\n", $gabMissing));
+                      
+			$email->send();
+			
+			
+			
+			
+			
+			
+			$email = \Email::forge();
+			
+			$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+      
+			$email->to("s.skinner@expertmoneysolutions.co.uk");
+                
+			$email->subject("Lists Missing from Resolve Debtsolv");
+        
+			$email->html_body("The following lists are missing from the Resolve Debtsolv\n\n".implode("\n", $resolveMissing));
+                      
+			$email->send();
+			
 			
 		}
 		
