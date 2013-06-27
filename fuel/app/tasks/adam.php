@@ -2430,7 +2430,7 @@ Gregson and Brooke.');
 			
 			
 			
-			/*
+			
 			$email = \Email::forge();
 			
 			$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
@@ -2459,8 +2459,8 @@ Gregson and Brooke.');
 			$email->html_body("The following lists are missing from the Resolve Debtsolv<br /><br />".implode("<br />", $resolveMissing));
                       
 			$email->send();
-			*/
 			
+	
 		}
 		
 	}
