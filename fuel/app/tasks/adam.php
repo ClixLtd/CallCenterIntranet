@@ -2363,7 +2363,7 @@ Gregson and Brooke.');
 				
 				
 				list($dialler_lead_id, $rows_affected) = \DB::insert('Leadpool_DM.dbo.LeadBatch')->set(array(
-					'ID'    		 => $gabListsDM,
+					'ID'    		 => $lastGabBat,
 					'Filename'       => '',
 					'LeadSourceID'   => $lastGab,
 					'ImportMethodID' => 0,
@@ -2391,7 +2391,7 @@ Gregson and Brooke.');
 				$listDetails  = \DB::select('list_description')->from('vicidial_lists')->where('list_id', $missing)->execute('dialler');
 				
 				list($leadSourceID, $rows_affected) = \DB::insert('BS_Leadpool_DM.dbo.Type_Lead_Source')->set(array(
-				 	'ID'             => $lastGab,
+				 	'ID'             => $lastRes,
 					'Description'    => $listDetails[0]['list_description'],
 					'Reference'      => $missing,
 					'Status'         => 1,
@@ -2402,7 +2402,7 @@ Gregson and Brooke.');
 				
 				
 				list($leadSourceID, $rows_affected) = \DB::insert('BS_Debtsolv_DM.dbo.Type_Lead_Source')->set(array(
-				 	'ID'             => $lastGabDM,
+				 	'ID'             => $lastResDM,
 					'Alias'          => $listDetails[0]['list_description'],
 					'Reference'      => $missing,
 					'Status'         => 1,
@@ -2415,9 +2415,9 @@ Gregson and Brooke.');
 				
 				
 				list($dialler_lead_id, $rows_affected) = \DB::insert('BS_Leadpool_DM.dbo.LeadBatch')->set(array(
-					'ID'    		 => $gabListsDM,
+					'ID'    		 => $lastResBat,
 					'Filename'       => '',
-					'LeadSourceID'   => $lastGab,
+					'LeadSourceID'   => $lastRes,
 					'ImportMethodID' => 0,
 					'ImportNotes'    => '',
 					'ActionTakenID'  => 0,
