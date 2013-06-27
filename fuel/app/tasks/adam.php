@@ -2325,7 +2325,7 @@ Gregson and Brooke.');
 			
 			$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
       
-			$email->to("s.skinner@expertmoneysolutions.co.uk");
+			$email->to("it@expertmoneysolutions.co.uk");
                 
 			$email->subject("Lists Missing from GAB Debtsolv");
         
@@ -2342,7 +2342,7 @@ Gregson and Brooke.');
 			
 			$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
       
-			$email->to("s.skinner@expertmoneysolutions.co.uk");
+			$email->to("it@expertmoneysolutions.co.uk");
                 
 			$email->subject("Lists Missing from Resolve Debtsolv");
         
