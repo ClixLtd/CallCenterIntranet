@@ -2321,6 +2321,31 @@ Gregson and Brooke.');
 			}
 			
 			
+			
+			foreach ($gabMissing as $missing)
+			{
+				$listDetails  = \DB::select('list_description')->from('vicidial_lists')->where('list_id', $missing)->execute('dialler');
+				list($leadSourceID, $rows_affected) = \DB::insert('Leadpool_DM.dbo.Type_Lead_Source')->set(array(
+					'Description'    => $listDetails[0]['list_description'],
+					'Reference'      => $missing,
+					'Status'         => 1,
+					'ScoreValue'     => 0,
+					'CategoryID'     => 0,
+					'IntroducerID'   => 42,
+				))->execute('debtsolv')
+				
+				list($dialler_lead_id, $rows_affected) = \DB::insert('Leadpool_DM.dbo.LeadBatch')->set(array(
+					'Description'    => $listDetails[0]['list_description'],
+					'Filename'       => '',
+					'LeadSourceID'   => $leadSourceID
+				))->execute('debtsolv');
+				
+				
+			}
+			
+			
+			
+			/*
 			$email = \Email::forge();
 			
 			$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
@@ -2349,7 +2374,7 @@ Gregson and Brooke.');
 			$email->html_body("The following lists are missing from the Resolve Debtsolv<br /><br />".implode("<br />", $resolveMissing));
                       
 			$email->send();
-			
+			*/
 			
 		}
 		
