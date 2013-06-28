@@ -388,19 +388,18 @@
 			
 			@Adam::move_telesales_staff();
 			
-			@Adam::daily_stats();
-			
-			// Run List stat checker
-			@Adam::get_tomorrow_list_stats("GAB-1", "gabdialler");
-			@Adam::get_tomorrow_list_stats("GBS-1", "gabdialler");
-			@Adam::get_tomorrow_list_stats("OPT-IN", "gabdialler");
-			@Adam::get_tomorrow_list_stats("BURTON1", "resolvedialler");
-			@Adam::get_tomorrow_list_stats("SMS-1", "resolvedialler");
-      
       // -- Run staff late report
       // ------------------------
       @Adam::staff_late_report();
-
+      
+			@Adam::daily_stats();
+			
+			// Run List stat checker
+			#@Adam::get_tomorrow_list_stats("GAB-1", "gabdialler");
+			#@Adam::get_tomorrow_list_stats("GBS-1", "gabdialler");
+			#@Adam::get_tomorrow_list_stats("OPT-IN", "gabdialler");
+			#@Adam::get_tomorrow_list_stats("BURTON1", "resolvedialler");
+			#@Adam::get_tomorrow_list_stats("SMS-1", "resolvedialler");
 		}
 		
 		/**
