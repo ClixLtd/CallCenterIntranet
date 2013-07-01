@@ -57,7 +57,7 @@ class Model_Data
     
     public static function get_invalids($data_id=null)
     {
-	    $dataQuery = \DB::select('*')->from('data_dialler_copy')->where('data_lead_id', $data_id);
+	    $dataQuery = \DB::select('*')->from('data_dialler_copy')->join('data_holder', 'LEFT')->on('data_holder.id', '=', 'data_dialler_copy.data_lead_id')->where('data_holder.data_id', $data_id)->where('data_dialler_copy.dialler_lead_id', 0);
 	    
 	    $queryResults = $dataQuery->cached(21600)->execute()->as_array();  
 	    
