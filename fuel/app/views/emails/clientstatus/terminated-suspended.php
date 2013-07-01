@@ -4,10 +4,10 @@
   <body>
     <h2>Terminated and Suspended Clients</h2>
     
-    <table width="100" cellpadding="5" cellspacing="0">
+    <table width="100%" cellpadding="5" cellspacing="0">
       <thead>
         <tr style="background-color:#DDDDDD">
-          <th colspan="3">Summary</th>
+          <th colspan="4">Summary</th>
         </tr>
         <tr style="background-color:#DDDDDD">
           <th>Date</th>
@@ -32,7 +32,7 @@
     foreach($clients['status'] as $status => $clientList)
     {
       ?>    
-      <table width="100" cellpadding="5" cellspacing="0">
+      <table width="100%" cellpadding="5" cellspacing="0">
         <thead>
           <tr style="background-color:#DDDDDD">
             <th colspan="6"><?=$status;?></th>
