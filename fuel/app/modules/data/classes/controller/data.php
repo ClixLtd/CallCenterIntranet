@@ -80,7 +80,7 @@ class Controller_Data extends \Controller_Base
 			    
 		    }
 		    
-		    print_r($duplicateNumbers);
+		    print_r($invalidLeads);
 		    
 	    }
 	    else
