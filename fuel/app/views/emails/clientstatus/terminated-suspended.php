@@ -38,7 +38,7 @@
             <th colspan="6"><?=$status;?></th>
           </tr>
           <tr style="background-color:#DDDDDD">
-            <th>Client ID</th>
+            <th width="80">Client ID</th>
             <th>Client Name</th>
             <th>Changed By</th>
             <th>Process Stage Date/Time</th>
@@ -58,10 +58,10 @@
             <tr style="background-color: <?php echo ($background==0) ? "#DDDDDD" : "#EEEEEE"; ?>; border-bottom: #CCCCCC 1px solid;">
               <td align="center"><?=$client['ClientID'];?></td>
               <td><?=rtrim($client['Title'] . ' ' . $client['Forename'] . ' ' . $client['Surname']);?></td>
-              <td align="center"><?=$client['CreatedBy'];?></td>
-              <td align="center"><?=date("d-m-Y H:i", strtotime($client['ProcessDate']));?></td>
+              <td align="center" nowrap><?=$client['CreatedBy'];?></td>
+              <td align="center" nowrap><?=date("d-m-Y H:i", strtotime($client['ProcessDate']));?></td>
               <td align="center"><?=$client['CorresspondenceTitle'];?></td>
-              <td align="center"><?=$client['CorrespondenceDescription'];?></td>
+              <td align="center"><?=nl2br($client['CorrespondenceDescription']);?></td>
             </tr>
             <?php
             $background = ($background==0) ? 1 : 0;
