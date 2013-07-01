@@ -58,8 +58,22 @@ class Controller_Data extends \Controller_Base
 		    
 		    $invalidLeads = \Data\Model_Data::get_invalids($data_id);
 		    
+		    $tpsNumbers = $duplicateNumbers = array();
+		    foreach ($invalidLeads as $singleLead)
+		    {
+			    $leadDetails = unserialize($singleLead['number_data']);
+			    
+			    if (isset($leadDetails['duplicates']) && count($leadDetails['duplicates']) > 0)
+			    {
+				    $duplicateNumbers[] = array(
+				    	'number' => $leadDetails['duplicates']['number'],
+				    	'list_ids' => $leadDetails['duplicates']['list_ids'],
+				    );
+			    }
+			    
+		    }
 		    
-		    print_r($invalidLeads);
+		    print_r($duplicateNumbers);
 		    
 	    }
 	    else
