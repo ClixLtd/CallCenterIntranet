@@ -7,7 +7,7 @@
     <table width="100%" cellpadding="5" cellspacing="0">
       <thead>
         <tr style="background-color:#DDDDDD">
-          <th colspan="4">Summary</th>
+          <th colspan="4" style="font-size: 14px;">Summary</th>
         </tr>
         <tr style="background-color:#DDDDDD">
           <th>Date</th>
@@ -26,7 +26,9 @@
       </tbody>
     </table>
     
+    <br />
     <hr />
+    <br />
     
     <?php
     foreach($clients['status'] as $status => $clientList)
@@ -35,7 +37,7 @@
       <table width="100%" cellpadding="5" cellspacing="0">
         <thead>
           <tr style="background-color:#DDDDDD">
-            <th colspan="6"><?=$status;?></th>
+            <th colspan="6" style="font-size: 14px;"><?=$status;?></th>
           </tr>
           <tr style="background-color:#DDDDDD">
             <th width="80">Client ID</th>
@@ -57,8 +59,8 @@
             ?>
             <tr style="background-color: <?php echo ($background==0) ? "#DDDDDD" : "#EEEEEE"; ?>; border-bottom: #CCCCCC 1px solid;">
               <td align="center"><?=$client['ClientID'];?></td>
-              <td><?=rtrim($client['Title'] . ' ' . $client['Forename'] . ' ' . $client['Surname']);?></td>
-              <td align="center" nowrap><?=$client['CreatedBy'];?></td>
+              <td nowrap><?=rtrim($client['Title'] . ' ' . $client['Forename'] . ' ' . $client['Surname']);?></td>
+              <td nowrap><?=$client['CreatedBy'];?></td>
               <td align="center" nowrap><?=date("d-m-Y H:i", strtotime($client['ProcessDate']));?></td>
               <td align="center"><?=$client['CorresspondenceTitle'];?></td>
               <td align="center"><?=nl2br($client['CorrespondenceDescription']);?></td>
@@ -78,7 +80,9 @@
         
       </table>
       
+      <br />
       <hr />
+      <br />
       
       <?php
       }
