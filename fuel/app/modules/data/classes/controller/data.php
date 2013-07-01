@@ -56,9 +56,10 @@ class Controller_Data extends \Controller_Base
 		    	'listid'     => $oneList['dialler_id'],
 		    );
 		    
+		    $invalidLeads = \Data\Model_Data::get_invalids($data_id);
 		    
 		    
-		    print_r($basicStats);
+		    print_r($invalidLeads);
 		    
 	    }
 	    else

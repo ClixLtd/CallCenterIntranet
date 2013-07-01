@@ -55,6 +55,16 @@ class Model_Data
 	    
     }
     
+    public static function get_invalids($data_id=null)
+    {
+	    $dataQuery = \DB::select('*')->from('data_dialler_copy')->where('data_lead_id', $data_id)->where('dialler_lead_id', 0);
+	    
+	    $queryResults = $dataQuery->cached(21600)->execute()->as_array();  
+	    
+	    return (is_array($queryResults) && count($queryResults) > 0) ? $queryResults : null;
+	      
+    }
+    
     
     
     /**
