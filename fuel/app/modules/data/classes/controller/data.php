@@ -74,7 +74,7 @@ class Controller_Data extends \Controller_Base
 			    if (isset($leadDetails['tps']) && count($leadDetails['tps']) > 0)
 			    {
 				    $tpsNumbers[] = array(
-				    	'number' => $leadDetails['duplicates']['number'],
+				    	'number' => $leadDetails['tps']['number'],
 				    );
 			    }
 			    
