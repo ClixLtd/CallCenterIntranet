@@ -449,6 +449,13 @@ class Source
     {
         $this->_load();
         
+        
+        
+        
+        
+        
+        
+        
         // E-Mail Managers with new campaign lists
 		$email = \Email::forge();
 		

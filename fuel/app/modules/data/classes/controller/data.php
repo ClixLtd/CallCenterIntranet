@@ -116,6 +116,7 @@ class Controller_Data extends \Controller_Base
             
             $uploads = \Upload::get_files();
             $dataFilename = $uploads[0]['saved_as'];
+            $realFilename = $uploads[0]['filename'];
             
             
             
@@ -135,20 +136,20 @@ class Controller_Data extends \Controller_Base
                 'title' => 'Title',
                 'first_name' => 'First Name',
                 'middle_initial' => 'Middle Initial',
-                'last_name' => 'Surname',
-                'address1' => 'Address 1',
-                'address2' => 'Address 2',
-                'address3' => 'Address 3',
-                'city' => 'City',
-                'state' => 'State',
-                'province' => 'Province',
-                'postal_code' => 'Post Code',
-                'gender' => 'Gender',
-                'phone_number' => 'Phone Number',
-                'alt_phone' => 'Alternate Phone',
-                'email' => 'E-Mail',
+                'last_name'     => 'Surname',
+                'address1'      => 'Address 1',
+                'address2'      => 'Address 2',
+                'address3'      => 'Address 3',
+                'city'          => 'City',
+                'state'         => 'State',
+                'province'      => 'Province',
+                'postal_code'   => 'Post Code',
+                'gender'        => 'Gender',
+                'phone_number'  => 'Phone Number',
+                'alt_phone'     => 'Alternate Phone',
+                'email'         => 'E-Mail',
                 'date_of_birth' => 'Date of Birth',
-                'comments' => 'Comments',
+                'comments'      => 'Comments',
             );
             
             $headingGuess = array();
@@ -169,9 +170,10 @@ class Controller_Data extends \Controller_Base
                 
         $this->template->title = 'Set Data Options';
         $this->template->content = \View::forge('add/setoptions', array(
-            'dataFilename' => $dataFilename,
-            'allHeadings' => $databaseHeadings,
-            'fileHeadings' => $fileHeadings,
+            'dataFilename'  => $dataFilename,
+            'realFilename'  => $realFilename,
+            'allHeadings'   => $databaseHeadings,
+            'fileHeadings'  => $fileHeadings,
             'headingsGuess' => $headingGuess,
         ));
     }
