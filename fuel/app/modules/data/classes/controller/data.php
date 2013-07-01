@@ -36,6 +36,38 @@ class Controller_Data extends \Controller_Base
     
     
     
+    public function action_view($data_id=null)
+    {
+	    if (!is_null($data_id))
+	    {
+		    $listDetails = \Data\Model_Data::get_stats($data_id);
+		    $oneList     = $listDetails[0];
+		    
+		    $basicStats  = array(
+		    	'purchased'  => $oneList['purchased_leads'],
+		    	'duplicates' => $oneList['duplicates'],
+				'tps'		 => $oneList['tps'],
+		    	'dialable'   => $oneList['dialable_leads'],
+		    	'contacted'  => $oneList['contacted_leads'],
+		    	'referrals'  => $oneList['referrals'],
+		    	'packout'    => $oneList['pack_out'],
+		    	'packin'     => $oneList['pack_in'],
+		    	'paid'       => $oneList['first_payment'],
+		    	'listid'     => $oneList['dialler_id'],
+		    );
+		    
+		    
+		    
+		    print_r($basicStats);
+		    
+	    }
+	    else
+	    {
+		    // List ID has not been given
+		    
+	    }   
+    }
+    
     
     
     

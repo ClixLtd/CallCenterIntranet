@@ -17,7 +17,7 @@
 		<tbody>
 			<?php foreach($lists as $list): ?>
 			<tr>
-				<td><a href="/data/full/<?php echo $list['id']; ?>"><?php echo $list['dialler_id']; ?></a></td>
+				<td><a href="/data/view/<?php echo $list['id']; ?>"><?php echo $list['dialler_id']; ?></a></td>
 				<td><?php echo date("d/m/Y", strtotime($list['added_date'])); ?></td>
 				<td><?php echo $list['purchased_leads']; ?></td>
 				<td><span rel="tooltip" title="<?php echo number_format((((int)$list['dialable_leads']/(int)$list['purchased_leads'])*100),2)."%"; ?>"><?php echo $list['dialable_leads']; ?></span></td>

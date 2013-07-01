@@ -39,14 +39,21 @@ class Model_Data
         // Execute the query and convert to an array
         $queryResults = $dataQuery->cached(300)->execute()->as_array();
         
-        
-        
-        
-        
         // Providing we have results, return them. If not return null
         return (is_array($queryResults) && count($queryResults) > 0) ? $queryResults : null;
     }
     
+    
+    public static function get_stats($data_id=null)
+    {
+    
+	    $dataQuery = \DB::select('*')->from('data')->where('id', $data_id);
+	    
+	    $queryResults = $dataQuery->cached(300)->execute()->as_array();
+	    
+	    return (is_array($queryResults) && count($queryResults) > 0) ? $queryResults : null;
+	    
+    }
     
     
     
