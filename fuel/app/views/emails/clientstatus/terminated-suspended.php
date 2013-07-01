@@ -42,8 +42,8 @@
             <th>Client Name</th>
             <th>Changed By</th>
             <th>Process Stage Date/Time</th>
-            <th>Last Corresspondence Title</th>
-            <th>Last Corresspondence Note</th>
+            <th>Last Correspondence Title</th>
+            <th>Last Correspondence Note</th>
           </tr>
         </thead>
         <tbody>
@@ -60,7 +60,7 @@
               <td><?=rtrim($client['Title'] . ' ' . $client['Forename'] . ' ' . $client['Surname']);?></td>
               <td align="center"><?=$client['CreatedBy'];?></td>
               <td align="center"><?=date("d-m-Y H:i", strtotime($client['ProcessDate']));?></td>
-              <td align="center"><?=$client['CorrespondenceTitle'];?></td>
+              <td align="center"><?=$client['CorresspondenceTitle'];?></td>
               <td align="center"><?=$client['CorrespondenceDescription'];?></td>
             </tr>
             <?php
