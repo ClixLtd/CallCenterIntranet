@@ -20,8 +20,8 @@
         <tr style="background-color:#EEEEEE">
           <td align="center"><?=date("d/m/Y");?></td>
           <td align="center"><?=$clients['Office'];?></td>
-          <td align="center"><?=number_format(count($clients['Terminated']));?></td>
-          <td align="center"><?=number_format(count($clients['Suspended']));?></td>
+          <td align="center"><?=number_format(count($clients['status']['Terminated']));?></td>
+          <td align="center"><?=number_format(count($clients['status']['Suspended']));?></td>
         </tr>
       </tbody>
     </table>
