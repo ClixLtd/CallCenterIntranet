@@ -37,7 +37,7 @@
       <table width="100%" cellpadding="5" cellspacing="0">
         <thead>
           <tr style="background-color:#DDDDDD">
-            <th colspan="6" style="font-size: 14px;"><?=$status;?></th>
+            <th colspan="7" style="font-size: 14px;"><?=$status;?></th>
           </tr>
           <tr style="background-color:#DDDDDD">
             <th width="80">Client ID</th>
@@ -46,6 +46,7 @@
             <th>Process Stage Date/Time</th>
             <th>Last Correspondence Title</th>
             <th>Last Correspondence Note</th>
+            <th>First Payment Made</th>
           </tr>
         </thead>
         <tbody>
@@ -62,8 +63,9 @@
               <td nowrap><?=rtrim($client['Title'] . ' ' . $client['Forename'] . ' ' . $client['Surname']);?></td>
               <td nowrap><?=$client['CreatedBy'];?></td>
               <td align="center" nowrap><?=date("d-m-Y H:i", strtotime($client['ProcessDate']));?></td>
-              <td align="center"><?=$client['CorresspondenceTitle'];?></td>
-              <td align="center"><?=nl2br($client['CorrespondenceDescription']);?></td>
+              <td><?=$client['CorresspondenceTitle'];?></td>
+              <td><?=nl2br($client['CorrespondenceDescription']);?></td>
+              <td align="center"><?=$client['FirstPaymentMade'];?></td>
             </tr>
             <?php
             $background = ($background==0) ? 1 : 0;
