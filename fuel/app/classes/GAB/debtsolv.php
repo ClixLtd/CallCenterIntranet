@@ -606,7 +606,7 @@ class Debtsolv {
 	      	SELECT Top (1)
 	      		ResponseText
 	      	FROM
-	      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
+	      		Debtsolv.dbo.Client_CustomQuestionResponses
 	      	WHERE
 	      		QuestionID = 10007
 	      		AND ClientID = D_CLD.Client_ID
