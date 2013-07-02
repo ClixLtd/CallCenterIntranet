@@ -1136,7 +1136,7 @@ GROUP BY
                               AND DR.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS')
                               AND TCR.[Description] <> 'Referred'
                               AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
-                              AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
+                              AND CONVERT(date, DR.referral_date, 105) < '" . $endDate . "'";
     	
     	$reportQueryResolve = "SELECT  DR.leadpool_id
                       , DR.short_code
@@ -1172,7 +1172,7 @@ GROUP BY
                       AND DR.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS')
                       AND TCR.[Description] <> 'Referred'
                       AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
-                      AND CONVERT(date, DR.referral_date, 105) <= '" . $endDate . "'";
+                      AND CONVERT(date, DR.referral_date, 105) < '" . $endDate . "'";
     	
     	// Find all the paid clients for this date range
     	$paymentsQuery = "SELECT  D_CD.ClientID
@@ -1187,7 +1187,7 @@ GROUP BY
                           WHERE D_R.user_login IN (" . $inList . ")
                               AND D_R.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS')
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
-                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . $endDate . "'";
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) < '" . $endDate . "'";
     	
     	// Find all the paid clients for this date range
     	$paymentsQueryResolve = "SELECT  D_CD.ClientID
@@ -1202,7 +1202,7 @@ GROUP BY
                           WHERE D_R.user_login IN (" . $inList . ")
                               AND D_R.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS')
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
-                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) <= '" . $endDate . "'";
+                              AND CONVERT(date, D_CD.FirstPaymentDate, 105) < '" . $endDate . "'";
     	
     	// Loop through the results and create the report
     	$reportResultsGAB = DB::query($reportQuery)->cached(60)->execute('debtsolv');
