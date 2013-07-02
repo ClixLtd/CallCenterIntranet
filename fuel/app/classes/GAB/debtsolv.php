@@ -643,6 +643,8 @@ class Debtsolv {
 	    ".$date_where."
 		AND NOT ((D_CPD.InitialAgreedAmount is null OR D_CPD.InitialAgreedAmount <= 0) AND CC.ContactResult = 1500)
 		AND TCR.Description <> 'Referred'
+		AND TCR.Description <> 'No Contact'
+		AND TCR.Description <> 'Failed Transfer'
 	    ".$center_query."
 	    AND ISNULL(DI_REF.product,'DR') = 'DR'
 	  ORDER BY
@@ -728,6 +730,8 @@ class Debtsolv {
 	    ".$date_where."
 		AND NOT ((D_CPD.InitialAgreedAmount is null OR D_CPD.InitialAgreedAmount <= 0) AND CC.ContactResult = 1500)
 		AND TCR.Description <> 'Referred'
+		AND TCR.Description <> 'No Contact'
+		AND TCR.Description <> 'Failed Transfer'
 	    ".$center_query."
 	    AND ISNULL(DI_REF.product,'DR') = 'DR'
 	  ORDER BY
