@@ -392,6 +392,10 @@
       // ------------------------
       @Adam::staff_late_report();
       
+      // -- Terminated and Suspended Clients
+      // -----------------------------------
+      @Adam::terminated_suspended_clients_report();
+      
 			@Adam::daily_stats();
 			
 			// Run List stat checker
@@ -2293,15 +2297,15 @@ Gregson and Brooke.');
     {
       $offices = array(
         'Bolton' => array('database' => 'Debtsolv',
-                          'to' => array('d.stansfield@expertmoneysolutions.co.uk')
+                          'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
                          ),
                          
         'Burton' => array('database' => 'BS_Debtsolv_DM',
-                          'to' => array('d.stansfield@expertmoneysolutions.co.uk')
+                          'to' => array('burton-client-status-report@expertmoneysolutions.co.uk')
                          ),
                          
         'Clear View' => array('database' => 'CV_Debtsolv_DM',
-                              'to' => array('d.stansfield@expertmoneysolutions.co.uk')
+                              'to' => array('clear-view-client-status-report@expertmoneysolutions.co.uk')
                              ),
       );
       
@@ -2410,82 +2414,6 @@ Gregson and Brooke.');
       // -- Log the task as completed
       // ----------------------------
       \Log::info("Task :: terminated_suspended_clients_report | Status :: Completed");
-      
-      /*
-      $boltonOffice = array();
-      $burtonOffice = array();
-      
-      // -- Filter the offices
-      // ---------------------
-      foreach($results as $key => $result)
-      {
-        switch($result['Office'])
-        {
-          case 'Bolton' :
-            // -- Bolton Clients
-            // -----------------
-            $boltonOffice[] = $results[$key];
-          break;
-          case 'Burton' :
-            // -- Burton Clients
-            // -----------------
-            $burtonOffice[] = $results[$key];
-          break;
-        }        
-      }
-      
-      // -- Not needed anymore
-      // ---------------------
-      unset($results);
-      
-      // -- Bolton Office
-      // ----------------
-      if(count($boltonOffice) > 0)
-      {
-        $results = array();
-        $results['Office'] = 'Bolton';
-        $results['status'] = Adam::processClientStatus($boltonOffice);
-        
-        $email = \Email::forge();
-        $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
-    
-        $email->to('d.stansfield@expertmoneysolutions.co.uk');
-              
-        $email->subject('Bolton: Terminated and Suspended Clients' . ' ' . date("d-m-Y"));
-      
-        $email->html_body(\View::forge('emails/clientstatus/terminated-suspended', array(
-                        'clients' => $results,
-            					)
-            				));
-                    
-        $email->send();
-      }
-      
-      // -- Burton Office
-      // ----------------
-      if(count($burtonOffice) > 0)
-      {
-        $results = array();
-        $results['Office'] = 'Burton';
-        $results['status'] = Adam::processClientStatus($burtonOffice);
-        
-        unset($email);
-        
-        $email = \Email::forge();
-        $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
-    
-        $email->to('d.stansfield@expertmoneysolutions.co.uk');
-              
-        $email->subject('Burton: Terminated and Suspended Clients' . ' ' . date("d-m-Y"));
-      
-        $email->html_body(\View::forge('emails/clientstatus/terminated-suspended', array(
-                        'clients' => $results,
-            					)
-            				));
-                    
-        $email->send();
-      }
-      */
     }
     
     /**
