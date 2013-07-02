@@ -2330,14 +2330,23 @@ Gregson and Brooke.');
                                     	,CORRESPONDENCE.title AS 'CorresspondenceTitle'
                                     	,CORRESPONDENCE.Description AS 'CorrespondenceDescription'
                                       ,CASE
-                                         WHEN CLIENT_DATES.FirstPaymentDate IS NULL THEN 'No'
-                                       ELSE
-                                         'Yes'
-                                       END AS FirstPaymentMade
+                                         WHEN
+                                           exists
+                                           (
+                                             SELECT Top (1)
+                                               FirstPaymentDate
+                                             FROM
+                                               Dialler.dbo.client_dates
+                                             WHERE
+                                               ClientID = PROCESSING_LOG.ClientID
+                                           )
+                                         THEN
+                                           'Yes'
+                                         ELSE
+                                           'No'
+                                         END AS FirstPaymentMade
                                     FROM
                                       " . $officeData['database'] . ".dbo.log_ProcessingStatusUpdates AS PROCESSING_LOG
-                                    LEFT JOIN
-                                      Dialler.dbo.client_dates AS CLIENT_DATES ON PROCESSING_LOG.ClientID = CLIENT_DATES.ClientID
                                     LEFT JOIN
                                       " . $officeData['database'] . ".dbo.Users AS USERS ON PROCESSING_LOG.UserID = USERS.ID
                                     LEFT JOIN
