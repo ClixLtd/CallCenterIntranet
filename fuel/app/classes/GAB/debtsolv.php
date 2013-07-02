@@ -89,8 +89,8 @@ class Debtsolv {
 				
 				if (!is_null($new_agent))
 				{
-					$getStaffDetails = \DB::select('first_name', 'last_name')->from('staffs')->where('debtsolv_id', $new_agent)->execute();
-					$updateArray['user_login'] = $new_agent;
+					$getStaffDetails = \DB::select('first_name', 'last_name', 'dialler_id')->from('staffs')->where('debtsolv_id', $new_agent)->execute();
+					$updateArray['user_login'] = $getStaffDetails[0]['dialler_id'];
 					$updateArray['full_name'] = $getStaffDetails[0]['first_name'].' '.$getStaffDetails[0]['last_name'];
 				}
 				
