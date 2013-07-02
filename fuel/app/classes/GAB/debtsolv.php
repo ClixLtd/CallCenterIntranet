@@ -601,7 +601,16 @@ class Debtsolv {
 	      	WHERE
 	      		QuestionID = 1
 	      		AND ClientID = D_CLD.Client_ID
-	      ) AS 'Delivery'
+	      ) AS 'Delivery',
+	      (
+	      	SELECT Top (1)
+	      		ResponseText
+	      	FROM
+	      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
+	      	WHERE
+	      		QuestionID = 10007
+	      		AND ClientID = D_CLD.Client_ID
+	      ) AS 'MyProduct'
 	      ,CONVERT(varchar, CLD.DateCreated, 105) AS 'Referred Date'
 	      ,CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
 	      ,CASE
@@ -763,7 +772,11 @@ class Debtsolv {
 			    	$return_array['pack_outs_value'] = $return_array['pack_outs_value'] + $result['DI'];
 			    }
 			    
-    			$return_array['referrals']++;
+			    if (isset($result['MyProduct']) AND (int)$result['MyProduct'] <> 2)
+			    {
+    			    $return_array['referrals']++;
+			    }
+			    
 			   
 		    }
 	    }
