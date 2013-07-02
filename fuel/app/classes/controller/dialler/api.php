@@ -158,6 +158,7 @@
 		public function get_mobile_wallboard()
 		{	
 		
+		
 		    $hq_this_month = GAB\Debtsolv::get_referral_count('GAB', date("01-m-Y"), date("t-m-Y"), 300);
 			$hq_this_week = GAB\Debtsolv::get_referral_count('GAB', date("d-m-Y", strtotime("monday this week")), date("d-m-Y"), 300);
 			

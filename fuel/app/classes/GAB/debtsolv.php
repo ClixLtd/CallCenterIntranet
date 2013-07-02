@@ -523,6 +523,7 @@ class Debtsolv {
 	public static function get_referral_count($center=null, $start_date=null, $end_date=null, $cache=null)
 	{
 	
+	
 		if (!is_null($center))
 		{
 			if ($center == "INTERNAL")

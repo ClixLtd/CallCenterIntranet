@@ -66,15 +66,17 @@ class Controller_Data extends \Controller_Base
 			    if (isset($leadDetails['duplicates']) && count($leadDetails['duplicates']) > 0)
 			    {
 				    $duplicateNumbers[] = array(
-				    	'number' => $leadDetails['duplicates']['number'],
-				    	'list_ids' => $leadDetails['duplicates']['list_ids'],
+				    	'leadDetails' => $singleLead,
+				    	'number'      => $leadDetails['duplicates']['number'],
+				    	'list_ids'    => $leadDetails['duplicates']['list_ids'],
 				    );
 			    }
 			    
 			    if (isset($leadDetails['tps']) && count($leadDetails['tps']) > 0)
 			    {
 				    $tpsNumbers[] = array(
-				    	'number' => $leadDetails['tps'][0],
+				    	'leadDetails' => $singleLead,
+				    	'number'      => $leadDetails['tps'][0],
 				    );
 			    }
 			    
