@@ -1877,7 +1877,7 @@ Gregson and Brooke.');
         			'bottom' => \Arr::multisort($newStandardList, array('points' => SORT_DESC, 'backup' => SORT_DESC,), true),
         			'promotions' => $promotionsToPremier,
         			'demotions' => $demotionsToStandard,
-        			'chosendate' => $chosenDate,
+        			'chosendate' => $earlyDate,
         		)));
         		
         		$email->send();
