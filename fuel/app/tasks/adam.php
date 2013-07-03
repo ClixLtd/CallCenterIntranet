@@ -392,6 +392,10 @@
       // ------------------------
       @Adam::staff_late_report();
       
+      // -- Terminated and Suspended Clients
+      // -----------------------------------
+      @Adam::terminated_suspended_clients_report();
+      
 			@Adam::daily_stats();
 			
 			// Run List stat checker
@@ -2289,206 +2293,129 @@ Gregson and Brooke.');
      */
     public function terminated_suspended_clients_report()
     {
-      $results = array();
-      $results = \DB::query("SELECT
-                               PROCESSING_LOG.ClientID
-                              ,'Bolton' AS Office
-                              ,CLIENT_CONTACT.Title
-                              ,CLIENT_CONTACT.Forename
-                              ,CLIENT_CONTACT.Surname
-                              ,CLIENT_CONTACT.LastAccessDate
-                              ,CLIENT_STATUS.Description AS ClientStatus
-                              ,USERS.Undersigned AS 'CreatedBy'
-                              ,ProcessingStatus
-                              ,CASE
-                                 WHEN ProcessingStatus = 2100 THEN 'Terminated'
-                                 WHEN ProcessingStatus = 550 THEN 'Suspended'
-                               END AS ProcessLogStatus
-                              ,PROCESSING_LOG.DateUpdated AS 'ProcessDate'
-                              ,CORRESPONDENCE.DateCreated AS 'CorrespondenceCreated'
-                              ,CORRESPONDENCE.title AS 'CorresspondenceTitle'
-                              ,CORRESPONDENCE.Description AS 'CorrespondenceDescription'
-                            FROM
-                              Debtsolv.dbo.log_ProcessingStatusUpdates AS PROCESSING_LOG
-                            LEFT JOIN
-                              Debtsolv.dbo.Users AS USERS ON PROCESSING_LOG.UserID = USERS.ID
-                            LEFT JOIN
-                              Debtsolv.dbo.Client_Contact AS CLIENT_CONTACT ON PROCESSING_LOG.ClientID = CLIENT_CONTACT.ID
-                            LEFT JOIN
-                              Debtsolv.dbo.Type_Client_Status AS CLIENT_STATUS ON CLIENT_CONTACT.Status = CLIENT_STATUS.ID
-                            LEFT JOIN
-                              (
-                                SELECT
-                                   ClientID
-                                  ,CreatedBy
-                                  ,title
-                                  ,[Description]
-                                  ,DateCreated
-                                  ,ROW_NUMBER() OVER (PARTITION BY ClientID ORDER BY DateCreated DESC) AS RowN
-                                FROM
-                                  Debtsolv.dbo.Client_Correspondence AS CC
-                              ) AS CORRESPONDENCE
-                              ON PROCESSING_LOG.ClientID = CORRESPONDENCE.ClientID AND PROCESSING_LOG.UserID = CORRESPONDENCE.CreatedBy
-                            LEFT JOIN
-                            (
-                              SELECT
-                            	 ClientID
-                            	,DateUpdated AS LogUpdate
-                            	,ProcessingStatus AS [Status]
-                            	,ROW_NUMBER() OVER (PARTITION BY ClientID ORDER BY DateUpdated DESC) AS LogRow
-                              FROM
-                            	Debtsolv.dbo.log_ProcessingStatusUpdates
-                            ) AS LogRows ON LogRows.ClientID = PROCESSING_LOG.ClientID AND LogRows.LogUpdate = PROCESSING_LOG.DateUpdated
-                            WHERE
-                              DateUpdated >= DATEADD(day, DATEDIFF(day, 0, GetDate()), 0)
-                            AND
-                              ProcessingStatus IN (2100, 550)
-                            AND
-                              LogRow = 1
-                            AND
-                              CORRESPONDENCE.RowN = 1
-                              
-                            UNION
-                            
-                            SELECT
-                               PROCESSING_LOG.ClientID
-                              ,'Burton' AS Office
-                              ,CLIENT_CONTACT.Title
-                              ,CLIENT_CONTACT.Forename
-                              ,CLIENT_CONTACT.Surname
-                              ,CLIENT_CONTACT.LastAccessDate
-                              ,CLIENT_STATUS.Description AS ClientStatus
-                              ,USERS.Undersigned AS 'CreatedBy'
-                              ,PROCESSING_LOG.ProcessingStatus
-                              ,CASE
-                                 WHEN PROCESSING_LOG.ProcessingStatus = 2100 THEN 'Terminated'
-                                 WHEN PROCESSING_LOG.ProcessingStatus = 550 THEN 'Suspended'
-                               END AS ProcessLogStatus
-                              ,PROCESSING_LOG.DateUpdated AS 'ProcessDate'
-                              ,CORRESPONDENCE.DateCreated AS 'CorrespondenceCreated'
-                              ,CORRESPONDENCE.title AS 'CorresspondenceTitle'
-                              ,CORRESPONDENCE.Description AS 'CorrespondenceDescription'
-                            FROM
-                              BS_Debtsolv_DM.dbo.log_ProcessingStatusUpdates AS PROCESSING_LOG
-                            LEFT JOIN
-                              BS_Debtsolv_DM.dbo.Users AS USERS ON PROCESSING_LOG.UserID = USERS.ID
-                            LEFT JOIN
-                              BS_Debtsolv_DM.dbo.Client_Contact AS CLIENT_CONTACT ON PROCESSING_LOG.ClientID = CLIENT_CONTACT.ID
-                            LEFT JOIN
-                              BS_Debtsolv_DM.dbo.Type_Client_Status AS CLIENT_STATUS ON CLIENT_CONTACT.Status = CLIENT_STATUS.ID
-                            LEFT JOIN
-                              (
-                                SELECT
-                                   ClientID
-                                  ,CreatedBy
-                                  ,title
-                                  ,[Description]
-                                  ,DateCreated
-                                  ,ROW_NUMBER() OVER (PARTITION BY ClientID ORDER BY DateCreated DESC) AS RowN
-                                FROM
-                                  BS_Debtsolv_DM.dbo.Client_Correspondence AS CC
-                              ) AS CORRESPONDENCE
-                              ON PROCESSING_LOG.ClientID = CORRESPONDENCE.ClientID AND PROCESSING_LOG.UserID = CORRESPONDENCE.CreatedBy
-                            LEFT JOIN
-                            (
-                              SELECT
-                            	 ClientID
-                            	,DateUpdated AS LogUpdate
-                            	,ProcessingStatus AS [Status]
-                            	,ROW_NUMBER() OVER (PARTITION BY ClientID ORDER BY DateUpdated DESC) AS LogRow
-                              FROM
-                            	BS_Debtsolv_DM.dbo.log_ProcessingStatusUpdates
-                            ) AS LogRows ON LogRows.ClientID = PROCESSING_LOG.ClientID AND LogRows.LogUpdate = PROCESSING_LOG.DateUpdated
-                            WHERE
-                              DateUpdated >= DATEADD(day, DATEDIFF(day, 0, GetDate()), 0)
-                            AND
-                              ProcessingStatus IN (2100, 550)
-                            AND
-                              LogRow = 1
-                            AND
-                              CORRESPONDENCE.RowN = 1
-                            ORDER BY
-                               Office
-                              ,PROCESSING_LOG.ClientID
-                              ,PROCESSING_LOG.ProcessingStatus
-                              ,CORRESPONDENCE.DateCreated ASC
+      $offices = array(
+        'Bolton' => array('database' => 'Debtsolv',
+                          'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
+                         ),
+                         
+        'Burton' => array('database' => 'BS_Debtsolv_DM',
+                          'to' => array('burton-client-status-report@expertmoneysolutions.co.uk')
+                         ),
+                         
+        'Clear View' => array('database' => 'CV_Debtsolv_DM',
+                              'to' => array('clear-view-client-status-report@expertmoneysolutions.co.uk')
+                             ),
+      );
+      
+      foreach($offices as $office => $officeData)
+      {
+        $officeResults = array();
+        $officeResults = \DB::query("SELECT
+                                    	 PROCESSING_LOG.ClientID
+                                    	,CLIENT_CONTACT.Title
+                                    	,CLIENT_CONTACT.Forename
+                                    	,CLIENT_CONTACT.Surname
+                                    	,CLIENT_CONTACT.LastAccessDate
+                                    	,CLIENT_STATUS.Description AS ClientStatus
+                                    	,USERS.Undersigned AS 'CreatedBy'
+                                    	,ProcessingStatus
+                                    	,CASE
+                                    	   WHEN ProcessingStatus = 2100 THEN 'Terminated'
+                                    	   WHEN ProcessingStatus = 550 THEN 'Suspended'
+                                    	 END AS ProcessLogStatus
+                                    	,PROCESSING_LOG.DateUpdated AS 'ProcessDate'
+                                    	,CORRESPONDENCE.DateCreated AS 'CorrespondenceCreated'
+                                    	,CORRESPONDENCE.title AS 'CorresspondenceTitle'
+                                    	,CORRESPONDENCE.Description AS 'CorrespondenceDescription'
+                                      ,CASE
+                                         WHEN
+                                           exists
+                                           (
+                                             SELECT Top (1)
+                                               FirstPaymentDate
+                                             FROM
+                                               Dialler.dbo.client_dates
+                                             WHERE
+                                               ClientID = PROCESSING_LOG.ClientID
+                                           )
+                                         THEN
+                                           'Yes'
+                                         ELSE
+                                           'No'
+                                         END AS FirstPaymentMade
+                                    FROM
+                                      " . $officeData['database'] . ".dbo.log_ProcessingStatusUpdates AS PROCESSING_LOG
+                                    LEFT JOIN
+                                      " . $officeData['database'] . ".dbo.Users AS USERS ON PROCESSING_LOG.UserID = USERS.ID
+                                    LEFT JOIN
+                                      " . $officeData['database'] . ".dbo.Client_Contact AS CLIENT_CONTACT ON PROCESSING_LOG.ClientID = CLIENT_CONTACT.ID
+                                    LEFT JOIN
+                                      " . $officeData['database'] . ".dbo.Type_Client_Status AS CLIENT_STATUS ON CLIENT_CONTACT.Status = CLIENT_STATUS.ID
+                                    LEFT JOIN
+                                    (
+                                      SELECT
+                                       ClientID
+                                    	 ,CreatedBy
+                                    		 ,title
+                                    		 ,[Description]
+                                    		 ,DateCreated
+                                    		 ,ROW_NUMBER() OVER (PARTITION BY ClientID ORDER BY DateCreated DESC) AS RowN
+                                    	 FROM
+                                    	  " . $officeData['database'] . ".dbo.Client_Correspondence AS CC
+             	                       ) AS CORRESPONDENCE
+                                     ON PROCESSING_LOG.ClientID = CORRESPONDENCE.ClientID AND PROCESSING_LOG.UserID = CORRESPONDENCE.CreatedBy
+                                     LEFT JOIN
+                                     (
+                                    	 SELECT
+                                    	   ClientID
+                                    	   ,DateUpdated AS LogUpdate
+                                    	   ,ProcessingStatus AS [Status]
+                                    	   ,ROW_NUMBER() OVER (PARTITION BY ClientID ORDER BY DateUpdated DESC) AS LogRow
+                                    	 FROM
+                                    	   " . $officeData['database'] . ".dbo.log_ProcessingStatusUpdates
+                                     ) AS LogRows ON LogRows.ClientID = PROCESSING_LOG.ClientID AND LogRows.LogUpdate = PROCESSING_LOG.DateUpdated
+                                     WHERE
+                                       DateUpdated >= DATEADD(day, DATEDIFF(day, 0, GetDate()), 0)
+                                     AND
+                                       ProcessingStatus IN (2100, 550)
+                                     AND
+                                       LogRow = 1
+                                     AND
+                                       CORRESPONDENCE.RowN = 1
+                                     ORDER BY
+                                        PROCESSING_LOG.ProcessingStatus
+                                       ,FirstPaymentMade
+                                       ,CORRESPONDENCE.DateCreated ASC
                             ", \DB::SELECT)->execute('debtsolv')->as_array();
                             
-      if(count($results) <= 0)
-        return false;
-        
-      $boltonOffice = array();
-      $burtonOffice = array();
-      
-      // -- Filter the offices
-      // ---------------------
-      foreach($results as $key => $result)
-      {
-        switch($result['Office'])
+        if(count($officeResults) > 0)
         {
-          case 'Bolton' :
-            // -- Bolton Clients
-            // -----------------
-            $boltonOffice[] = $results[$key];
-          break;
-          case 'Burton' :
-            // -- Burton Clients
-            // -----------------
-            $burtonOffice[] = $results[$key];
-          break;
-        }        
-      }
-      
-      // -- Not needed anymore
-      // ---------------------
-      unset($results);
-      
-      // -- Bolton Office
-      // ----------------
-      if(count($boltonOffice) > 0)
-      {
-        $results = array();
-        $results['Office'] = 'Bolton';
-        $results['status'] = Adam::processClientStatus($boltonOffice);
-        
-        $email = \Email::forge();
-        $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+          $results = array();
+          
+          // -- Process the results
+          // ----------------------
+          $results['Office'] = $office;
+          $results['status'] = Adam::processClientStatus($officeResults);
+          
+          unset($officeResults);
+          
+          // -- Send email out
+          // -----------------
+          $email = \Email::forge();
+          $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
     
-        $email->to('d.stansfield@expertmoneysolutions.co.uk');
+          $email->to($officeData['to']);
               
-        $email->subject('Bolton: Terminated and Suspended Clients' . ' ' . date("d-m-Y"));
+          $email->subject($office . ': Terminated and Suspended Clients' . ' ' . date("d-m-Y"));
       
-        $email->html_body(\View::forge('emails/clientstatus/terminated-suspended', array(
-                        'clients' => $results,
-            					)
-            				));
+          $email->html_body(\View::forge('emails/clientstatus/terminated-suspended', array('clients' => $results,)
+            				       ));
                     
-        $email->send();
-      }
-      
-      // -- Burton Office
-      // ----------------
-      if(count($burtonOffice) > 0)
-      {
-        $results = array();
-        $results['Office'] = 'Burton';
-        $results['status'] = Adam::processClientStatus($burtonOffice);
+          $email->send();
         
-        unset($email);
-        
-        $email = \Email::forge();
-        $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
-    
-        $email->to('d.stansfield@expertmoneysolutions.co.uk');
-              
-        $email->subject('Burton: Terminated and Suspended Clients' . ' ' . date("d-m-Y"));
-      
-        $email->html_body(\View::forge('emails/clientstatus/terminated-suspended', array(
-                        'clients' => $results,
-            					)
-            				));
-                    
-        $email->send();
+          unset($results);
+          unset($email);
+        }
       }
       
       // -- Log the task as completed
