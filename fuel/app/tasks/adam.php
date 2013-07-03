@@ -1700,7 +1700,7 @@ Gregson and Brooke.');
 		{
 		    // Work out days are required
 		    $chosenDate = (is_null($chosenDay)) ? strtotime(date('o-\\WW'))  : strtotime($chosenDay);
-		    $earlyDate  = (is_null($chosenDay)) ? strtotime(date("jS F Y", $chosenDay) . ' -7 days') : strtotime($chosenDay . ' -7 days');
+		    $earlyDate  = (is_null($chosenDay)) ? strtotime(date("jS F Y", $chosenDate) . ' -7 days') : strtotime($chosenDay . ' -7 days');
 		    
 		    // How many Bolton staff
             $premierPercent   = 20;
