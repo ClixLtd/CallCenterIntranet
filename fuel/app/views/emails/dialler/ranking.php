@@ -55,7 +55,6 @@
 								<TH width="100">Referrals</TH>
 								<TH width="80">Pack Outs</TH>
 								<TH width="50">Points</TH>
-								<TH width="50">Week</TH>
 							</TR>
 						</THEAD>
 						
@@ -67,7 +66,6 @@
 								<TD align="center"><?php echo $email_data['referrals']; ?></TD>
 								<TD align="center"><?php echo $email_data['packouts']; ?></TD>
 								<TD align="center"><?php echo $email_data['points']; ?></TD>
-								<TD align="center"><?php echo $email_data['backup']; ?></TD>
 							</TR>
 							<?php endforeach; ?>
 						</TBODY>
@@ -87,7 +85,6 @@
 								<TH width="80">Referrals</TH>
 								<TH width="80">Pack Outs</TH>
 								<TH width="50">Points</TH>
-								<TH width="50">Week</TH>
 							</TR>
 						</THEAD>
 						
@@ -99,7 +96,6 @@
 								<TD align="center"><?php echo $email_data['referrals']; ?></TD>
 								<TD align="center"><?php echo $email_data['packouts']; ?></TD>
 								<TD align="center"><?php echo $email_data['points']; ?></TD>
-								<TD align="center"><?php echo $email_data['backup']; ?></TD>
 							</TR>
 							<?php endforeach; ?>
 						</TBODY>

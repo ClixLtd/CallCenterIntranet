@@ -1695,7 +1695,7 @@ Gregson and Brooke.');
 		public function move_telesales_staff($chosenDay=null)
 		{
 		    // Work out days are required
-		    $chosenDate = (is_null($chosenDay)) ? strtotime('today')         : strtotime($chosenDay);
+		    $chosenDate = (is_null($chosenDay)) ? strtotime(date('o-\\WW'))  : strtotime($chosenDay);
 		    $earlyDate  = (is_null($chosenDay)) ? strtotime('today -7 days') : strtotime($chosenDay . ' -7 days');
 		    
 		    // How many Bolton staff
@@ -1708,10 +1708,10 @@ Gregson and Brooke.');
 		    {
                 
                 // Get list of top staff
-                $staffListRequest = \Controller_Reports::generate_telesales_report(null, date("Y-m-d",$chosenDate), date("Y-m-d",$chosenDate));
+                $staffListRequestSecondary = \Controller_Reports::generate_telesales_report(null, date("Y-m-d",$chosenDate), date("Y-m-d",$chosenDate));
                 
                 // Get list of details over the past 7 days for extra checking purposes
-                $staffListRequestSecondary = \Controller_Reports::generate_telesales_report(null, date("Y-m-d", $earlyDate), date("Y-m-d",$chosenDate));
+                $staffListRequest = \Controller_Reports::generate_telesales_report(null, date("Y-m-d", $earlyDate), date("Y-m-d",$chosenDate));
                 
                 
 		        // Number of staff required for the premier campaign
@@ -1789,7 +1789,6 @@ Gregson and Brooke.');
                 }
                 // Sort premier users by daily points and weekly points as a backup
                 $premierAllWithScores = \Arr::multisort($premierAllWithScores, array(
-                    'points' => SORT_ASC,
                     'backup' => SORT_ASC,
                 ), true);
                 
@@ -1813,7 +1812,6 @@ Gregson and Brooke.');
                 }
                 // Sort standard users by daily points and weekly points as a backup
                 $standardAllWithScores = \Arr::multisort($standardAllWithScores, array(
-                    'points' => SORT_DESC,
                     'backup' => SORT_DESC,
                 ), true);
                 
@@ -1863,7 +1861,7 @@ Gregson and Brooke.');
         		$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
         		
         		$email->to(array(
-        			'telesalesleaders@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
+        			'simonskinner@expertmoneysolutions.co.uk'  => 'Telesales Group Updates',
         		));
         		
         		$email->priority(\Email::P_HIGH);
