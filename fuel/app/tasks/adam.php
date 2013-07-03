@@ -381,12 +381,18 @@
 			
 		}
 		
+		public function monday_morning_tasks()
+		{
+			@Adam::move_telesales_staff();
+		}
+		
 		
 		public function daily_tasks()
 		{
 			date_default_timezone_set('Europe/London');
 			
-			@Adam::move_telesales_staff();
+			// No longer daily
+			//@Adam::move_telesales_staff();
 			
       // -- Run staff late report
       // ------------------------
