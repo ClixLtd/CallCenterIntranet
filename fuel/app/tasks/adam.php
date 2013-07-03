@@ -1878,6 +1878,7 @@ Gregson and Brooke.');
         			'promotions' => $promotionsToPremier,
         			'demotions' => $demotionsToStandard,
         			'chosendate' => $earlyDate,
+        			'chosenenddate' => $chosenDate,
         		)));
         		
         		$email->send();

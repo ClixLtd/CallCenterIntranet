@@ -7,7 +7,7 @@
 		<TABLE width="600" style="font-family: verdana; border-radius: 5px; background-color: #FFFFFF;">
 			<TR>
 				<TD>
-					Based on the sales statistics for <?php echo date('d/m/Y', $chosendate); ?> the dialler groups have been updated as shown below.<br /><br />
+					Based on the sales statistics for the period <?php echo date('d/m/Y', $chosendate); ?> to <?php echo date('d/m/Y', $chosenenddate); ?> the dialler groups have been updated as shown below.<br /><br />
 					
 					<center>
 					<h2>Promotions and Demotions</h2>
