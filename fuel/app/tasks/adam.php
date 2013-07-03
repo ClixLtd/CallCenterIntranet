@@ -1793,7 +1793,7 @@ Gregson and Brooke.');
                 }
                 // Sort premier users by daily points and weekly points as a backup
                 $premierAllWithScores = \Arr::multisort($premierAllWithScores, array(
-                    'backup' => SORT_ASC,
+                    'points' => SORT_ASC,
                 ), true);
                 
                 
@@ -1816,7 +1816,7 @@ Gregson and Brooke.');
                 }
                 // Sort standard users by daily points and weekly points as a backup
                 $standardAllWithScores = \Arr::multisort($standardAllWithScores, array(
-                    'backup' => SORT_DESC,
+                    'points' => SORT_DESC,
                 ), true);
                 
                 
