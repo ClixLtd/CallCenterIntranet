@@ -139,7 +139,7 @@ class Controller_Data extends \Controller_Base
         
         $impData = \Data\Source::forge(\Data\Source::CREATE, array(
             'supplier_id' => \Input::post('supplier'),
-            'dialler_id' => 12312,
+            'dialler_id' => \Input::post('listid'),
             'headers' => $postHeaders,
             'import_options' => $postOptions,
             'filename' => \Input::post('filename'),
@@ -222,7 +222,7 @@ class Controller_Data extends \Controller_Base
 
         }
         
-        
+        $suppliers = \DB->select('id', 'name')->from('suppliers')->execute()->as_array();
                 
         $this->template->title = 'Set Data Options';
         $this->template->content = \View::forge('add/setoptions', array(
@@ -231,6 +231,7 @@ class Controller_Data extends \Controller_Base
             'allHeadings'   => $databaseHeadings,
             'fileHeadings'  => $fileHeadings,
             'headingsGuess' => $headingGuess,
+            'suppliers'     => $suppliers,
         ));
     }
 

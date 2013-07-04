@@ -8,12 +8,14 @@
         <legend>Supplier Options</legend>
         
         <select name="supplier">
-            <option value="1">Supplier 1</option>
-            <option value="2">Supplier 2</option>
-            <option value="3">Supplier 3</option>
+        	<?php foreach ($supplier as $sup): ?>
+            <option value="<?php echo $sup['id']; ?>"><?php echo $sup['name']; ?></option>
+            <?php endforeach; ?>
         </select>
         
         <input type="text" name="cost" placeholder="Cost">
+        
+        <input type="text" name="listid" placeholder="List ID">
         
     </fieldset>
     

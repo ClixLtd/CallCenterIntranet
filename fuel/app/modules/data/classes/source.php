@@ -21,6 +21,7 @@ class Source
     protected  $importOptions   = null;
     protected  $status          = null;
     protected  $listID          = null;
+    protected  $supplier_id     = null;
     
     protected  $purchased_leads = null;
     protected  $duplicates      = null;
@@ -469,8 +470,11 @@ class Source
 		
 		$email->subject('New Data Set Imported');
 		
+		
+        $supplier = \DB->select('name')->from('suppliers')->where('id', $this->supplier_id)->execute()->as_array();
+		
 		$email->html_body(\View::forge('emails/importcomplete', array(
-		    'supplierName' => "BrandAnimal",
+		    'supplierName' => $supplier[0]['name'],
 		    'addedDate' => date("d/m/Y", strtotime($this->added_date)),
 		    'listID' => $this->listID,
 		    'leadsPurchased' => $this->purchased_leads,
@@ -542,7 +546,7 @@ class Source
         $this->duplicates      = $result[0]->duplicates;
         $this->tps             = $result[0]->tps;
         $this->dialable_leads  = $result[0]->dialable_leads;
-        
+        $this->supplier_id     = $result[0]->supplier_id;
         
         // Load the required dates
         $this->added_date      = $result[0]->added_date;
