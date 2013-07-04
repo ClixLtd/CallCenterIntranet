@@ -222,7 +222,7 @@ class Controller_Data extends \Controller_Base
 
         }
         
-        $suppliers = \DB->select('id', 'name')->from('suppliers')->execute()->as_array();
+        $suppliers = \DB::select('id', 'name')->from('suppliers')->execute()->as_array();
                 
         $this->template->title = 'Set Data Options';
         $this->template->content = \View::forge('add/setoptions', array(

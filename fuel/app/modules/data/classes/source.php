@@ -471,7 +471,7 @@ class Source
 		$email->subject('New Data Set Imported');
 		
 		
-        $supplier = \DB->select('name')->from('suppliers')->where('id', $this->supplier_id)->execute()->as_array();
+        $supplier = \DB::select('name')->from('suppliers')->where('id', $this->supplier_id)->execute()->as_array();
 		
 		$email->html_body(\View::forge('emails/importcomplete', array(
 		    'supplierName' => $supplier[0]['name'],
