@@ -8,7 +8,7 @@
         <legend>Supplier Options</legend>
         
         <select name="supplier">
-        	<?php foreach ($supplier as $sup): ?>
+        	<?php foreach ($suppliers as $sup): ?>
             <option value="<?php echo $sup['id']; ?>"><?php echo $sup['name']; ?></option>
             <?php endforeach; ?>
         </select>
