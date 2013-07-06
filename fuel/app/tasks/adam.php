@@ -2118,7 +2118,7 @@ Gregson and Brooke.');
       $totalFri = '4500';
       
       $date = date("Y-m-d");
-      $startDateTime = date("Y-m-d 0:00:01");
+      $startDateTime = date("Y-m-d 00:00:01");
       $endDateTime = date("Y-m-d 23:59:59");
       
       $hqGroup = array(
@@ -2127,6 +2127,7 @@ Gregson and Brooke.');
         'GAB',
         'GABAGENT',
         'GABSENIOR',
+        'GABPPISNR',
       );
       
       $resolveGroup = array(
@@ -2165,32 +2166,32 @@ Gregson and Brooke.');
       // ------------------
       $results = array();
       $results = \DB::query("SELECT
-                                VAL.user
-                               ,VU.full_name
-                               ,VAL.user_group
-                               ,SUM(pause_sec) AS total_sec_time
-                               ,SEC_TO_TIME(SUM(pause_sec)) AS total_break_time
-                               ,SEC_TO_TIME(SUM(IF(sub_status = 'Lunch' AND pause_sec > " . (int)$lunchTime . ", pause_sec - " . (int)$lunchTime . ", IF(sub_status = 'Break' AND pause_sec > " . (int)$breakTime . ", pause_sec - " . (int)$breakTime . ", '')))) AS time_diff
-                               ,SUM(IF(`sub_status` = 'Break', 1, 0)) AS total_breaks_taken
-                               ,SUM(IF(`sub_status` = 'Lunch', 1, 0)) AS total_lunch_taken
-                             FROM
-                               vicidial_agent_log AS VAL
-                             LEFT JOIN
-                               vicidial_users AS VU ON VAL.user = VU.user
-                             WHERE
-                               event_time >= '" . $startDateTime . "'
-                             AND
-                               event_time <= '" . $endDateTime . "'
-                             AND
-                               sub_status IN ('Break', 'Lunch')
-                             AND
-                               pause_sec > 0
-                             GROUP BY
-                               VAL.user
-                             HAVING
-                               total_sec_time > IF(DAYNAME('" . $date . "') = 'Friday', " . $totalFri . ", " . (int)$totalMonToThurs . ")
-                             ORDER BY
-                               time_diff DESC
+                              	VAL.user
+                                 ,VU.full_name
+                                 ,VAL.user_group
+                                 ,SUM(pause_sec) AS total_sec_time
+                                 ,SEC_TO_TIME(SUM(pause_sec)) AS total_break_time
+                                 ,SEC_TO_TIME(SUM(pause_sec) - IF(DAYNAME('" . $date . "') = 'Friday', " . $totalFri . ", " . $totalMonToThurs . ")) AS time_diff
+                                 ,SUM(IF(`sub_status` = 'Break', 1, 0)) AS total_breaks_taken
+                                 ,SUM(IF(`sub_status` = 'Lunch', 1, 0)) AS total_lunch_taken
+                               FROM
+                                 vicidial_agent_log AS VAL
+                               LEFT JOIN
+                                 vicidial_users AS VU ON VAL.user = VU.user
+                               WHERE
+                                 event_time >= '" . $startDateTime . "'
+                               AND
+                                 event_time <= '" . $endDateTime . "'
+                               AND
+                                 sub_status IN ('Break', 'Lunch')
+                               AND
+                                 pause_sec > 0
+                               GROUP BY
+                                 VAL.user
+                               HAVING
+                                 time_diff > 0
+                               ORDER BY
+                                 time_diff DESC
                             ", \DB::SELECT)->execute('gabdialler')->as_array();
                                
       if(count($results) <= 0)
