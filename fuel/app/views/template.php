@@ -28,6 +28,8 @@
 	<?php echo Asset::css('jquery.fullcalendar.css'); ?>
 	<?php echo Asset::css('jquery.visualize.css'); ?>
 	<?php echo Asset::css('dropdown.css'); ?>
+  
+  <?php echo Asset::css('hr.css'); ?>
 	
 	
 	<?php echo Asset::js('jquery/jquery.datatables.js'); ?>
