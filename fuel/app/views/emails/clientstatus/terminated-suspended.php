@@ -90,7 +90,7 @@
             </tr>
             
             <tr style="background-color: #EEEEEE; border-bottom: #999 1px solid;">
-              <td rowspan="4" align="center" valign="top" style="background-color: <?=$colorCode;?>; border-bottom: 1px solid #999;"><b><?=$client['ClientID'];?></b></td>
+              <td rowspan="4" align="center" valign="top" style="background-color: <?=$colorCode;?>;"><b><?=$client['ClientID'];?></b></td>
               <td nowrap><?=rtrim($client['Title'] . ' ' . $client['Forename'] . ' ' . $client['Surname']);?></td>
               <td nowrap><?=$client['CreatedBy'];?></td>
               <td align="center" nowrap><?=date("d-m-Y H:i", strtotime($client['ProcessDate']));?></td>
@@ -110,7 +110,7 @@
               <th>Pack Returned</th>
               <th>&nbsp;</th>
             </tr>
-            <tr style="background-color: #EEEEEE; border-bottom: #CCCCCC 1px solid;">
+            <tr style="background-color: #EEEEEE; border-bottom: #999 1px solid;">
               <td align="center"><?=date("d-m-Y H:i", strtotime($client['DateAgreed']));?></td>
               <td align="center">&pound;<?=number_format($client['AgreedDI']);?></td>
               <td align="center"><?=date("d-m-Y H:i", strtotime($client['LastPaymentMade']));?></td>
