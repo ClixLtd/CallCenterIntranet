@@ -2303,15 +2303,15 @@ Gregson and Brooke.');
     {
       $offices = array(
         'Bolton' => array('database' => 'Debtsolv',
-                          'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
+                          'to' => array('d.stansfield@expertmoneysolutions.co.uk') #bolton-client-status-report@expertmoneysolutions.co.uk
                          ),
                          
         'Burton' => array('database' => 'BS_Debtsolv_DM',
-                          'to' => array('burton-client-status-report@expertmoneysolutions.co.uk')
+                          'to' => array('d.stansfield@expertmoneysolutions.co.uk') #burton-client-status-report@expertmoneysolutions.co.uk
                          ),
                          
         'Clear View' => array('database' => 'CV_Debtsolv_DM',
-                              'to' => array('clear-view-client-status-report@expertmoneysolutions.co.uk')
+                              'to' => array('d.stansfield@expertmoneysolutions.co.uk') #clear-view-client-status-report@expertmoneysolutions.co.uk
                              ),
       );
       
@@ -2319,22 +2319,43 @@ Gregson and Brooke.');
       {
         $officeResults = array();
         $officeResults = \DB::query("SELECT
-                                    	 PROCESSING_LOG.ClientID
-                                    	,CLIENT_CONTACT.Title
-                                    	,CLIENT_CONTACT.Forename
-                                    	,CLIENT_CONTACT.Surname
-                                    	,CLIENT_CONTACT.LastAccessDate
-                                    	,CLIENT_STATUS.Description AS ClientStatus
-                                    	,USERS.Undersigned AS 'CreatedBy'
-                                    	,ProcessingStatus
-                                    	,CASE
-                                    	   WHEN ProcessingStatus = 2100 THEN 'Terminated'
-                                    	   WHEN ProcessingStatus = 550 THEN 'Suspended'
-                                    	 END AS ProcessLogStatus
-                                    	,PROCESSING_LOG.DateUpdated AS 'ProcessDate'
-                                    	,CORRESPONDENCE.DateCreated AS 'CorrespondenceCreated'
-                                    	,CORRESPONDENCE.title AS 'CorresspondenceTitle'
-                                    	,CORRESPONDENCE.Description AS 'CorrespondenceDescription'
+                                       PROCESSING_LOG.ClientID
+                                      ,CLIENT_CONTACT.Title
+                                      ,CLIENT_CONTACT.Forename
+                                      ,CLIENT_CONTACT.Surname
+                                      ,CLIENT_STATUS.Description AS ClientStatus
+                                      ,USERS.Undersigned AS 'CreatedBy'
+                                      ,PROCESSING_LOG.ProcessingStatus
+                                      ,CASE
+                                         WHEN PROCESSING_LOG.ProcessingStatus = 2100 THEN 'Terminated'
+                                         WHEN PROCESSING_LOG.ProcessingStatus = 550 THEN 'Suspended'
+                                       END AS ProcessLogStatus
+                                      ,PROCESSING_LOG.DateUpdated AS 'ProcessDate'
+                                      ,CORRESPONDENCE.DateCreated AS 'CorrespondenceCreated'
+                                      ,CORRESPONDENCE.CorrespondenceType
+                                      ,CORRESPONDENCE.title AS 'CorresspondenceTitle'
+                                      ,CORRESPONDENCE.Description AS 'CorrespondenceDescription'
+                                      ,(
+                                         SELECT TOP 1
+                                           COUNT(ClientID)
+                                         FROM
+                                           " . $officeData['database'] . ".dbo.Client_Correspondence
+                                         WHERE
+                                           ClientID = PROCESSING_LOG.ClientID       
+                                         AND
+                                           [Type] = 27
+                                       ) AS TotalCallsToClient
+                                      ,CLIENT_LEAD.DateAgreed
+                                      ,PAYMENT_DATA.InitialAgreedAmount / 100 AS AgreedDI
+                                      ,DATEDIFF(month, CLIENT_LEAD.DateAgreed, PROCESSING_LOG.DateUpdated) -
+                                         CASE
+                                           WHEN
+                                             DATEPART(day, CLIENT_LEAD.DateAgreed) > DATEPART(DAY, PROCESSING_LOG.DateUpdated)
+                                           THEN
+                                             1
+                                           ELSE
+                                             0
+                                         END AS MonthsOnPlan
                                       ,CASE
                                          WHEN
                                            exists
@@ -2351,6 +2372,16 @@ Gregson and Brooke.');
                                          ELSE
                                            'No'
                                          END AS FirstPaymentMade
+                                      ,(
+                                         SELECT TOP (1)
+                                           [Date]
+                                         FROM
+                                           " . $officeData['database'] . ".dbo.Payment_Receipt
+                                         WHERE
+                                           ClientID = PROCESSING_LOG.ClientID
+                                         ORDER BY
+                                           ID DESC
+                                       ) AS LastPaymentMade
                                     FROM
                                       " . $officeData['database'] . ".dbo.log_ProcessingStatusUpdates AS PROCESSING_LOG
                                     LEFT JOIN
@@ -2360,40 +2391,47 @@ Gregson and Brooke.');
                                     LEFT JOIN
                                       " . $officeData['database'] . ".dbo.Type_Client_Status AS CLIENT_STATUS ON CLIENT_CONTACT.Status = CLIENT_STATUS.ID
                                     LEFT JOIN
+                                      " . $officeData['database'] . ".dbo.Client_LeadData AS CLIENT_LEAD ON PROCESSING_LOG.ClientID = CLIENT_LEAD.Client_ID
+                                    LEFT JOIN
+                                      " . $officeData['database'] . ".dbo.Client_PaymentData AS PAYMENT_DATA ON PROCESSING_LOG.ClientID = PAYMENT_DATA.ClientID
+                                    LEFT JOIN
+                                      (
+                                        SELECT
+                                           ClientID
+                                          ,CreatedBy
+                                          ,TC.Description AS CorrespondenceType
+                                          ,title
+                                          ,CC.[Description]
+                                          ,DateCreated
+                                          ,ROW_NUMBER() OVER (PARTITION BY ClientID ORDER BY DateCreated DESC) AS RowN
+                                        FROM
+                                          " . $officeData['database'] . ".dbo.Client_Correspondence AS CC
+                                        LEFT JOIN
+                                          " . $officeData['database'] . ".dbo.Type_Correspondence  AS TC ON CC.[Type] = TC.ID
+                                      ) AS CORRESPONDENCE
+                                      ON PROCESSING_LOG.ClientID = CORRESPONDENCE.ClientID AND PROCESSING_LOG.UserID = CORRESPONDENCE.CreatedBy  
+                                    LEFT JOIN
                                     (
                                       SELECT
-                                       ClientID
-                                    	 ,CreatedBy
-                                    		 ,title
-                                    		 ,[Description]
-                                    		 ,DateCreated
-                                    		 ,ROW_NUMBER() OVER (PARTITION BY ClientID ORDER BY DateCreated DESC) AS RowN
-                                    	 FROM
-                                    	  " . $officeData['database'] . ".dbo.Client_Correspondence AS CC
-             	                       ) AS CORRESPONDENCE
-                                     ON PROCESSING_LOG.ClientID = CORRESPONDENCE.ClientID AND PROCESSING_LOG.UserID = CORRESPONDENCE.CreatedBy
-                                     LEFT JOIN
-                                     (
-                                    	 SELECT
-                                    	   ClientID
-                                    	   ,DateUpdated AS LogUpdate
-                                    	   ,ProcessingStatus AS [Status]
-                                    	   ,ROW_NUMBER() OVER (PARTITION BY ClientID ORDER BY DateUpdated DESC) AS LogRow
-                                    	 FROM
-                                    	   " . $officeData['database'] . ".dbo.log_ProcessingStatusUpdates
-                                     ) AS LogRows ON LogRows.ClientID = PROCESSING_LOG.ClientID AND LogRows.LogUpdate = PROCESSING_LOG.DateUpdated
-                                     WHERE
-                                       DateUpdated >= DATEADD(day, DATEDIFF(day, 0, GetDate()), 0)
-                                     AND
-                                       ProcessingStatus IN (2100, 550)
-                                     AND
-                                       LogRow = 1
-                                     AND
-                                       CORRESPONDENCE.RowN = 1
-                                     ORDER BY
-                                        PROCESSING_LOG.ProcessingStatus
-                                       ,FirstPaymentMade
-                                       ,CORRESPONDENCE.DateCreated ASC
+                                    	 ClientID
+                                    	,DateUpdated AS LogUpdate
+                                    	,ProcessingStatus AS [Status]
+                                    	,ROW_NUMBER() OVER (PARTITION BY ClientID ORDER BY DateUpdated DESC) AS LogRow
+                                      FROM
+                                    	" . $officeData['database'] . ".dbo.log_ProcessingStatusUpdates
+                                    ) AS LogRows ON LogRows.ClientID = PROCESSING_LOG.ClientID AND LogRows.LogUpdate = PROCESSING_LOG.DateUpdated
+                                    WHERE
+                                      DateUpdated >= DATEADD(day, DATEDIFF(day, 0, GetDate()-3), 0)
+                                    AND
+                                      PROCESSING_LOG.ProcessingStatus IN (2100, 550)
+                                    AND
+                                      LogRow = 1
+                                    AND
+                                      CORRESPONDENCE.RowN = 1
+                                    ORDER BY
+                                       PROCESSING_LOG.ProcessingStatus
+                                      ,FirstPaymentMade
+                                      ,CORRESPONDENCE.DateCreated ASC
                             ", \DB::SELECT)->execute('debtsolv')->as_array();
                             
         if(count($officeResults) > 0)
