@@ -57,7 +57,7 @@
       <table width="100%" cellpadding="7" cellspacing="0">
         <thead>
           <tr style="background-color:#DDDDDD">
-            <th colspan="8" style="font-size: 14px;"><?=$status;?></th>
+            <th colspan="8" style="font-size: 14px;"><?=$status;?> Clients</th>
           </tr>
         </thead>
         <tbody>
@@ -80,7 +80,7 @@
             ?>
             
             <tr style="background-color:#DDDDDD">
-              <th>Client ID</th>
+              <th>ID</th>
               <th>Client Name</th>
               <th>Changed By</th>
               <th>Process Stage Date/Time</th>
@@ -112,7 +112,7 @@
             </tr>
             <tr style="background-color: #EEEEEE; border-bottom: #CCCCCC 1px solid;">
               <td align="center"><?=date("d-m-Y H:i", strtotime($client['DateAgreed']));?></td>
-              <td align="right">&pound;<?=number_format($client['AgreedDI']);?></td>
+              <td align="center">&pound;<?=number_format($client['AgreedDI']);?></td>
               <td align="center"><?=date("d-m-Y H:i", strtotime($client['LastPaymentMade']));?></td>
               <td align="center"><?=$client['MonthsOnPlan'];?></td>
               <td align="center"><?=$client['TotalCallsToClient'];?></td>
