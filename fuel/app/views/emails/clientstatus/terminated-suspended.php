@@ -32,7 +32,7 @@
     
     <table>
       <tr>
-        <th colspan="2">Colour Code</th>
+        <th colspan="2" align="left">Colour Code</th>
       </tr>
       <tr>
         <td width="100" style="background-color: #A0F06C;"></td>
@@ -52,10 +52,10 @@
     foreach($clients['status'] as $status => $clientList)
     {
       ?>    
-      <table width="100%" cellpadding="5" cellspacing="0">
+      <table width="100%" cellpadding="7" cellspacing="0">
         <thead>
           <tr style="background-color:#DDDDDD">
-            <th colspan="7" style="font-size: 14px;"><?=$status;?></th>
+            <th colspan="8" style="font-size: 14px;"><?=$status;?></th>
           </tr>
           <tr style="background-color:#DDDDDD">
             <th width="80">Client ID</th>
@@ -86,13 +86,16 @@
             
             ?>
             <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">
-              <td rowspan="3" align="center" valign="top" style="background-color: <?=$colorCode;?>;"><?=$client['ClientID'];?></td>
+              <td rowspan="3" align="center" valign="top" style="background-color: <?=$colorCode;?>; border-bottom: 1px solid #999;;"><?=$client['ClientID'];?></td>
               <td nowrap><?=rtrim($client['Title'] . ' ' . $client['Forename'] . ' ' . $client['Surname']);?></td>
               <td nowrap><?=$client['CreatedBy'];?></td>
               <td align="center" nowrap><?=date("d-m-Y H:i", strtotime($client['ProcessDate']));?></td>
               <td><?=$client['CorresspondenceTitle'];?></td>
               <td colspan="2"><?=nl2br($client['CorrespondenceDescription']);?></td>
               <td align="center"><?=$client['FirstPaymentMade'];?></td>
+            </tr>
+            <tr>
+              <td colspan="8" style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">&nbsp;</td>
             </tr>
             <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">
               <th>Date Agreed</th>
@@ -101,6 +104,7 @@
               <th>Months on Plan</th>
               <th>Total Calls Made</th>
               <th>Pack Returned</th>
+              <th>&nbsp;</th>
             </tr>
             <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">
               <td align="center"><?=date("d-m-Y H:i", strtotime($client['DateAgreed']));?></td>
