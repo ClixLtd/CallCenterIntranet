@@ -30,6 +30,22 @@
     <hr />
     <br />
     
+    <table>
+      <tr>
+        <th>Colour Code</th>
+      </tr>
+      <tr>
+        <td style="background-color: #A0F06C;"></td>
+        <td>Pack returned &amp; first payment made</td>
+        <td>&nbsp;</td>
+        <td style="background-color: #FFD440;"></td>
+        <td>Pack returned but no first payment made</td>
+        <td>&nbsp;</td>
+        <td style="background-color: #FF5D40;"></td>
+        <td>Pack not returned &amp; no first payment</td>
+      </tr>
+    </table>
+    
     <?php
     foreach($clients['status'] as $status => $clientList)
     {
@@ -45,7 +61,7 @@
             <th>Changed By</th>
             <th>Process Stage Date/Time</th>
             <th>Last Correspondence Title</th>
-            <th>Last Correspondence Note</th>
+            <th colspan="2">Last Correspondence Note</th>
             <th>First Payment Made</th>
           </tr>
         </thead>
@@ -57,30 +73,40 @@
         {
           foreach($clientList as $client)
           {
+            $colorCode = '';
+            
+            if($client['PackReturned'] == 'Yes' && $client['FirstPaymentMade'] == 'Yes')
+              $colorCode = '#A0F06C';
+            else if($client['PackReturned'] == 'Yes' && $client['FirstPaymentMade'] == 'No')
+              $colorCode = '#FFD440';
+            else
+              $colorCode = '#FF5D40';
+            
             ?>
             <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">
-              <td rowspan="3" align="center" valign="top"><?=$client['ClientID'];?></td>
+              <td rowspan="3" align="center" valign="top" style="background-color: <?=$colorCode;?>;"><?=$client['ClientID'];?></td>
               <td nowrap><?=rtrim($client['Title'] . ' ' . $client['Forename'] . ' ' . $client['Surname']);?></td>
               <td nowrap><?=$client['CreatedBy'];?></td>
               <td align="center" nowrap><?=date("d-m-Y H:i", strtotime($client['ProcessDate']));?></td>
               <td><?=$client['CorresspondenceTitle'];?></td>
-              <td><?=nl2br($client['CorrespondenceDescription']);?></td>
+              <td colspan="2"><?=nl2br($client['CorrespondenceDescription']);?></td>
               <td align="center"><?=$client['FirstPaymentMade'];?></td>
             </tr>
-            <tr>
+            <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">
               <th>Date Agreed</th>
               <th>DI</th>
-              <th>Last Payment Date</th>
+              <th>Last Payment</th>
               <th>Months on Plan</th>
               <th>Total Calls Made</th>
-              <th></th>
+              <th>Pack Returned</th>
             </tr>
-            <tr>
-              <td><?=date("d-m-Y H:i", strtotime($client['DateAgreed']));?></td>
-              <td><?=$client['AgreedDI'];?></td>
-              <td><?=date("d-m-Y H:i", strtotime($client['LastPaymentMade']));?></td>
-              <td><?=$client['MonthsOnPlan'];?></td>
-              <td><?=$client['TotalCallsToClient'];?></td>
+            <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">
+              <td align="center"><?=date("d-m-Y H:i", strtotime($client['DateAgreed']));?></td>
+              <td align="right">&pound;<?=number_format($client['AgreedDI']);?></td>
+              <td align="center"><?=date("d-m-Y H:i", strtotime($client['LastPaymentMade']));?></td>
+              <td align="center"><?=$client['MonthsOnPlan'];?></td>
+              <td align="center"><?=$client['TotalCallsToClient'];?></td>
+              <td align="center><?=$client['PackReturned'];?></td>
               <td></td>
             </tr>
             <?php

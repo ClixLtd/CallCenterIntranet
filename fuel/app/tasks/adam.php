@@ -2325,6 +2325,13 @@ Gregson and Brooke.');
                                          WHEN PROCESSING_LOG.ProcessingStatus = 2100 THEN 'Terminated'
                                          WHEN PROCESSING_LOG.ProcessingStatus = 550 THEN 'Suspended'
                                        END AS ProcessLogStatus
+                                      ,CASE
+                                         WHEN
+                                           CLIENT_LEAD.DatePackReceived >= CLIENT_LEAD.DateAgreed
+                                           THEN 'Yes'
+                                         ELSE
+                                           'No'
+                                       END AS PackReturned
                                       ,PROCESSING_LOG.DateUpdated AS 'ProcessDate'
                                       ,CORRESPONDENCE.DateCreated AS 'CorrespondenceCreated'
                                       ,CORRESPONDENCE.CorrespondenceType
