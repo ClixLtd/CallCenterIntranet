@@ -86,7 +86,7 @@
             
             ?>
             <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">
-              <td rowspan="3" align="center" valign="top" style="background-color: <?=$colorCode;?>; border-bottom: 1px solid #999;;"><?=$client['ClientID'];?></td>
+              <td rowspan="4" align="center" valign="top" style="background-color: <?=$colorCode;?>; border-bottom: 1px solid #999;;"><?=$client['ClientID'];?></td>
               <td nowrap><?=rtrim($client['Title'] . ' ' . $client['Forename'] . ' ' . $client['Surname']);?></td>
               <td nowrap><?=$client['CreatedBy'];?></td>
               <td align="center" nowrap><?=date("d-m-Y H:i", strtotime($client['ProcessDate']));?></td>
