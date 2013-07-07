@@ -59,13 +59,29 @@
           {
             ?>
             <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">
-              <td align="center"><?=$client['ClientID'];?></td>
+              <td rowspan="3" align="center" valign="top"><?=$client['ClientID'];?></td>
               <td nowrap><?=rtrim($client['Title'] . ' ' . $client['Forename'] . ' ' . $client['Surname']);?></td>
               <td nowrap><?=$client['CreatedBy'];?></td>
               <td align="center" nowrap><?=date("d-m-Y H:i", strtotime($client['ProcessDate']));?></td>
               <td><?=$client['CorresspondenceTitle'];?></td>
               <td><?=nl2br($client['CorrespondenceDescription']);?></td>
               <td align="center"><?=$client['FirstPaymentMade'];?></td>
+            </tr>
+            <tr>
+              <th>Date Agreed</th>
+              <th>DI</th>
+              <th>Last Payment Date</th>
+              <th>Months on Plan</th>
+              <th>Total Calls Made</th>
+              <th></th>
+            </tr>
+            <tr>
+              <td><?=date("d-m-Y H:i", strtotime($client['DateAgreed']));?></td>
+              <td><?=$client['AgreedDI'];?></td>
+              <td><?=date("d-m-Y H:i", strtotime($client['LastPaymentMade']));?></td>
+              <td><?=$client['MonthsOnPlan'];?></td>
+              <td><?=$client['TotalCallsToClient'];?></td>
+              <td></td>
             </tr>
             <?php
             $background = ($background==0) ? 1 : 0;
