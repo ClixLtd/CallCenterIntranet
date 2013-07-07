@@ -2298,15 +2298,15 @@ Gregson and Brooke.');
     {
       $offices = array(
         'Bolton' => array('database' => 'Debtsolv',
-                          'to' => array('d.stansfield@expertmoneysolutions.co.uk') #bolton-client-status-report@expertmoneysolutions.co.uk
+                          'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
                          ),
                          
         'Burton' => array('database' => 'BS_Debtsolv_DM',
-                          'to' => array('d.stansfield@expertmoneysolutions.co.uk') #burton-client-status-report@expertmoneysolutions.co.uk
+                          'to' => array('burton-client-status-report@expertmoneysolutions.co.uk')
                          ),
                          
         'Clear View' => array('database' => 'CV_Debtsolv_DM',
-                              'to' => array('d.stansfield@expertmoneysolutions.co.uk') #clear-view-client-status-report@expertmoneysolutions.co.uk
+                              'to' => array('clear-view-client-status-report@expertmoneysolutions.co.uk')
                              ),
       );
       
@@ -2423,7 +2423,7 @@ Gregson and Brooke.');
                                     	" . $officeData['database'] . ".dbo.log_ProcessingStatusUpdates
                                     ) AS LogRows ON LogRows.ClientID = PROCESSING_LOG.ClientID AND LogRows.LogUpdate = PROCESSING_LOG.DateUpdated
                                     WHERE
-                                      DateUpdated >= DATEADD(day, DATEDIFF(day, 0, GetDate()-3), 0)
+                                      DateUpdated >= DATEADD(day, DATEDIFF(day, 0, GetDate()), 0)
                                     AND
                                       PROCESSING_LOG.ProcessingStatus IN (2100, 550)
                                     AND
