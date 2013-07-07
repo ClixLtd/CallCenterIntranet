@@ -48,6 +48,8 @@
       </tr>
     </table>
     
+    <br />
+    
     <?php
     foreach($clients['status'] as $status => $clientList)
     {
@@ -56,15 +58,6 @@
         <thead>
           <tr style="background-color:#DDDDDD">
             <th colspan="8" style="font-size: 14px;"><?=$status;?></th>
-          </tr>
-          <tr style="background-color:#DDDDDD">
-            <th width="80">Client ID</th>
-            <th>Client Name</th>
-            <th>Changed By</th>
-            <th>Process Stage Date/Time</th>
-            <th>Last Correspondence Title</th>
-            <th colspan="2">Last Correspondence Note</th>
-            <th>First Payment Made</th>
           </tr>
         </thead>
         <tbody>
@@ -85,8 +78,18 @@
               $colorCode = '#FF5D40';
             
             ?>
-            <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">
-              <td rowspan="4" align="center" valign="top" style="background-color: <?=$colorCode;?>; border-bottom: 1px solid #999;;"><?=$client['ClientID'];?></td>
+            
+            <tr style="background-color:#DDDDDD">
+              <th rowspan="5" align="center" valign="top" style="background-color: <?=$colorCode;?>; border-bottom: 1px solid #999;"><?=$client['ClientID'];?></th>
+              <th>Client Name</th>
+              <th>Changed By</th>
+              <th>Process Stage Date/Time</th>
+              <th>Last Correspondence Title</th>
+              <th colspan="2">Last Correspondence Note</th>
+              <th>First Payment</th>
+            </tr>
+            
+            <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #999 1px solid;">
               <td nowrap><?=rtrim($client['Title'] . ' ' . $client['Forename'] . ' ' . $client['Surname']);?></td>
               <td nowrap><?=$client['CreatedBy'];?></td>
               <td align="center" nowrap><?=date("d-m-Y H:i", strtotime($client['ProcessDate']));?></td>
@@ -95,7 +98,7 @@
               <td align="center"><?=$client['FirstPaymentMade'];?></td>
             </tr>
             <tr>
-              <td colspan="8" style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">&nbsp;</td>
+              <td colspan="8" style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>;">&nbsp;</td>
             </tr>
             <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">
               <th>Date Agreed</th>
