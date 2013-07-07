@@ -80,7 +80,7 @@
             ?>
             
             <tr style="background-color:#DDDDDD">
-              <th rowspan="5" align="center" valign="top" style="background-color: <?=$colorCode;?>; border-bottom: 1px solid #999;"><?=$client['ClientID'];?></th>
+              <th>Client ID</th>
               <th>Client Name</th>
               <th>Changed By</th>
               <th>Process Stage Date/Time</th>
@@ -89,7 +89,8 @@
               <th>First Payment</th>
             </tr>
             
-            <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #999 1px solid;">
+            <tr style="background-color: #EEEEEE; border-bottom: #999 1px solid;">
+              <td rowspan="4" align="center" valign="top" style="background-color: <?=$colorCode;?>; border-bottom: 1px solid #999;"><b><?=$client['ClientID'];?></b></td>
               <td nowrap><?=rtrim($client['Title'] . ' ' . $client['Forename'] . ' ' . $client['Surname']);?></td>
               <td nowrap><?=$client['CreatedBy'];?></td>
               <td align="center" nowrap><?=date("d-m-Y H:i", strtotime($client['ProcessDate']));?></td>
@@ -98,9 +99,9 @@
               <td align="center"><?=$client['FirstPaymentMade'];?></td>
             </tr>
             <tr>
-              <td colspan="8" style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>;">&nbsp;</td>
+              <td colspan="8" style="background-color: #EEEEEE;">&nbsp;</td>
             </tr>
-            <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">
+            <tr style="background-color: #DDDDDD; border-bottom: #CCCCCC 1px solid;">
               <th>Date Agreed</th>
               <th>DI</th>
               <th>Last Payment</th>
@@ -109,7 +110,7 @@
               <th>Pack Returned</th>
               <th>&nbsp;</th>
             </tr>
-            <tr style="background-color: <?php echo ($background==0) ? "#EEEEEE" : "#DDDDDD"; ?>; border-bottom: #CCCCCC 1px solid;">
+            <tr style="background-color: #EEEEEE; border-bottom: #CCCCCC 1px solid;">
               <td align="center"><?=date("d-m-Y H:i", strtotime($client['DateAgreed']));?></td>
               <td align="right">&pound;<?=number_format($client['AgreedDI']);?></td>
               <td align="center"><?=date("d-m-Y H:i", strtotime($client['LastPaymentMade']));?></td>
@@ -117,6 +118,9 @@
               <td align="center"><?=$client['TotalCallsToClient'];?></td>
               <td align="center"><?=$client['PackReturned'];?></td>
               <td></td>
+            </tr>
+            <tr>
+              <td>&nbsp;</td>
             </tr>
             <?php
             $background = ($background==0) ? 1 : 0;
