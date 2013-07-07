@@ -32,15 +32,17 @@
     
     <table>
       <tr>
-        <th>Colour Code</th>
+        <th colspan="2">Colour Code</th>
       </tr>
       <tr>
-        <td style="background-color: #A0F06C;"></td>
+        <td width="100" style="background-color: #A0F06C;"></td>
         <td>Pack returned &amp; first payment made</td>
-        <td>&nbsp;</td>
+      </tr>
+      <tr>
         <td style="background-color: #FFD440;"></td>
         <td>Pack returned but no first payment made</td>
-        <td>&nbsp;</td>
+      </tr>
+      <tr>
         <td style="background-color: #FF5D40;"></td>
         <td>Pack not returned &amp; no first payment</td>
       </tr>
@@ -106,7 +108,7 @@
               <td align="center"><?=date("d-m-Y H:i", strtotime($client['LastPaymentMade']));?></td>
               <td align="center"><?=$client['MonthsOnPlan'];?></td>
               <td align="center"><?=$client['TotalCallsToClient'];?></td>
-              <td align="center><?=$client['PackReturned'];?></td>
+              <td align="center"><?=$client['PackReturned'];?></td>
               <td></td>
             </tr>
             <?php
