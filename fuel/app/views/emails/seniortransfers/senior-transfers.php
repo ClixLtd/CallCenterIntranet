@@ -43,7 +43,7 @@
                   ?>
                   <tr style="background-color: <?php echo ($background==0) ? "#DDDDDD" : "#EEEEEE"; ?>; border-bottom: #CCCCCC 1px solid;">
                     <td align="center"><?=$result['lead_id'];?></td>
-                    <td align="center"><?=$result['office'];?></td>
+                    <td align="center"><?=$result['office'] == 'HQ' ? 'Bolton' : $result['office'];?></td>
                     <td align="center"><?=$result['tele_agent'];?></td>
                     <td><?=$result['senior_username'];?></td>
                     <td align="center"><?=$result['transfered_date_time'];?></td>

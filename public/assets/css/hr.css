@@ -43,3 +43,15 @@
       width: 100%;
       text-decoration: none;
     }
+ 
+.New-Profile-Step {
+  display: none;
+}
+  
+.Form-Table {
+  
+}
+
+  .Form-Table th, .Form-Table td {
+    font-size: 12px;
+  }
