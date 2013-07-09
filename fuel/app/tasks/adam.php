@@ -2402,6 +2402,8 @@ Gregson and Brooke.');
                                     LEFT JOIN
                                       " . $officeData['database'] . ".dbo.Client_PaymentData AS PAYMENT_DATA ON PROCESSING_LOG.ClientID = PAYMENT_DATA.ClientID
                                     LEFT JOIN
+                                      " . $officeData['database'] . ".dbo.Client_Alert AS ALERT ON PROCESSING_LOG.ClientID = ALERT.ClientID
+                                    LEFT JOIN
                                       (
                                         SELECT
                                            ClientID
@@ -2435,6 +2437,8 @@ Gregson and Brooke.');
                                       LogRow = 1
                                     AND
                                       CORRESPONDENCE.RowN = 1
+                                    AND
+                                      ALERT.[Message] NOT LIKE '%PPI ONLY%'
                                     ORDER BY
                                        PROCESSING_LOG.ProcessingStatus
                                       ,FirstPaymentMade
