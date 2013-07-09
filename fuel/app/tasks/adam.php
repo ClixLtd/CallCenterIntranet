@@ -2412,7 +2412,7 @@ Gregson and Brooke.');
                                           ,title
                                           ,CC.[Description]
                                           ,DateCreated
-                                          ,ROW_NUMBER() OVER (PARTITION BY ClientID ORDER BY DateCreated DESC) AS RowN
+                                          ,ROW_NUMBER() OVER (PARTITION BY ClientID ORDER BY CASE WHEN [Type] = 55 THEN 1 ELSE 0 END DESC, DateCreated DESC) AS RowN
                                         FROM
                                           " . $officeData['database'] . ".dbo.Client_Correspondence AS CC
                                         LEFT JOIN
