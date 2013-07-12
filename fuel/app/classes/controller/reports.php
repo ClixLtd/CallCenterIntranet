@@ -3221,6 +3221,7 @@ GROUP BY
                         				    BS_Debtsolv_DM.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
                                             WHERE
                                               " . $paid_duration . "
+                                              ". $call_center_choice ."
                                               AND D_CD.Office = 'RESOLVE'
 				")->cached(300)->execute('debtsolv');
 				
