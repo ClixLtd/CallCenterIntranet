@@ -3258,6 +3258,7 @@ GROUP BY
 				
 				    $all_paid['G'.$paid['ClientID']] = array(
 				        '<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['ClientID'].'</a>',
+				        $paid['LeadPoolReference'],
 				        $paid['Name'],
 				        $paid['Lead Source'],
 				        $paid['Office'],
