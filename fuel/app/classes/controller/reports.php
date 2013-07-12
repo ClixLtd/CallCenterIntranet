@@ -3363,6 +3363,7 @@ GROUP BY
 								"sTitle" => "Client ID", 
 								"bSortable" => false,
 							),
+							 array(
 								"sTitle" => "Leadpool ID", 
 								"bSortable" => false,
 							),
