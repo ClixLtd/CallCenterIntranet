@@ -3305,7 +3305,8 @@ GROUP BY
     				
     				
     				    $all_paid['R'.$paid['ClientID']] = array(
-    				        $paid['ClientID'],
+    				        '<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['ClientID'].'</a>',
+    				        $paid['LeadPoolReference'],
     				        $paid['Name'],
     				        $paid['Lead Source'],
     				        '<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['Office'].'</a>',
