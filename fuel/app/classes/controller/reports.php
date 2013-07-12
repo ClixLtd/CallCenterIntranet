@@ -810,6 +810,9 @@ GROUP BY
 	    }
 	    
 	    
+	    
+	    
+	    
 	    $seniorQueryGAB = "SELECT
                             	  D_URS.Login
                             	, COUNT(CASE WHEN (D_CLD.DatePackSent >= '".$startDate."' AND D_CLD.DatePackSent < '".$endDate."') THEN Client_ID END) AS PackOut
@@ -3077,6 +3080,7 @@ GROUP BY
 								
 				$paid_reports1 = \DB::query("SELECT
                                                 D_CD.ClientID
+                                              , D_CLD.LeadPoolReference
                                               , (CD.Forename + ' ' + CD.Surname) AS Name
                                               , LSO.[Description] AS 'Lead Source'
 											  , CLD.LeadRef2 AS Office
@@ -3151,6 +3155,7 @@ GROUP BY
 				
 				$paid_reports2 = \DB::query("SELECT
                                                 D_CD.ClientID
+                                              , D_CLD.LeadPoolReference
                                               , (CD.Forename + ' ' + CD.Surname) AS Name
                                               , LSO.[Description] AS 'Lead Source'
 											  , ISNULL(CLD.LeadRef2,'RESOLVE') AS Office
@@ -3356,6 +3361,9 @@ GROUP BY
 						"aoColumns" => array(
 						    array(
 								"sTitle" => "Client ID", 
+								"bSortable" => false,
+							),
+								"sTitle" => "Leadpool ID", 
 								"bSortable" => false,
 							),
 							array(
