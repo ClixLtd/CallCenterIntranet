@@ -3277,54 +3277,52 @@ GROUP BY
 				}
 				
 				
-				if ( is_null($center) || $center == 'RESOLVE' )
-				{
-    				
-    				foreach ($paid_reports2 AS $paid)
-    				{
-    				
-    				    $pdtype = "";
-    						  
-        				  switch ((string)$paid['ProductType']) {
-        				  
-        				      CASE '0':
-        				          $pdtype = "DR";
-        				          break;
-        				      CASE '1':
-        				          $pdtype = "DMPLUS";
-        				          break;
-        				      CASE '2':
-        				          $pdtype = "PPI";
-        				          break;
-        				      CASE '3':
-        				          $pdtype = "DRPLUS";
-        				          break;
-        				      CASE '':
-        				          $pdtype = "";
-        				          break;
-        				  }
-    				
-    				
-    				    $all_paid['R'.$paid['ClientID']] = array(
-    				        '<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['ClientID'].'</a>',
-    				        $paid['LeadPoolReference'],
-    				        $paid['Name'],
-    				        $paid['Lead Source'],
-    				        '<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['Office'].'</a>',
-							'<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['Telesales Agent'].'</a>',
-    				        $paid['Consolidator'],
-    				        $paid['DI'],
-    				        $pdtype,
-    				        date("d-m-y", strtotime($paid['Referred Date'])),
-    				        date("d-m-y", strtotime($paid['Pack In Date'])),
-    				        date("d-m-y", strtotime($paid['FirstPaymentDate'])),
-    				    );
-    				
-        				$totals['paid']['count']++;
-    					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
-    				}
 				
+				foreach ($paid_reports2 AS $paid)
+				{
+				
+				    $pdtype = "";
+						  
+    				  switch ((string)$paid['ProductType']) {
+    				  
+    				      CASE '0':
+    				          $pdtype = "DR";
+    				          break;
+    				      CASE '1':
+    				          $pdtype = "DMPLUS";
+    				          break;
+    				      CASE '2':
+    				          $pdtype = "PPI";
+    				          break;
+    				      CASE '3':
+    				          $pdtype = "DRPLUS";
+    				          break;
+    				      CASE '':
+    				          $pdtype = "";
+    				          break;
+    				  }
+				
+				
+				    $all_paid['R'.$paid['ClientID']] = array(
+				        '<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['ClientID'].'</a>',
+				        $paid['LeadPoolReference'],
+				        $paid['Name'],
+				        $paid['Lead Source'],
+				        '<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['Office'].'</a>',
+						'<a href="/reports/change_offices/'.$paid['ClientID'].'/">'.$paid['Telesales Agent'].'</a>',
+				        $paid['Consolidator'],
+				        $paid['DI'],
+				        $pdtype,
+				        date("d-m-y", strtotime($paid['Referred Date'])),
+				        date("d-m-y", strtotime($paid['Pack In Date'])),
+				        date("d-m-y", strtotime($paid['FirstPaymentDate'])),
+				    );
+				
+    				$totals['paid']['count']++;
+					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
 				}
+				
+				
 				
 				
 				$all_paid_return = array();
