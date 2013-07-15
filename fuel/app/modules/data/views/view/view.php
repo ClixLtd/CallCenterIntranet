@@ -27,30 +27,43 @@
 									<tr>
 										<td><b>Leads Purchased</b></td>
 										<td><?php echo number_format($basicStats['purchased'],0); ?></td>
+										<td></td>
+										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['purchased'],2); ?></td>
 									</tr>
 									<tr>
 										<td><b>Dialable Leads</b></td>
 										<td><?php echo number_format($basicStats['dialable'],0); ?> (<?php echo number_format(($basicStats['dialable']/$basicStats['purchased'])*100,1); ?>%)</td>
+										<td></td>
+										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['dialable'],2); ?></td>
 									</tr>
 									<tr>
 										<td><b>Leads Contacted</b></td>
 										<td><?php echo number_format($basicStats['contacted'],0); ?> (<?php echo number_format(($basicStats['contacted']/$basicStats['dialable'])*100,1); ?>%)</td>
+										<td></td>
+										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['contacted'],2); ?></td>
 									</tr>
 									<tr>
 										<td><b>Referrals</b></td>
 										<td><?php echo number_format($basicStats['referrals'],0); ?> (<?php echo number_format(($basicStats['referrals']/$basicStats['contacted'])*100,1); ?>%)</td>
+										<td></td>
+										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['referrals'],2); ?></td>
 									</tr>
 									<tr>
 										<td><b>Packs Out</b></td>
 										<td><?php echo number_format($basicStats['packout'],0); ?> (<?php echo number_format(($basicStats['packout']/$basicStats['referrals'])*100,1); ?>%)</td>
+										<td></td>
+										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['packout'],2); ?></td>
 									</tr>
 									<tr>
 										<td><b>Packs In</b></td>
 										<td><?php echo number_format($basicStats['packin'],0); ?> (<?php echo number_format(($basicStats['packin']/$basicStats['packout'])*100,1); ?>%)</td>
+										<td></td>
+										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['packin'],2); ?></td>
 									</tr>
 									<tr>
 										<td><b>Paid Clients</b></td>
 										<td><?php echo number_format($basicStats['paid'],0); ?> (<?php echo number_format(($basicStats['paid']/$basicStats['packin'])*100,1); ?>%)</td>
+										<td></td><td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['paid'],2); ?></td>
 									</tr>
 								</tbody>
 							</table>
@@ -58,49 +71,6 @@
 					</div>
 					
 				</article>
-
-
-				<article class="half-block clearrm">
-					
-					<div class="article-container">
-						<section>
-							<table class="zebra-striped">
-								<tbody>
-									<tr>
-										<td><b>Cost Per Lead</b></td>
-										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['purchased'],2); ?></td>
-									</tr>
-									<tr>
-										<td><b>Cost Per Dialable Lead</b></td>
-										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['dialable'],2); ?></td>
-									</tr>
-									<tr>
-										<td><b>Cost Per Contact</b></td>
-										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['contacted'],2); ?></td>
-									</tr>
-									<tr>
-										<td><b>Cost Per Referral</b></td>
-										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['referrals'],2); ?></td>
-									</tr>
-									<tr>
-										<td><b>Cost Per Pack Out</b></td>
-										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['packout'],2); ?></td>
-									</tr>
-									<tr>
-										<td><b>Cost Per Pack In</b></td>
-										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['packin'],2); ?></td>
-									</tr>
-									<tr>
-										<td><b>Cost Per Paid Client</b></td>
-										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['paid'],2); ?></td>
-									</tr>
-								</tbody>
-							</table>
-						</section>
-					</div>
-					
-				</article>
-
 				
 			</article>
 		</div>
