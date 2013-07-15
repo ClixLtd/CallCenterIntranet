@@ -44,6 +44,7 @@ class Controller_Data extends \Controller_Base
 		    $oneList     = $listDetails[0];
 		    
 		    $basicStats  = array(
+		    	'cost'       => $oneList['cost'],
 		    	'purchased'  => $oneList['purchased_leads'],
 		    	'duplicates' => $oneList['duplicates'],
 				'tps'		 => $oneList['tps'],

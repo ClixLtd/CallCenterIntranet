@@ -67,40 +67,32 @@
 							<table class="zebra-striped">
 								<tbody>
 									<tr>
-										<td><b>Leads Purchased</b></td>
-										<td><?php echo number_format($basicStats['purchased'],0); ?></td>
-									</tr>
-									<tr>
 										<td><b>Cost Per Lead</b></td>
-										<td><div id="dr_pack_out_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['purchased'],2); ?></td>
 									</tr>
 									<tr>
 										<td><b>Cost Per Dialable Lead</b></td>
-										<td><div id="dmplus_pack_out_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
-									</tr>
-									<tr>
-										<td><b>Leads Contacted</b></td>
-										<td><div id="referral_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['dialable'],2); ?></td>
 									</tr>
 									<tr>
 										<td><b>Cost Per Contact</b></td>
-										<td><div id="pack_in_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['contacted'],2); ?></td>
 									</tr>
 									<tr>
-										<td><b>Referrals</b></td>
-										<td><div id="paid_in_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td><b>Cost Per Referral</b></td>
+										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['referrals'],2); ?></td>
 									</tr>
 									<tr>
-										<td><b>Packs Out</b></td>
-										<td><div id="paid_in_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td><b>Cost Per Pack Out</b></td>
+										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['packout'],2); ?></td>
 									</tr>
 									<tr>
-										<td><b>Packs In</b></td>
-										<td><div id="paid_in_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td><b>Cost Per Pack In</b></td>
+										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['packin'],2); ?></td>
 									</tr>
 									<tr>
-										<td><b>Paid Clients</b></td>
-										<td><div id="paid_in_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td><b>Cost Per Paid Client</b></td>
+										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['paid'],2); ?></td>
 									</tr>
 								</tbody>
 							</table>
