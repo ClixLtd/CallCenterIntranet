@@ -28,7 +28,7 @@
 										<th></th>
 										<th>Total</th>
 										<th>%</th>
-										<th>Per Lead</th>
+										<th>Cost Per</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -71,7 +71,7 @@
 									<tr>
 										<td><b>Paid Clients</b></td>
 										<td><?php echo number_format($basicStats['paid'],0); ?></td>
-										<td><?php echo number_format(($basicStats['paid']/$basicStats['packin'])*100,1); ?>%</td>
+										<td>	<?php echo number_format(($basicStats['paid']/$basicStats['packin'])*100,1); ?>%</td>
 										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['paid'],2); ?></td>
 									</tr>
 								</tbody>
