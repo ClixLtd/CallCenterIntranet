@@ -23,48 +23,30 @@
 					<div class="article-container">
 						<section>
 							<table class="zebra-striped">
-								<thead>
-									<tr>
-										<th></th>
-										<th>Count</th>
-									</tr>
-								</thead>
 								<tbody>
 									<tr>
 										<td><b>Leads Purchased</b></td>
-										<td><div id="referral_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
-									</tr>
-									<tr>
-										<td><b>Cost Per Lead</b></td>
-										<td><div id="dr_pack_out_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
-									</tr>
-									<tr>
-										<td><b>Cost Per Dialable Lead</b></td>
-										<td><div id="dmplus_pack_out_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td><?php echo number_format($basicStats['purchased'],0); ?></td>
 									</tr>
 									<tr>
 										<td><b>Leads Contacted</b></td>
-										<td><div id="referral_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
-									</tr>
-									<tr>
-										<td><b>Cost Per Contact</b></td>
-										<td><div id="pack_in_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td><?php echo number_format($basicStats['contacted'],0); ?></td>
 									</tr>
 									<tr>
 										<td><b>Referrals</b></td>
-										<td><div id="paid_in_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td><?php echo number_format($basicStats['referrals'],0); ?></td>
 									</tr>
 									<tr>
 										<td><b>Packs Out</b></td>
-										<td><div id="paid_in_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td><?php echo number_format($basicStats['packout'],0); ?></td>
 									</tr>
 									<tr>
 										<td><b>Packs In</b></td>
-										<td><div id="paid_in_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td><?php echo number_format($basicStats['packin'],0); ?></div></td>
 									</tr>
 									<tr>
 										<td><b>Paid Clients</b></td>
-										<td><div id="paid_in_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td><?php echo number_format($basicStats['paid'],0); ?></td>
 									</tr>
 								</tbody>
 							</table>
@@ -79,16 +61,10 @@
 					<div class="article-container">
 						<section>
 							<table class="zebra-striped">
-								<thead>
-									<tr>
-										<th></th>
-										<th>Count</th>
-									</tr>
-								</thead>
 								<tbody>
 									<tr>
 										<td><b>Leads Purchased</b></td>
-										<td><div id="referral_count"><span class="loader red" title="Loading, please wait&#8230;"></span></div></td>
+										<td><?php echo number_format($basicStats['purchased'],0); ?></td>
 									</tr>
 									<tr>
 										<td><b>Cost Per Lead</b></td>
