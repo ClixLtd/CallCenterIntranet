@@ -32,7 +32,7 @@
 
 		<p>For a full break down of TPS, Duplicates and other stats please click the link below which will take you to the correct page on the intranet.</p>
 		
-		<p><a href="http://intranet.gregsonandbrooke.co.uk/data/view/something/<?php echo $dataID; ?>/">List <?php echo $dataID; ?> Statistics</a></p>
+		<p><a href="http://intranet.gregsonandbrooke.co.uk/data/view/<?php echo $dataID; ?>/">List <?php echo $dataID; ?> Statistics</a></p>
 		
 	</BODY>
 </HTML>

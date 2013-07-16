@@ -7,6 +7,7 @@
 			<nav>
 				<ul class="tab-switch">
 					<li><a class="default-tab" href="#quickview">Quick View</a></li>
+					<li><a class="default-tab" href="#quickview">Quick View</a></li>
 				</ul>
 			</nav>
 			
