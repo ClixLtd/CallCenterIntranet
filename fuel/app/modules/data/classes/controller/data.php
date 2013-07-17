@@ -85,11 +85,18 @@ class Controller_Data extends \Controller_Base
 		    
 		    $statusPie = \Data\Model_Data::get_statuses($data_id);
 		    
+		    // Turn the status results into a flot pie chart
+		    $pieText = "";
+		    foreach ($statusPie as $status=>$total)
+		    {
+			    $pieText .= '{ label: "'.$status.'",  data: '.$total.'},';
+		    }
+		    
 		    
 		    $this->template->title = 'Statistics for List ' . $data_id;
 	        $this->template->content = \View::forge('view/view', array(
 	        	'basicStats' => $basicStats,
-	        	'statuses'   => $statusPie,
+	        	'statuses'   => $pieText,
 	        ));
 
 		    
