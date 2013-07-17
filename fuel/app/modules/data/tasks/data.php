@@ -91,18 +91,24 @@ class Data
     public static function updateCurrentStatus()
     {
     	$updateTime = date('Y-m-d H:i:s', strtotime("-30 minutes"));
-	    $allToCheck = \DB::select('dialler_lead_id')->from('data_dialler_copy')->where('dialler_lead_id', '<>', 0)->where('current_status_update', '<=', $updateTime)
+	    $allToCheck = \DB::select('dialler_lead_id')->from('data_dialler_copy')->where('dialler_lead_id', '<>', 0)->where('current_status', '<>', 'DELETED')->where('current_status_update', '<=', $updateTime)
 	                     ->order_by('current_status_update','asc')->limit(250)->execute()->as_array();
 	    
 	    foreach ($allToCheck as $singleLead)
 	    {
 	    
-	    	$diallerResult = \DB::select('status')->from('vicidial_list')->where('lead_id', $singleLead['dialler_lead_id'])->execute('dialler');
+	    	$diallerResult = \DB::select('status')->from('vicidial_list')->where('lead_id', $singleLead['dialler_lead_id'])->execute('dialler')->as_array();
 		    
-		    print_r($diallerResult);
+		    if (isset($diallerResult[0]['status']))
+		    {
+			    $updateStatus = $diallerResult[0]['status'];
+		    }
+		    else
+		    {
+			    $updateStatus = "DELETED";
+		    }
 		    
-		    
-		    //$result = \DB::update('data_dialler_copy')->set(array('current_status' => $diallerResult[0]['status']))->where('dialler_lead_id', $singleLead['dialler_lead_id'])->execute();
+		    $result = \DB::update('data_dialler_copy')->set(array('current_status' => $updateStatus))->where('dialler_lead_id', $singleLead['dialler_lead_id'])->execute();
 	    }
 	    
     }
