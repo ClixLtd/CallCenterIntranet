@@ -95,6 +95,7 @@ class Data
 	    $allToCheck = \DB::select('dialler_lead_id')->from('data_dialler_copy')->where('dialler_lead_id', '<>', 0)->where('current_status', '<>', 'DELETED')->where('current_status_update', '<=', $updateTime)
 	                     ->order_by('current_status_update','asc')->limit(50)->execute()->as_array();
 	    
+	    $updateQueries = "";
 	    foreach ($allToCheck as $singleLead)
 	    {
 	    
@@ -109,7 +110,10 @@ class Data
 			    $updateStatus = "DELETED";
 		    }
 		    
-		    $result = \DB::update('data_dialler_copy')->set(array('current_status' => $updateStatus, 'current_status_update' => $timeNow))->where('dialler_lead_id', $singleLead['dialler_lead_id'])->execute();
+		    $result = \DB::update('data_dialler_copy')->set(array('current_status' => $updateStatus, 'current_status_update' => $timeNow))->where('dialler_lead_id', $singleLead['dialler_lead_id']);
+		    
+		    print $result;
+		    
 	    }
 	    
     }
