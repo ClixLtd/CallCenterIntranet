@@ -37,6 +37,7 @@
 	
 	<?php echo Asset::js('jquery/jquery.livequery.js'); ?>
 	<?php echo Asset::js('jquery/jquery.flot.js'); ?>
+	<?php echo Asset::js('jquery/jquery.flot.pie.js'); ?>
 	
 	
 	<?php echo Asset::css('print.css', array('media'=>'print')); ?>
