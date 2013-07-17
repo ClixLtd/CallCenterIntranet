@@ -120,7 +120,11 @@ $.plot($("#pieStatus"), data,
 	series: {
 		pie: { 
 			show: true
-		}
+		},
+        grid: {
+            hoverable: true,
+            clickable: true
+        }
 	}
 });
 
