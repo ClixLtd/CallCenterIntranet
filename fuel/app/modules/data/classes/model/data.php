@@ -81,7 +81,7 @@ class Model_Data
 	    $statusCount = array();
 	    foreach ($dataResults as $singleResult)
 	    {
-		    $statusCount[$singleResult['status']] = (isset($statusCount[$singleResult['status']])) ? $statusCount[$singleResult['status']] + 1 : 1;
+		    $statusCount[$singleResult['current_status']] = (isset($statusCount[$singleResult['current_status']])) ? $statusCount[$singleResult['current_status']] + 1 : 1;
 	    }
 	    
 	    return $statusCount;
