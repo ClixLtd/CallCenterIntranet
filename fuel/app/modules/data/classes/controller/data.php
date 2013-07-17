@@ -97,7 +97,7 @@ class Controller_Data extends \Controller_Base
 	        $this->template->content = \View::forge('view/view', array(
 	        	'basicStats' => $basicStats,
 	        	'statuses'   => $pieText,
-	        ));
+	        ), false);
 
 		    
 	    }
