@@ -119,7 +119,11 @@ $.plot($("#pieStatus"), data,
 {
 	series: {
 		pie: { 
-			show: true
+			show: true,
+			combine: {
+                    color: '#999',
+                    threshold: 0.1
+                }
 		},
         grid: {
             hoverable: true,
