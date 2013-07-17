@@ -96,9 +96,12 @@ class Data
 	    
 	    foreach ($allToCheck as $singleLead)
 	    {
-		    $diallerResult = \DB::select('status')->from('vicidial_list')->where('lead_id', $singleLead['dialler_lead_id'])->execute('dialler')->as_array();
+	    
+	    	print $singleLead['dialler_lead_id'];
+	    
+		    //$diallerResult = \DB::select('status')->from('vicidial_list')->where('lead_id', $singleLead['dialler_lead_id'])->execute('dialler')->as_array();
 		    
-		    $result = \DB::update('data_dialler_copy')->set(array('current_status' => $diallerResult[0]['status']))->where('dialler_lead_id', $singleLead['dialler_lead_id'])->execute();
+		    //$result = \DB::update('data_dialler_copy')->set(array('current_status' => $diallerResult[0]['status']))->where('dialler_lead_id', $singleLead['dialler_lead_id'])->execute();
 	    }
 	    
     }
