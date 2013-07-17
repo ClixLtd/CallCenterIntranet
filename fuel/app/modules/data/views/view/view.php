@@ -87,22 +87,7 @@
 					
 					<div class="article-container">
 						<section>
-							<table class="zebra-striped">
-								<thead>
-									<tr>
-										<th>Status</th>
-										<th>Count</th>
-									</tr>
-								</thead>
-								<tbody>
-									<?php foreach ($statuses as $status => $count): ?>
-									<tr>
-										<td><?php echo $status; ?></td>
-										<td><?php echo $count; ?></td>
-									</tr>
-									<?php endforeach; ?>
-								</tbody>
-							</table>
+							<div id="pieStatus"></div>
 						</section>
 					</div>
 					
@@ -117,3 +102,34 @@
 
 
 </article>
+
+
+<script>
+
+$(function () {
+
+
+var data = [
+	{ label: "Series1",  data: 10},
+	{ label: "Series2",  data: 30},
+	{ label: "Series3",  data: 90},
+	{ label: "Series4",  data: 70},
+	{ label: "Series5",  data: 80},
+	{ label: "Series6",  data: 110}
+];
+
+
+
+$.plot($("#pieStatus"), data, 
+{
+	series: {
+		pie: { 
+			show: true
+		}
+	}
+});
+
+
+});
+
+</script>
