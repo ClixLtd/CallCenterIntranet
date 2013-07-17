@@ -112,9 +112,11 @@ class Data
 		    
 		    $result = \DB::update('data_dialler_copy')->set(array('current_status' => $updateStatus, 'current_status_update' => $timeNow))->where('dialler_lead_id', $singleLead['dialler_lead_id']);
 		    
-		    print $result;
+		    $updateQueries .= $result.";";
 		    
 	    }
+	    
+	    \DB::query($updateQueries)->execute();
 	    
     }
     
