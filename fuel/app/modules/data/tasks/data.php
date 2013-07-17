@@ -91,6 +91,7 @@ class Data
     public static function updateCurrentStatus()
     {
     	$updateTime = date('Y-m-d H:i:s', strtotime("-30 minutes"));
+    	$timeNow = date('Y-m-d H:i:s', strtotime("NOW"));
 	    $allToCheck = \DB::select('dialler_lead_id')->from('data_dialler_copy')->where('dialler_lead_id', '<>', 0)->where('current_status', '<>', 'DELETED')->where('current_status_update', '<=', $updateTime)
 	                     ->order_by('current_status_update','asc')->limit(250)->execute()->as_array();
 	    
@@ -108,7 +109,7 @@ class Data
 			    $updateStatus = "DELETED";
 		    }
 		    
-		    $result = \DB::update('data_dialler_copy')->set(array('current_status' => $updateStatus))->where('dialler_lead_id', $singleLead['dialler_lead_id'])->execute();
+		    $result = \DB::update('data_dialler_copy')->set(array('current_status' => $updateStatus, 'current_status_update' => $timeNow))->where('dialler_lead_id', $singleLead['dialler_lead_id'])->execute();
 	    }
 	    
     }
