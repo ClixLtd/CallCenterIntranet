@@ -83,10 +83,13 @@ class Controller_Data extends \Controller_Base
 			    
 		    }
 		    
+		    $statusPie = \Data\Model_Data::get_statuses($data_id);
+		    
 		    
 		    $this->template->title = 'Statistics for List ' . $data_id;
 	        $this->template->content = \View::forge('view/view', array(
 	        	'basicStats' => $basicStats,
+	        	'statuses'   => $statusPie,
 	        ));
 
 		    
