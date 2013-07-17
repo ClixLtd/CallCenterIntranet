@@ -71,7 +71,7 @@ class Model_Data
     
     public static function get_statuses($data_id=null)
     {
-	    $dataResults = \DB::select('status')
+	    $dataResults = \DB::select('data_dialler_copy.current_status')
 	    				  ->from('data_dialler_copy')
 	    				  ->join('data_holder', 'LEFT')->on('data_holder.id', '=', 'data_dialler_copy.data_lead_id')
 	    				  ->where('data_holder.data_id', $data_id)
