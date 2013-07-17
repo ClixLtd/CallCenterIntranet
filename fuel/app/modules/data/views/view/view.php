@@ -82,6 +82,34 @@
 					
 				</article>
 				
+				
+				<article class="half-block clearrm">
+					
+					<div class="article-container">
+						<section>
+							<table class="zebra-striped">
+								<thead>
+									<tr>
+										<th>Status</th>
+										<th>Count</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php foreach ($statuses as $status => $count): ?>
+									<tr>
+										<td><?php echo $status; ?></td>
+										<td><?php echo $count; ?></td>
+									</tr>
+									<?php endforeach; ?>
+								</tbody>
+							</table>
+						</section>
+					</div>
+					
+				</article>
+				
+				
+				
 			</article>
 		</div>
 
