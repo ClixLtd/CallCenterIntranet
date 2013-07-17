@@ -93,7 +93,7 @@ class Data
     	$updateTime = date('Y-m-d H:i:s', strtotime("-30 minutes"));
     	$timeNow = date('Y-m-d H:i:s', strtotime("NOW"));
 	    $allToCheck = \DB::select('dialler_lead_id')->from('data_dialler_copy')->where('dialler_lead_id', '<>', 0)->where('current_status', '<>', 'DELETED')->where('current_status_update', '<=', $updateTime)
-	                     ->order_by('current_status_update','asc')->limit(2500)->execute()->as_array();
+	                     ->order_by('current_status_update','asc')->limit(25000)->execute()->as_array();
 	    
 	    $updateQueries = "";
 	    foreach ($allToCheck as $singleLead)
