@@ -87,7 +87,7 @@
 					
 					<div class="article-container">
 						<section>
-							<div id="pieStatus"></div>
+							<div id="pieStatus" style="height: 400px;"></div>
 						</section>
 					</div>
 					
