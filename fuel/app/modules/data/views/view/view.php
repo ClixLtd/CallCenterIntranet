@@ -87,7 +87,7 @@
 					
 					<div class="article-container">
 						<section>
-							<div id="pieStatus" style="height: 400px;"></div>
+							<div id="pieStatus" class="flotChart" style="height: 400px;"></div>
 						</section>
 					</div>
 					
