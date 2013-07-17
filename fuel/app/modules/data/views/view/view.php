@@ -123,7 +123,7 @@ $.plot($("#pieStatus"), data,
 		},
         legend: {
             show: false
-        }
+        },
         grid: {
             hoverable: true,
             clickable: true
