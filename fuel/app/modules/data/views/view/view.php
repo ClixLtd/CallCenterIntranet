@@ -122,7 +122,7 @@ $.plot($("#pieStatus"), data,
 			show: true,
 			combine: {
                     color: '#999',
-                    threshold: 0.1
+                    threshold: 0.05
                 }
 		},
         grid: {
