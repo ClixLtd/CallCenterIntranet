@@ -121,14 +121,14 @@ $.plot($("#pieStatus"), data,
 		pie: { 
 			show: true
 		},
-        legend: {
-            show: false
-        },
         grid: {
             hoverable: true,
             clickable: true
         }
-	}
+	},
+    legend: {
+        show: false
+    }
 });
 
 
