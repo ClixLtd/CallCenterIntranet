@@ -5,9 +5,6 @@
 	class Orm extends \Orm\Model
 	{
 		
-		
-		
-		
 		protected static $_connection = 'gabdialler';
 		
 		public static $_connection_choices = array(
@@ -21,7 +18,6 @@
 			{
 				self::$_connection = $dialler;
 			}
-			
 			
 			return parent::find($id, $options);
 			

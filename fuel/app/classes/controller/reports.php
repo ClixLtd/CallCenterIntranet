@@ -268,7 +268,7 @@ class Controller_Reports extends Controller_BaseHybrid
 	    
 	    
 	    
-	    $db_choice                  = array(
+	    $db_choice = array(
 	       'GAB' => array('DS'     => 'Debtsolv',
 	                      'LP'     => 'Leadpool_DM',
 	                      'QU'     => 'Office <> \'RESOLVE\''),
@@ -572,7 +572,7 @@ GROUP BY
     	$endDate = null;
     	
     	$month = $this->param('month');
-    	if (!is_null($month))
+    	if (!is_null($month) || strlen($month) < 4)
     	{
         	$monthSplit = explode('-', $month);
         	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
