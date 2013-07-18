@@ -18,10 +18,10 @@
 	<section>
 		<div class="tab" id="validleads">
 			<article class="full-block">
-				<h3>Quick View</h3>
+				<h3>Valid Leads</h3>
 				
 				<article class="full-block">
-				as
+					<table id="table-validLeads"></table>
 				</article>
 			</article>
 		</div>

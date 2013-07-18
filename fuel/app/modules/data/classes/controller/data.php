@@ -2,7 +2,7 @@
 
 namespace Data;
 
-class Controller_Data extends \Controller_Base
+class Controller_Data extends \Controller_BaseHybrid
 {
 
     public function action_index($supplier_id=null)
@@ -34,6 +34,28 @@ class Controller_Data extends \Controller_Base
     }
     
     
+    
+    
+    public function get_validleads($data_id)
+    {
+	    
+	    
+	    return $this->response(array(
+	    	'aaData' => array(
+	    		array(
+	    			'test1',
+	    			'test2',
+	    			'test3',
+	    		),
+	    		array(
+	    			'test4',
+	    			'test5',
+	    			'test6',
+	    		),
+	    	),
+	    ));
+	    
+    }
     
     
     public function action_view($data_id=null)
