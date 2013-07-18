@@ -80,6 +80,9 @@ class Model_Data
 	    				
 		$countResults = $countQuery->cached(600)->execute()->as_array();
 	    				
+	    				
+	    				print_r($countResults);
+	    				
 	    $dataQuery = \DB::select('*')
 	    				->from('data_dialler_copy')
 	    				->join('data_holder', 'LEFT')->on('data_holder.id', '=', 'data_dialler_copy.data_lead_id')
@@ -92,7 +95,7 @@ class Model_Data
 	    
 	    return array(
 	    	$queryResults,
-	    	$countQuery[0]['total']
+	    	200000
 	    );
 	      
     }
