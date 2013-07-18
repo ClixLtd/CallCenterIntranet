@@ -44,7 +44,9 @@ class Controller_Data extends \Controller_BaseHybrid
 	    	'Title' => 'title',
 	    	'First Name' => 'first_name',
 	    	'Last Name' => 'last_name',
-	    	'Status' => 'status',
+	    	'Number' => 'phone_number',
+	    	'Alt Number' => 'alt_phone',
+	    	'Status' => 'current_status',
 	    );
 	    
 	    $headingArray = array();
