@@ -79,6 +79,8 @@ class Model_Data
 	    				  ->group_by('data_dialler_copy.current_status')
 	    				  ->cached(600)->execute()->as_array();  ;
 	    
+	    print_r($dataResults);
+	    
 	    $statusCount = array();
 	    foreach ($dataResults as $singleResult)
 	    {
