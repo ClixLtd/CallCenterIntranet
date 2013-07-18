@@ -24,6 +24,15 @@
 				<article class="full-block">
 					<table id="table-validLeads">
 						<thead>
+							<tr>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+							</tr>
 						</thead>
 						<tbody>
 		
@@ -50,6 +59,15 @@
 				<article class="full-block">
 					<table id="table-validLeads">
 						<thead>
+							<tr>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+								<th></th>
+							</tr>
 						</thead>
 						<tbody>
 		
