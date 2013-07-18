@@ -36,6 +36,56 @@ class Controller_Data extends \Controller_BaseHybrid
     
     
     
+    public function get_invalidleads($data_id)
+    {
+	    
+	    $headings = array(
+	    	'Dialler ID' => 'dialler_lead_id',
+	    	'Title' => 'title',
+	    	'First Name' => 'first_name',
+	    	'Last Name' => 'last_name',
+	    	'Number' => 'phone_number',
+	    	'Alt Number' => 'alt_phone',
+	    	'Status' => 'current_status',
+	    );
+	    
+	    $headingArray = array();
+	    $headingCounts = array();
+	    foreach ($headings as $heading=>$dbcolumn)
+	    {
+		    $headingCounts[] = $dbcolumn;
+	    }
+	    
+	    
+	    list($validLeads, $validCount) = \Data\Model_Data::get_valids($data_id, \Input::get('iDisplayLength'), \Input::get('iDisplayStart'), $headingCounts[\Input::get('iSortCol_0')], \Input::get('sSortDir_0'), '=');
+	    	    
+	    $makeArray = array();
+	    foreach ($validLeads as $singleLead)
+	    {
+	    	$singleArray = array();
+	    	foreach ($headings as $heading)
+	    	{
+		    	$singleArray[] = $singleLead[$heading];
+	    	}
+	    	$makeArray[] = $singleArray;
+	    }
+	    
+	    
+	    return $this->response(array(
+	    	'iTotalRecords' => $validCount,
+	    	'iTotalDisplayRecords' => $validCount,
+	    	'aaSorting' => array(
+	    		array(
+	    			1,
+					'desc',
+	    		),
+	    	),
+	    	'aaData' => $makeArray,
+	    	'aoColumns' => $headingArray,
+	    ));
+	    
+    }
+    
     public function get_validleads($data_id)
     {
 	    
@@ -58,9 +108,7 @@ class Controller_Data extends \Controller_BaseHybrid
 	    
 	    
 	    list($validLeads, $validCount) = \Data\Model_Data::get_valids($data_id, \Input::get('iDisplayLength'), \Input::get('iDisplayStart'), $headingCounts[\Input::get('iSortCol_0')], \Input::get('sSortDir_0'));
-	    
-	    print_r($validLeads);
-	    
+	    	    
 	    $makeArray = array();
 	    foreach ($validLeads as $singleLead)
 	    {

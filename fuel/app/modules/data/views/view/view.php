@@ -16,6 +16,33 @@
 	</div>
 	
 	<section>
+
+		<div class="tab" id="invalidleads">
+			<article class="full-block">
+				<h3>Valid Leads</h3>
+				
+				<article class="full-block">
+					<table id="table-validLeads">
+						<thead>
+						</thead>
+						<tbody>
+		
+						</tbody>
+					</table>
+					<script>
+						$(document).ready(function() {
+							$('#table-validLeads').dataTable( {
+								"bProcessing": true,
+								"bServerSide": true,
+								"sAjaxSource": 'https://intranet.gregsonandbrooke.co.uk/data/invalidleads/<?php echo $listID; ?>.json'
+							} );
+						} );
+					</script>
+				</article>
+			</article>
+		</div>
+	
+	
 		<div class="tab" id="validleads">
 			<article class="full-block">
 				<h3>Valid Leads</h3>
@@ -23,13 +50,6 @@
 				<article class="full-block">
 					<table id="table-validLeads">
 						<thead>
-							<tr>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-							</tr>
 						</thead>
 						<tbody>
 		
