@@ -209,10 +209,10 @@
 			$resolveCountQueryPartTime = "SELECT COUNT(DISTINCT VDL.user) AS total FROM vicidial_user_log AS VDL LEFT JOIN vicidial_users AS VDU ON VDL.user=VDU.user WHERE VDU.user_group IN ('PREMIER-RESOLVEPART','STANDARD-RESOLVEPART') AND DATE(VDL.event_date)=DATE(NOW());";
 			
 			
-			$gabResults = DB::query($gabCountQuery)->cached(60)->execute('gabdialler');
-			$gbsResults = DB::query($gbsCountQuery)->cached(60)->execute('gabdialler');
-			$resolveResults = DB::query($resolveCountQuery)->cached(60)->execute('gabdialler');
-			$resolveResultsPartTime = DB::query($resolveCountQueryPartTime)->cached(60)->execute('gabdialler');
+			$gabResults = DB::query($gabCountQuery)->cached(60)->execute('dialler');
+			$gbsResults = DB::query($gbsCountQuery)->cached(60)->execute('dialler');
+			$resolveResults = DB::query($resolveCountQuery)->cached(60)->execute('dialler');
+			$resolveResultsPartTime = DB::query($resolveCountQueryPartTime)->cached(60)->execute('dialler');
 			
 			
 			$perPerson = array(
