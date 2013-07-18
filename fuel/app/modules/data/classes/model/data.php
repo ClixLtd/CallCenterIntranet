@@ -95,9 +95,24 @@ class Model_Data
 		    	->or_where('data_holder.phone_number', 'LIKE', '%'.$search.'%')
 		    	->or_where('data_holder.alt_phone', 'LIKE', '%'.$search.'%')
 		    ->where_close();
+		    
+		    $countQuery->where_open()
+		    	->where('data_dialler_copy.current_status', 'LIKE', '%'.$search.'%')
+		    	->or_where('data_holder.first_name', 'LIKE', '%'.$search.'%')
+		    	->or_where('data_holder.last_name', 'LIKE', '%'.$search.'%')
+		    	->or_where('data_holder.phone_number', 'LIKE', '%'.$search.'%')
+		    	->or_where('data_holder.alt_phone', 'LIKE', '%'.$search.'%')
+		    ->where_close();
+		    
+		    $smallCount = $countQuery->cached(600)->execute()->as_array();
+		    
+	    }
+	    else
+	    {
+		    $smallCount = $countResults;
 	    }
 		
-		$smallCount = $dataQuery->count();
+		
 		
 	    $dataQuery->order_by($sortCol, $sortDirection)
 	    		  ->limit($limit)
