@@ -84,7 +84,7 @@ class Model_Data
 	    				->from('data_dialler_copy')
 	    				->join('data_holder', 'LEFT')->on('data_holder.id', '=', 'data_dialler_copy.data_lead_id')
 	    				->where('data_holder.data_id', $data_id)
-	    				->where('data_dialler_copy.dialler_lead_id', $type, 0)
+	    				->where('data_dialler_copy.dialler_lead_id', $type, 0);
 	    
 	    if (!is_null($search) && strlen($search) >= 2)
 	    {
