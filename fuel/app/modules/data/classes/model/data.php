@@ -71,17 +71,18 @@ class Model_Data
     
     public static function get_statuses($data_id=null)
     {
-	    $dataResults = \DB::select('data_dialler_copy.current_status')
+	    $dataResults = \DB::select('data_dialler_copy.current_status', \DB::expr('COUNT(data_dialler_copy.current_status) AS total'))
 	    				  ->from('data_dialler_copy')
 	    				  ->join('data_holder', 'LEFT')->on('data_holder.id', '=', 'data_dialler_copy.data_lead_id')
 	    				  ->where('data_holder.data_id', $data_id)
 	    				  ->where('data_dialler_copy.dialler_lead_id', '<>', 0)
+	    				  ->group_by('data_dialler_copy.current_status')
 	    				  ->cached(600)->execute()->as_array();  ;
 	    
 	    $statusCount = array();
 	    foreach ($dataResults as $singleResult)
 	    {
-		    $statusCount[$singleResult['current_status']] = (isset($statusCount[$singleResult['current_status']])) ? $statusCount[$singleResult['current_status']] + 1 : 1;
+		    $statusCount[$singleResult['current_status']] = $statusCount[$singleResult['total']];
 	    }
 	    
 	    return $statusCount;
