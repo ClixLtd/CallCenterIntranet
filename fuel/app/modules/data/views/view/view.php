@@ -22,6 +22,14 @@
 				
 				<article class="full-block">
 					<table id="table-validLeads"></table>
+					<script>
+						$(document).ready(function() {
+							$('#table-validLeads').dataTable( {
+								"bProcessing": true,
+								"sAjaxSource": 'https://intranet.gregsonandbrooke.co.uk/data/validleads/15.json'
+							} );
+						} );
+					</script>
 				</article>
 			</article>
 		</div>
