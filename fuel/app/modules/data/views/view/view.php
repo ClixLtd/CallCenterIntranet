@@ -39,7 +39,7 @@
 						$(document).ready(function() {
 							$('#table-validLeads').dataTable( {
 								"bProcessing": true,
-								"sAjaxSource": 'https://intranet.gregsonandbrooke.co.uk/data/validleads/15.json'
+								"sAjaxSource": 'https://intranet.gregsonandbrooke.co.uk/data/validleads/4.json'
 							} );
 						} );
 					</script>
