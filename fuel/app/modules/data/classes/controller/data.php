@@ -41,6 +41,10 @@ class Controller_Data extends \Controller_BaseHybrid
 	    
 	    
 	    return $this->response(array(
+	    	'aaSorting' => array(
+	    		1,
+	    		'desc',
+	    	),
 	    	'aaData' => array(
 	    		array(
 	    			'test1',
