@@ -96,7 +96,9 @@ class Model_Data
 		    	->or_where('data_holder.alt_phone', 'LIKE', '%'.$search.'%')
 		    ->where_close();
 	    }
-	    				
+		
+		$smallCount = $dataQuery->count();
+		
 	    $dataQuery->order_by($sortCol, $sortDirection)
 	    		  ->limit($limit)
 	    		  ->offset($start);
@@ -105,7 +107,8 @@ class Model_Data
 	    
 	    return array(
 	    	$queryResults,
-	    	$countResults[0]['total']
+	    	$countResults[0]['total'],
+	    	$smallCount
 	    );
 	      
     }
