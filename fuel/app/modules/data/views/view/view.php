@@ -7,8 +7,8 @@
 			<nav>
 				<ul class="tab-switch">
 					<li><a class="default-tab" href="#quickview">Quick View</a></li>
-					<li><a class="tab" href="#validleads">Valid Leads</a></li>
-					<li><a class="tab" href="#invalidleads">Invalid Leads</a></li>
+					<li><a href="#validleads">Valid Leads</a></li>
+					<li><a href="#invalidleads">Invalid Leads</a></li>
 				</ul>
 			</nav>
 			
