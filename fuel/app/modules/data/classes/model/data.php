@@ -79,12 +79,10 @@ class Model_Data
 	    				  ->group_by('data_dialler_copy.current_status')
 	    				  ->cached(600)->execute()->as_array();  ;
 	    
-	    print_r($dataResults);
-	    
 	    $statusCount = array();
 	    foreach ($dataResults as $singleResult)
 	    {
-		    $statusCount[$singleResult['current_status']] = $statusCount[$singleResult['total']];
+		    $statusCount[$singleResult['current_status']] = $singleResult['total'];
 	    }
 	    
 	    return $statusCount;
