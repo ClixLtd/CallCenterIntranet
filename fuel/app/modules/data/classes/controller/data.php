@@ -39,12 +39,14 @@ class Controller_Data extends \Controller_BaseHybrid
     public function get_validleads($data_id)
     {
 	    
-	    $validLeads = \Data\Model_Data::get_invalids($data_id);
-	    
-	    print_r($validLeads);
+	    $validLeads = \Data\Model_Data::get_valids($data_id);
 	    
 	    $headings = array(
-	    	'' => '',
+	    	'Dialler ID' => 'dialler_lead_id',
+	    	'Title' => 'title',
+	    	'First Name' => 'first_name',
+	    	'Last Name' => 'last_name',
+	    	'Status' => 'status',
 	    );
 	    
 	    $makeArray = array();
@@ -58,6 +60,12 @@ class Controller_Data extends \Controller_BaseHybrid
 	    	$makeArray[] = $singleArray;
 	    }
 	    
+	    $headingArray = array();
+	    foreach ($headings as $heading=>$dbcolumn)
+	    {
+		    $headingArray[] = array('sTitle' => $heading, 'bSortable' => true);
+	    }
+	    
 	    
 	    return $this->response(array(
 	    	'aaSorting' => array(
@@ -67,6 +75,7 @@ class Controller_Data extends \Controller_BaseHybrid
 	    		),
 	    	),
 	    	'aaData' => $makeArray,
+	    	'aoColumns' => $headingArray,
 	    ));
 	    
     }
