@@ -47,8 +47,15 @@ class Controller_Data extends \Controller_BaseHybrid
 	    	'Status' => 'status',
 	    );
 	    
+	    $headingArray = array();
+	    $headingCounts = array();
+	    foreach ($headings as $heading=>$dbcolumn)
+	    {
+		    $headingCounts[] = $dbcolumn;
+	    }
 	    
-	    list($validLeads, $validCount) = \Data\Model_Data::get_valids($data_id, \Input::get('iDisplayLength'), 0, \Input::get('iSortCol_0'), \Input::get('sSortDir_0'));
+	    
+	    list($validLeads, $validCount) = \Data\Model_Data::get_valids($data_id, \Input::get('iDisplayLength'), 0, $headingCounts[\Input::get('iSortCol_0')], \Input::get('sSortDir_0'));
 	    
 	    $makeArray = array();
 	    foreach ($validLeads as $singleLead)
@@ -59,12 +66,6 @@ class Controller_Data extends \Controller_BaseHybrid
 		    	$singleArray[] = $singleLead[$heading];
 	    	}
 	    	$makeArray[] = $singleArray;
-	    }
-	    
-	    $headingArray = array();
-	    foreach ($headings as $heading=>$dbcolumn)
-	    {
-		    $headingArray[] = array('sTitle' => $heading, 'bSortable' => true);
 	    }
 	    
 	    
