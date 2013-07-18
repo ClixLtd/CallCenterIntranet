@@ -123,7 +123,7 @@ class Model_Data
 	    return array(
 	    	$queryResults,
 	    	$countResults[0]['total'],
-	    	$smallCount
+	    	$smallCount[0]['total']
 	    );
 	      
     }
