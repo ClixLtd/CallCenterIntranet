@@ -70,13 +70,15 @@ class Model_Data
     }
     
     
-    public static function get_valids($data_id=null)
+    public static function get_valids($data_id=null, $limit=10, $start=0, $sortCol='dialler_lead_id', $sortDirection='asc')
     {
 	    $dataQuery = \DB::select('*')
 	    				->from('data_dialler_copy')
 	    				->join('data_holder', 'LEFT')->on('data_holder.id', '=', 'data_dialler_copy.data_lead_id')
 	    				->where('data_holder.data_id', $data_id)
-	    				->where('data_dialler_copy.dialler_lead_id', '<>', 0);
+	    				->where('data_dialler_copy.dialler_lead_id', '<>', 0)
+	    				->order_by($sortCol, $sortDirection)
+	    				->limit($limit,$start);
 	    
 	    $queryResults = $dataQuery->cached(600)->execute()->as_array();  
 	    
