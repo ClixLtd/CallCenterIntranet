@@ -92,7 +92,7 @@ class Model_Data
 	    
 	    return array(
 	    	$queryResults,
-	    	$countQuery[0]['total']
+	    	$countResults[0]['total']
 	    );
 	      
     }
