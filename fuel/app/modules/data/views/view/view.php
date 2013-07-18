@@ -40,7 +40,7 @@
 							$('#table-validLeads').dataTable( {
 								"bProcessing": true,
 								"bServerSide": true,
-								"sAjaxSource": 'https://intranet.gregsonandbrooke.co.uk/data/validleads/4.json'
+								"sAjaxSource": 'https://intranet.gregsonandbrooke.co.uk/data/validleads/<?php echo $listID; ?>.json'
 							} );
 						} );
 					</script>

@@ -140,6 +140,7 @@ class Controller_Data extends \Controller_BaseHybrid
 		    
 		    $this->template->title = 'Statistics for List ' . $data_id;
 	        $this->template->content = \View::forge('view/view', array(
+	        	'listID' => $data_id,
 	        	'basicStats' => $basicStats,
 	        	'statuses'   => $pieText,
 	        ), false);
