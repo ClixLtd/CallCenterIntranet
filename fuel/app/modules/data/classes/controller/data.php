@@ -57,7 +57,7 @@ class Controller_Data extends \Controller_BaseHybrid
 	    }
 	    
 	    
-	    list($validLeads, $validCount) = \Data\Model_Data::get_leads($data_id, \Input::get('iDisplayLength'), \Input::get('iDisplayStart'), $headingCounts[\Input::get('iSortCol_0')], \Input::get('sSortDir_0'), '=');
+	    list($validLeads, $validCount) = \Data\Model_Data::get_leads($data_id, \Input::get('iDisplayLength'), \Input::get('iDisplayStart'), $headingCounts[\Input::get('iSortCol_0')], \Input::get('sSortDir_0'), '=', \Input::get('sSearch', null));
 	    	    
 	    $makeArray = array();
 	    foreach ($validLeads as $singleLead)
@@ -107,7 +107,7 @@ class Controller_Data extends \Controller_BaseHybrid
 	    }
 	    
 	    
-	    list($validLeads, $validCount) = \Data\Model_Data::get_leads($data_id, \Input::get('iDisplayLength'), \Input::get('iDisplayStart'), $headingCounts[\Input::get('iSortCol_0')], \Input::get('sSortDir_0'));
+	    list($validLeads, $validCount) = \Data\Model_Data::get_leads($data_id, \Input::get('iDisplayLength'), \Input::get('iDisplayStart'), $headingCounts[\Input::get('iSortCol_0')], \Input::get('sSortDir_0'), '<>', \Input::get('sSearch', null));
 	    	    
 	    $makeArray = array();
 	    foreach ($validLeads as $singleLead)

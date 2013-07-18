@@ -70,7 +70,7 @@ class Model_Data
     }
     
     
-    public static function get_leads($data_id=null, $limit=10, $start=0, $sortCol='dialler_lead_id', $sortDirection='asc', $type='<>')
+    public static function get_leads($data_id=null, $limit=10, $start=0, $sortCol='dialler_lead_id', $sortDirection='asc', $type='<>', $search=null)
     {
     	$countQuery = \DB::select( \DB::expr('COUNT(data_dialler_copy.current_status) AS total') )
 	    				->from('data_dialler_copy')
@@ -85,9 +85,21 @@ class Model_Data
 	    				->join('data_holder', 'LEFT')->on('data_holder.id', '=', 'data_dialler_copy.data_lead_id')
 	    				->where('data_holder.data_id', $data_id)
 	    				->where('data_dialler_copy.dialler_lead_id', $type, 0)
-	    				->order_by($sortCol, $sortDirection)
-	    				->limit($limit)
-	    				->offset($start);
+	    
+	    if (!is_null($search) && strlen($search) >= 2)
+	    {
+		    $dataQuery->where_open()
+		    	->where('data_dialler_copy.current_status', 'LIKE', '%'.$search.'%')
+		    	->or_where('data_holder.first_name', 'LIKE', '%'.$search.'%')
+		    	->or_where('data_holder.last_name', 'LIKE', '%'.$search.'%')
+		    	->or_where('data_holder.phone_number', 'LIKE', '%'.$search.'%')
+		    	->or_where('data_holder.alt_phone', 'LIKE', '%'.$search.'%')
+		    ->where_close();
+	    }
+	    				
+	    $dataQuery->order_by($sortCol, $sortDirection)
+	    		  ->limit($limit)
+	    		  ->offset($start);
 	    
 	    $queryResults = $dataQuery->cached(600)->execute()->as_array();  
 	    
