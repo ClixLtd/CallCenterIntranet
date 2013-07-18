@@ -21,7 +21,14 @@
 				<h3>Valid Leads</h3>
 				
 				<article class="full-block">
-					<table id="table-validLeads"></table>
+					<table id="table-validLeads">
+						<thead>
+						
+						</thead>
+						<tbody>
+		
+						</tbody>
+					</table>
 					<script>
 						$(document).ready(function() {
 							$('#table-validLeads').dataTable( {
