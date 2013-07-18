@@ -7,7 +7,8 @@
 			<nav>
 				<ul class="tab-switch">
 					<li><a class="default-tab" href="#quickview">Quick View</a></li>
-					<li><a class="default-tab" href="#quickview">Quick View</a></li>
+					<li><a class="tab" href="#validleads">Valid Leads</a></li>
+					<li><a class="tab" href="#invalidleads">Invalid Leads</a></li>
 				</ul>
 			</nav>
 			
@@ -15,6 +16,20 @@
 	</div>
 	
 	<section>
+		<div class="tab" id="validleads">
+			<article class="full-block">
+				<h3>Quick View</h3>
+				
+				<article class="full-block">
+				as
+				</article>
+			</article>
+		</div>
+		
+	
+	
+	
+	
 		<div class="tab default-tab" id="quickview">
 			<article class="full-block">
 				<h3>Quick View</h3>
