@@ -39,8 +39,6 @@ class Controller_Data extends \Controller_BaseHybrid
     public function get_validleads($data_id)
     {
 	    
-	    $validLeads = \Data\Model_Data::get_valids($data_id);
-	    
 	    $headings = array(
 	    	'Dialler ID' => 'dialler_lead_id',
 	    	'Title' => 'title',
@@ -48,6 +46,9 @@ class Controller_Data extends \Controller_BaseHybrid
 	    	'Last Name' => 'last_name',
 	    	'Status' => 'status',
 	    );
+	    
+	    
+	    list($validLeads, $validCount) = \Data\Model_Data::get_valids($data_id, \Input::get('iDisplayLength'), 0, \Input::get('iSortCol_0'), \Input::get('sSortDir_0'));
 	    
 	    $makeArray = array();
 	    foreach ($validLeads as $singleLead)
@@ -68,6 +69,8 @@ class Controller_Data extends \Controller_BaseHybrid
 	    
 	    
 	    return $this->response(array(
+	    	'iTotalRecords' => $validCount,
+	    	'iTotalDisplayRecords' => count($makeArray),
 	    	'aaSorting' => array(
 	    		array(
 	    			1,
