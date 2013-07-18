@@ -583,6 +583,7 @@ GROUP BY
     	$reportArray = Controller_Reports::generate_monthly_payment_report($center, $startDate, $endDate);
     	
     	return $this->response(array(
+    		'start' => $startDate,
 		    'reports' => $reportArray['reports'],
 		    'payments' => array(
 		        "aaData" => $reportArray['clients'],
