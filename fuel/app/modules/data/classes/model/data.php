@@ -86,7 +86,8 @@ class Model_Data
 	    				->where('data_holder.data_id', $data_id)
 	    				->where('data_dialler_copy.dialler_lead_id', '<>', 0)
 	    				->order_by($sortCol, $sortDirection)
-	    				->limit($limit,$start);
+	    				->limit($limit)
+	    				->offset($start);
 	    
 	    $queryResults = $dataQuery->cached(600)->execute()->as_array();  
 	    
