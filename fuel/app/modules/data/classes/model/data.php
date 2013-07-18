@@ -69,6 +69,22 @@ class Model_Data
 	      
     }
     
+    
+    public static function get_valids($data_id=null)
+    {
+	    $dataQuery = \DB::select('*')
+	    				->from('data_dialler_copy')
+	    				->join('data_holder', 'LEFT')->on('data_holder.id', '=', 'data_dialler_copy.data_lead_id')
+	    				->where('data_holder.data_id', $data_id)
+	    				->where('data_dialler_copy.dialler_lead_id', '<>', 0);
+	    
+	    $queryResults = $dataQuery->cached(600)->execute()->as_array();  
+	    
+	    return (is_array($queryResults) && count($queryResults) > 0) ? $queryResults : null;
+	      
+    }
+    
+    
     public static function get_statuses($data_id=null)
     {
 	    $dataResults = \DB::select('data_dialler_copy.current_status', \DB::expr('COUNT(data_dialler_copy.current_status) AS total'))

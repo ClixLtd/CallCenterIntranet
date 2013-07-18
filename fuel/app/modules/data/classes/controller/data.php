@@ -39,6 +39,25 @@ class Controller_Data extends \Controller_BaseHybrid
     public function get_validleads($data_id)
     {
 	    
+	    $validLeads = \Data\Model_Data::get_invalids($data_id);
+	    
+	    print_r($validLeads);
+	    
+	    $headings = array(
+	    	'' => '',
+	    );
+	    
+	    $makeArray = array();
+	    foreach ($validLeads as $singleLead)
+	    {
+	    	$singleArray = array();
+	    	foreach ($headings as $heading)
+	    	{
+		    	$singleArray[] = $singleLead[$heading];
+	    	}
+	    	$makeArray[] = $singleArray;
+	    }
+	    
 	    
 	    return $this->response(array(
 	    	'aaSorting' => array(
@@ -47,18 +66,7 @@ class Controller_Data extends \Controller_BaseHybrid
 					'desc',
 	    		),
 	    	),
-	    	'aaData' => array(
-	    		array(
-	    			'test1',
-	    			'test2',
-	    			'test3',
-	    		),
-	    		array(
-	    			'test4',
-	    			'test5',
-	    			'test6',
-	    		),
-	    	),
+	    	'aaData' => $makeArray,
 	    ));
 	    
     }
