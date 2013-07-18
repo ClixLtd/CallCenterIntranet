@@ -71,7 +71,7 @@ class Controller_Data extends \Controller_BaseHybrid
 	    
 	    return $this->response(array(
 	    	'iTotalRecords' => $validCount,
-	    	'iTotalDisplayRecords' => count($makeArray),
+	    	'iTotalDisplayRecords' => $validCount,
 	    	'aaSorting' => array(
 	    		array(
 	    			1,
