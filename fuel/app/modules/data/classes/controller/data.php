@@ -55,7 +55,7 @@ class Controller_Data extends \Controller_BaseHybrid
 	    }
 	    
 	    
-	    list($validLeads, $validCount) = \Data\Model_Data::get_valids($data_id, \Input::get('iDisplayLength'), 0, $headingCounts[\Input::get('iSortCol_0')], \Input::get('sSortDir_0'));
+	    list($validLeads, $validCount) = \Data\Model_Data::get_valids($data_id, \Input::get('iDisplayLength'), \Input::get('iDisplayStart'), $headingCounts[\Input::get('iSortCol_0')], \Input::get('sSortDir_0'));
 	    
 	    $makeArray = array();
 	    foreach ($validLeads as $singleLead)
