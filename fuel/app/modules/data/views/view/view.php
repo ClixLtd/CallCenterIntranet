@@ -21,18 +21,7 @@
 				<h3>Valid Leads</h3>
 				
 				<article class="full-block">
-					<table id="table-validLeads">
-						<thead>
-							<tr>
-								<th>Rendering engine</th>
-								<th>Browser</th>
-								<th>Platform(s)</th>
-							</tr>
-						</thead>
-						<tbody>
-		
-						</tbody>
-					</table>
+					<table id="table-validLeads"></table>
 					<script>
 						$(document).ready(function() {
 							$('#table-validLeads').dataTable( {
