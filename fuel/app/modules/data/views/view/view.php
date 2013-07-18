@@ -22,7 +22,7 @@
 				<h3>Valid Leads</h3>
 				
 				<article class="full-block">
-					<table id="table-validLeads">
+					<table id="table-invalidLeads">
 						<thead>
 							<tr>
 								<th></th>
@@ -40,7 +40,7 @@
 					</table>
 					<script>
 						$(document).ready(function() {
-							$('#table-validLeads').dataTable( {
+							$('#table-invalidLeads').dataTable( {
 								"bProcessing": true,
 								"bServerSide": true,
 								"sAjaxSource": 'https://intranet.gregsonandbrooke.co.uk/data/invalidleads/<?php echo $listID; ?>.json'
