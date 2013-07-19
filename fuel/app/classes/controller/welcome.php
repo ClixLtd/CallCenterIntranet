@@ -24,7 +24,7 @@ class Controller_Welcome extends Controller_Base
 		list($driver, $user_id) = Auth::get_user_id();
 		$this_user = Model_User::find($user_id);
 		
-		$latest_news_q = Model_News::find()->where('call_center_id', $this_user->call_center_id)->or_where('call_center_id', 0)->order_by('created_at', 'DESC');
+		$latest_news_q = Model_News::query()->where('call_center_id', $this_user->call_center_id)->or_where('call_center_id', 0)->order_by('created_at', 'DESC');
 		
 		if( $latest_news_q->count() > 0 ) {
 			$latest_news = $latest_news_q->get();
@@ -33,7 +33,7 @@ class Controller_Welcome extends Controller_Base
 		}
 		
 		
-		$invalid_logins_q = Model_Users_Log_Login::find()->where('user_id', $user_id)->where('status', 2)->order_by('login_time', 'DESC');
+		$invalid_logins_q = Model_Users_Log_Login::query()->where('user_id', $user_id)->where('status', 2)->order_by('login_time', 'DESC');
 		
 		if( $invalid_logins_q->count() > 0 ) {
 			$invalid_logins = $invalid_logins_q->get();
