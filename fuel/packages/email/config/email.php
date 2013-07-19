@@ -14,7 +14,7 @@ return array(
 		/**
 		 * Mail driver (mail, smtp, sendmail, noop)
 		 */
-		'driver'		=> 'smtp',
+		'driver'		=> 'mail',
 
 		/**
 		 * Whether to send as html, set to null for autodetection.
@@ -89,17 +89,17 @@ return array(
 		 * SMTP settings
 		 */
 		'smtp'	=> array(
-			'host'		=> 'ssl://smtp.gmail.com',
-			'port'		=> 465,
-			'username'	=> 'noreply@expertmoneysolutions.co.uk',
-			'password'	=> 'Wvts231ct6D',
+			'host'		=> '',
+			'port'		=> 25,
+			'username'	=> '',
+			'password'	=> '',
 			'timeout'	=> 5,
 		),
 
 		/**
 		 * Newline
 		 */
-		'newline'	=> "\r\n",
+		'newline'	=> "\n",
 
 		/**
 		 * Attachment paths

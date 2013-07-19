@@ -3,7 +3,7 @@
  * Part of the Fuel framework.
  *
  * @package    Fuel
- * @version    1.5
+ * @version    1.6
  * @author     Fuel Development Team
  * @license    MIT License
  * @copyright  2010 - 2013 Fuel Development Team
@@ -55,6 +55,18 @@ return array(
 
 	'profiling'  => false,
 
+        /**
+	 * profiling_paths - The paths to show in profiler.
+	 *
+	 * If you do not wish to see path set to 'NULL'
+	 * You can also add other paths that you wish not to see
+	 */
+	'profiling_paths' => array(
+	    'APPPATH' => APPPATH,
+	    'COREPATH' => COREPATH,
+	    'PKGPATH' => PKGPATH,
+	),
+
 	/**
 	 * Default location for the file cache
 	 */
@@ -80,6 +92,8 @@ return array(
 		'throttle'     => 10,
 		// Should notices from Error::notice() be shown?
 		'notices'      => true,
+		// Render previous contents or show it as HTML?
+		'render_prior' => false,
 	),
 
 	/**
@@ -143,7 +157,15 @@ return array(
 		/**
 		 * A salt to make sure the generated security tokens are not predictable
 		 */
-		'token_salt'       => 'put your salt value here to make the token more secure',
+		'token_salt'            => 'put your salt value here to make the token more secure',
+
+		/**
+		 * Allow the Input class to use X headers when present
+		 *
+		 * Examples of these are HTTP_X_FORWARDED_FOR and HTTP_X_FORWARDED_PROTO, which
+		 * can be faked which could have security implications
+		 */
+		'allow_x_headers'       => false,
 
 		/**
 		 * This input filter can be any normal PHP function as well as 'xss_clean'
