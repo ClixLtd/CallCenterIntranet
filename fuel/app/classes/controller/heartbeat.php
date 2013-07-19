@@ -11,7 +11,7 @@ class Controller_Heartbeat extends Controller_BaseApi
     	
     	date_default_timezone_set('Europe/London');
     	
-    	$stats = \Model_Server_Statistic::find()->where('server', $server)->order_by('created_at','DESC')->get_one();
+    	$stats = \Model_Server_Statistic::query()->where('server', $server)->order_by('created_at','DESC')->get_one();
     	
     	$returnArray = unserialize($stats->server_stats);
     	
@@ -42,7 +42,7 @@ class Controller_Heartbeat extends Controller_BaseApi
     	$allStats = array();
     	foreach ($servers AS $serverName => $server)
     	{
-        	$stats = \Model_Server_Statistic::find()->where('server', $server);
+        	$stats = \Model_Server_Statistic::query()->where('server', $server);
         	
         	
         	if (!is_null($time_limit))
@@ -134,7 +134,7 @@ class Controller_Heartbeat extends Controller_BaseApi
     	
     	if ( (int)$_POST['harddisk'] <= 5 )
     	{
-        	$previous_alerts = \Model_Adam_Announcement::find()->where('campaign', $server)->where('alert_type', 'SERVERSPACE15');
+        	$previous_alerts = \Model_Adam_Announcement::query()->where('campaign', $server)->where('alert_type', 'SERVERSPACE15');
 				
         	if ($previous_alerts->count() == 0)
         	{
@@ -151,7 +151,7 @@ class Controller_Heartbeat extends Controller_BaseApi
         	
     	} else if ( (int)$_POST['harddisk'] <= 10 )
     	{
-        	$previous_alerts = \Model_Adam_Announcement::find()->where('campaign', $server)->where('alert_type', 'SERVERSPACE60');
+        	$previous_alerts = \Model_Adam_Announcement::query()->where('campaign', $server)->where('alert_type', 'SERVERSPACE60');
 				
         	if ($previous_alerts->count() == 0)
         	{
