@@ -63,8 +63,8 @@ return array(
 		'table_prefix' => '',
 		'connection'  => array(
 			'dsn'        => 'mysql:host=192.168.5.215;dbname=asterisk',
-			'username'   => 'cron',
-			'password'   => '1234',
+			'username'   => 'intranet',
+			'password'   => 'Wvts231ct6D',
 		),
 	),
 	/* GAB Databases
