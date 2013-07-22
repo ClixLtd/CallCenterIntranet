@@ -23,16 +23,15 @@
    {
      $results = array();
      $results = \DB::query("SELECT
-                               U.id
-                              ,username
-                              ,name
+                               STAFF.id
+                              ,CONCAT(first_name, ' ', last_name) AS name
                               ,CALL_CENTER.title AS center
                             FROM
-                              users AS U
+                              staffs AS STAFF
                             LEFT JOIN
-                              call_centers AS CALL_CENTER ON U.call_center_id = CALL_CENTER.id 
+                              call_centers AS CALL_CENTER ON STAFF.center_id = CALL_CENTER.id 
                             WHERE
-                              call_center_id = 2
+                              center_id = 2
                             ORDER BY
                               name ASC
                            ", \DB::SELECT)->execute()->as_array();
@@ -49,28 +48,42 @@
    {
      $result = array();
      $result = \DB::query("SELECT
-                              DETAILS.user_id
-                             ,forename
-                             ,middle_name
-                             ,surname
-                             ,USER.email
-                             ,USER.call_center_id
+                              STAFF.id
+                             ,first_name
+                             ,last_name
+                             ,center_id
                              ,CALL_CENTER.title AS center_name
-                             ,CALL_CENTER.created_at AS start_date
+                             ,STAFF.created_at AS start_date
                            FROM
-                             users AS USER
+                             staffs AS STAFF
                            LEFT JOIN
-                             hr_employee_details AS DETAILS ON USER.id = DETAILS.user_id
-                           LEFT JOIN
-                             call_centers AS CALL_CENTER ON USER.call_center_id = CALL_CENTER.id 
+                             call_centers AS CALL_CENTER ON STAFF.center_id = CALL_CENTER.id 
                            WHERE
-                             USER.id = " . (int)static::$empID . "
-                           LIMIT 1 
+                             STAFF.id = " . (int)static::$empID . "
+                           LIMIT 1
                           ", \DB::SELECT)->execute()->as_array();
      if(isset($result[0]))                   
        return $result[0];
      else
        return $result;
+   }
+   
+   /**
+    * Load Up the Tax Codes
+    * 
+    * @author David Stansfield
+    */
+   public static function loadTaxCodes()
+   {
+     $results = array();
+     $results = \DB::query("SELECT
+                               id
+                              ,code
+                            FROM
+                              hr_type_tax_codes
+                           ", \DB::SELECT)->execute()->as_array();
+                           
+     return $results;
    }
  }
 ?>

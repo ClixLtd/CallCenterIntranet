@@ -36,9 +36,8 @@
           <table>
             <thead>
               <tr>
-                <th>ID</th>
+                <th>Employee ID</th>
                 <th>Full Name</th>
-                <th>Username</th>
                 <th>Centre</th>
                 <th></th>
               </tr>
@@ -53,7 +52,6 @@
                   <tr>
                     <td><?=$staff['id'];?></td>
                     <td><?=$staff['name'];?></td>
-                    <td><?=$staff['username'];?></td>
                     <td><?=$staff['center'];?></td>
                     <td><a href="/hr/profiles/view/<?=$staff['id'];?>/">View Profile</a></td>
                   </tr>

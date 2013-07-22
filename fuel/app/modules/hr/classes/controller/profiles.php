@@ -39,11 +39,19 @@
       
       $Employee = Employee::forge($empID);
       
+      // -- Create a new Profile Data
+      // ----------------------------
+      $departmentsList = array();
+      $departmentsList = Model_Department::loadDepartments((int)$Employee->center_id);
+      $taxCodes = Model_Employee::loadTaxCodes();
+      
       $this->template->title = 'View Profile | Human Resources';
       $this->template->content = \View::forge('profiles/view_profile',
                                                array('empID' => (int)$empID,
                                                      'employeeDeatils' => $Employee->getDetails(),
                                                      'hasDetails' => $Employee->hasDetails(),
+                                                     'departmentsList' => $departmentsList,
+                                                     'taxCodes' => $taxCodes,
                                                     )
                                              );
     }

@@ -1,3 +1,9 @@
+<?php
+#print_r($employeeDeatils);
+?>
+<script type="text/javascript">
+  var empID = <?=(int)$empID;?>;
+</script>
 <article class="full-block clearfix">
   <section>
     <article class="full-block">
@@ -42,11 +48,11 @@ if($hasDetails === false)
               </tr>
               <tr>
                 <th>Forename</th>
-                <td id="Forename-Cell"></td>
+                <td id="Forename-Cell"><?=$employeeDeatils['first_name'];?></td>
               </tr>
               <tr>
                 <th>Surname</th>
-                <td id="Surname-Cell"></td>
+                <td id="Surname-Cell"><?=$employeeDeatils['last_name'];?></td>
               </tr>
               <tr>
                 <th>Date of Birth</th>
@@ -90,7 +96,7 @@ if($hasDetails === false)
               </tr>
               <tr>
                 <th>Email Address</th>
-                <td><?=$employeeDeatils['email'];?></td>
+                <td></td>
               </tr>
             </table>
 					</div>
@@ -176,20 +182,23 @@ if($hasDetails === false)
                   <tr>
                     <th>Title</th>
                     <td>
-                      <select name="New-Profile-Title">
+                      <select name="New-Profile-Title" id="New-Title-Input">
                         <option value="">-- Select --</option>
+                        <option value="Mr">Mr</option>
+                        <option value="Miss">Miss</option>
+                        <option value="Mrs">Mrs</option>
                       </select>
                     </td>
                     
                     <th>Forename</th>
-                    <td id="Forename-Cell"><input type="text" name="New-Profile-Forename" /></td>
+                    <td id="Forename-Cell"><input type="text" name="New-Profile-Forename" id="New-Forename-Input" value="<?=$employeeDeatils['first_name'];?>" /></td>
                     
                     <th>Surname</th>
-                    <td id="Surname-Cell"><input type="text" name="New-Profile-Surname" /></td>
+                    <td id="Surname-Cell"><input type="text" name="New-Profile-Surname" id="New-Surname-Input" value="<?=$employeeDeatils['last_name'];?>" /></td>
                   </tr>
                   <tr>
                     <th>Date of Birth</th>
-                    <td id="Date-of-Birth-Cell"><input type="text" name="New-Profile-Date-of-Birth" /></td>
+                    <td id="Date-of-Birth-Cell"><input type="text" name="New-Profile-Date-of-Birth" id="New-Date-of-Birth" class="datepicker" placeholder="dd/mm/yyy" /></td>
                     <th colspan="4"></th>                    
                   </tr>
                   <tr>
@@ -200,33 +209,33 @@ if($hasDetails === false)
                     <td id="Building-Cell"><input type="text" name="New-Profile-Building" /></td>
                     
                     <th>No. / Street</th>
-                    <td id="Street_and-Number-Cell"><input type="text" name="New-Profile-Street-and-Number" /></td>
+                    <td id="Street_and-Number-Cell"><input type="text" name="New-Profile-Street-and-Number" id="New-Street-and-Number-Input" /></td>
                     
                     <th>District</th>
-                    <td id="District-Cell"><input type="text" name="New-Profile-District" /></td>
+                    <td id="District-Cell"><input type="text" name="New-Profile-District" id="New-District-Input" /></td>
                   </tr>
                   <tr>
                     <th>Town / Barangay</th>
-                    <td id="Town-Cell"><input type="text" name="New-Profile-Town" /></td>
+                    <td id="Town-Cell"><input type="text" name="New-Profile-Town" id="New-Town-Input" /></td>
                     
                     <th>County / Municipality</th>
-                    <td id="County-Cell"><input type="text" name="New-Profile-County" /></td>
+                    <td id="County-Cell"><input type="text" name="New-Profile-County" id="New-County-Input" /></td>
                     
                     <th>Post Code</th>
-                    <td id="Post-Code-Cell"><input type="text" name="New-Profile-Post-Code" /></td>
+                    <td id="Post-Code-Cell"><input type="text" name="New-Profile-Post-Code" id="New-Post-Code-Input" /></td>
                   </tr>
                   <tr>
                     <th colspan="6" style="background-color: #FFF;">Telephone</th>
                   </tr>
                   <tr>
                     <th>Telephone Home</th>
-                    <td id="Telephone-Home-Cell"><input type="text" name="New-Profile-Telephone-Home" /></td>
+                    <td id="Telephone-Home-Cell"><input type="text" name="New-Profile-Telephone-Home" id="New-Telephone-Home-Input" /></td>
     
                     <th>Telephone Mobile</th>
-                    <td id="Telephone-Mobile-Cell"><input type="text" name="New-Profile-Telephone-Mobile" /></td>
+                    <td id="Telephone-Mobile-Cell"><input type="text" name="New-Profile-Telephone-Mobile" id="New-Telephone-Mobile-Input" /></td>
     
                     <th>Telephone Other</th>
-                    <td id="Telephone-Other-Cell"><input type="text" name="New-Profile-Telephone-Other" /></td>
+                    <td id="Telephone-Other-Cell"><input type="text" name="New-Profile-Telephone-Other" id="New-Telephone-Other-Input" /></td>
                   </tr>
                 </table>
     					</div>
@@ -246,7 +255,7 @@ if($hasDetails === false)
           <section>
             <article class="full-block">
               <header>
-                <h2>Jobe Role</h2>
+                <h2>Job Role and Position</h2>
               </header>
             </article>
           </section>
@@ -260,7 +269,78 @@ if($hasDetails === false)
     			        <div class="span12">
     				        <table width="100%" cellpadding="5" class="Form-Table">
                       <tr>
-                        <th></th>
+                        <th colspan="6" style="background-color: #FFF;">Job Position</th>
+                      </tr>
+                      <tr>
+                        <th>Department</th>
+                        <td>
+                          <select name="Department" id="Department-Select" rel="<?=(int)$employeeDeatils['call_center_id'];?>">
+                            <option value="">-- Select --</option>
+                            <?php
+                            foreach($departmentsList as $department)
+                            {
+                              ?>
+                              <option value="<?=$department['id'];?>"><?=$department['name'];?></option>
+                              <?php
+                            }
+                            ?>
+                          </select>
+                        </td>
+                        <th>Position</th>
+                        <td>
+                          <select name="Position" id="Department-Position-Select" id="New-Position-Input">
+                            <option value="">-- Select --</option>
+                          </select>
+                        </td>
+                        <th>Level</th>
+                        <td>
+                          <select name="Position-Level" id="Department-Position-Level-Select" id="New-Position-Level-Input">
+                            <option value="">-- Select --</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th colspan="6" style="background-color: #FFF;">Pay and Tax Details</th>
+                      </tr>
+                      <tr>
+                        <th>Tin No.</th>
+                        <th>Tax Code</th>
+                        <th>PhHealth No.</th>
+                        <th>SSSNo.</th>
+                        <th>Basic Salary</th>
+                        <th>Time Bonus</th>
+                      </tr>
+                      <tr>
+                        <td><input type="text" name="Tin-Number" id="New-Tin-Number-Input" placeholder="Tin No." /></td>
+                        <td>
+                          <select name="Tax-Code" id="New-Tax-Code">
+                            <option value="-1">-- Select --</option>
+                            <?php
+                            foreach($taxCodes as $code)
+                            {
+                              ?>
+                              <option value="<?=$code['id'];?>"><?=$code['code'];?></option>
+                              <?php
+                            }
+                            ?>
+                          </select>
+                        </td>
+                        <td><input type="text" name="PhilHealth-Number" id="New-PhilHealth-Number-Input" placeholder="Phil Health" /></td>
+                        <td><input type="text" name="SSS-Number" id="New-SSS-Number-Input" placeholder="SSS No." /></td>
+                        <td><input type="text" name="Basic-Salary" id="New-Basic-Salary-Input" placeholder="Basic Salary" /></td>
+                        <td><input type="text" name="Time-Bonus" id="New-Time-Bonus-Input" placeholder="Time Bonus" /></td>
+                      </tr>
+                      <tr>
+                        <th>Managers Bonus</th>
+                        <th>Bank</th>
+                        <th>Account Number</th>
+                        <th colspan="3"></th>
+                      </tr>
+                      <tr>
+                        <td><input type="text" name="Managers-Bonus" id="New-Managers-Bonus-Input" placeholder="Managers Bonus" /></td>
+                        <td><input type="text" name="Bank" id="New-Bank-Input" placeholder="Bank" /></td>
+                        <td><input type="text" name="Account-Number" id="New-Account-Number-Input" placeholder="Account Number" /></td>
+                        <td colspan="3"></td>
                       </tr>
                     </table>
     					    </div>
