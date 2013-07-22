@@ -192,9 +192,8 @@ class Controller_Data extends \Controller_BaseHybrid
 		    {
 			    $pieText .= '{ label: "'.$status.'",  data: '.$total.'},';
 		    }
-		    
 
-            list($lastSoftReset, $lastHardReset, $softCount, $hardCount) = Model_Data::get_reset_dates($data_id);
+            list($lastSoftReset, $lastHardReset, $softCount, $hardCount, $allResets) = Model_Data::get_reset_dates($data_id);
 
 		    $this->template->title = 'Statistics for List ' . $data_id;
 	        $this->template->content = \View::forge('view/view', array(
@@ -207,9 +206,9 @@ class Controller_Data extends \Controller_BaseHybrid
                     'lastHard' => $lastHardReset,
                     'softCount' => $softCount,
                     'hardCount' => $hardCount,
+                    'allResets' => $allResets,
                 ),
 	        ), false);
-
 		    
 	    }
 	    else

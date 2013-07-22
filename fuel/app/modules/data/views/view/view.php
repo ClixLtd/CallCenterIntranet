@@ -18,7 +18,41 @@
 	
 	<section>
 
-		<div class="tab" id="invalidleads">
+    <div class="tab" id="listResets">
+        <article class="full-block">
+            <h3>List Resets</h3>
+
+            <article class="full-block">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>User</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php if (count($importantDates['allResets']) > 0): ?>
+                    <?php foreach ($importantDates['allResets'] as $reset): ?>
+                    <tr>
+                        <td><?php echo date("d/m/Y - H:i", strtotime($reset['date'])); ?></td>
+                        <td><?php echo $reset['name']; ?></td>
+                        <td><?php echo $reset['username']; ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                    <?php else: ?>
+                    <tr>
+                        <td colspan="3"><b>No Resets have been done!</b></td>
+                    </tr>
+                    <?php endif; ?>
+                    </tbody>
+                </table>
+            </article>
+        </article>
+    </div>
+
+
+    <div class="tab" id="invalidleads">
 			<article class="full-block">
 				<h3>Valid Leads</h3>
 				
@@ -26,13 +60,13 @@
 					<table id="table-invalidLeads">
 						<thead>
 							<tr>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
+								<th>Dialler ID</th>
+								<th>Title</th>
+								<th>First Name</th>
+								<th>Surname</th>
+								<th>Telephone</th>
+								<th>Alt Telephone</th>
+								<th>Status</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -61,13 +95,13 @@
 					<table id="table-validLeads">
 						<thead>
 							<tr>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
-								<th></th>
+                                <th>Dialler ID</th>
+                                <th>Title</th>
+                                <th>First Name</th>
+                                <th>Surname</th>
+                                <th>Telephone</th>
+                                <th>Alt Telephone</th>
+                                <th>Status</th>
 							</tr>
 						</thead>
 						<tbody>

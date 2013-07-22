@@ -48,11 +48,23 @@ class Model_Data
         $softResets = \DB::select('date')->from('data_reset')->where('data_id', $data_id)->where('type', 1)->execute()->as_array();
         $hardResets = \DB::select('date')->from('data_reset')->where('data_id', $data_id)->where('type', 2)->execute()->as_array();
 
+        $allResets = \DB::select('name', 'date', 'user_id')->from('data_reset')
+                        ->join('data_reset_type', 'LEFT')->on('data_reset.type', '=', 'data_reset_type.id')->where('data_id', $data_id)->execute()->as_array();
+
+        $allResetsReturn = array();
+        foreach ($allResets as $reset)
+        {
+            $userDetails = \Model_User::find($reset['user_id']);
+            $reset['username'] = $userDetails->name;
+            $allResetsReturn[] = $reset;
+        }
+
         return array(
             $softResets[0]['date'],
             $hardResets[0]['date'],
             count($softResets),
             count($hardResets),
+            $allResetsReturn,
         );
 
     }
