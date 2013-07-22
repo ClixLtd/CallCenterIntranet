@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6ec1e1a-ea37-408e-97a7-15627f4de15c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/packages/crm" afterPath="$PROJECT_DIR$/fuel/packages/crm" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php" afterPath="$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php" afterPath="$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/modules/suppliers/classes/controller/suppliers.php" afterPath="$PROJECT_DIR$/fuel/app/modules/suppliers/classes/controller/suppliers.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/views/template.php" afterPath="$PROJECT_DIR$/fuel/app/views/template.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php" afterPath="$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/config/format.php" afterPath="$PROJECT_DIR$/fuel/app/config/format.php" />
     </list>
     <ignored path="intranet-live.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -51,28 +46,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="format.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fuel/core1.5/config/format.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="13" selection-start="484" selection-end="484" vertical-scroll-proportion="-7.5">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="format.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fuel/core/config/format.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="16" column="45" selection-start="370" selection-end="370" vertical-scroll-proportion="-4.375">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="format.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fuel/app/config/format.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="26" column="32" selection-start="624" selection-end="624" vertical-scroll-proportion="0.45507586">
+            <state line="25" column="0" selection-start="515" selection-end="515" vertical-scroll-proportion="0.43757293">
               <folding>
                 <element signature="e#6#233#0" expanded="true" />
               </folding>
@@ -84,15 +61,6 @@
         <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php">
           <provider selected="true" editor-type-id="text-editor">
             <state line="208" column="46" selection-start="5967" selection-end="5967" vertical-scroll-proportion="-31.25">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="data.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="54" column="31" selection-start="1761" selection-end="1761" vertical-scroll-proportion="-23.75">
               <folding />
             </state>
           </provider>
@@ -283,7 +251,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="core" />
+              <option name="myItemId" value="core1.4" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -301,7 +269,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="core" />
+              <option name="myItemId" value="core1.4" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -807,13 +775,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/fuel/app/modules/suppliers/classes/model/suppliers.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="29" selection-start="230" selection-end="230" vertical-scroll-proportion="0.19253209">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fuel/app/modules/suppliers/classes/controller/suppliers.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="17" column="0" selection-start="367" selection-end="367" vertical-scroll-proportion="0.2975496">
@@ -831,20 +792,6 @@
     <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/views/view/list.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="23" column="49" selection-start="798" selection-end="798" vertical-scroll-proportion="0.40876776">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="54" column="31" selection-start="1761" selection-end="1761" vertical-scroll-proportion="-23.75">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="208" column="46" selection-start="5967" selection-end="5967" vertical-scroll-proportion="-31.25">
           <folding />
         </state>
       </provider>
@@ -891,6 +838,41 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/fuel/core1.4/config/format.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="54" column="31" selection-start="1761" selection-end="1761" vertical-scroll-proportion="0.6651108">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="208" column="46" selection-start="5967" selection-end="5967" vertical-scroll-proportion="-31.25">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuel/core/config/format.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="45" selection-start="370" selection-end="370" vertical-scroll-proportion="0.12252042">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuel/core1.5/config/format.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="13" selection-start="484" selection-end="484" vertical-scroll-proportion="0.21003501">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="92" column="4" selection-start="1868" selection-end="1868" vertical-scroll-proportion="-8.75">
@@ -903,23 +885,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fuel/core1.5/config/format.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="13" selection-start="484" selection-end="484" vertical-scroll-proportion="-7.5">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fuel/core/config/format.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="45" selection-start="370" selection-end="370" vertical-scroll-proportion="-4.375">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fuel/app/config/format.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="26" column="32" selection-start="624" selection-end="624" vertical-scroll-proportion="0.45507586">
+        <state line="25" column="0" selection-start="515" selection-end="515" vertical-scroll-proportion="0.43757293">
           <folding>
             <element signature="e#6#233#0" expanded="true" />
           </folding>
