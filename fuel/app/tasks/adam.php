@@ -263,7 +263,7 @@
 				$daily_stats = \DB::query($makeQuery)->cached(120)->execute($dialler);
 				
 				// Delete previous stats from the database
-				$delete_stats = \Model_Tomorrow_List_Stat::find()->where('dialler', $dialler)->where('campaign',$campaign)->get_one();
+				$delete_stats = \Model_Tomorrow_List_Stat::query()->where('dialler', $dialler)->where('campaign',$campaign)->get_one();
 				
 				if ($delete_stats)
 				{
@@ -301,7 +301,7 @@
 			$duplicate_details = array();
 			$count = 0;
 			
-			$details = \Model_Data_Supplier_Campaign_Lists_Duplicate::find()->where('dialler',0)->limit($total)->get();
+			$details = \Model_Data_Supplier_Campaign_Lists_Duplicate::query()->where('dialler',0)->limit($total)->get();
 			
 			$leads = array();
 			$id_reference = array();
@@ -436,7 +436,7 @@
 				$current_date_time = strtotime("NOW");
 				if ( $current_date_time >= ((int)$get_work_hours['start']) && $current_date_time <= ((int)$get_work_hours['start']+90) )
 				{
-					$previous_alerts = \Model_Adam_Announcement::find()->where('campaign', 'NULL')->where('alert_type', 'GOOD-MORNING');
+					$previous_alerts = \Model_Adam_Announcement::query()->where('campaign', 'NULL')->where('alert_type', 'GOOD-MORNING');
 					
 					if ($previous_alerts->count() == 0)
 					{
@@ -452,7 +452,7 @@
 				} 
 				else if ( $current_date_time >= ((int)$get_work_hours['end']-90) && $current_date_time <= ((int)$get_work_hours['end']) )
 				{
-					$previous_alerts = \Model_Adam_Announcement::find()->where('campaign', 'NULL')->where('alert_type', 'GOOD-EVENING');
+					$previous_alerts = \Model_Adam_Announcement::query()->where('campaign', 'NULL')->where('alert_type', 'GOOD-EVENING');
 					
 					if ($previous_alerts->count() == 0)
 					{
@@ -627,7 +627,7 @@
 				//$hour_column = "sales_9";
 				
 				// Pull in the stats for the day from the database and loop through them to find all the details for this hour
-				$today_stats = \Model_Tomorrow_List_Stat::find()->where('dialler', $dialler)->where('campaign',$campaign)->get_one();
+				$today_stats = \Model_Tomorrow_List_Stat::query()->where('dialler', $dialler)->where('campaign',$campaign)->get_one();
 				$list_data = unserialize($today_stats->content);
 				$list_ids = array();
 				$create_lists = array();
@@ -995,7 +995,7 @@ Gregson and Brooke.');
 			if ($campaign_stats->dialable_leads < $campaign_stats->calls_fivemin)
 			{
 			
-				$previous_alerts = \Model_Adam_Announcement::find()->where('campaign', $campaign_id)->where('alert_type', 'LEADS5');
+				$previous_alerts = \Model_Adam_Announcement::query()->where('campaign', $campaign_id)->where('alert_type', 'LEADS5');
 				
 				if ($previous_alerts->count() == 0)
 				{
@@ -1018,7 +1018,7 @@ Gregson and Brooke.');
 			else if ($campaign_stats->dialable_leads < ($campaign_stats->calls_fivemin*3))
 			{
 			
-				$previous_alerts = \Model_Adam_Announcement::find()->where('campaign', $campaign_id)->where('alert_type', 'LEADS15');
+				$previous_alerts = \Model_Adam_Announcement::query()->where('campaign', $campaign_id)->where('alert_type', 'LEADS15');
 				
 				if ($previous_alerts->count() == 0)
 				{
@@ -1040,7 +1040,7 @@ Gregson and Brooke.');
 			else if ($campaign_stats->dialable_leads < $campaign_stats->calls_halfhour)
 			{
 			
-				$previous_alerts = \Model_Adam_Announcement::find()->where('campaign', $campaign_id)->where('alert_type', 'LEADS30');
+				$previous_alerts = \Model_Adam_Announcement::query()->where('campaign', $campaign_id)->where('alert_type', 'LEADS30');
 				
 				if ($previous_alerts->count() == 0)
 				{
@@ -1070,7 +1070,7 @@ Gregson and Brooke.');
 		{
 			date_default_timezone_set('Europe/London');
 			
-			$removable = \Model_Adam_Announcement::find()->where('remove_date', '<', date('Y-m-d H:i:s'))->get();
+			$removable = \Model_Adam_Announcement::query()->where('remove_date', '<', date('Y-m-d H:i:s'))->get();
 			
 			foreach ($removable AS $remove)
 			{
