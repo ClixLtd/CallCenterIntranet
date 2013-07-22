@@ -15,8 +15,8 @@ return array(
     'csv' => array(
         'delimiter'       => ',',
         'enclosure'       => '',
-        'newline'         => "\n\r",
-        'regex_newline'   => '\n\r',
+        'newline'         => "\n",
+        'regex_newline'   => '\n',
         'escape'          => '\\',
     ),
     'xml' => array(

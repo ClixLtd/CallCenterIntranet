@@ -49,7 +49,7 @@
       <file leaf-file-name="format.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fuel/app/config/format.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="34" selection-start="408" selection-end="408" vertical-scroll-proportion="0.3150525">
+            <state line="17" column="32" selection-start="369" selection-end="369" vertical-scroll-proportion="0.2975496">
               <folding>
                 <element signature="e#6#233#0" expanded="true" />
               </folding>
@@ -887,7 +887,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fuel/app/config/format.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="34" selection-start="408" selection-end="408" vertical-scroll-proportion="0.3150525">
+        <state line="17" column="32" selection-start="369" selection-end="369" vertical-scroll-proportion="0.2975496">
           <folding>
             <element signature="e#6#233#0" expanded="true" />
           </folding>
