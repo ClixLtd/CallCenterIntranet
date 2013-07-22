@@ -8,7 +8,7 @@ class Printmanager
 	public static function run()
 	{
 		
-		$getPrintQueue = \Printmanager\Model_Printmanager_Queue::find()->where('scheduled', '<=', date('Y-m-d H:m:s'))->where('status', 'WAITING')->get();
+		$getPrintQueue = \Printmanager\Model_Printmanager_Queue::query()->where('scheduled', '<=', date('Y-m-d H:m:s'))->where('status', 'WAITING')->get();
 		
 		foreach ($getPrintQueue AS $printJob)
 		{
