@@ -16,8 +16,8 @@ return array(
 		'table_prefix' => '',
 		'connection'  => array(
 			'dsn'        => 'mysql:host=192.168.5.215;dbname=asterisk',
-			'username'   => 'intranet',
-			'password'   => 'Wvts231ct6D',
+			'username'   => 'cron',
+			'password'   => '1234',
 		),
 	),
 	'debtsolv' => array(
