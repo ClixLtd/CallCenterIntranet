@@ -7,7 +7,7 @@ return array(
 	'default' => array(
 		'connection'  => array(
 			'dsn'        => 'mysql:host=127.0.0.1;dbname=gab_intranet',
-			'username'   => 'root',
+			'username'   => 'intranet',
 			'password'   => 'Wvts231ct6D',
 		),
 	),
