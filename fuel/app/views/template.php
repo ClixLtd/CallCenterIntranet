@@ -166,8 +166,8 @@
 				<li class="current">
 					<a href="/reports" title="" class="logs">Data Suppliers</a>
 					<ul>
-						<?php if (Auth::has_access('data_suppliers.view')): ?><li><?php echo Html::anchor('data/supplier/index', 'View Suppliers'); ?></li><?php endif; ?>
-						<?php if (Auth::has_access('data_suppliers.lists')): ?><li><?php echo Html::anchor('data/supplier/list/index', 'Data Lists'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('data_suppliers.view')): ?><li><?php echo Html::anchor('suppliers', 'View Suppliers'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('data_suppliers.lists')): ?><li><?php echo Html::anchor('data/list', 'Data Lists'); ?></li><?php endif; ?>
 					</ul>
 				</li>
 				<?php endif; ?>

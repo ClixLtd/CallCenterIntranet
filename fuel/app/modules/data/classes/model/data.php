@@ -43,7 +43,20 @@ class Model_Data
         return (is_array($queryResults) && count($queryResults) > 0) ? $queryResults : null;
     }
     
-    
+    public static function get_reset_dates($data_id)
+    {
+        $softResets = \DB::select('date')->from('data_reset')->where('data_id', $data_id)->where('type', 1)->execute()->as_array();
+        $hardResets = \DB::select('date')->from('data_reset')->where('data_id', $data_id)->where('type', 2)->execute()->as_array();
+
+        return array(
+            $softResets[0]['date'],
+            $hardResets[0]['date'],
+            count($softResets),
+            count($hardResets),
+        );
+
+    }
+
     public static function get_stats($data_id=null)
     {
     

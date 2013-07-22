@@ -7,7 +7,8 @@
 			<nav>
 				<ul class="tab-switch">
 					<li><a class="default-tab" href="#quickview">Quick View</a></li>
-					<li><a href="#validleads">Valid Leads</a></li>
+                    <li><a href="#listResets">List Resets</a></li>
+                    <li><a href="#validleads">Valid Leads</a></li>
 					<li><a href="#invalidleads">Invalid Leads</a></li>
 				</ul>
 			</nav>
@@ -43,7 +44,7 @@
 							$('#table-invalidLeads').dataTable( {
 								"bProcessing": true,
 								"bServerSide": true,
-								"sAjaxSource": 'https://intranet.gregsonandbrooke.co.uk/data/invalidleads/<?php echo $listID; ?>.json'
+								"sAjaxSource": '/data/invalidleads/<?php echo $listID; ?>.json'
 							} );
 						} );
 					</script>
@@ -78,7 +79,7 @@
 							$('#table-validLeads').dataTable( {
 								"bProcessing": true,
 								"bServerSide": true,
-								"sAjaxSource": 'https://intranet.gregsonandbrooke.co.uk/data/validleads/<?php echo $listID; ?>.json'
+								"sAjaxSource": '/data/validleads/<?php echo $listID; ?>.json'
 							} );
 						} );
 					</script>
@@ -167,8 +168,49 @@
 					</div>
 					
 				</article>
-				
-				
+
+                <br class="clearfix" />
+
+                <article class="half-block">
+
+                    <div class="article-container">
+                        <section>
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th>Date Added</th>
+                                    <td><?php echo date('d/m/Y', strtotime($importantDates['added'])); ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Last Soft Reset</th>
+                                    <td><?php echo (!isset($importantDates['lastSoft'])) ? "N/A" : date('d/m/Y', strtotime($importantDates['lastSoft']))." (".$importantDates['softCount'].")"; ?></td>
+                                </tr>
+                                <tr>
+                                    <th>Last Hard Reset</th>
+                                    <td><?php echo (!isset($importantDates['lastHard'])) ? "N/A" : date('d/m/Y', strtotime($importantDates['lastHard']))." (".$importantDates['hardCount'].")"; ?></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </section>
+                    </div>
+
+                </article>
+
+                <article class="half-block clearrm">
+
+                    <div class="article-container">
+                        <section>
+
+                        </section>
+                    </div>
+
+                </article>
 				
 			</article>
 		</div>
