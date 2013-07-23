@@ -262,7 +262,7 @@
 		
 		<?php if (Auth::has_access('user.view')): ?>
 		<div>
-			<p style="color: silver; font-weight: bold; text-align: right;">Intranet: <?php echo exec('git describe --tags --long'); ?> - Fuel: <?php echo e(Fuel::VERSION); ?> - Render Time: {exec_time}s - Memory Use: {mem_usage}mb</p>
+			<p style="color: silver; font-weight: bold; text-align: right;">Intranet: <?php echo exec('git describe --tags --long'); ?> (<?php echo exec('git rev-parse --abbrev-ref HEAD'); ?>) - Fuel: <?php echo e(Fuel::VERSION); ?> - Render Time: {exec_time}s - Memory Use: {mem_usage}mb</p>
 		</div>
 		<?php endif; ?>
 		
