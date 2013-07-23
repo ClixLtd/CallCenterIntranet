@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6ec1e1a-ea37-408e-97a7-15627f4de15c" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php" afterPath="$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php" afterPath="$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/modules/data/tasks/data.php" afterPath="$PROJECT_DIR$/fuel/app/modules/data/tasks/data.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php" afterPath="$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/views/template.php" afterPath="$PROJECT_DIR$/fuel/app/views/template.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="intranet-live.iws" />
@@ -18,6 +15,7 @@
     <file path="/view.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374563886115" ignored="false" />
     <file path="/data.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374564201641" ignored="false" />
     <file path="/printmanager.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374513015016" ignored="false" />
+    <file path="/template.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374572169271" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,45 +38,7 @@
       <file leaf-file-name="data.php" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="177" column="5" selection-start="6245" selection-end="6245" vertical-scroll-proportion="0.5983702">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="view.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="4" selection-start="455" selection-end="455" vertical-scroll-proportion="-3.5333333">
-              <folding>
-                <element signature="n#style#0;n#div#0;n#section#0;n#div#0;n#article#1;n#article#0;n#div#3;n#section#0;n#article#0;n#!!top" expanded="true" />
-                <marker date="1374563890366" expanded="true" signature="3874:3895" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="4083:4190" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="4097:4190" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="4367:4447" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="4721:4802" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="5078:5153" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="5430:5505" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="5776:5850" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="6116:6194" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="6661:6677" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="7009:7521" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="7045:7521" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="7085:7297" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="7337:7521" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="7374:7411" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="7616:7653" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="7952:7989" placeholder="..." />
-                <marker date="1374563890366" expanded="true" signature="8753:8826" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="data.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="20" column="0" selection-start="416" selection-end="416" vertical-scroll-proportion="-10.0">
+            <state line="151" column="10" selection-start="5388" selection-end="5388" vertical-scroll-proportion="0.15832363">
               <folding />
             </state>
           </provider>
@@ -87,7 +47,16 @@
       <file leaf-file-name="data.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/tasks/data.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="126" column="0" selection-start="3536" selection-end="3536" vertical-scroll-proportion="-24.0">
+            <state line="126" column="0" selection-start="3536" selection-end="3536" vertical-scroll-proportion="-24.708334">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="data.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="20" column="0" selection-start="416" selection-end="416" vertical-scroll-proportion="-0.625">
               <folding />
             </state>
           </provider>
@@ -120,13 +89,13 @@
         <option value="$PROJECT_DIR$/fuel/app/modules/suppliers/views/list.php" />
         <option value="$PROJECT_DIR$/fuel/app/modules/suppliers/views/view/list.php" />
         <option value="$PROJECT_DIR$/fuel/app/modules/suppliers/classes/controller/suppliers.php" />
-        <option value="$PROJECT_DIR$/fuel/app/views/template.php" />
         <option value="$PROJECT_DIR$/fuel/app/config/format.php" />
         <option value="$PROJECT_DIR$/fuel/packages/printmanager/tasks/printmanager.php" />
         <option value="$PROJECT_DIR$/fuel/app/modules/data/tasks/data.php" />
         <option value="$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php" />
         <option value="$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php" />
         <option value="$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php" />
+        <option value="$PROJECT_DIR$/fuel/app/views/template.php" />
       </list>
     </option>
   </component>
@@ -209,6 +178,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intranet-live" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intranet-live" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fuel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -422,6 +413,74 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intranet-live" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intranet-live" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fuel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="classes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="model" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intranet-live" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intranet-live" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fuel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="data" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="classes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controller" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="Scope" />
@@ -555,11 +614,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/fuel/packages/crm/subpackage/letter/controller/manage.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="23" selection-start="100" selection-end="100" vertical-scroll-proportion="0.09113001" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fuel/packages/crm/subpackage/letter/models/pack.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="38" column="55" selection-start="831" selection-end="831" vertical-scroll-proportion="0.6818182" />
@@ -617,50 +671,57 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/tasks/data.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="126" column="0" selection-start="3536" selection-end="3536" vertical-scroll-proportion="-24.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="4" selection-start="455" selection-end="455" vertical-scroll-proportion="-3.5333333">
+        <state line="18" column="4" selection-start="455" selection-end="455" vertical-scroll-proportion="0.33333334">
           <folding>
             <element signature="n#style#0;n#div#0;n#section#0;n#div#0;n#article#1;n#article#0;n#div#3;n#section#0;n#article#0;n#!!top" expanded="true" />
-            <marker date="1374563890366" expanded="true" signature="3874:3895" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="4083:4190" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="4097:4190" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="4367:4447" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="4721:4802" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="5078:5153" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="5430:5505" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="5776:5850" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="6116:6194" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="6661:6677" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="7009:7521" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="7045:7521" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="7085:7297" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="7337:7521" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="7374:7411" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="7616:7653" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="7952:7989" placeholder="..." />
-            <marker date="1374563890366" expanded="true" signature="8753:8826" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
+            <marker date="1374567640659" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="0" selection-start="416" selection-end="416" vertical-scroll-proportion="-10.0">
+        <state line="20" column="0" selection-start="416" selection-end="416" vertical-scroll-proportion="-0.625">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/tasks/data.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="126" column="0" selection-start="3536" selection-end="3536" vertical-scroll-proportion="-24.708334">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuel/app/views/template.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="264" column="135" selection-start="11385" selection-end="11385" vertical-scroll-proportion="0.3617021">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="177" column="5" selection-start="6245" selection-end="6245" vertical-scroll-proportion="0.5983702">
+        <state line="151" column="10" selection-start="5388" selection-end="5388" vertical-scroll-proportion="0.15832363">
           <folding />
         </state>
       </provider>
