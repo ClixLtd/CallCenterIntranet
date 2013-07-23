@@ -2126,9 +2126,9 @@ Gregson and Brooke.');
       $totalMonToThurs = '5400';
       $totalFri = '4500';
       
-      $date = date("Y-m-d");
-      $startDateTime = date("Y-m-d 00:00:01");
-      $endDateTime = date("Y-m-d 23:59:59");
+      $date = date("Y-m-d", strtotime("-1 day", time()));
+      $startDateTime = date("Y-m-d 00:00:01", strtotime("-1 day", time()));
+      $endDateTime = date("Y-m-d 23:59:59", strtotime("-1 day", time()));
       
       $hqGroup = array(
         'PREMIER-GAB',
