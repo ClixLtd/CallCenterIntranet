@@ -385,7 +385,14 @@
 		{
 			@Adam::move_telesales_staff();
 		}
-		
+
+        // These are tasks to be run at 8am every morning.
+        public function daily_morning_tasks()
+        {
+            // -- Run staff late report
+            // ------------------------
+            @Adam::staff_late_report();
+        }
 		
 		public function daily_tasks()
 		{
@@ -393,11 +400,8 @@
 			
 			// No longer daily
 			//@Adam::move_telesales_staff();
-			
-      // -- Run staff late report
-      // ------------------------
-      @Adam::staff_late_report();
-      
+
+
       // -- Terminated and Suspended Clients
       // -----------------------------------
       @Adam::terminated_suspended_clients_report();
