@@ -385,7 +385,14 @@
 		{
 			@Adam::move_telesales_staff();
 		}
-		
+
+        // These are tasks to be run at 8am every morning.
+        public function daily_morning_tasks()
+        {
+            // -- Run staff late report
+            // ------------------------
+            @Adam::staff_late_report();
+        }
 		
 		public function daily_tasks()
 		{
@@ -393,11 +400,8 @@
 			
 			// No longer daily
 			//@Adam::move_telesales_staff();
-			
-      // -- Run staff late report
-      // ------------------------
-      @Adam::staff_late_report();
-      
+
+
       // -- Terminated and Suspended Clients
       // -----------------------------------
       @Adam::terminated_suspended_clients_report();
@@ -2122,9 +2126,9 @@ Gregson and Brooke.');
       $totalMonToThurs = '5400';
       $totalFri = '4500';
       
-      $date = date("Y-m-d");
-      $startDateTime = date("Y-m-d 00:00:01");
-      $endDateTime = date("Y-m-d 23:59:59");
+      $date = date("Y-m-d", strtotime("-1 day", time()));
+      $startDateTime = date("Y-m-d 00:00:01", strtotime("-1 day", time()));
+      $endDateTime = date("Y-m-d 23:59:59", strtotime("-1 day", time()));
       
       $hqGroup = array(
         'PREMIER-GAB',
