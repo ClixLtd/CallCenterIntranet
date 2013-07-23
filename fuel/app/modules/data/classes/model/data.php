@@ -173,8 +173,25 @@ class Model_Data
 	    return $statusCount;
 	    
     }
-    
-    
+
+    public static function softResetList($listID)
+    {
+        $results = \DB::update('vicidial_list')->set(array())->where('list_id', $listID)->execute();
+        return true;
+    }
+
+
+    /**
+     * Pull all the current active lists in a campaign
+     *
+     * @param $campaign
+     */
+    public static function current_lists($campaign)
+    {
+        $currentLists = \DB::select('*')->from('vicidial_lists')->where('campaign_id', $campaign)->where('active', 'Y')->execute()->as_array();
+        return $currentLists;
+    }
+
     
     /**
      * Check the database for a given heading to see if we can guess the real heading.

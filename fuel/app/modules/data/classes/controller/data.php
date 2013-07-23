@@ -14,6 +14,12 @@ class Controller_Data extends \Controller_BaseHybrid
         $this->template->title = 'Example Page';
         $this->template->content = "hello";
     }
+
+
+    public function get_softresetlist($listID)
+    {
+
+    }
     
     
     

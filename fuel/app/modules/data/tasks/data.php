@@ -2,6 +2,8 @@
 
 namespace Fuel\Tasks;
 
+use Data\Model_Data;
+
 class Data
 {
     
@@ -116,7 +118,15 @@ class Data
 
     }
     
-    
+
+    public static function minuteReport()
+    {
+        // First get the current campaigns that are running
+        $currentPremierLists = Model_Data::current_lists('PREMIER');
+        $currentStandardLists = Model_Data::current_lists('STANDARD');
+
+    }
+
     
     public static function _update($data_id=null)
     {

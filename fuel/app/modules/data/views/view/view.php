@@ -128,7 +128,14 @@
 		<div class="tab default-tab" id="quickview">
 			<article class="full-block">
 				<h3>Quick View</h3>
-				
+
+                <nav>
+                    <ul>
+                        <li><button id="activate" rel="<?php echo $listID; ?>">Activate List</button></li>
+                        <li><button id="softReset" rel="<?php echo $listID; ?>">Perform Soft Reset</button></li>
+                    </ul>
+                </nav>
+
 				<article class="half-block">
 					
 					<div class="article-container">
@@ -194,10 +201,10 @@
 				
 				
 				<article class="half-block clearrm">
-					
+					<h3>Current Lead Status</h3>
 					<div class="article-container">
 						<section>
-							<div id="pieStatus" class="flotChart" style="height: 400px;"></div>
+							<div id="pieStatus" class="flotChart" style="height: 350px;"></div>
 						</section>
 					</div>
 					
@@ -208,6 +215,7 @@
                 <article class="half-block">
 
                     <div class="article-container">
+                        <h3>Important Dates</h3>
                         <section>
                             <table>
                                 <thead>
@@ -237,9 +245,10 @@
                 </article>
 
                 <article class="half-block clearrm">
-
+                    <h3>Actions</h3>
                     <div class="article-container">
                         <section>
+
 
                         </section>
                     </div>
