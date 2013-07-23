@@ -176,7 +176,21 @@ class Model_Data
 
     public static function softResetList($listID)
     {
-        $results = \DB::update('vicidial_list')->set(array())->where('list_id', $listID)->execute();
+        $listData = \DB::select('dialler_id')->from('data')->where('id', $listID)->limit(1)->execute()->as_array();
+
+        $results = \DB::update('vicidial_list')->set(array(
+            'called_since_last_reset' => 'N',
+        ))->where('list_id', $listData[0]['dialler_id'])->execute('dialler');
+
+        list($driver, $user_id) = \Auth::get_user_id();
+        list($insert_id, $rows_affected) = \DB::insert('data_reset')->set(array(
+            'id' => null,
+            'data_id' => $listID,
+            'user_id' => $user_id,
+            'type' => 1,
+            'date' => date('Y-m-d H:i:s'),
+        ))->execute();
+
         return true;
     }
 
