@@ -127,17 +127,15 @@
 	
 		<div class="tab default-tab" id="quickview">
 			<article class="full-block">
-				<h3>Quick View</h3>
 
-                <nav>
-                    <ul>
-                        <li><button id="activate" rel="<?php echo $listID; ?>">Activate List</button></li>
-                        <li><button id="softReset" rel="<?php echo $listID; ?>">Perform Soft Reset</button></li>
-                    </ul>
+                <nav style="float: right;">
+                    <button id="softReset" rel="<?php echo $listID; ?>">Perform Soft Reset</button>
                 </nav>
 
+				<h3>Quick View</h3>
+
 				<article class="half-block">
-					
+
 					<div class="article-container">
 						<section>
 							<table class="zebra-striped">
@@ -263,7 +261,7 @@
 
 </article>
 
-
+<?php echo \Asset::js('data/list.js'); ?>
 <script>
 
 $(function () {
@@ -299,3 +297,7 @@ $.plot($("#pieStatus"), data,
 });
 
 </script>
+
+<div id="dialog-confirm" title="Reset this List?" style="display: none;">
+    <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>Are you sure you want to reset this list?</p>
+</div>

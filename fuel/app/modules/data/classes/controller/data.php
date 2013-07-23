@@ -18,7 +18,9 @@ class Controller_Data extends \Controller_BaseHybrid
 
     public function get_softresetlist($listID)
     {
+        $updateResult = Model_Data::softResetList($listID);
 
+        return $this->response($updateResult);
     }
     
     
