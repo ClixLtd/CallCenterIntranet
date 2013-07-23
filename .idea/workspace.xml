@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6ec1e1a-ea37-408e-97a7-15627f4de15c" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/assets/js/data/list.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php" afterPath="$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php" afterPath="$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php" afterPath="$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="intranet-live.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -15,7 +11,7 @@
     <file path="/.htaccess" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374578349496" ignored="false" />
     <file path="/suppliers.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374503915868" ignored="false" />
     <file path="/list.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374504062652" ignored="false" />
-    <file path="/view.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374579413566" ignored="false" />
+    <file path="/view.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374580541588" ignored="false" />
     <file path="/data.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374578406446" ignored="false" />
     <file path="/printmanager.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374513015016" ignored="false" />
     <file path="/template.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374573631277" ignored="false" />
@@ -42,7 +38,7 @@
       <file leaf-file-name="data.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="192" column="0" selection-start="6871" selection-end="6871" vertical-scroll-proportion="-7.2040815">
+            <state line="192" column="0" selection-start="6871" selection-end="6871" vertical-scroll-proportion="-18.244898">
               <folding />
             </state>
           </provider>
@@ -51,8 +47,22 @@
       <file leaf-file-name="data.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="22" column="46" selection-start="523" selection-end="523" vertical-scroll-proportion="-10.0">
+            <state line="22" column="46" selection-start="523" selection-end="523" vertical-scroll-proportion="66.875">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="view.php" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="256" column="52" selection-start="9192" selection-end="9192" vertical-scroll-proportion="0.34397164">
+              <folding>
+                <element signature="n#style#0;n#nav#0;n#article#0;n#div#3;n#section#0;n#article#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#section#0;n#div#0;n#article#1;n#article#0;n#div#3;n#section#0;n#article#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#p#0;n#div#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -80,20 +90,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state line="22" column="6" selection-start="595" selection-end="595" vertical-scroll-proportion="0.0">
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="view.php" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="277" column="13" selection-start="8749" selection-end="8749" vertical-scroll-proportion="0.4503546">
-              <folding>
-                <element signature="n#style#0;n#nav#0;n#article#0;n#div#3;n#section#0;n#article#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#section#0;n#div#0;n#article#1;n#article#0;n#div#3;n#section#0;n#article#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#span#0;n#p#0;n#div#0;n#!!top" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -130,8 +126,8 @@
         <option value="$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php" />
         <option value="$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php" />
         <option value="$PROJECT_DIR$/public/.htaccess" />
-        <option value="$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php" />
         <option value="$PROJECT_DIR$/public/assets/js/data/list.js" />
+        <option value="$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php" />
       </list>
     </option>
   </component>
@@ -848,20 +844,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="46" selection-start="523" selection-end="523" vertical-scroll-proportion="-10.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="192" column="0" selection-start="6871" selection-end="6871" vertical-scroll-proportion="-7.2040815">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/.htaccess">
       <provider selected="true" editor-type-id="text-editor">
         <state line="8" column="0" selection-start="173" selection-end="173" vertical-scroll-proportion="0.0">
@@ -883,9 +865,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="192" column="0" selection-start="6871" selection-end="6871" vertical-scroll-proportion="-18.244898">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="46" selection-start="523" selection-end="523" vertical-scroll-proportion="66.875">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="277" column="13" selection-start="8749" selection-end="8749" vertical-scroll-proportion="0.4503546">
+        <state line="256" column="52" selection-start="9192" selection-end="9192" vertical-scroll-proportion="0.34397164">
           <folding>
             <element signature="n#style#0;n#nav#0;n#article#0;n#div#3;n#section#0;n#article#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#div#0;n#section#0;n#div#0;n#article#1;n#article#0;n#div#3;n#section#0;n#article#0;n#!!top" expanded="true" />
