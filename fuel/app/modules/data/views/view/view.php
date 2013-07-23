@@ -154,6 +154,18 @@
 										<td></td>
 										<td>&pound;<?php echo number_format($basicStats['cost']/$basicStats['purchased'],2); ?></td>
 									</tr>
+                                    <tr>
+                                        <td><b>Duplicates</b></td>
+                                        <td><?php echo number_format($basicStats['duplicates'],0); ?></td>
+                                        <td><?php echo number_format(($basicStats['duplicates']/$basicStats['purchased'])*100,1); ?>%</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>TPS</b></td>
+                                        <td><?php echo number_format($basicStats['tps'],0); ?></td>
+                                        <td><?php echo number_format(($basicStats['tps']/$basicStats['purchased'])*100,1); ?>%</td>
+                                        <td></td>
+                                    </tr>
 									<tr>
 										<td><b>Dialable Leads</b></td>
 										<td><?php echo number_format($basicStats['dialable'],0); ?></td>
@@ -202,7 +214,7 @@
 					<h3>Current Lead Status</h3>
 					<div class="article-container">
 						<section>
-							<div id="pieStatus" class="flotChart" style="height: 350px;"></div>
+							<div id="pieStatus" class="flotChart" style="height: 450px;"></div>
 						</section>
 					</div>
 					
@@ -243,7 +255,6 @@
                 </article>
 
                 <article class="half-block clearrm">
-                    <h3>Actions</h3>
                     <div class="article-container">
                         <section>
 
