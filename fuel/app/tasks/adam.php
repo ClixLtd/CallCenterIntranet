@@ -2266,7 +2266,7 @@ Gregson and Brooke.');
       
         $email->to($hqEmailDetails['to']);
                 
-        $email->subject($hqEmailDetails['subject'] . ' ' . date("d-m-Y"));
+        $email->subject($hqEmailDetails['subject'] . ' ' . $date);
         
         $email->html_body(\View::forge('emails/latestaff/late-staff', array(
               					'results' => $hqEmailDetails['results'],
@@ -2287,7 +2287,7 @@ Gregson and Brooke.');
       
         $email->to($resolveEmailDetails['to']);
                 
-        $email->subject($resolveEmailDetails['subject'] . ' ' . date("d-m-Y"));
+        $email->subject($resolveEmailDetails['subject'] . ' ' . $date);
         
         $email->html_body(\View::forge('emails/latestaff/late-staff', array(
               					'results' => $resolveEmailDetails['results'],
