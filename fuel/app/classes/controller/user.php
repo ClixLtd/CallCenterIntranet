@@ -123,7 +123,7 @@ class Controller_User extends Controller_BaseHybrid
 				Response::redirect('/');
 			} else {
 				
-				$query = Model_User::find()->where('username', Input::post('username'));
+				$query = Model_User::query()->where('username', Input::post('username'));
 				if ($query->count() > 0) {
 					$attempt = $query->get_one();
 					
