@@ -2,21 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6ec1e1a-ea37-408e-97a7-15627f4de15c" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/intranet-live.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/scopes/scope_settings.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/packages/crm" afterPath="$PROJECT_DIR$/fuel/packages/crm" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/tasks/adam.php" afterPath="$PROJECT_DIR$/fuel/app/tasks/adam.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fuel/app/classes/controller/reports.php" afterPath="$PROJECT_DIR$/fuel/app/classes/controller/reports.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="intranet-live.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374674119584" ignored="false" />
+    <file path="/Dummy.txt" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374834425756" ignored="false" />
     <file path="/adam.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374492488219" ignored="false" />
-    <file path="/.htaccess" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374578349496" ignored="false" />
+    <file path="/.htaccess" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374764529758" ignored="false" />
     <file path="/suppliers.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374503915868" ignored="false" />
     <file path="/list.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374504062652" ignored="false" />
     <file path="/view.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374580541588" ignored="false" />
@@ -24,6 +17,7 @@
     <file path="/printmanager.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374513015016" ignored="false" />
     <file path="/template.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374573631277" ignored="false" />
     <file path="/list.js" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374579478325" ignored="false" />
+    <file path="/reports.php" changelist="d6ec1e1a-ea37-408e-97a7-15627f4de15c" time="1374848654361" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,7 +54,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/fuel/app/config/development/db.php" />
         <option value="$PROJECT_DIR$/fuel/app/config/production/db.php" />
         <option value="$PROJECT_DIR$/fuel/packages/crm/subpackage/portal/classes/portal_check.php" />
         <option value="$PROJECT_DIR$/fuel/app/modules/suppliers/classes/model/suppliers.php" />
@@ -73,9 +66,10 @@
         <option value="$PROJECT_DIR$/fuel/app/views/template.php" />
         <option value="$PROJECT_DIR$/fuel/app/modules/data/classes/controller/data.php" />
         <option value="$PROJECT_DIR$/fuel/app/modules/data/classes/model/data.php" />
-        <option value="$PROJECT_DIR$/public/.htaccess" />
         <option value="$PROJECT_DIR$/public/assets/js/data/list.js" />
         <option value="$PROJECT_DIR$/fuel/app/modules/data/views/view/view.php" />
+        <option value="$PROJECT_DIR$/public/.htaccess" />
+        <option value="$PROJECT_DIR$/fuel/app/classes/controller/reports.php" />
       </list>
     </option>
   </component>
@@ -111,7 +105,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -158,8 +151,75 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intranet-live" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intranet-live" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fuel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intranet-live" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intranet-live" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fuel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="classes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intranet-live" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intranet-live" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fuel" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="classes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controller" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -214,7 +274,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.249694" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27172583" sideWeight="0.6703418" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.063035496" sideWeight="0.6703418" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -290,11 +350,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/fuel/packages/printmanager/classes/queue.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="21" selection-start="357" selection-end="357" vertical-scroll-proportion="0.2975496" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fuel/app/classes/model/user.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="7" column="13" selection-start="106" selection-end="110" vertical-scroll-proportion="0.12252042" />
@@ -350,11 +405,6 @@
         <state line="267" column="14" selection-start="9398" selection-end="9398" vertical-scroll-proportion="-7.5" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/.htaccess">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="0" selection-start="173" selection-end="173" vertical-scroll-proportion="0.13590033" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fuel/app/classes/controller/base.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="15" column="58" selection-start="274" selection-end="274" vertical-scroll-proportion="0.2619325" />
@@ -367,9 +417,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/assets/js/jquery/jquery-1.5.1.min.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/.htaccess">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="0" selection-start="173" selection-end="173" vertical-scroll-proportion="0.1632653">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fuel/app/classes/controller/reports.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2472" column="18" selection-start="82766" selection-end="82766" vertical-scroll-proportion="0.018248174">
           <folding>
-            <element signature="n#!!doc" expanded="false" />
+            <marker date="1374848736643" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>

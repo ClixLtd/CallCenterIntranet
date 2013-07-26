@@ -797,165 +797,159 @@ GROUP BY
 	    $staff = $staff->get();
 	    
 	    // Convert the active users into a list ready for the "IN" query
-	    $inList = "";
-	    $inListCount = 0;
-	    foreach ($staff AS $member)
-	    {
-	        $inListCount++;
-    	    $inList .= "'" . $member->debtsolv_id . "'";
-    	    
-    	    if ($inListCount < $totalStaff)
-    	    {
-        	    $inList .= ",";
-    	    }
-	    }
-	    
-	    
-	    
-	    
-	    
-	    $seniorQueryGAB = "SELECT
-                            	  D_URS.Login
-                            	, COUNT(CASE WHEN (D_CLD.DatePackSent >= '".$startDate."' AND D_CLD.DatePackSent < '".$endDate."') THEN Client_ID END) AS PackOut
-                            	, COUNT(CASE WHEN (D_CLD.DatePackReceived >= '".$startDate."' AND D_CLD.DatePackReceived < '".$endDate."') THEN Client_ID END) AS PackIn
-                            	, (SELECT COUNT(DISTINCT DD_CD.ClientID) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN Debtsolv.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN Debtsolv.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID WHERE FirstPaymentDate >= '".$startDate."' AND FirstPaymentDate < '".$endDate."' AND Office = 'GAB' AND DD_URS.login = D_URS.Login) AS Paid
-                            	, ISNULL((SELECT SUM((D_CPD.NormalExpectedPayment/100)) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN Debtsolv.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN Debtsolv.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON DD_CLD.Client_ID = D_CPD.ClientID WHERE DD_CD.FirstPaymentDate >= '".$startDate."' AND DD_CD.FirstPaymentDate < '".$endDate."' AND Office = 'GAB' AND DD_URS.login = D_URS.Login),0) AS Income
+	    $staffCheck = array();
+        foreach ($staff as $member)
+        {
+            $staffCheck[$member->first_name." ".$member->last_name] = $member->debtsolv_id;
+        }
+
+        $checkStaff = array_flip($staffCheck);
+
+	    $gabSeniorQuery = "SELECT
+                                  leadpool_id
+                                , D_CLD.Client_ID
+                                , ISNULL((SELECT TOP 1 D_U.Login FROM Leadpool_DM.dbo.CampaignContactAccess AS CCA LEFT JOIN Debtsolv.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
+                                , TCR.Description
+                                , referral_date
+                                , D_CLD.DatePackSent
+                                , D_CLD.DatePackReceived
+                                , DCD.FirstPaymentDate
+                                , D_CPD.NormalExpectedPayment
                             FROM
-                            	Debtsolv.dbo.Client_LeadData AS D_CLD
+                                [Dialler].[dbo].[referrals] AS DR
                             LEFT JOIN
-                            	Debtsolv.dbo.Users AS D_URS ON D_CLD.Counsellor = D_URS.ID
+                                Debtsolv.dbo.Client_LeadData AS D_CLD ON DR.leadpool_id = D_CLD.LeadPoolReference
+                            LEFT JOIN
+                                LeadPool_DM.dbo.Campaign_Contacts AS CC ON DR.leadpool_id = CC.ClientID
+                            LEFT JOIN
+                                LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                            LEFT JOIN
+                                Dialler.dbo.client_dates AS DCD ON D_CLD.Client_ID =  DCD.ClientID
+                            LEFT JOIN
+                                Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
                             WHERE
-                            	(D_CLD.DatePackReceived >= '".$startDate."' OR D_CLD.DatePackSent >= '".$startDate."')
-                            	AND D_URS.Login IN (".$inList.")
-                            GROUP BY
-                            	D_URS.Login";
-	    
-	    $seniorCountQueryGAB = "SELECT
-                        	   ISNULL((SELECT TOP 1 D_U.Login FROM Leadpool_DM.dbo.CampaignContactAccess AS CCA LEFT JOIN Debtsolv.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
-                           FROM 
-                        	   [Dialler].[dbo].[referrals] AS D_R
-                           LEFT JOIN
-                        	   LeadPool_DM.dbo.Campaign_Contacts AS CC ON D_R.leadpool_id = CC.ClientID
-                           WHERE
-                        	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
-	    
-	    $seniorQueryRESOLVE = "SELECT
-                            	  D_URS.Login
-                            	, COUNT(CASE WHEN (D_CLD.DatePackSent >= '".$startDate."' AND D_CLD.DatePackSent < '".$endDate."') THEN Client_ID END) AS PackOut
-                            	, COUNT(CASE WHEN (D_CLD.DatePackReceived >= '".$startDate."' AND D_CLD.DatePackReceived < '".$endDate."') THEN Client_ID END) AS PackIn
-                            	, (SELECT COUNT(DISTINCT DD_CD.ClientID) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN BS_Debtsolv_DM.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN BS_Debtsolv_DM.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID WHERE FirstPaymentDate >= '".$startDate."' AND FirstPaymentDate < '".$endDate."' AND Office = 'RESOLVE' AND DD_URS.login = D_URS.Login) AS Paid
-                            	, ISNULL((SELECT SUM((D_CPD.NormalExpectedPayment/100)) AS Total FROM [Dialler].[dbo].[client_dates] AS DD_CD LEFT JOIN BS_Debtsolv_DM.dbo.Client_LeadData AS DD_CLD ON DD_CD.ClientID = DD_CLD.Client_ID LEFT JOIN BS_Debtsolv_DM.dbo.Users AS DD_URS ON DD_CLD.Counsellor = DD_URS.ID LEFT JOIN BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON DD_CLD.Client_ID = D_CPD.ClientID WHERE DD_CD.FirstPaymentDate >= '".$startDate."' AND DD_CD.FirstPaymentDate < '".$endDate."' AND Office = 'RESOLVE' AND DD_URS.login = D_URS.Login),0) AS Income
+                                (DR.referral_date >= '".$startDate."' AND DR.referral_date < '".$endDate."')
+                            ORDER BY
+                                DR.id DESC";
+
+        $resolveSeniorQuery = "SELECT
+                                  leadpool_id
+                                , D_CLD.Client_ID
+                                , ISNULL((SELECT TOP 1 D_U.Login FROM BS_Leadpool_DM.dbo.CampaignContactAccess AS CCA LEFT JOIN BS_Debtsolv_DM.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
+                                , TCR.Description
+                                , referral_date
+                                , D_CLD.DatePackSent
+                                , D_CLD.DatePackReceived
+                                , DCD.FirstPaymentDate
+                                , D_CPD.NormalExpectedPayment
                             FROM
-                            	BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD
+                                [Dialler].[dbo].[referrals] AS DR
                             LEFT JOIN
-                            	BS_Debtsolv_DM.dbo.Users AS D_URS ON D_CLD.Counsellor = D_URS.ID
+                                BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON DR.leadpool_id = D_CLD.LeadPoolReference
+                            LEFT JOIN
+                                BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON DR.leadpool_id = CC.ClientID
+                            LEFT JOIN
+                                BS_LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                            LEFT JOIN
+                                Dialler.dbo.client_dates AS DCD ON D_CLD.Client_ID =  DCD.ClientID
+                            LEFT JOIN
+                                BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
                             WHERE
-                            	(D_CLD.DatePackReceived >= '".$startDate."' OR D_CLD.DatePackSent >= '".$startDate."')
-                            	AND D_URS.Login IN (".$inList.")
-                            GROUP BY
-                            	D_URS.Login";
-	    
-	    $seniorCountQueryGAB = "SELECT
-                        	   ISNULL((SELECT TOP 1 D_U.Login FROM Leadpool_DM.dbo.CampaignContactAccess AS CCA LEFT JOIN Debtsolv.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
-                           FROM 
-                        	   [Dialler].[dbo].[referrals] AS D_R
-                           LEFT JOIN
-                        	   LeadPool_DM.dbo.Campaign_Contacts AS CC ON D_R.leadpool_id = CC.ClientID
-                           WHERE
-                        	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
-                        	   
-                        	   
-                        	   
-	    $seniorCountQueryRESOLVE = "SELECT
-                	   ISNULL((SELECT TOP 1 D_U.Login FROM BS_Leadpool_DM.dbo.CampaignContactAccess AS CCA LEFT JOIN BS_Debtsolv_DM.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
-                   FROM 
-                	   [Dialler].[dbo].[referrals] AS D_R
-                   LEFT JOIN
-                	   BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON D_R.leadpool_id = CC.ClientID
-                   WHERE
-                	   (D_R.referral_date >= '".$startDate."' AND D_R.referral_date < '".$endDate."')";
-	    
-	    
-	    $seniorResultsGAB = DB::query($seniorQueryGAB)->cached(60)->execute('debtsolv');
-	    $seniorCountResultsGAB = DB::query($seniorCountQueryGAB)->cached(60)->execute('debtsolv');
-	    
-	    $seniorResultsRESOLVE = DB::query($seniorQueryRESOLVE)->cached(60)->execute('debtsolv');
-	    $seniorCountResultsRESOLVE = DB::query($seniorCountQueryRESOLVE)->cached(60)->execute('debtsolv');
-    	
-    	
-    	$resultsGAB = array();
-    	foreach ($seniorResultsGAB AS $single)
-    	{
-        	$resultsGAB[$single['Login']] = array(
-        	   'login'    => $single['Login'],
-        	   'PackOuts' => $single['PackOut'],
-        	   'PackIns'  => $single['PackIn'],
-        	   'Paids'    => $single['Paid'],
-        	   'Revenue'  => $single['Income'],
-        	   'POtoPI'   => ($single['PackOut'] == 0) ? 0 : (($single['PackIn'] / $single['PackOut']) * 100),
-        	   'PItoPC'   => ($single['PackIn'] == 0) ? 0 : (($single['Paid'] / $single['PackIn']) * 100),
-        	   'POtoPC'   => ($single['PackOut'] == 0) ? 0 : (($single['Paid'] / $single['PackOut']) * 100),
-        	);
-    	}
-    	
-        foreach ($seniorResultsRESOLVE AS $single)
-    	{
-        	$resultsGAB[$single['Login']] = array(
-        	   'login'    => $single['Login'],
-        	   'PackOuts' => $single['PackOut'],
-        	   'PackIns'  => $single['PackIn'],
-        	   'Paids'    => $single['Paid'],
-        	   'Revenue'  => $single['Income'],
-        	   'POtoPI'   => ($single['PackOut'] == 0) ? 0 : (($single['PackIn'] / $single['PackOut']) * 100),
-        	   'PItoPC'   => ($single['PackIn'] == 0) ? 0 : (($single['Paid'] / $single['PackIn']) * 100),
-        	   'POtoPC'   => ($single['PackOut'] == 0) ? 0 : (($single['Paid'] / $single['PackOut']) * 100),
-        	);
-    	}
-    	
-    	
-    	$countResultsGAB = array();
-    	foreach ($seniorCountResultsGAB AS $single)
-    	{
-        	$countResultsGAB[$single['Senior']] = (isset($countResultsGAB[$single['Senior']])) ? $countResultsGAB[$single['Senior']] + 1 : 1;
-    	}
-    	
-    	foreach ($seniorCountResultsRESOLVE AS $single)
-    	{
-        	$countResultsGAB[$single['Senior']] = (isset($countResultsGAB[$single['Senior']])) ? $countResultsGAB[$single['Senior']] + 1 : 1;
-    	}
-    	
-    	
-    	$fullReturn = array();
-    	foreach ($staff AS $member)
-    	{
-        	$fullReturn[$member->debtsolv_id] = array(
-        	    'fullName' => $member->first_name . " " . $member->last_name,
-        	    'hotkeys'  => (isset($countResultsGAB[$member->debtsolv_id])) ? $countResultsGAB[$member->debtsolv_id] : 0,
-        	    'PackOuts' => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackOuts'] : 0,
-        	    'PackIns'  => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['PackIns'] : 0,
-        	    'Paids'    => (isset($resultsGAB[$member->debtsolv_id])) ? $resultsGAB[$member->debtsolv_id]['Paids'] : 0,
-        	    'HKtoPO'   => (isset($countResultsGAB[$member->debtsolv_id])) ? number_format((($resultsGAB[$member->debtsolv_id]['PackOuts'] / $countResultsGAB[$member->debtsolv_id])*100),2)."%" : "0.00%",
-        	    'POtoPI'   => (isset($resultsGAB[$member->debtsolv_id])) ? number_format($resultsGAB[$member->debtsolv_id]['POtoPI'],2)."%" : "0.00%",
-        	    'PItoPC'   => (isset($resultsGAB[$member->debtsolv_id])) ? number_format($resultsGAB[$member->debtsolv_id]['PItoPC'],2)."%" : "0.00%",
-        	    'POtoPC'   => (isset($resultsGAB[$member->debtsolv_id])) ? number_format($resultsGAB[$member->debtsolv_id]['POtoPC'],2)."%" : "0.00%",
-        	    'HKtoPC'   => (isset($countResultsGAB[$member->debtsolv_id])) ? number_format((($resultsGAB[$member->debtsolv_id]['Paids'] / $countResultsGAB[$member->debtsolv_id])*100),2)."%" : "0.00%",
-        	    'Revenue'    => (isset($resultsGAB[$member->debtsolv_id])) ? "&pound;".number_format($resultsGAB[$member->debtsolv_id]['Revenue'],2) : "&pound;0.00",
-        	    'PpHK' => (isset($countResultsGAB[$member->debtsolv_id])) ? "&pound;".number_format(($resultsGAB[$member->debtsolv_id]['Revenue'] / $countResultsGAB[$member->debtsolv_id]),2) : "&pound;0.00",
-        	);
-    	}
-    	
-    	
-    	
-    	$sort = array();
-    	foreach ($fullReturn AS $key => $row)
-    	{
+                                (DR.referral_date >= '".$startDate."' AND DR.referral_date < '".$endDate."')
+                            ORDER BY
+                                DR.id DESC";
+
+        $gabSeniorResult = \DB::query($gabSeniorQuery)->cached(600)->execute('debtsolv');
+        $resolveSeniorResult = \DB::query($resolveSeniorQuery)->cached(600)->execute('debtsolv');
+
+
+        $gabDetailCount = array();
+        foreach ($gabSeniorResult as $referral)
+        {
+            if (in_array($referral['Senior'], $staffCheck))
+            {
+                $gabDetailCount[$referral['Senior']]['hotkeys'] = (isset($gabDetailCount[$referral['Senior']]['hotkeys'])) ? $gabDetailCount[$referral['Senior']]['hotkeys'] + 1 : 1;
+
+                if (strtotime($referral['DatePackSent']) > strtotime('1st January 2000'))
+                {
+                    $gabDetailCount[$referral['Senior']]['packouts'] = (isset($gabDetailCount[$referral['Senior']]['packouts'])) ? $gabDetailCount[$referral['Senior']]['packouts'] + 1 : 1;
+                }
+
+                if (strtotime($referral['DatePackReceived']) > strtotime('1st January 2000'))
+                {
+                    $gabDetailCount[$referral['Senior']]['packin'] = (isset($gabDetailCount[$referral['Senior']]['packin'])) ? $gabDetailCount[$referral['Senior']]['packin'] + 1 : 1;
+                }
+
+                if (strtotime($referral['FirstPaymentDate']) > strtotime('1st January 2000'))
+                {
+                    $gabDetailCount[$referral['Senior']]['paid'] = (isset($gabDetailCount[$referral['Senior']]['paid'])) ? $gabDetailCount[$referral['Senior']]['paid'] + 1 : 1;
+                }
+
+                if (strtotime($referral['NormalExpectedPayment']) > 0)
+                {
+                    $gabDetailCount[$referral['Senior']]['totaldi'] = (isset($gabDetailCount[$referral['Senior']]['totaldi'])) ? $gabDetailCount[$referral['Senior']]['totaldi'] + $referral['NormalExpectedPayment'] : $referral['NormalExpectedPayment'];
+                }
+            }
+        }
+
+        $resolveDetailCount = array();
+        foreach ($resolveSeniorResult as $referral)
+        {
+            if (in_array($referral['Senior'], $staffCheck))
+            {
+                $resolveDetailCount[$referral['Senior']]['hotkeys'] = (isset($resolveDetailCount[$referral['Senior']]['hotkeys'])) ? $resolveDetailCount[$referral['Senior']]['hotkeys'] + 1 : 1;
+
+                if (strtotime($referral['DatePackSent']) > strtotime('1st January 2000'))
+                {
+                    $resolveDetailCount[$referral['Senior']]['packouts'] = (isset($resolveDetailCount[$referral['Senior']]['packouts'])) ? $resolveDetailCount[$referral['Senior']]['packouts'] + 1 : 1;
+                }
+
+                if (strtotime($referral['DatePackReceived']) > strtotime('1st January 2000'))
+                {
+                    $resolveDetailCount[$referral['Senior']]['packin'] = (isset($resolveDetailCount[$referral['Senior']]['packin'])) ? $resolveDetailCount[$referral['Senior']]['packin'] + 1 : 1;
+                }
+
+                if (strtotime($referral['FirstPaymentDate']) > strtotime('1st January 2000'))
+                {
+                    $resolveDetailCount[$referral['Senior']]['paid'] = (isset($resolveDetailCount[$referral['Senior']]['paid'])) ? $resolveDetailCount[$referral['Senior']]['paid'] + 1 : 1;
+                }
+
+                if (strtotime($referral['NormalExpectedPayment']) > 0)
+                {
+                    $gabDetailCount[$referral['Senior']]['totaldi'] = (isset($gabDetailCount[$referral['Senior']]['totaldi'])) ? $gabDetailCount[$referral['Senior']]['totaldi'] + $referral['NormalExpectedPayment'] : $referral['NormalExpectedPayment'];
+                }
+            }
+        }
+
+        $fullResults = \Arr::merge($gabDetailCount, $resolveDetailCount);
+
+        $fullReturn = array();
+        foreach ($fullResults as $staff => $single)
+        {
+            $fullReturn[$staff] = array(
+                'fullName' => $checkStaff[$staff],
+                'hotkeys'  => (isset($fullResults[$staff]['hotkeys'])) ? $single['hotkeys'] : 0,
+                'PackOuts' => (isset($fullResults[$staff]['packouts'])) ? $single['packouts'] : 0,
+                'PackIns'  => (isset($fullResults[$staff]['packin'])) ? $single['packin'] : 0,
+                'Paids'    => (isset($fullResults[$staff]['paid'])) ? $single['paid'] : 0,
+                'HKtoPO'   => (isset($fullResults[$staff]['packouts']) && isset($fullResults[$staff]['hotkeys'])) ? number_format((($single['packouts'] / $single['hotkeys'])*100), 2)."%" : "0.00%",
+                'POtoPI'   => (isset($fullResults[$staff]['packin']) && isset($fullResults[$staff]['packouts'])) ? number_format((($single['packin'] / $single['packouts'])*100), 2)."%" : "0.00%",
+                'PItoPC'   => (isset($fullResults[$staff]['paid']) && isset($fullResults[$staff]['packin'])) ? number_format((($single['paid'] / $single['packin'])*100), 2)."%" : "0.00%",
+                'POtoPC'   => (isset($fullResults[$staff]['paid']) && isset($fullResults[$staff]['packouts'])) ? number_format((($single['paid'] / $single['packouts'])*100), 2)."%" : "0.00%",
+                'HKtoPC'   => (isset($fullResults[$staff]['paid']) && isset($fullResults[$staff]['hotkeys'])) ? number_format((($single['paid'] / $single['hotkeys'])*100), 2)."%" : "0.00%",
+                'Revenue'  => (isset($fullResults[$staff]['totaldi'])) ? "&pound;".number_format((($single['totaldi'])/100), 2) : "&pound;0.00",
+                'PpHK'     => (isset($fullResults[$staff]['totaldi']) && isset($fullResults[$staff]['hotkeys'])) ? "&pound;".number_format((($single['totaldi']/100)/$fullResults[$staff]['hotkeys']),2) : "&pound;0.00",
+            );
+        }
+
+        $sort = array();
+        foreach ($fullReturn AS $key => $row)
+        {
             $sort[$key] = (int)str_replace("&pound;", "", $row['PpHK']);
-    	}
-    	
-    	array_multisort($sort, SORT_DESC, $fullReturn);
-    	
-    	
-    	
+        }
+
+        array_multisort($sort, SORT_DESC, $fullReturn);
+
     	return $fullReturn;
     	
 	}
