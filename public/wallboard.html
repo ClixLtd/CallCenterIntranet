@@ -1,7 +1,9 @@
 <HTML>
 	<HEAD>
 		<TITLE>Wallboard</TITLE>
-		
+
+        <link href='http://fonts.googleapis.com/css?family=Roboto:400,900italic,900,700,500italic,400italic,500,300italic,300,100,100italic,700italic' rel='stylesheet' type='text/css'>
+
 		<script src="/assets/js/jquery/jquery-1.5.1.min.js"></script>
 		<script src="/assets/js/jquery/jqtouch.js"></script>
 		<script src="/assets/js/jquery/jqtouch-jquery.min.js"></script>
@@ -131,8 +133,11 @@
     			});
 			
 			
-				$.getJSON('https://intranet.gregsonandbrooke.co.uk/dialler/api/mobile_wallboard.json', function(data) {
-					
+				$.getJSON('/dialler/api/mobile_wallboard.json', function(data) {
+
+                    $('#HQAG').html(data['HQ']['agents'] + ' Agents');
+                    $('#PCCAG').html(data['PCC']['agents'] + ' Agents');
+                    $('#RESOLVEAG').html(data['RESOLVE']['agents'] + ' Agents');
 					
 					
 					$('.circleValue').each(function() {
@@ -158,6 +163,8 @@
 							// Update saved stats
 							savedStats[shortcode] = newStats;
 						}
+
+
 
 						
 					});
@@ -215,7 +222,7 @@
 			{
 				display: block;
 				text-align: center;
-				font-family: verdana;
+				font-family: 'Roboto', sans-serif;
 				font-weight: bold;
 				font-size: 14px;
 				color: #777;
@@ -256,7 +263,17 @@
 				padding-top: 10px;
 				padding-bottom: 10px;
 			}
-		
+
+
+            .ag
+            {
+                font-size: 12px;
+                text-align: center;
+                font-family: 'Roboto', sans-serif;;
+                padding-bottom: 10px;
+                color: #999;
+            }
+
 			.bluebg { background-color: #a2cde9; border-right: 1px white solid; }
 			.orangebg { background-color: #eeae5b; }
 			.greenbg { background-color: #c3e5b0; border-left: 1px white solid; }
@@ -271,7 +288,7 @@
 			{
 				display: block;
 				text-align: center;
-				font-family: verdana;
+				font-family: 'Roboto', sans-serif;
 				font-weight: bold;
 				font-size: 12px;
 				color: #777;
@@ -284,7 +301,7 @@
 			{
 				display: block;
 				text-align: center;
-				font-family: verdana;
+				font-family: 'Roboto', sans-serif;
 				font-weight: bold;
 				font-size: 10px;
 				color: #777;
@@ -297,7 +314,7 @@
 				margin-top: 10px;
 				height: 40px;
 				text-align: center;
-				font-family: verdana;
+				font-family: 'Roboto', sans-serif;
 				font-size: 11px;
 				color: #777;
 			}
@@ -432,6 +449,12 @@
 					<div class="circleValueOrange circleValue thirdRight" style="float: left;" id="RESOLVEP"></div>
 					
 					<br style="clear: both;" />
+
+                    <div class="ag thirdLeft" style="float: left;" id="HQAG"></div>
+                    <div class="ag third" style="float: left;" id="PCCAG"></div>
+                    <div class="ag thirdRight" style="float: left;" id="RESOLVEAG"></div>
+
+                    <br style="clear: both;" />
 				</div>
 				
 				<div class="title">
