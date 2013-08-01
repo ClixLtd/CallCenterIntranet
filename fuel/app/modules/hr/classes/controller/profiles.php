@@ -49,7 +49,9 @@
       $this->template->content = \View::forge('profiles/view_profile',
                                                array('empID' => (int)$empID,
                                                      'employeeDeatils' => $Employee->getDetails(),
-                                                     'hasDetails' => $Employee->hasDetails(),
+                                                     'taxAndPay' => $Employee->getTaxAndPay(),
+                                                     'jobRole' => $Employee->getJobRole(),
+                                                     'profileCompleted' => $Employee->profileCompleted(),
                                                      'departmentsList' => $departmentsList,
                                                      'taxCodes' => $taxCodes,
                                                     )

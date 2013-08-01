@@ -10,8 +10,8 @@
 
     <?php 
     for ($i = 0; $i <= 18; $i++) {
-    
-        $date = strtotime("-".$i." months");
+        $today = date("1 F Y", strtotime('now'));
+        $date = strtotime($today." -".$i." months");
         echo '<option value="'.date("m-Y", $date).'">'.date("F Y", $date).'</option>';
     
     }

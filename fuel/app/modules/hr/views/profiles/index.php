@@ -3,7 +3,7 @@
 <section>
   <article class="full-block">
     <header>
-      <h2>Search Staff</h2>
+      <h2>Search Employees</h2>
     </header>
     
     <form id="findClientForm" style="margin: 0px;">
@@ -11,11 +11,11 @@
         <div class="row-fluid">
           <div class="span12">
             <p>
-            To find a staff member, type in either their Staff ID, username or name
+            To find an employee, type in either their employee ID, username or thier name
             </p>
             <input id="clientID" class="input-xxlarge" type="text" style="width: 95%;" placeholder="Enter ID, Username or Name" />
             <div class="form-actions" style="margin-top: 15px; width: 95%; text-align: right;">
-              <button id="clientIDButton" class="btn btn-alt btn-large btn-primary" type="submit">Find Staff</button>
+              <button id="clientIDButton" class="btn btn-alt btn-large btn-primary" type="submit">Find Employee</button>
             </div>
           </div>
         </div>
@@ -27,7 +27,7 @@
 <section>
   <article class="full-block">
     <header>
-      <h2>Staff List</h2>
+      <h2>Employee List</h2>
     </header>
     
     <section style="height: 500px; overflow: auto;">

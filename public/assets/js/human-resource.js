@@ -8,59 +8,15 @@ $(document).ready(function()
   // -- Select a Department Position
   // -------------------------------
   $("#Department-Select").change(function()
-  {
-    var departmenID = $(this).val();
-    
-    $.ajax({
-      url: '/hr/ajaxcalls/department_position_list/' + departmenID + '.json',
-      type: 'json',
-      success: function(data)
-      {
-        if(data['status'] == 'SUCCESS')
-        {
-          var options = '<option value="-1">-- Select --</option>';
-          
-          if(data['results'].length > 0)
-          {
-            $.each(data['results'], function(index, value)
-            {
-              options += '<option value="' + value['id'] + '">' + value['job_role'] + '</option>';
-            }); 
-          }
-          
-          $("#Department-Position-Select").html(options);
-        }
-      }
-    });
+  {    
+    changeJobPositionList($(this).val());
   });
   
   // -- Select a Position Level
   // --------------------------
   $("#Department-Position-Select").change(function()
   {
-    var positionID = $(this).val();
-    
-    $.ajax({
-      url: '/hr/ajaxcalls/department_posistion_level_list/' + positionID + '.json',
-      type: 'json',
-      success: function(data)
-      {
-        if(data['status'] == 'SUCCESS')
-        {
-          var options = '<option value="-1">-- Select --</option>';
-          
-          if(data['results'].length > 0)
-          {
-            $.each(data['results'], function(index, value)
-            {
-              options += '<option value="' + value['id'] + '">' + value['name'] + '</options>';
-            });
-          }
-          
-          $("#Department-Position-Level-Select").html(options);
-        }
-      }
-    });
+    changeJobPositionLevelList($(this).val());
   });
   
   // -- Load up the details of the posistion level for use in the create profile
@@ -83,7 +39,7 @@ $(document).ready(function()
     });
   })
   
-  $("#Create-New-Profile").click(function()
+  $(".Edit-Profile").click(function()
   {
     changeCreateNewProfile('start');
     $("#Create-New-Profile-Dialog").dialog("open");
@@ -126,7 +82,7 @@ $(document).ready(function()
       
 			"Cancel": function()
       {
-        if(confirm('Are you sure you want yo canel this new profile?') == true)
+        if(confirm('Are you sure you want to canel editing this profile?') == true)
         {
           $(this).dialog("close"); 
         }
@@ -146,6 +102,14 @@ $(document).ready(function()
       {
         $(newProfileDialogbuttons[0]).attr("disabled", "disabled");
         $(newProfileDialogbuttons[0]).css('color', 'gray');
+      }
+      
+      // -- Load up the job position and level
+      // -------------------------------------
+      if(departmentID > 0 && positionID > 0)
+      {
+        changeJobPositionList(departmentID);
+        changeJobPositionLevelList(positionID);
       }
     }
 	});
@@ -211,19 +175,18 @@ function changeCreateNewProfile(direction)
 function validateCreateNewProfile()
 {
   requiredFieldsID = [
-    "New-Title-Input",
-    "New-Forename-Input",
-    "New-Surname-Input",
-    "New-Date-of-Birth",
-    "New-Street-and-Number-Input",
-    "New-Town-Input",
-    "New-Post-Code-Input",
+    "Forename-Input",
+    "Surname-Input",
+    "Date-of-Birth",
+    "Street-and-Number-Input",
+    "Town-Input",
+    "Post-Code-Input",
     "Department-Select",
     "Department-Position-Select",
     "Department-Position-Level-Select",
-    "New-Tin-Number-Input",
-    "New-PhilHealth-Number-Input",
-    "New-SSS-Number-Input",
+    "Tin-Number-Input",
+    "PhilHealth-Number-Input",
+    "SSS-Number-Input",
   ];
   
   var missing = [];
@@ -238,13 +201,16 @@ function validateCreateNewProfile()
       element.css('background-color', '#FF8080').css('color', '#FFF');
     }
     
-    if(ID == 'New-Date-of-Birth')
+    // -- Validate Date of Birth
+    // -------------------------
+    if(ID == 'Date-of-Birth')
     {
-      var pattern = /^([0-9]{2})-([0-9]{2})-([0-9]{4})$/;
+      var pattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
       
-      if(pattern.test(element.val()) == false)
+      if(!document.getElementById(ID).value.match(pattern))
       {
-        alert('Date of Birth is in valid');
+        missing.push(ID);
+        $("#DOB-Error").html('Invalid format must be dd-mm-yyyy');
         element.css('background-color', '#FF8080').css('color', '#FFF');
       }
     }
@@ -267,18 +233,74 @@ function saveEmployeeProfile()
 {
   $.ajax({
     url: '/hr/ajaxcalls/save_profile/' + empID + '.json',
-    type: 'json',
+    type: 'post',
+    dataType: 'json',
     data: $("#Employee-New-Profile-Form").serialize(),
     success: function(data)
     {
       if(data['status'] == 'SUCCESS')
       {
         alert('Employee Profile has been saved');
+        location.reload();
       }
       else
       {
         alert('Employee Profile could not be saved. Please inform the I.T. Department');
         $("#Create-New-Profile-Dialog").dialog("close");
+      }
+    }
+  });
+}
+
+// -- Change the Job Position List depending on the department
+// -----------------------------------------------------------
+function changeJobPositionList(departmentID)
+{
+  $.ajax({
+    url: '/hr/ajaxcalls/department_position_list/' + departmentID + '.json',
+    type: 'post',
+    success: function(data)
+    {
+      if(data['status'] == 'SUCCESS')
+      {
+        var options = '<option value="-1">-- Select --</option>';
+        
+        if(data['results'].length > 0)
+        {
+          $.each(data['results'], function(index, value)
+          {
+            options += '<option value="' + value['id'] + '"' + (positionID == value['id'] ? ' SELECTED' : false) + '>' + value['job_role'] + '</option>';
+          }); 
+        }
+        
+        $("#Department-Position-Select").html(options);
+      }
+    }
+  });
+}
+
+// -- Change the Position Level ID depending on the position
+// ---------------------------------------------------------
+function changeJobPositionLevelList(positionID)
+{
+  $.ajax({
+    url: '/hr/ajaxcalls/department_posistion_level_list/' + positionID + '.json',
+    type: 'post',
+    success: function(data)
+    {
+      if(data['status'] == 'SUCCESS')
+      {
+        var options = '<option value="-1">-- Select --</option>';
+        
+        if(data['results'].length > 0)
+        {
+          $.each(data['results'], function(index, value)
+          {
+            options += '<option value="' + value['id'] + '"' + (positionLevelID == value['id'] ? ' SELECTED' : false) + '>' + value['name'] + '</options>';
+          });
+        }
+        
+        $("#Department-Position-Level-Select").html(options);
       }
     }
   });
