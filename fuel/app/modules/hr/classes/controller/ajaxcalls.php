@@ -33,6 +33,33 @@
    
    public function action_save_profile($empID = 0)
    {
+     if((int)$empID <= 0)
+     {
+       $this->response(array(
+			   'status' => 'FAILED',
+         'results' => 'Employee ID is 0',
+		   ));
+      
+       return;
+     }
      
+     // -- Save the employee profile
+     // ----------------------------
+     $status = '';
+     
+     $Employee = Employee::forge((int)$empID);
+     if($Employee->saveProfile($_POST) === true)
+     {
+       $status = 'SUCCESS';
+     }
+     else
+     {
+       $status = 'FAILED';
+     }
+     
+     $this->response(array(
+			   'status' => $status,
+         'results' => '',
+		   ));
    }
  }

@@ -80,6 +80,19 @@
      }
    }
    
+   /**
+    * Find out if the employee profile has been completed
+    * 
+    * @author David Stansfield
+    */
+   public function profileCompleted()
+   {
+     if($this->_values['profile_completed'] == 'no')
+       return false;
+     else
+       return true;
+   }
+   
    /** Return all the data in the values array
     * 
     * @author David Stansfield
@@ -89,12 +102,73 @@
      return $this->_values;
    }
    
-   public function hasDetails()
+   /**
+    * Return employee's Tax and Pay details
+    * 
+    * @author David Stansfield
+    */
+   public function getTaxAndPay()
    {
-     if(isset($this->_values['user_id']) && $this->_values['user_id'] > 0)
+     $result = array();
+     $result = Model_Employee::loadTaxAndPay();
+     
+     return $result;
+   }
+   
+   /**
+    * Return employee's job role and department
+    * 
+    * @author David Stansfield
+    */
+   public function getJobRole()
+   {
+     $result = array();
+     $result = Model_Employee::loadJobRole();
+     
+     return $result;
+   }
+   
+   /**
+    * Save the full empoyee profile
+    * 
+    * @author David Stansfield
+    */
+   public function saveProfile($data = array())
+   {
+     if(Model_Employee::saveEmployeeDetails($data) === true)
+     {
+       $this->changeJobPosition($data['Position-Level']);
+       
+       // -- Save Tax and Pay if employee is from GBS
+       // -------------------------------------------
+       if($this->_values['center_id'] == 2)
+       {       
+         // -- Save Tax and Pay
+         // -------------------
+         Model_Employee::saveTaxandPay($data);
+         
+         if($this->profileCompleted() === false)
+           Model_Employee::setProfileAsCompleted();
+       }
+      
        return true;
+     }
      else
+     {
        return false;
+     }
+   }
+   
+   /**
+    * Change Job Position
+    * 
+    * @author David Stansfield
+    */
+   public function changeJobPosition($positionLevelID = 0)
+   {
+     Model_Employee::changeJobPosition((int)$positionLevelID);
+     
+     return true;
    }
  }
 ?>

@@ -1,25 +1,26 @@
-<?php
-#print_r($employeeDeatils);
-?>
 <script type="text/javascript">
   var empID = <?=(int)$empID;?>;
+  var departmentID = <?=(int)isset($jobRole['department_id']) ? $jobRole['department_id'] : 0;?>;
+  var positionID = <?=(int)isset($jobRole['position_id']) ? $jobRole['position_id'] : 0;?>;
+  var positionLevelID = <?=(int)isset($jobRole['level_id']) ? $jobRole['level_id'] : 0;?>;
 </script>
 <article class="full-block clearfix">
   <section>
     <article class="full-block">
       <header>
         <h2>Employee Profile</h2>
+        <nav><button class="btn Edit-Profile">Edit Profile</button></nav>
       </header>
     </article>
   </section>
 </article>
 
 <?php
-if($hasDetails === false)
+if($profileCompleted === false)
 {
   ?>
   <div class="notification attention">
-	  <p><strong>NO PROFILE!</strong> This Employee hasn't got a profile yet. Create them a new profile now. [ <a href="javascript:void(0);" rel="<?=$empID;?>" id="Create-New-Profile">Create New Profile</a> ]</p>
+	  <p><strong>NO PROFILE!</strong> This Employee hasn't got a completed profile yet. Complete thier profile now. [ <a href="javascript:void(0);" rel="<?=$empID;?>" class="Edit-Profile">Complete Profile</a> ]</p>
   </div>
   <?php
 }
@@ -43,10 +44,6 @@ if($hasDetails === false)
                 <td><?=date("d-m-Y", $employeeDeatils['start_date']);?></td>
               </tr>
               <tr>
-                <th>Center</th>
-                <td><?=$employeeDeatils['center_name'];?></td>
-              </tr>
-              <tr>
                 <th>Forename</th>
                 <td id="Forename-Cell"><?=$employeeDeatils['first_name'];?></td>
               </tr>
@@ -56,47 +53,47 @@ if($hasDetails === false)
               </tr>
               <tr>
                 <th>Date of Birth</th>
-                <td id="Date-of-Birth-Cell"></td>
+                <td id="Date-of-Birth-Cell"><?=date("d-m-Y", strtotime($employeeDeatils['date_of_birth']));?></td>
               </tr>
               <tr>
                 <th>Building</th>
-                <td id="Building-Cell"></td>
+                <td id="Building-Cell"><?=$employeeDeatils['building'];?></td>
               </tr>
               <tr>
                 <th>No. / Street</th>
-                <td id="Street_and-Number-Cell"></td>
+                <td id="Street_and-Number-Cell"><?=$employeeDeatils['street_and_number'];?></td>
               </tr>
               <tr>
                 <th>District</th>
-                <td id="District-Cell"></td>
+                <td id="District-Cell"><?=$employeeDeatils['district'];?></td>
               </tr>
               <tr>
                 <th>Town / Barangay</th>
-                <td id="Town-Cell"></td>
+                <td id="Town-Cell"><?=$employeeDeatils['town'];?></td>
               </tr>
               <tr>
                 <th>County / Municipality</th>
-                <td id="County-Cell"></td>
+                <td id="County-Cell"><?=$employeeDeatils['county'];?></td>
               </tr>
               <tr>
                 <th>Post Code</th>
-                <td id="Post-Code-Cell"></td>
+                <td id="Post-Code-Cell"><?=$employeeDeatils['post_code'];?></td>
               </tr>
               <tr>
                 <th>Telephone Home</th>
-                <td id="Telephone-Home-Cell"></td>
+                <td id="Telephone-Home-Cell"><?=$employeeDeatils['telephone_home'];?></td>
               </tr>
               <tr>
                 <th>Telephone Mobile</th>
-                <td id="Telephone-Mobile-Cell"></td>
+                <td id="Telephone-Mobile-Cell"><?=$employeeDeatils['telephone_mobile'];?></td>
               </tr>
               <tr>
                 <th>Telephone Other</th>
-                <td id="Telephone-Other-Cell"></td>
+                <td id="Telephone-Other-Cell"><?=$employeeDeatils['telephone_other'];?></td>
               </tr>
               <tr>
                 <th>Email Address</th>
-                <td></td>
+                <td><?=$employeeDeatils['email'];?></td>
               </tr>
             </table>
 					</div>
@@ -111,11 +108,26 @@ if($hasDetails === false)
       <section>
 			  <div class="row-fluid">
 			    <div class="span12">
-				    Hello
+				    <table>
+              <tr>
+                <th>Center</th>
+                <td colspan="5"><?=$employeeDeatils['center_name'];?></td>
+              </tr>
+              <tr>
+                <th>Department</th>
+                <td><?=isset($jobRole['department_name']) ? $jobRole['department_name'] : '</i>Not Set</i>';?></td>
+                
+                <th>Role</th>
+                <td><?=isset($jobRole['position_job_role']) ? $jobRole['position_job_role'] : '</i>Not Set</i>';?></td>
+                
+                <th>Level</th>
+                <td><?=isset($jobRole['level_name']) ? $jobRole['level_name'] : false;?></td>
+              </tr>
+            </table>
 					</div>
 				</div>
 		  </section>
-      
+      <br />
       <section>
 			  <div class="row-fluid">
 			    <div class="span12">
@@ -145,14 +157,14 @@ if($hasDetails === false)
 					</div>
 				</div>
 		  </section>      
-                  
+      
     </article>
 		<!-- // END -->
 	</section>
 </article>
 
-<!-- Create New Profile Dialog Box -->
-<!-- ----------------------------- -->
+<!-- Edit Profile Dialog Box -->
+<!-- ----------------------- -->
 <div id="Create-New-Profile-Dialog">
   <div style="padding: 5px;">
   
@@ -178,64 +190,66 @@ if($hasDetails === false)
     			<section>
     			  <div class="row-fluid">
     			    <div class="span12">
-    				    <table width="100%" cellpadding="5" class="Form-Table">
+    				    <table width="100%" cellpadding="5" id="Profile-Edit-Form" class="Form-Table">
                   <tr>
+                  <!--
                     <th>Title</th>
                     <td>
-                      <select name="New-Profile-Title" id="New-Title-Input">
-                        <option value="">-- Select --</option>
+                      <select name="Profile-Title" id="Title-Input">
+                        <option value=""> Select </option>
                         <option value="Mr">Mr</option>
                         <option value="Miss">Miss</option>
                         <option value="Mrs">Mrs</option>
                       </select>
                     </td>
-                    
+                    -->
                     <th>Forename</th>
-                    <td id="Forename-Cell"><input type="text" name="New-Profile-Forename" id="New-Forename-Input" value="<?=$employeeDeatils['first_name'];?>" /></td>
+                    <td id="Forename-Cell"><input type="text" name="Profile-Forename" id="Forename-Input" class="medium" value="<?=$employeeDeatils['first_name'];?>" /></td>
                     
                     <th>Surname</th>
-                    <td id="Surname-Cell"><input type="text" name="New-Profile-Surname" id="New-Surname-Input" value="<?=$employeeDeatils['last_name'];?>" /></td>
+                    <td id="Surname-Cell"><input type="text" name="Profile-Surname" id="Surname-Input" class="medium" value="<?=$employeeDeatils['last_name'];?>" /></td>
+                    <td colspan="2"></td>
                   </tr>
                   <tr>
                     <th>Date of Birth</th>
-                    <td id="Date-of-Birth-Cell"><input type="text" name="New-Profile-Date-of-Birth" id="New-Date-of-Birth" class="datepicker" placeholder="dd/mm/yyy" /></td>
-                    <th colspan="4"></th>                    
+                    <td id="Date-of-Birth-Cell"><input type="text" name="Profile-Date-of-Birth" class="medium" id="Date-of-Birth" maxlength="10" value="<?=date("d-m-Y", strtotime($employeeDeatils['date_of_birth']));?>" placeholder="dd/mm/yyyy" /></td>
+                    <td colspan="4" style="text-align: left;"><span id="DOB-Error" style="color: #FF0000;"></span></td>               
                   </tr>
                   <tr>
                     <th colspan="6" style="background-color: #FFF;">Address</th>
                   </tr>
                   <tr>
                     <th>Building</th>
-                    <td id="Building-Cell"><input type="text" name="New-Profile-Building" /></td>
+                    <td id="Building-Cell"><input type="text" name="Profile-Building" class="medium" value="<?=$employeeDeatils['building'];?>" /></td>
                     
                     <th>No. / Street</th>
-                    <td id="Street_and-Number-Cell"><input type="text" name="New-Profile-Street-and-Number" id="New-Street-and-Number-Input" /></td>
+                    <td id="Street_and-Number-Cell"><input type="text" name="Profile-Street-and-Number" class="medium" id="Street-and-Number-Input" value="<?=$employeeDeatils['street_and_number'];?>" /></td>
                     
                     <th>District</th>
-                    <td id="District-Cell"><input type="text" name="New-Profile-District" id="New-District-Input" /></td>
+                    <td id="District-Cell"><input type="text" name="Profile-District" class="medium" id="District-Input" value="<?=$employeeDeatils['district'];?>" /></td>
                   </tr>
                   <tr>
                     <th>Town / Barangay</th>
-                    <td id="Town-Cell"><input type="text" name="New-Profile-Town" id="New-Town-Input" /></td>
+                    <td id="Town-Cell"><input type="text" name="Profile-Town" class="medium" id="Town-Input" value="<?=$employeeDeatils['town'];?>" /></td>
                     
                     <th>County / Municipality</th>
-                    <td id="County-Cell"><input type="text" name="New-Profile-County" id="New-County-Input" /></td>
+                    <td id="County-Cell"><input type="text" name="Profile-County" class="medium" id="County-Input" value="<?=$employeeDeatils['county'];?>" /></td>
                     
                     <th>Post Code</th>
-                    <td id="Post-Code-Cell"><input type="text" name="New-Profile-Post-Code" id="New-Post-Code-Input" /></td>
+                    <td id="Post-Code-Cell"><input type="text" name="Profile-Post-Code" class="medium" maxlength="8" id="Post-Code-Input" value="<?=$employeeDeatils['post_code'];?>" /></td>
                   </tr>
                   <tr>
                     <th colspan="6" style="background-color: #FFF;">Telephone</th>
                   </tr>
                   <tr>
-                    <th>Telephone Home</th>
-                    <td id="Telephone-Home-Cell"><input type="text" name="New-Profile-Telephone-Home" id="New-Telephone-Home-Input" /></td>
+                    <th>Home</th>
+                    <td id="Telephone-Home-Cell"><input type="text" name="Profile-Telephone-Home" class="medium" id="Telephone-Home-Input" value="<?=$employeeDeatils['telephone_home'];?>" /></td>
     
-                    <th>Telephone Mobile</th>
-                    <td id="Telephone-Mobile-Cell"><input type="text" name="New-Profile-Telephone-Mobile" id="New-Telephone-Mobile-Input" /></td>
+                    <th>Mobile</th>
+                    <td id="Telephone-Mobile-Cell"><input type="text" name="Profile-Telephone-Mobile" class="medium" id="Telephone-Mobile-Input" value="<?=$employeeDeatils['telephone_mobile'];?>" /></td>
     
-                    <th>Telephone Other</th>
-                    <td id="Telephone-Other-Cell"><input type="text" name="New-Profile-Telephone-Other" id="New-Telephone-Other-Input" /></td>
+                    <th>Other</th>
+                    <td id="Telephone-Other-Cell"><input type="text" name="Profile-Telephone-Other" class="medium" id="Telephone-Other-Input" value="<?=$employeeDeatils['telephone_other'];?>" /></td>
                   </tr>
                 </table>
     					</div>
@@ -255,7 +269,7 @@ if($hasDetails === false)
           <section>
             <article class="full-block">
               <header>
-                <h2>Job Role and Position</h2>
+                <h2>Job Role, Pay and Tax</h2>
               </header>
             </article>
           </section>
@@ -274,13 +288,13 @@ if($hasDetails === false)
                       <tr>
                         <th>Department</th>
                         <td>
-                          <select name="Department" id="Department-Select" rel="<?=(int)$employeeDeatils['call_center_id'];?>">
+                          <select name="Department" id="Department-Select" rel="<?=(int)$employeeDeatils['center_id'];?>">
                             <option value="">-- Select --</option>
                             <?php
                             foreach($departmentsList as $department)
                             {
                               ?>
-                              <option value="<?=$department['id'];?>"><?=$department['name'];?></option>
+                              <option value="<?=$department['id'];?>"<?=isset($jobRole['department_id']) && $jobRole['department_id'] ? ' SELECTED' : false;?>><?=$department['name'];?></option>
                               <?php
                             }
                             ?>
@@ -288,13 +302,13 @@ if($hasDetails === false)
                         </td>
                         <th>Position</th>
                         <td>
-                          <select name="Position" id="Department-Position-Select" id="New-Position-Input">
+                          <select name="Position" id="Department-Position-Select" id="Position-Input">
                             <option value="">-- Select --</option>
                           </select>
                         </td>
                         <th>Level</th>
                         <td>
-                          <select name="Position-Level" id="Department-Position-Level-Select" id="New-Position-Level-Input">
+                          <select name="Position-Level" id="Department-Position-Level-Select">
                             <option value="">-- Select --</option>
                           </select>
                         </td>
@@ -311,35 +325,35 @@ if($hasDetails === false)
                         <th>Time Bonus</th>
                       </tr>
                       <tr>
-                        <td><input type="text" name="Tin-Number" id="New-Tin-Number-Input" placeholder="Tin No." /></td>
+                        <td><input type="text" name="Tin-Number" id="Tin-Number-Input" class="medium" placeholder="Tin No." value="<?=isset($taxAndPay['tin_number']) ? $taxAndPay['tin_number'] : false;?>" /></td>
                         <td>
-                          <select name="Tax-Code" id="New-Tax-Code">
+                          <select name="Tax-Code" id="Tax-Code">
                             <option value="-1">-- Select --</option>
                             <?php
                             foreach($taxCodes as $code)
                             {
                               ?>
-                              <option value="<?=$code['id'];?>"><?=$code['code'];?></option>
+                              <option value="<?=$code['id'];?>"<?=isset($taxAndPay['tax_code_id']) && $taxAndPay['tax_code_id'] == $code['id'] ? ' SELECTED' : false;?>><?=$code['code'];?></option>
                               <?php
                             }
                             ?>
                           </select>
                         </td>
-                        <td><input type="text" name="PhilHealth-Number" id="New-PhilHealth-Number-Input" placeholder="Phil Health" /></td>
-                        <td><input type="text" name="SSS-Number" id="New-SSS-Number-Input" placeholder="SSS No." /></td>
-                        <td><input type="text" name="Basic-Salary" id="New-Basic-Salary-Input" placeholder="Basic Salary" /></td>
-                        <td><input type="text" name="Time-Bonus" id="New-Time-Bonus-Input" placeholder="Time Bonus" /></td>
+                        <td><input type="text" name="PhilHealth-Number" id="PhilHealth-Number-Input" class="medium" placeholder="Phil Health" value="<?=isset($taxAndPay['phil_health_number']) ? $taxAndPay['phil_health_number'] : false;?>" /></td>
+                        <td><input type="text" name="SSS-Number" id="SSS-Number-Input" class="medium" placeholder="SSS No." value="<?=isset($taxAndPay['sss_number']) ? $taxAndPay['sss_number'] : false;?>" /></td>
+                        <td><input type="text" name="Basic-Salary-Override" id="Basic-Salary-Input" class="medium" placeholder="Basic Salary" value="<?=isset($taxAndPay['basic_pay_override']) ? $taxAndPay['basic_pay_override'] : false;?>" /></td>
+                        <td><input type="text" name="Time-Bonus" id="Time-Bonus-Input" class="medium" placeholder="Time Bonus" value="<?=isset($taxAndPay['time_bonus']) ? $taxAndPay['time_bonus'] : false;?>" /></td>
                       </tr>
                       <tr>
                         <th>Managers Bonus</th>
                         <th>Bank</th>
-                        <th>Account Number</th>
+                        <th>A/c Number</th>
                         <th colspan="3"></th>
                       </tr>
                       <tr>
-                        <td><input type="text" name="Managers-Bonus" id="New-Managers-Bonus-Input" placeholder="Managers Bonus" /></td>
-                        <td><input type="text" name="Bank" id="New-Bank-Input" placeholder="Bank" /></td>
-                        <td><input type="text" name="Account-Number" id="New-Account-Number-Input" placeholder="Account Number" /></td>
+                        <td><input type="text" name="Managers-Bonus" id="-Managers-Bonus-Input" class="medium" placeholder="Managers Bonus" value="<?=isset($taxAndPay['managers_bonus']) ? $taxAndPay['managers_bonus'] : false;?>" /></td>
+                        <td><input type="text" name="Bank" id="Bank-Input" class="medium" placeholder="Bank" value="<?=isset($taxAndPay['bank']) ? $taxAndPay['bank'] : false;?>" /></td>
+                        <td><input type="text" name="Account-Number" id="Account-Number-Input" class="medium" placeholder="Account Number" value="<?=isset($taxAndPay['account_number']) ? $taxAndPay['account_number'] : false;?>" /></td>
                         <td colspan="3"></td>
                       </tr>
                     </table>
