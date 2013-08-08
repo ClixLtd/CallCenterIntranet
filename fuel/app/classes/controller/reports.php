@@ -3326,7 +3326,7 @@ GROUP BY
 				{
     				$all_paid_return[] = $allPaid;
                     $totals['paid']['count']++;
-                    $totals['paid']['value']=$totals['paid']['value']+$allPaid['DI'];
+                    $totals['paid']['value']=$totals['paid']['value']+$allPaid[7];
 				}
 				
 				
