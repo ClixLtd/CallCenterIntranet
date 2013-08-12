@@ -2166,6 +2166,7 @@ Gregson and Brooke.');
                       'a.brooke@expertmoneysolutions.co.uk',
                       'i.patterson@expertmoneysolutions.co.uk',
                       'g.gregson@expertmoneysolutions.co.uk',
+                      'l.davenport@expertmoneysolutions.co.uk',
                      ),
         'subject' => 'Resolve: Staff Break/Lunch Late Report',
         'results' => array(),
