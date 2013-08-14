@@ -3316,14 +3316,17 @@ GROUP BY
     				$totals['paid']['count']++;
 					$totals['paid']['value']=$totals['paid']['value']+$paid['DI'];
 				}
-				
-				
-				
-				
+
+
+
+                $totals['paid']['count'] = 0;
+                $totals['paid']['value'] = 0;
 				$all_paid_return = array();
 				foreach ($all_paid AS $allPaid)
 				{
     				$all_paid_return[] = $allPaid;
+                    $totals['paid']['count']++;
+                    $totals['paid']['value']=$totals['paid']['value']+$allPaid[7];
 				}
 				
 				
