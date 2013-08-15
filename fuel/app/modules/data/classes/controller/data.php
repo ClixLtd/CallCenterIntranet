@@ -5,14 +5,14 @@ namespace Data;
 class Controller_Data extends \Templates\Controller_Force
 {
 
-    public $_intranetVersion = 1;
+    public $_intranetVersion = 2;
 
     public function action_index($supplier_id=null)
     {
         $quickView = array(
             'top5' => \Data\Model_Data::list_all($supplier_id, 'score', 5),
         );
-        
+
         $this->template->title = 'Example Page';
         $this->template->content = "hello";
     }
