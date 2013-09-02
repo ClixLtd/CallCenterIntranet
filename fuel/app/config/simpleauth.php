@@ -73,7 +73,7 @@ return array(
 		 
 		 65   => array('name' => 'External Support Rep', 'roles' => array('telesales_manager', 'area_manager', 'ppi', 'ppi_admin', 'ppireports')),
 		 
-		 69   => array('name' => 'Telesales Manager', 'roles' => array('telesales_manager', 'ppi', 'ppireports')),
+		 69   => array('name' => 'Telesales Manager', 'roles' => array('telesales_manager')),
 		 
 		 70   => array('name' => 'Sales Manager', 'roles' => array('telesales_manager', 'ppi', 'ppireports')),
 		 
