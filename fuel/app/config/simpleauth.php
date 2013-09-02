@@ -123,7 +123,7 @@ return array(
 		 ),
 
         'telesales_manager' => array(
-            'reports' => array('menu','disposition', 'ppi'),
+            'reports' => array('menu','disposition'),
         ),
 
         'telesales_manager_all' => array(
