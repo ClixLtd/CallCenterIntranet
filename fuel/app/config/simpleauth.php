@@ -75,7 +75,7 @@ return array(
 		 
 		 69   => array('name' => 'Telesales Manager', 'roles' => array('telesales_manager')),
 		 
-		 70   => array('name' => 'Sales Manager', 'roles' => array('telesales_manager', 'ppi', 'ppireports')),
+		 70   => array('name' => 'Sales Manager', 'roles' => array('telesales_manager')),
 		 
 		 72   => array('name' => 'Super Sales Manager', 'roles' => array('telesales_manager_all', 'manager', 'area_manager', 'ppi', 'ppireports')),
 		 
