@@ -2733,7 +2733,7 @@ GROUP BY
 					{
 						$lost_parse[] = array(
 							'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['ClientID'].'</a>',
-							'', #$result['Dialler Lead ID'],
+							$result['Dialler Lead ID'],
 							$result['Name'],
 							$result['Lead Source'],
 							$result['Office'],
@@ -2773,7 +2773,7 @@ GROUP BY
 						
 							$result_parse[] = array(
 								'<a href="/reports/change_offices/'.$result['ClientID'].'/">'.$result['ClientID'].'</a>',
-                                '', #$result['Dialler Lead ID'],
+                                $result['Dialler Lead ID'],
 								$result['Name'],
 								$result['Lead Source'],
 								$result['Office'],
@@ -3074,7 +3074,7 @@ GROUP BY
 				{
 					$all_pack_in[] = array(
 						'<a href="/reports/change_offices/'.$pack_in['ClientID'].'/">'.$pack_in['ClientID'].'</a>',
-                        '', #$pack_in['Dialler Lead ID'],
+                        $pack_in['Dialler Lead ID'],
 						$pack_in['Name'],
 						$pack_in['Lead Source'],
 						$pack_in['Office'],
