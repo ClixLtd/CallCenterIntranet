@@ -2446,13 +2446,10 @@ GROUP BY
 				$results1 = DB::query("SELECT CLD.ClientID
 				  ,CLD.LeadRef AS 'Dialler Lead ID'
 			      ,(CD.Forename + ' ' + CD.Surname) AS Name
-			      ,CASE WHEN
-			          (SELECT TOP (1) Description FROM Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT) = '<None>'
-			       THEN
-			           (SELECT TOP (1) Description FROM Debtsolv.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
-			       ELSE
-			           (SELECT TOP (1) Description FROM Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
-			       END AS 'Lead Source'
+			      , CASE WHEN D_CLD.SourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv.dbo.Type_Lead_Source WHERE ID=D_CLD.SourceID)
+                      WHEN LBA.LeadSourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
+                      ELSE (SELECT TOP (1) Description FROM Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
+                    END AS 'Lead Source'
 			      ,CASE WHEN
 			      	ISNULL(DI_REF.short_code,'<None>') = '<None>'
 			       THEN
@@ -2565,13 +2562,10 @@ GROUP BY
 			    $results2 = DB::query("SELECT CLD.ClientID
 				  ,CLD.LeadRef AS 'Dialler Lead ID'
 			      ,(CD.Forename + ' ' + CD.Surname) AS Name
-			      ,CASE WHEN
-			          (SELECT TOP (1) Description FROM BS_Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT) = '<None>'
-			       THEN
-			           (SELECT TOP (1) Description FROM BS_Debtsolv_DM.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
-			       ELSE
-			           (SELECT TOP (1) Description FROM BS_Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
-			       END AS 'Lead Source'
+			      , CASE WHEN D_CLD.SourceID > 0 THEN (SELECT TOP (1) Description FROM BS_Debtsolv_DM.dbo.Type_Lead_Source WHERE ID=D_CLD.SourceID)
+                      WHEN LBA.LeadSourceID > 0 THEN (SELECT TOP (1) Description FROM BS_Debtsolv_DM.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
+                      ELSE (SELECT TOP (1) Description FROM BS_Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
+                    END AS 'Lead Source'
 			      ,CASE WHEN
 			      	ISNULL(DI_REF.short_code,'<None>') = '<None>'
 			       THEN
@@ -2849,13 +2843,10 @@ GROUP BY
 					  ,D_CPD.ClientID AS ClientID
 					  ,CLD.LeadRef AS 'Dialler Lead ID'
 				      ,(CD.Forename + ' ' + CD.Surname) AS Name
-				      ,CASE WHEN
-			          (SELECT TOP (1) Description FROM BS_Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT) = '<None>'
-			       THEN
-			           (SELECT TOP (1) Description FROM BS_Debtsolv_DM.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
-			       ELSE
-			           (SELECT TOP (1) Description FROM BS_Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
-			       END AS 'Lead Source'
+				      , CASE WHEN D_CLD.SourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv.dbo.Type_Lead_Source WHERE ID=D_CLD.SourceID)
+                          WHEN LBA.LeadSourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
+                          ELSE (SELECT TOP (1) Description FROM Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
+                        END AS 'Lead Source'
 				      ,CLD.LeadRef2 AS Office
 				      ,TCR.[Description]
 				      
@@ -2954,13 +2945,10 @@ GROUP BY
 					  ,D_CPD.ClientID AS ClientID
 					  ,CLD.LeadRef AS 'Dialler Lead ID'
 				      ,(CD.Forename + ' ' + CD.Surname) AS Name
-				      ,CASE WHEN
-			          (SELECT TOP (1) Description FROM BS_Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT) = '<None>'
-			       THEN
-			           (SELECT TOP (1) Description FROM BS_Debtsolv_DM.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
-			       ELSE
-			           (SELECT TOP (1) Description FROM BS_Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
-			       END AS 'Lead Source'
+				      , CASE WHEN D_CLD.SourceID > 0 THEN (SELECT TOP (1) Description FROM BS_Debtsolv_DM.dbo.Type_Lead_Source WHERE ID=D_CLD.SourceID)
+                          WHEN LBA.LeadSourceID > 0 THEN (SELECT TOP (1) Description FROM BS_Debtsolv_DM.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
+                          ELSE (SELECT TOP (1) Description FROM BS_Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
+                        END AS 'Lead Source'
 				      ,CLD.LeadRef2 AS Office
 				      ,TCR.[Description]
 				      
@@ -3098,13 +3086,10 @@ GROUP BY
                                                 D_CD.ClientID
                                               , D_CLD.LeadPoolReference
                                               , (CD.Forename + ' ' + CD.Surname) AS Name
-                                              ,CASE WHEN
-			          (SELECT TOP (1) Description FROM BS_Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT) = '<None>'
-			       THEN
-			           (SELECT TOP (1) Description FROM BS_Debtsolv_DM.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
-			       ELSE
-			           (SELECT TOP (1) Description FROM BS_Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
-			       END AS 'Lead Source'
+                                              , CASE WHEN D_CLD.SourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv.dbo.Type_Lead_Source WHERE ID=D_CLD.SourceID)
+                                                  WHEN LBA.LeadSourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
+                                                  ELSE (SELECT TOP (1) Description FROM Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
+                                                END AS 'Lead Source'
 											  , CLD.LeadRef2 AS Office
 											  , CASE
                             				      		WHEN
@@ -3179,13 +3164,10 @@ GROUP BY
                                                 D_CD.ClientID
                                               , D_CLD.LeadPoolReference
                                               , (CD.Forename + ' ' + CD.Surname) AS Name
-                                              ,CASE WHEN
-			          (SELECT TOP (1) Description FROM BS_Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT) = '<None>'
-			       THEN
-			           (SELECT TOP (1) Description FROM BS_Debtsolv_DM.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
-			       ELSE
-			           (SELECT TOP (1) Description FROM BS_Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
-			       END AS 'Lead Source'
+                                              , CASE WHEN D_CLD.SourceID > 0 THEN (SELECT TOP (1) Description FROM BS_Debtsolv_DM.dbo.Type_Lead_Source WHERE ID=D_CLD.SourceID)
+                                                  WHEN LBA.LeadSourceID > 0 THEN (SELECT TOP (1) Description FROM BS_Debtsolv_DM.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
+                                                  ELSE (SELECT TOP (1) Description FROM BS_Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
+                                                END AS 'Lead Source'
 											  , ISNULL(CLD.LeadRef2,'RESOLVE') AS Office
 											  , CASE
                             				      		WHEN
