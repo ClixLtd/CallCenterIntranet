@@ -710,7 +710,7 @@ class Source
 		    
 	    }
 
-        $listScore = ($listScore / $referralCount);
+        $listScore = ($referralCount > 0) ? ($listScore / $referralCount) : 0;
 	    
 	    \DB::update('data')->set(array(
 	    	'contacted_leads' => $diallerCount[0]['contacted'],
