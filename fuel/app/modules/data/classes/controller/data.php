@@ -37,6 +37,11 @@ class Controller_Data extends \Controller_BaseHybrid
 
         $topScore = 0;
 
+        foreach ($allData as $key=>$singleData)
+        {
+            $allData[$key]['score'] = ($singleData['score'] > 0 ) ? ($singleData['purchased_leads'] / $singleData['score']) : 0;
+        }
+
         foreach ($allData as $singleData)
         {
             if ($singleData['score'] >= $topScore)
