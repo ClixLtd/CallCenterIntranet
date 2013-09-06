@@ -11,7 +11,8 @@
 				<th>Referrals</th>
 				<th>Pack Out</th>
 				<th>Pack In</th>
-				<th>Paid</th>
+                <th>Paid</th>
+                <th>Score</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -25,7 +26,8 @@
 				<td><span rel="tooltip" title="<?php echo number_format((((int)$list['referrals']/(int)$list['contacted_leads'])*100),2)."%"; ?>"><?php echo $list['referrals']; ?></span></td>
 				<td><span rel="tooltip" title="<?php echo number_format((((int)$list['pack_out']/(int)$list['referrals'])*100),2)."%"; ?>"><?php echo $list['pack_out']; ?></span></td>
 				<td><span rel="tooltip" title="<?php echo number_format((((int)$list['pack_in']/(int)$list['pack_out'])*100),2)."%"; ?>"><?php echo $list['pack_in']; ?></span></td>
-				<td><span rel="tooltip" title="<?php echo number_format((((int)$list['first_payment']/(int)$list['pack_in'])*100),2)."%"; ?>"><?php echo $list['first_payment']; ?></span></td>
+                <td><span rel="tooltip" title="<?php echo number_format((((int)$list['first_payment']/(int)$list['pack_in'])*100),2)."%"; ?>"><?php echo $list['first_payment']; ?></span></td>
+                <td><?php echo ($list['score'] / $list['purchased_leads']); ?></td>
 			</tr>
 			<?php endforeach; ?>
 		</tbody>
