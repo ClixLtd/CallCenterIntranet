@@ -580,6 +580,13 @@ class Source
                                   , CASE WHEN TCR.Description = 'Lead Completed' THEN 'TRUE' ELSE 'FALSE' END AS PackOut
                                   , CASE WHEN D_CLD.DatePackReceived >= CONVERT(datetime, '2000-01-01 00:00:00', 105) THEN 'TRUE' ELSE 'FALSE' END AS PackIn
                                   , CASE WHEN DCD.FirstPaymentDate >= '2000-01-01' THEN 'TRUE' ELSE 'FALSE' END AS FirstPayment
+                                  , CASE
+                                      WHEN DCD.FirstPaymentDate >= '2000-01-01' THEN (D_PD.NormalExpectedPayment * 1) / 100
+                                      WHEN D_CLD.DatePackReceived >= CONVERT(datetime, '2000-01-01 00:00:00', 105) THEN (D_PD.NormalExpectedPayment * 0.65) / 100
+                                      WHEN TCR.Description = 'Lead Completed' THEN (D_PD.NormalExpectedPayment * 0.3) / 100
+                                    ELSE
+                                      0
+                                    END AS Score
                                 FROM
                                   LeadPool_DM.dbo.Client_LeadDetails AS L_CLD
                                 LEFT JOIN
@@ -611,6 +618,13 @@ class Source
                                   , CASE WHEN TCR.Description = 'Lead Completed' THEN 'TRUE' ELSE 'FALSE' END AS PackOut
                                   , CASE WHEN D_CLD.DatePackReceived >= CONVERT(datetime, '2000-01-01 00:00:00', 105) THEN 'TRUE' ELSE 'FALSE' END AS PackIn
                                   , CASE WHEN DCD.FirstPaymentDate >= '2000-01-01' THEN 'TRUE' ELSE 'FALSE' END AS FirstPayment
+                                  , CASE
+                                      WHEN DCD.FirstPaymentDate >= '2000-01-01' THEN (D_PD.NormalExpectedPayment * 1) / 100
+                                      WHEN D_CLD.DatePackReceived >= CONVERT(datetime, '2000-01-01 00:00:00', 105) THEN (D_PD.NormalExpectedPayment * 0.65) / 100
+                                      WHEN TCR.Description = 'Lead Completed' THEN (D_PD.NormalExpectedPayment * 0.3) / 100
+                                    ELSE
+                                      0
+                                    END AS Score
                                 FROM
                                   BS_LeadPool_DM.dbo.Client_LeadDetails AS L_CLD
                                 LEFT JOIN
@@ -640,7 +654,8 @@ class Source
 	    $resolveDebtsolvCount = \DB::query($resolveDebtsolvCountQuery)->execute('debtsolv')->as_array();
 	    
 	    $combinedList = array();
-	    
+	    $listScore = 0;
+
 	    foreach ($gabDebtsolvCount as $singleLead)
 	    {
 		    $combinedList[$singleLead['LeadID']] = array(
@@ -648,6 +663,7 @@ class Source
 		    	'PackIn'       => $singleLead['PackIn'],
 		    	'FirstPayment' => $singleLead['FirstPayment'],
 		    );
+            $listScore = $listScore + $singleLead['Score'];
 	    }
 	    
 	    
@@ -697,6 +713,7 @@ class Source
             'pack_out'        => $packOutCount,
             'pack_in'         => $packInCount,
             'first_payment'   => $paidCount,
+            'score'           => $listScore,
         ))->where('id', $this->id)->execute();
 	    
     }
