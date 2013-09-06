@@ -605,6 +605,8 @@ class Source
                                   Debtsolv.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID = D_TLS.ID
                                 LEFT JOIN
                                   Dialler.dbo.referrals AS DMR ON D_CLD.LeadPoolReference=DMR.leadpool_id
+                                LEFT JOIN
+                                  Debtsolv.dbo.Client_PaymentData AS D_PD ON D_CLD.Client_ID=D_PD.ClientID
                                 WHERE
                                   L_TLS.Reference = '".$this->listID."'
                                 OR
@@ -643,6 +645,8 @@ class Source
                                   BS_Debtsolv_DM.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID = D_TLS.ID
                                 LEFT JOIN
                                   Dialler.dbo.referrals AS DMR ON D_CLD.LeadPoolReference=DMR.leadpool_id
+                                LEFT JOIN
+                                  BS_Debtsolv_DM.dbo.Client_PaymentData AS D_PD ON D_CLD.Client_ID=D_PD.ClientID
                                 WHERE
                                   L_TLS.Reference = '".$this->listID."'
                                 OR
