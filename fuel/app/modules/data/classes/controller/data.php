@@ -39,11 +39,13 @@ class Controller_Data extends \Controller_BaseHybrid
 
         foreach ($allData as $singleData)
         {
-            if ($singleData['Score'] > $topScore)
+            if ($singleData['Score'] >= $topScore)
             {
                 $topScore = $singleData['Score'];
             }
         }
+
+        print $topScore;
 
         $this->template->title = 'Listing all Data';
         $this->template->content = \View::forge('view/list', array(
