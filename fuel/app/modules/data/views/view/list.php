@@ -1,5 +1,3 @@
-<?php echo $topScore; ?>
-
 <div class="container">
        
 	<table class="datatable">

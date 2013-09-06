@@ -39,9 +39,9 @@ class Controller_Data extends \Controller_BaseHybrid
 
         foreach ($allData as $singleData)
         {
-            if ($singleData['Score'] >= $topScore)
+            if ($singleData['score'] >= $topScore)
             {
-                $topScore = $singleData['Score'];
+                $topScore = $singleData['score'];
             }
         }
 
