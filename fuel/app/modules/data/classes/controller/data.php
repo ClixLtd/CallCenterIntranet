@@ -45,8 +45,6 @@ class Controller_Data extends \Controller_BaseHybrid
             }
         }
 
-        print $topScore;
-
         $this->template->title = 'Listing all Data';
         $this->template->content = \View::forge('view/list', array(
         	'lists' => $allData,
