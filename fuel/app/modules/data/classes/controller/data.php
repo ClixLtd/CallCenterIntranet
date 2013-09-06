@@ -39,7 +39,7 @@ class Controller_Data extends \Controller_BaseHybrid
 
         foreach ($allData as $key=>$singleData)
         {
-            $allData[$key]['score'] = ($singleData['score'] > 0 ) ? ($singleData['purchased_leads'] / $singleData['score']) : 0;
+            $allData[$key]['score'] = ($singleData['score'] > 0 ) ? ($singleData['score'] / $singleData['purchased_leads']) : 0;
         }
 
         foreach ($allData as $singleData)
