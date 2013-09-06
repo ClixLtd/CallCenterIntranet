@@ -628,7 +628,7 @@ class Source
                                 LEFT JOIN
                                   BS_Debtsolv_DM.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID = D_TLS.ID
                                 LEFT JOIN
-                                  BS_Dialler_DM.dbo.referrals AS DMR ON D_CLD.LeadPoolReference=DMR.leadpool_id
+                                  Dialler.dbo.referrals AS DMR ON D_CLD.LeadPoolReference=DMR.leadpool_id
                                 WHERE
                                   L_TLS.Reference = '".$this->listID."'
                                 OR
