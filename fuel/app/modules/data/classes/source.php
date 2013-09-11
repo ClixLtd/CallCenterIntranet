@@ -217,7 +217,7 @@ class Source
             $tpsNumbers = array();
             
             // Check the numbers for duplicates
-            if (count($telephoneNumbers) > 0)
+            if (in_array(\Data\Source::DUPES, (array)$this->importOptions) && count($telephoneNumbers) > 0)
             {
                 list($telephoneNumbers,$duplicateNumbers) = $this->checkDuplicate($telephoneNumbers);
                 $isDuplicate = (count($telephoneNumbers) > 0) ? false : true;
@@ -449,14 +449,7 @@ class Source
     protected function _complete()
     {
         $this->_load();
-        
-        
-        
-        
-        
-        
-        
-        
+
         // E-Mail Managers with new campaign lists
 		$email = \Email::forge();
 		
