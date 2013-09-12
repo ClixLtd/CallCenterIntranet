@@ -4,7 +4,7 @@
   <body>
     <h2>Spark E Monthly Payment Report for <?=$month;?></h2>
     
-    <table>
+    <table cellpadding="5" cellspacing="0">
       <thead>
         <tr style="background-color:#DDDDDD">
           <th>Client ID</th>

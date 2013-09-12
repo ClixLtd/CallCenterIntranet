@@ -2718,7 +2718,7 @@ Gregson and Brooke.');
                                 LEAD_DATA.Client_ID
                                ,INTRODUCER.Name
                                ,CONVERT(VARCHAR, LEAD_DATA.DatePackReceived, 103) AS PackReceived
-                               ," . $packOutValue . " AS 'payment'
+                               ," . $packOutValue . " AS Payment
                              FROM
                                Debtsolv.dbo.Client_LeadData AS LEAD_DATA
                              INNER JOIN
@@ -2755,7 +2755,7 @@ Gregson and Brooke.');
       
       // -- Check to see if today is the first day of the month
       // ------------------------------------------------------
-      if(date("d-m-Y") != date("01-m-Y"))
+      if(date("d-m-Y") != date("12-m-Y"))
         return;
         
       $results = array();
