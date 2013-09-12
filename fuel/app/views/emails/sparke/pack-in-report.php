@@ -6,7 +6,7 @@
   <body>
     <h2>Spark E Pack-In Payment Report for <?=$date;?></h2>
     
-    <table>
+    <table cellpadding="5" cellspacing="0">
       <thead>
         <tr style="background-color:#DDDDDD">
           <th>Client ID</th>
@@ -27,7 +27,7 @@
               <td><?=$client['Client_ID'];?></td>
               <td><?=$client['Name'];?></td>
               <td><?=$client['PackReceived'];?></td>
-              <td><?=isset($client['Value']) ? $client['Value'] : 0;?></td>
+              <td>&pound;<?=isset($client['Payment']) ? $client['Payment'] : 0;?></td>
             </tr>
             <?php
             $background2 = ($background2 == 0) ? 1 : 0;
