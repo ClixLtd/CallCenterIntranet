@@ -2755,7 +2755,7 @@ Gregson and Brooke.');
       
       // -- Check to see if today is the first day of the month
       // ------------------------------------------------------
-      if(date("d-m-Y") != date("12-m-Y"))
+      if(date("d-m-Y") != date("13-m-Y"))
         return;
         
       $results = array();
