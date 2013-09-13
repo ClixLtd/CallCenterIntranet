@@ -8,7 +8,7 @@
     </p><p>
     <table cellpadding="5" cellspacing="0" width="100%">
       <thead>
-        <tr style="background-color:#DDDDDD">
+        <tr style="background-color:#DDDDDD; border-bottom: 2px solid #999999">
           <th>Client ID</th>
           <th>First Payment Date</th>
           <th>Second Payment Data</th>
@@ -22,20 +22,31 @@
       if(count($clients) > 0)
       {
         $background2 = 0;
+        $total = 0;
         foreach($clients as $client)
         {
           ?>
           <tr style="background-color: <?php echo ($background2 == 0) ? "#EEEEEE" : "#CCCCCC"; ?>; border-bottom: #DDDDDD 1px solid;">
-            <td align="right"><?=$client['ClientID'];?></td>
-            <td align="right"><?=date("d-m-Y", strtotime($client['FirstPaymentDate']));?></td>
-            <td align="right"><?=date("d-m-Y", strtotime($client['SecondPaymentDate']));?></td>
+            <td align="center"><?=$client['ClientID'];?></td>
+            <td align="center"><?=isset($client['FirstPaymentDate']) ? date("d-m-Y", strtotime($client['FirstPaymentDate'])) : false;?></td>
+            <td align="center"><?=isset($client['SecondPaymentDate']) ? date("d-m-Y", strtotime($client['SecondPaymentDate'])) : false;?></td>
             <td align="right">&pound;<?=$client['UsedDI'];?></td>
             <td align="center"><?=$client['PaymentMethod'];?></td>
             <td align="right">&pound;<?=$client['PaymentToMake'];?></td>
           </tr>
           <?php
           $background2 = ($background2 == 0) ? 1 : 0;
+          if($client['PaymentToMake'] > 0)
+            $total += $client['PaymentToMake'];
         }
+        ?>
+        <tr>
+          <td>&nbsp;</td>
+          <td colspan="4">&nbsp;</td>
+          <td align="right"><b>Total:</b></td>
+          <td><?=number_format($total, 0);?></td>
+        </tr>
+        <?php
       }
       else
       {
