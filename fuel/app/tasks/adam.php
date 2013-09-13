@@ -2894,6 +2894,23 @@ Gregson and Brooke.');
                                 ,PaymentToMake ASC
                             ", \DB::SELECT)->execute('debtsolv')->as_array();
                             
+      // -- Get Totals
+      // -------------
+      $totalDI = 0;
+      $totalToPayOut = 0;
+      
+      if(count($results) > 0)
+      {
+        foreach($results as $clients)
+        {
+          if($clients['UsedDI'] > 0)
+            $totalDI += $clients['UsedDI'];
+            
+          if($clients['PaymentToMake'] > 0)
+            $totalToPayOut += $clients['PaymentToMake'];
+        }
+      }
+                            
       $month = date("F", strtotime("-1 Month", time()));
                             
       $email = \Email::forge();
@@ -2906,6 +2923,8 @@ Gregson and Brooke.');
     
       $email->html_body(\View::forge('emails/sparke/monthly-payment-report', array('clients' => $results,
                                                                                    'month' => $month,
+                                                                                   'totalDI' => $totalDI,
+                                                                                   'totalToPayOut' => $totalToPayOut,
                                                                                   )
           				       ));
                   

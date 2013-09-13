@@ -6,9 +6,22 @@
     <p>
     The payment to make column is the double the DI minus the &pound;100 paid for the for the pack-in.
     </p><p>
+    <table>
+      <tr>
+        <th style="background-color: #DDDDDD;">Total Clients:</th>
+        <td align="center"><?=number_format(count($clients));?></td>
+        
+        <th style="background-color: #DDDDDD;">Total DI:</th>
+        <td align="right">&pound;<?=number_format($totalDI, 2);?></td>
+        
+        <th style="background-color: #DDDDDD;">Total Payment to Make:</th>
+        <td align="right">&pound;<?=number_format($totalToPayOut);?></td>
+      </tr>
+    </table>
+    </p><p>
     <table cellpadding="5" cellspacing="0" width="100%">
       <thead>
-        <tr style="background-color:#DDDDDD; border-bottom: 2px solid #999999">
+        <tr style="height: 35px; background-color:#DDDDDD; border-bottom: 2px solid #999999">
           <th>Client ID</th>
           <th>First Payment Date</th>
           <th>Second Payment Data</th>
@@ -36,15 +49,12 @@
           </tr>
           <?php
           $background2 = ($background2 == 0) ? 1 : 0;
-          if($client['PaymentToMake'] > 0)
-            $total += $client['PaymentToMake'];
         }
         ?>
         <tr>
-          <td>&nbsp;</td>
           <td colspan="4">&nbsp;</td>
-          <td align="right"><b>Total:</b></td>
-          <td><?=number_format($total, 0);?></td>
+          <td align="right" style="background-color: #DDDDDD;"><b>Total:</b></td>
+          <td align="right"><b><?=number_format($totalToPayOut);?></b></td>
         </tr>
         <?php
       }

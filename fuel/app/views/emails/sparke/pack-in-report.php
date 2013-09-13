@@ -5,7 +5,17 @@
   </head>
   <body>
     <h2>Spark E Pack-In Payment Report for <?=$date;?></h2>
-    
+    <p>
+    <table>
+      <tr>
+        <th style="background-color: #DDDDDD;">Total Clients:</th>
+        <td align="center"><?=count($clients);?></td>
+        
+        <th style="background-color: #DDDDDD;">Total To Payout:</th>
+        <td>&pound;<?=number_format((count($clients) * 100), 2);?></td>
+      </tr>
+    </table>
+    </p><p>
     <table cellpadding="5" cellspacing="0">
       <thead>
         <tr style="background-color:#DDDDDD">
@@ -42,5 +52,6 @@
         ?>
       </tbody>
     </table>
+    </p>
   </body>
 </html>
