@@ -6,13 +6,13 @@
   <body>
     <h2>Spark E Pack-In Payment Report for <?=$date;?></h2>
     <p>
-    <table>
+    <table cellpadding="5" cellspacing="0" style="border: 1px solid #999999;">
       <tr>
         <th style="background-color: #DDDDDD;">Total Clients:</th>
-        <td align="center"><?=count($clients);?></td>
+        <td width="120" align="center" style="background-color: #CCCCCC;"><?=count($clients);?></td>
         
         <th style="background-color: #DDDDDD;">Total To Payout:</th>
-        <td>&pound;<?=number_format((count($clients) * 100), 2);?></td>
+        <td width="120" style="background-color: #CCCCCC;">&pound;<?=number_format((count($clients) * 100), 2);?></td>
       </tr>
     </table>
     </p><p>
