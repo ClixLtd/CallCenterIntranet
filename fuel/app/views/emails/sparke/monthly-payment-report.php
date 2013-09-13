@@ -8,20 +8,20 @@
     </p><p>
     <table cellpadding="5" cellspacing="0" style="border: 1px solid #999999;">
       <tr>
-        <th style="background-color: #DDDDDD;">Total Clients:</th>
-        <td width="120" align="center" style="background-color: #CCCCCC;"><?=number_format(count($clients));?></td>
+        <th style="background-color: #CCCCCC;">Total Clients:</th>
+        <td width="120" align="center" style="background-color: #FFF;"><?=number_format(count($clients));?></td>
         
-        <th style="background-color: #DDDDDD;">Total DI:</th>
-        <td width="120" align="right" style="background-color: #CCCCCC;">&pound;<?=number_format($totalDI, 2);?></td>
+        <th style="background-color: #CCCCCC;">Total DI:</th>
+        <td width="120" align="right" style="background-color: #FFF;">&pound;<?=number_format($totalDI, 2);?></td>
         
-        <th style="background-color: #DDDDDD;">Total Payment to Make:</th>
-        <td width="120" align="right" style="background-color: #CCCCCC;">&pound;<?=number_format($totalToPayOut);?></td>
+        <th style="background-color: #CCCCCC;">Total Payment to Make:</th>
+        <td width="120" align="right" style="background-color: #FFF;">&pound;<?=number_format($totalToPayOut);?></td>
       </tr>
     </table>
     </p><p>
     <table cellpadding="5" cellspacing="0" width="100%">
       <thead>
-        <tr style="background-color:#DDDDDD;">
+        <tr style="background-color:#CCCCCC;">
           <th height="45">Client ID</th>
           <th>First Payment Date</th>
           <th>Second Payment Data</th>
@@ -56,8 +56,8 @@
         </tr>
         <tr>
           <td colspan="4">&nbsp;</td>
-          <td align="right" style="background-color: #DDDDDD;"><b>Total:</b></td>
-          <td align="right" style="background-color: #CCCCCC;"><b><?=number_format($totalToPayOut);?></b></td>
+          <td align="right" style="background-color: #CCCCCC;"><b>Total:</b></td>
+          <td align="right" style="background-color: #FFF;"><b>&pound;<?=number_format($totalToPayOut);?></b></td>
         </tr>
         <?php
       }
