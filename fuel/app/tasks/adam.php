@@ -406,6 +406,10 @@
       // -----------------------------------
       @Adam::terminated_suspended_clients_report();
       
+      // -- Spark E Report for Sahil to Accounts
+      // ---------------------------------------
+      @Adam::sahilPaymentReport();
+      
 			@Adam::daily_stats();
 			
 			// Run List stat checker
@@ -2711,7 +2715,7 @@ Gregson and Brooke.');
       $introducerID = 53;
       $packOutValue = 100;
       $date = date("d-m-Y");
-      $emailTo = "d.stansfield@gabfs.co.uk";
+      $emailTo = "sparke-reports@gabfs.co.uk";
       
       $results = array();
       $results = \DB::query("SELECT
@@ -2731,7 +2735,6 @@ Gregson and Brooke.');
                                LEAD_DATA.DatePackReceived >= DATEADD(day, DATEDIFF(day, 0, GetDate()), 0);
                             ", \DB::SELECT)->execute('debtsolv')->as_array();
                             
-      // Config supplied
       $email = \Email::forge();
       
       $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
@@ -2755,7 +2758,7 @@ Gregson and Brooke.');
       
       // -- Check to see if today is the first day of the month
       // ------------------------------------------------------
-      if(date("d-m-Y") != date("13-m-Y"))
+      if(date("d-m-Y") != date("01-m-Y"))
         return;
         
       $results = array();
@@ -2869,16 +2872,18 @@ Gregson and Brooke.');
                                 Debtsolv.dbo.Type_Payment_Method AS PAYMENT_METHOD ON PAYMENT_DATA.PaymentMethod = PAYMENT_METHOD.ID
                               WHERE
                               (
+                                  YEAR(TABLE1.[Date]) = YEAR(GETDATE())
+                                AND
                                   MONTH(TABLE1.[Date]) = MONTH(GETDATE()) - 1
                                 AND
                                   PAYMENT_DATA.PaymentMethod = 3
                                 OR
+                                  YEAR(TABLE2.[Date]) = YEAR(GETDATE())
+                                AND
                                   MONTH(TABLE2.[Date]) = MONTH(GETDATE()) - 1
                                 AND
                                   PAYMENT_DATA.PaymentMethod = 11
-                                )
-                              --AND
-                              --  TABLE1.ClientID = 823049
+                              )
                               GROUP BY
                                  TEMP_TABLE.ClientID
                                 ,TABLE1.[Date]
