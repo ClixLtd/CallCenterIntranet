@@ -9,13 +9,13 @@
     <table cellpadding="5" cellspacing="0" style="border: 1px solid #999999;">
       <tr>
         <th style="background-color: #CCCCCC;">Total Clients:</th>
-        <td width="120" align="center" style="background-color: #FFF;"><?=number_format(count($clients));?></td>
+        <td width="120" align="center" style="background-color: #EEE;"><?=number_format(count($clients));?></td>
         
         <th style="background-color: #CCCCCC;">Total DI:</th>
-        <td width="120" align="right" style="background-color: #FFF;">&pound;<?=number_format($totalDI, 2);?></td>
+        <td width="120" align="right" style="background-color: #EEE;">&pound;<?=number_format($totalDI, 2);?></td>
         
         <th style="background-color: #CCCCCC;">Total Payment to Make:</th>
-        <td width="120" align="right" style="background-color: #FFF;">&pound;<?=number_format($totalToPayOut);?></td>
+        <td width="120" align="right" style="background-color: #EEE;">&pound;<?=number_format($totalToPayOut);?></td>
       </tr>
     </table>
     </p><p>
@@ -57,7 +57,7 @@
         <tr>
           <td colspan="4">&nbsp;</td>
           <td align="right" style="background-color: #CCCCCC;"><b>Total:</b></td>
-          <td align="right" style="background-color: #FFF;"><b>&pound;<?=number_format($totalToPayOut);?></b></td>
+          <td align="right" style="background-color: #EEE;"><b>&pound;<?=number_format($totalToPayOut);?></b></td>
         </tr>
         <?php
       }
