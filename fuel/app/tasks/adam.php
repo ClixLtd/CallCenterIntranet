@@ -2128,7 +2128,7 @@ Gregson and Brooke.');
       $lunchTime = '3600';
       
       $totalMonToThurs = '5400';
-      $totalFri = '4500';
+      $totalFri = '5400'; #Old Time 4500
       
       $date = date("Y-m-d", strtotime("-1 day", time()));
       $startDateTime = date("Y-m-d 00:00:01", strtotime("-1 day", time()));
@@ -2142,7 +2142,7 @@ Gregson and Brooke.');
         'GABSENIOR',
         'GABPPISNR',
       );
-      
+      /*
       $resolveGroup = array(
         'PREMIER-RESOLVE',
         'PREMIER-RESOLVEPART',
@@ -2150,20 +2150,19 @@ Gregson and Brooke.');
         'STANDARD-RESOLVEPART',
         'RESOLVE',
       );
-      
+      */
       $hqEmailDetails = array(
         'to' => array('d.stansfield@expertmoneysolutions.co.uk',
                       'k.wallwork@expertmoneysolutions.co.uk',
                       'l.davenport@expertmoneysolutions.co.uk',
                       'a.brooke@expertmoneysolutions.co.uk',
-                      'i.patterson@expertmoneysolutions.co.uk',
                       'g.gregson@expertmoneysolutions.co.uk',
                       's.jayne@expertmoneysolutions.co.uk',
                      ),
         'subject' => 'Bolton: Staff Break/Lunch Late Report',
         'results' => array(),
       );
-      
+      /*
       $resolveEmailDetails = array(
         'to' => array('d.stansfield@expertmoneysolutions.co.uk',
                       'l.baker@resolvemm.co.uk',
@@ -2177,6 +2176,7 @@ Gregson and Brooke.');
         'subject' => 'Resolve: Staff Break/Lunch Late Report',
         'results' => array(),
       );
+      */
       
       // -- Get the Results
       // ------------------
@@ -2205,7 +2205,7 @@ Gregson and Brooke.');
                                GROUP BY
                                  VAL.user
                                HAVING
-                                 time_diff > 0
+                                 time_diff >= 60
                                ORDER BY
                                  time_diff DESC
                             ", \DB::SELECT)->execute('gabdialler')->as_array();
@@ -2253,12 +2253,14 @@ Gregson and Brooke.');
           // -----------
           $hqEmailDetails['results'][] = $results[$key];
         }
+        /*
         else if(in_array($result['user_group'], $resolveGroup))
         {
           // -- Resolve Group
           // ----------------
           $resolveEmailDetails['results'][] = $results[$key];
         }
+        */
       }
       
       // -- Send the emails out to the sales managers
@@ -2287,6 +2289,7 @@ Gregson and Brooke.');
       
       // -- Resolve Email
       // ----------------
+      /*
       if(count($resolveEmailDetails['results']) > 0)
       {
         $email = \Email::forge();
@@ -2303,6 +2306,7 @@ Gregson and Brooke.');
                       
         $email->send();
       }
+      */
     }
     
     /**
