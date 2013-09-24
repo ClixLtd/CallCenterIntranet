@@ -34,10 +34,26 @@ class Controller_Data extends \Controller_BaseHybrid
     public function action_list($supplier_id=null)
     {
         $allData = \Data\Model_Data::list_all($supplier_id, 'id');
-        
+
+        $topScore = 0;
+
+        foreach ($allData as $key=>$singleData)
+        {
+            $allData[$key]['score'] = ($singleData['score'] > 0 ) ? ($singleData['score'] / $singleData['purchased_leads']) : 0;
+        }
+
+        foreach ($allData as $singleData)
+        {
+            if ($singleData['score'] >= $topScore)
+            {
+                $topScore = $singleData['score'];
+            }
+        }
+
         $this->template->title = 'Listing all Data';
         $this->template->content = \View::forge('view/list', array(
         	'lists' => $allData,
+            'topScore' => $topScore,
         ));
     }
     
