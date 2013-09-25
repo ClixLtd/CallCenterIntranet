@@ -536,7 +536,7 @@ class Debtsolv {
 			}
 			else if ($center == "GBS")
 			{
-				$center_query = "AND DI_REF.short_code IN ('GBS','1TICK-GBS', 'EMS-GBS)";
+				$center_query = "AND DI_REF.short_code IN ('GBS','1TICK-GBS', 'EMS-GBS')";
 			}
 			else
 			{
