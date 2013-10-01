@@ -5,6 +5,163 @@ class Controller_incentive extends Controller_BaseApi
 
 
 
+    // Battle Ships Incentive Starts Here
+    // W - Water, no shot taken
+    // M - Miss, just water but nice try
+    // H - Hit, part of ship hit
+    // S - Sink, full ship sunk
+
+    public function doShot($square, $agent)
+    {
+        $result = \DB::select('ship_id')->from('incentive_battleships_ship_parts')->where('square', $square)->execute()->as_array();
+
+        if (count($result) > 0)
+        {
+            $shipID = $result[0]['ship_id'];
+            // Get Ship Length
+            $lengthCheck = \DB::select('length')->from('incentive_battleships_ships')->where('id', $shipID)->execute()->as_array();
+            $hitCheck = \DB::select('*')->from('incentive_battleships_ship_parts')->where('ship_id', $shipID)->where('status', 2)->execute()->as_array();
+
+
+            $shipLength = $lengthCheck[0]['length'];
+            $previousHits = count($hitCheck);
+
+            $isSunk = (($previousHits+1) >= $shipLength) ? true : false;
+
+            if (!$isSunk)
+            {
+                list($a, $b) = \DB::insert('incentive_battleships_turns')->set(array(
+                    'user_id' => $agent,
+                    'square' => $square,
+                    'status' => 2,
+                ))->execute();
+
+                $updres = \DB::update('incentive_battleships_ship_parts')->value('status', 2)->where('square', $square)->execute();
+
+                return "H";
+
+            }
+            else
+            {
+                list($a, $b) = \DB::insert('incentive_battleships_turns')->set(array(
+                    'user_id' => $agent,
+                    'square' => $square,
+                    'status' => 3,
+                ))->execute();
+
+                $updres = \DB::update('incentive_battleships_ships')->value('status', 1)->where('id', $shipID)->execute();
+                $updres = \DB::update('incentive_battleships_ship_parts')->value('status', 3)->where('ship_id', $shipID)->execute();
+
+                return "S";
+            }
+
+        }
+        else
+        {
+            list($a, $b) = \DB::insert('incentive_battleships_turns')->set(array(
+                'user_id' => $agent,
+                'square' => $square,
+                'status' => 1,
+            ))->execute();
+            return "M";
+        }
+
+    }
+
+
+    // Create the Battleships Board with Results
+    public function generateBoard()
+    {
+        $statusConvert = array(
+            1 => 'M',
+            2 => 'H',
+            3 => 'S',
+        );
+
+        $board = array();
+        $dimensions = array(
+            'w' => 20,
+            'h' => 20,
+        );
+        $letters = array();
+        for ($j=1; $j <= $dimensions['w']; $j++)
+        {
+            $letters[$j] = chr( ($j + 64) );
+        }
+
+        for ($i=1; $i <= $dimensions['h']; $i++)
+        {
+            for ($j=1; $j <= $dimensions['w']; $j++)
+            {
+                $result = \DB::select('status', 'user_id')->from('incentive_battleships_turns')->where('square', $letters[$j].$i)->execute()->as_array();
+
+                $agent = \DB::select('first_name', 'last_name')->from('staffs')->where('network_id', $result[0]['user_id'])->execute()->as_array();
+
+                // Check the database for something in this square
+                $board[$i][$letters[$j]] = array(
+                    'type' => $statusConvert[$result[0]['status']],
+                    'agent' => $agent[0]['first_name'] . " " . $agent[0]['last_name'],
+                );
+            }
+        }
+
+        return $board;
+    }
+
+
+
+    public function action_displayboard()
+    {
+        $board = Controller_incentive::generateBoard();
+
+        $agents = \DB::select('first_name', 'last_name', 'network_id')->from('staffs')->where('active', 1)->order_by('first_name')->execute()->as_array();
+
+        $this->template->title = 'Battleships';
+        $this->template->content = View::forge('incentive/battleships_board', array(
+            'board' => $board,
+            'agents' => $agents,
+        ));
+    }
+
+    public function action_takeShot()
+    {
+
+        $square = Input::post('square');
+        $agent = Input::post('agent');
+
+
+        $result = Controller_incentive::doShot($square, $agent);
+
+        switch($result)
+        {
+            case "M":
+                $template = "battleships_miss";
+                break;
+            case "H":
+                $template = "battleships_hit";
+                break;
+            case "S":
+                $template = "battleships_sunk";
+                break;
+
+        }
+
+        $this->template->title = 'Battleships';
+        $this->template->content = View::forge('incentive/' . $template);
+
+    }
+
+
+
+    // Battle Ships Incentive Ends Here
+
+
+
+
+
+
+
+
 	public function get_trading_places($center=null)
 	{
 
