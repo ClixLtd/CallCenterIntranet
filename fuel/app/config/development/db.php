@@ -25,6 +25,7 @@ return array(
 		'table_prefix' => '',
 		'connection' => array(
 				'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=LeadPool_DM',
+        #'dsn'            => 'sqlsrv:Server=109.235.124.18,1334;Database=LeadPool_DM',
 		        'username'       => 'superuser',
 		        'password'       => 'Rfd32xs12B',
 		        'persistent'     => false,
