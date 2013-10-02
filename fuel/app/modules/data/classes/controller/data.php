@@ -70,7 +70,7 @@ class Controller_Data extends \Controller_BaseHybrid
 	    	'Last Name' => 'last_name',
 	    	'Number' => 'phone_number',
 	    	'Alt Number' => 'alt_phone',
-	    	'Status' => 'current_status',
+	    	'Status' => 'number_data',
 	    );
 	    
 	    $headingArray = array();
@@ -89,7 +89,15 @@ class Controller_Data extends \Controller_BaseHybrid
 	    	$singleArray = array();
 	    	foreach ($headings as $heading)
 	    	{
-		    	$singleArray[] = $singleLead[$heading];
+                if ($heading == 'number_data')
+                {
+                    $allData = unserialize($singleLead[$heading]);
+                    $singleArray[] = $allData['duplicates']['data_list_ids'];
+                }
+                else
+                {
+                    $singleArray[] = $singleLead[$heading];
+                }
 	    	}
 	    	$makeArray[] = $singleArray;
 	    }
