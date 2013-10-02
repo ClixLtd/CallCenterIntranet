@@ -89,7 +89,6 @@ return array(
 				5 => '006_add_dates_to_data',
 				6 => '007_create_data_headings',
 				7 => '008_add_current_status_to_data_dialler_copy',
-				8 => '009_add_score_to_data',
 			),
 			'suppliers' => 
 			array(
