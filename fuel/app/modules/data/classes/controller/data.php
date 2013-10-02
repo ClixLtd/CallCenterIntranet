@@ -99,7 +99,7 @@ class Controller_Data extends \Controller_BaseHybrid
 
                     $diallerListID = $diallerListIDQuery[0]['dialler_id'];
 
-                    $singleArray[] = 'Duplicate from list '.$diallerListID;
+                    $singleArray[] = ((int)$diallerListID > 0) ? 'Duplicate from list '.$diallerListID : 'TPS Match'    ;
                 }
                 else
                 {
