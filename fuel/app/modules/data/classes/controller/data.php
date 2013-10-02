@@ -92,7 +92,14 @@ class Controller_Data extends \Controller_BaseHybrid
                 if ($heading == 'number_data')
                 {
                     $allData = unserialize($singleLead[$heading]);
-                    $singleArray[] = $allData['duplicates']['data_list_ids'];
+
+                    $duplicateIntranetList = $allData['duplicates']['data_list_ids'];
+
+                    $diallerListIDQuery = \DB::select('dialler_id')->from('data')->where('id', $duplicateIntranetList)->execute()->as_array();
+
+                    $diallerListID = $diallerListIDQuery[0]['dialler_id'];
+
+                    $singleArray[] = 'Duplicate from list '.$diallerListID;
                 }
                 else
                 {
