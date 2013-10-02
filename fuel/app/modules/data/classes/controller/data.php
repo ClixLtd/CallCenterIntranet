@@ -93,7 +93,7 @@ class Controller_Data extends \Controller_BaseHybrid
                 {
                     $allData = unserialize($singleLead[$heading]);
 
-                    $duplicateIntranetList = $allData['duplicates']['data_list_ids'];
+                    $duplicateIntranetList = $allData['duplicates']['data_list_ids'][0];
 
                     $diallerListIDQuery = \DB::select('dialler_id')->from('data')->where('id', $duplicateIntranetList)->execute()->as_array();
 
