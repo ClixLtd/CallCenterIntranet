@@ -73,9 +73,11 @@ class Controller_Data extends \Controller_BaseHybrid
 	    
 	    $headingArray = array();
 	    $headingCounts = array();
+	    $headingNames = array();
 	    foreach ($headings as $heading=>$dbcolumn)
 	    {
 		    $headingCounts[] = $dbcolumn;
+		    $headingNames[] = $heading;
 	    }
 	    
 	    
@@ -124,7 +126,7 @@ class Controller_Data extends \Controller_BaseHybrid
 	    
 	}
 	
-	$data = implode(",", $headings)."\n";
+	$data = implode(",", $headingNames)."\n";
 	foreach ($makeArray as $oneLine)
 	{
 	    $data .= implode(",", $oneLine)."\n";
