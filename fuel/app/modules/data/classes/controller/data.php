@@ -109,7 +109,13 @@ class Controller_Data extends \Controller_BaseHybrid
 	    
 	}
 	
-	$data = \Format::forge($makeArray)->to_csv();
+	$data = "";
+	foreach ($makeArray as $oneLine)
+	{
+	    $data = implode(",", $oneLine)."\n";
+	}
+	
+	//$data = \Format::forge($makeArray)->to_csv();
 	    
 	$response = new \Response();
 	$response->set_header('Content-Type', 'text/csv');
