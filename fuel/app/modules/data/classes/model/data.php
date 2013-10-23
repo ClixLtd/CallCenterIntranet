@@ -143,10 +143,10 @@ class Model_Data
             
             if ($limit > 0)
             {
-                    $dataQuery->limit($limit);
-            }
+                $dataQuery->limit($limit);
             
-            $dataQuery->offset($start);
+                $dataQuery->offset($start);
+            }
 	    
 	    $queryResults = $dataQuery->cached(600)->execute()->as_array();  
 	    
