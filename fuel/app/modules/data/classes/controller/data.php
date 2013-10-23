@@ -129,6 +129,8 @@ class Controller_Data extends \Controller_BaseHybrid
 	
 	echo $data;
 	
+	return "";
+	
     }
     
     
