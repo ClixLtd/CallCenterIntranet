@@ -112,7 +112,7 @@ class Controller_Data extends \Controller_BaseHybrid
 	$data = "";
 	foreach ($makeArray as $oneLine)
 	{
-	    $data = implode(",", $oneLine)."\n";
+	    $data .= implode(",", $oneLine)."\n";
 	}
 	
 	//$data = \Format::forge($makeArray)->to_csv();
