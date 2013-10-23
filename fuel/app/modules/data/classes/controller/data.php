@@ -90,14 +90,22 @@ class Controller_Data extends \Controller_BaseHybrid
                 if ($heading == 'number_data')
                 {
                     $allData = unserialize($singleLead[$heading]);
-
-                    $duplicateIntranetList = $allData['duplicates']['data_list_ids'][0];
-
-                    $diallerListIDQuery = \DB::select('dialler_id')->from('data')->where('id', $duplicateIntranetList)->execute()->as_array();
 		    
-		    if (count($diallerListIDQuery) > 0)
+		    if (isset($allData['duplicates']['data_list_ids']))
 		    {
-                    	$diallerListID = $diallerListIDQuery[0]['dialler_id'];
+                	$duplicateIntranetList = $allData['duplicates']['data_list_ids'][0];
+
+                    	$diallerListIDQuery = \DB::select('dialler_id')->from('data')->where('id', $duplicateIntranetList)->execute()->as_array();
+		    
+		    	if (count($diallerListIDQuery) > 0)
+		    	{
+                    		$diallerListID = $diallerListIDQuery[0]['dialler_id'];
+		    	}
+		    	else
+		    	{
+		    		$diallerListID = 0;
+		    	}
+		    
 		    }
 		    else
 		    {
