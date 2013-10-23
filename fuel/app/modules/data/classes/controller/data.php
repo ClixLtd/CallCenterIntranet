@@ -79,7 +79,7 @@ class Controller_Data extends \Controller_BaseHybrid
 	    }
 	    
 	    
-	    list($validLeads, $validCount, $filterCount) = \Data\Model_Data::get_leads($data_id, -1, null, null, null, '=', null);
+	    list($validLeads, $validCount, $filterCount) = \Data\Model_Data::get_leads($data_id, -1, 0, 'dialler_lead_id', 'asc', '=');
 	   
 	    $invalidArray = array();
 	    $makeArray = array();
