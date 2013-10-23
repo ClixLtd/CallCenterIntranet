@@ -113,7 +113,7 @@ class Controller_Data extends \Controller_BaseHybrid
 	    
 	$response = new Response();
 	$response->set_header('Content-Type', 'application/pdf');
-	$response->set_header('Content-Disposition', 'attachment; filename="'.$data_id.'_'.date('Ymd-Hi')'.csv"');
+	$response->set_header('Content-Disposition', 'attachment; filename="'.$data_id.'_'.date('Ymd-Hi').'.csv"');
 	
 	$response->body($date);
 	
