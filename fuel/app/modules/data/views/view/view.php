@@ -54,7 +54,7 @@
 
     <div class="tab" id="invalidleads">
 			<article class="full-block">
-				<h3>Valid Leads</h3>
+				<h3>Invalid Leads</h3>
 				
 				<article class="full-block">
 					<table id="table-invalidLeads">
@@ -82,6 +82,9 @@
 							} );
 						} );
 					</script>
+					
+					<p><a href="/data/exportinvalidleads/<?php echo $listID; ?>/">Click Here</a> to download all invalid leads (Please note: This could take a while)</p>
+					
 				</article>
 			</article>
 		</div>
