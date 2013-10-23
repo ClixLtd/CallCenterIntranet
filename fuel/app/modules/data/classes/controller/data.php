@@ -98,13 +98,16 @@ class Controller_Data extends \Controller_BaseHybrid
 		    
 		    if (isset($allData['duplicates']['data_list_ids']))
 		    {
-                	$duplicateIntranetList = $allData['duplicates']['data_list_ids'][0];
+		    	
+		    	foreach ($allData['duplicates']['data_list_ids'] as $did)
+		    	{
+		    	    $diallerListIDQuery = \DB::select('dialler_id')->from('data')->where('id', $did)->execute()->as_array();
+		    	}
+		    	
 
-                    	$diallerListIDQuery = \DB::select('dialler_id')->from('data')->where('id', $duplicateIntranetList)->execute()->as_array();
-		    
 		    	if (count($diallerListIDQuery) > 0)
 		    	{
-                    		$diallerIDs[] = $diallerListIDQuery[0]['dialler_id'];
+                    	    $diallerIDs[] = $diallerListIDQuery[0]['dialler_id'];
 		    	}
 		    
 		    }
