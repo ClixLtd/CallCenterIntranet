@@ -117,7 +117,7 @@ class Controller_Data extends \Controller_BaseHybrid
 		    	}
 		    }
 		    
-                    $singleArray[] = (count($diallerIDs) > 0) ? 'Duplicate from list(s) '.implode(",", $diallerIDs) : 'TPS Match';
+                    $singleArray[] = (count($diallerIDs) > 0) ? 'Duplicate from list(s) '.implode("/", $diallerIDs) : 'TPS Match';
                 }
                 else
                 {
