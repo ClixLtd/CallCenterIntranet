@@ -124,7 +124,7 @@ class Controller_Data extends \Controller_BaseHybrid
 	    
 	}
 	
-	$data = "";
+	$data = implode(",", $headings)."\n";
 	foreach ($makeArray as $oneLine)
 	{
 	    $data .= implode(",", $oneLine)."\n";
