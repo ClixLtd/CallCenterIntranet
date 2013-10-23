@@ -58,6 +58,68 @@ class Controller_Data extends \Controller_BaseHybrid
     }
     
     
+    public function action_exportinvalidleads($data_id)
+    {
+	    
+	    $headings = array(
+	    	'Dialler ID' => 'dialler_lead_id',
+	    	'Title' => 'title',
+	    	'First Name' => 'first_name',
+	    	'Last Name' => 'last_name',
+	    	'Number' => 'phone_number',
+	    	'Alt Number' => 'alt_phone',
+	    	'Status' => 'number_data',
+	    );
+	    
+	    $headingArray = array();
+	    $headingCounts = array();
+	    foreach ($headings as $heading=>$dbcolumn)
+	    {
+		    $headingCounts[] = $dbcolumn;
+	    }
+	    
+	    
+	    list($validLeads, $validCount, $filterCount) = \Data\Model_Data::get_leads($data_id, -1);
+	    	    
+	    $makeArray = array();
+	    foreach ($validLeads as $singleLead)
+	    {
+	    	$singleArray = array();
+	    	foreach ($headings as $heading)
+	    	{
+                if ($heading == 'number_data')
+                {
+                    $allData = unserialize($singleLead[$heading]);
+
+                    $duplicateIntranetList = $allData['duplicates']['data_list_ids'][0];
+
+                    $diallerListIDQuery = \DB::select('dialler_id')->from('data')->where('id', $duplicateIntranetList)->execute()->as_array();
+
+                    $diallerListID = $diallerListIDQuery[0]['dialler_id'];
+
+                    $singleArray[] = ((int)$diallerListID > 0) ? 'Duplicate from list '.$diallerListID : 'TPS Match'    ;
+                }
+                else
+                {
+                    $singleArray[] = $singleLead[$heading];
+                }
+	    }
+	    
+	    $makeArray[] = $singleArray;
+	    
+	}
+	
+	$data = \Format::forge($makeArray)->to_csv();
+	    
+	$response = new Response();
+	$response->set_header('Content-Type', 'application/pdf');
+	$response->set_header('Content-Disposition', 'attachment; filename="'.$data_id.'_'.date('Ymd-Hi')'.csv"');
+	
+	$response->body($date);
+	
+	return $response;
+	
+    }
     
     
     public function get_invalidleads($data_id)
