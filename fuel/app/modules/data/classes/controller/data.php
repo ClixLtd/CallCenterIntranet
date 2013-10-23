@@ -79,8 +79,9 @@ class Controller_Data extends \Controller_BaseHybrid
 	    }
 	    
 	    
-	    list($validLeads, $validCount, $filterCount) = \Data\Model_Data::get_leads($data_id, -1);
-	    	    
+	    list($validLeads, $validCount, $filterCount) = \Data\Model_Data::get_leads($data_id, -1, null, null, null, '=', null);
+	   
+	    $invalidArray = array();
 	    $makeArray = array();
 	    foreach ($validLeads as $singleLead)
 	    {
@@ -169,8 +170,10 @@ class Controller_Data extends \Controller_BaseHybrid
 	    }
 	    
 	    
-	    list($validLeads, $validCount, $filterCount) = \Data\Model_Data::get_leads($data_id, \Input::get('iDisplayLength'), \Input::get('iDisplayStart'), $headingCounts[\Input::get('iSortCol_0')], \Input::get('sSortDir_0'), '=', \Input::get('sSearch', null));
-	    	    
+	    list($validLeads, $validCount, $filterCount) = \Data\Model_Data::get_leads($data_id, \Input::get('iDisplayLength'), \Input::get('iDisplayStart'), $headingCounts[\Input::get('iSortCol_0')], \Input::get('sSortDir_0'), '=', \Input::get('sSearch', null), false);
+	    	   
+	    	   
+	    $invalidArray = array();
 	    $makeArray = array();
 	    foreach ($validLeads as $singleLead)
 	    {
@@ -180,7 +183,7 @@ class Controller_Data extends \Controller_BaseHybrid
                 if ($heading == 'number_data')
                 {
                     $allData = unserialize($singleLead[$heading]);
-
+			
                     $duplicateIntranetList = $allData['duplicates']['data_list_ids'][0];
 
                     $diallerListIDQuery = \DB::select('dialler_id')->from('data')->where('id', $duplicateIntranetList)->execute()->as_array();
