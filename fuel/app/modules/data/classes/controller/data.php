@@ -121,9 +121,13 @@ class Controller_Data extends \Controller_BaseHybrid
 	$response->set_header('Content-Type', 'text/csv');
 	$response->set_header('Content-Disposition', 'attachment; filename="'.$data_id.'_'.date('Ymd-Hi').'.csv"');
 	
-	$response->body($data);
+	// $response->body($data);
 	
-	return $response;
+	//return $response;
+	
+	$response->send_headers();
+	
+	echo $data;
 	
     }
     
