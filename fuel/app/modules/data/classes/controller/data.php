@@ -93,6 +93,8 @@ class Controller_Data extends \Controller_BaseHybrid
                 if ($heading == 'number_data')
                 {
                     $allData = unserialize($singleLead[$heading]);
+		    $diallerIDs = array();
+		    
 		    
 		    if (isset($allData['duplicates']['data_list_ids']))
 		    {
@@ -102,19 +104,20 @@ class Controller_Data extends \Controller_BaseHybrid
 		    
 		    	if (count($diallerListIDQuery) > 0)
 		    	{
-                    		$diallerListID = $diallerListIDQuery[0]['dialler_id'];
-		    	}
-		    	else
-		    	{
-		    		$diallerListID = 0;
+                    		$diallerIDs[] = $diallerListIDQuery[0]['dialler_id'];
 		    	}
 		    
 		    }
-		    else
+		    
+		    if (isset($allData['duplicates']['list_ids']))
 		    {
-		    	$diallerListID = 0;
+		    	foreach ($allData['duplicates']['list_ids'] as $did)
+		    	{
+		    		$diallerIDs[] = $did;
+		    	}
 		    }
-                    $singleArray[] = ((int)$diallerListID > 0) ? 'Duplicate from list '.$diallerListID : 'TPS Match'    ;
+		    
+                    $singleArray[] = (count($diallerIDs) > 0) ? 'Duplicate from list(s) '.implode(",", $diallerIDs) : 'TPS Match';
                 }
                 else
                 {
