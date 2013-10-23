@@ -94,9 +94,15 @@ class Controller_Data extends \Controller_BaseHybrid
                     $duplicateIntranetList = $allData['duplicates']['data_list_ids'][0];
 
                     $diallerListIDQuery = \DB::select('dialler_id')->from('data')->where('id', $duplicateIntranetList)->execute()->as_array();
-
-                    $diallerListID = $diallerListIDQuery[0]['dialler_id'];
-
+		    
+		    if (count($diallerListIDQuery) > 0)
+		    {
+                    	$diallerListID = $diallerListIDQuery[0]['dialler_id'];
+		    }
+		    else
+		    {
+		    	$diallerListID = 0;
+		    }
                     $singleArray[] = ((int)$diallerListID > 0) ? 'Duplicate from list '.$diallerListID : 'TPS Match'    ;
                 }
                 else
