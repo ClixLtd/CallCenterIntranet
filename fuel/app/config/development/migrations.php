@@ -103,6 +103,16 @@ return array(
 				6 => '007_create_clientarea_messages_statuses',
 				7 => '008_create_clientarea_type_access_log_type',
 			),
+			'survey' => 
+			array(
+				0 => '001_create_scripts_tables',
+				1 => '002_create_scripts_forms_tables',
+				2 => '003_alter_scripts_forms_can_repeat',
+				3 => '004_alter_scripts_script_form_id',
+				4 => '005_alter_scripts_forms_responses_add_answers',
+				5 => '006_create_scripts_forms_reponses_log',
+				6 => '007_alter_scripts_add_domain_id',
+			),
 		),
 		'package' => 
 		array(
