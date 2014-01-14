@@ -35,11 +35,11 @@
                   <tr style="background-color: <?php echo ($background==0) ? "#DDDDDD" : "#EEEEEE"; ?>; border-bottom: #CCCCCC 1px solid;">
                     <td align="center"><?=$result['user'];?></td>
                     <td align="center"><?=$result['agent_name'];?></td>
-                    <td align="center"><?=$result['dials'];?></td>
-                    <td><?=$result['connections'];?></td>
-                    <td align="center"><?=$result['none_connections'];?></td>
-                    <td align="center"><?=$result['pitched_to'];?></td>
-                    <td align="center"><?=$result['sales'];?></td>
+                    <td align="center"><?=number_format($result['dials']);?></td>
+                    <td align="center"><?=number_format($result['connections']);?></td>
+                    <td align="center"><?=number_format($result['none_connections']);?></td>
+                    <td align="center"><?=number_format($result['pitched_to']);?></td>
+                    <td align="center"><?=number_format($result['sales']);?></td>
                   </tr>
                   <?php
                   $background = ($background==0) ? 1 : 0;
@@ -48,7 +48,7 @@
               else
               {
                 ?>
-                <td colspan="8">No Transfers</td>
+                <td colspan="8">No Data for Today</td>
                 <?php
               }
               ?>
