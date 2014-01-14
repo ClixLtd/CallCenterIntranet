@@ -400,7 +400,8 @@
 			
 			// No longer daily
 			//@Adam::move_telesales_staff();
-
+      
+      @Adam::daily_dialler_report();
 
       // -- Terminated and Suspended Clients
       // -----------------------------------
@@ -2547,6 +2548,54 @@ Gregson and Brooke.');
       // -- Log the task as completed
       // ----------------------------
       \Log::info("Task :: terminated_suspended_clients_report | Status :: Completed");
+    }
+    
+    /**
+     * Daily Dialler Report for Gary
+     * 
+     * @author David Stansfield
+     */
+    public function daily_dialler_report()
+    {
+      $results = array();
+      $results = \DB::query("SELECT
+                               LOG.user
+                              ,USER.full_name AS agent_name
+                              ,COUNT(LOG.uniqueid) AS dials
+                              ,SUM(IF(STATUS.human_answered = 'Y', 1, 0)) AS connections
+                              ,SUM(IF(STATUS.human_answered = 'N', 1, 0)) AS none_Connections
+                              ,SUM(IF(length_in_sec > 30 AND STATUS.human_answered = 'Y', 1, 0)) AS pitched_to
+                              ,SUM(IF(LOG.comments = 'AUTO', 1, 0)) AS auto_calls
+                              ,SUM(IF(LOG.comments = 'MANUAL', 1, 0)) AS manual_calls
+                              ,SUM(IF(status = 'SALE', 1, 0)) AS sales
+                             FROM
+                               vicidial_log_archive AS LOG
+                             LEFT JOIN
+                               vicidial_users AS USER USING(user)
+                             INNER JOIN
+                               vicidial_statuses AS STATUS USING(status)
+                             WHERE
+                               DATE(LOG.call_date) = CURDATE()
+                             GROUP BY
+                               LOG.user
+                            ", \DB::SELECT)->execute('gabdialler')->as_array();
+                            
+      // -- Send email out
+      // -----------------
+      $email = \Email::forge();
+      $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+
+      $email->to(array('d.stansfield@clix.co.uk'));
+          
+      $email->subject('Dialler Call Stats for' . ' ' . date("d-m-Y"));
+  
+      $email->html_body(\View::forge('emails/dialler/agentcallstats', array('results' => $results,)
+        				       ));
+                
+      $email->send();
+    
+      unset($results);
+      unset($email);
     }
     
     /**

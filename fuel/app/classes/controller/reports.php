@@ -1,9 +1,9 @@
 <?php
 
-class Controller_Reports extends Controller_BaseHybrid
+class Controller_Reports extends \Templates\Controller_Force
 {
-    
-    
+
+    public $_intranetVersion = 1;
     
     public static function generate_externals_report($introducer=null, $_startDate=null, $_endDate=null)
     {

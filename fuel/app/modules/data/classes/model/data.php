@@ -140,13 +140,13 @@ class Model_Data
 		
 		
 	    $dataQuery->order_by($sortCol, $sortDirection);
-            
-            if ($limit > 0)
-            {
-                $dataQuery->limit($limit);
-            
-                $dataQuery->offset($start);
-            }
+	    
+	    if ($limit > 0)
+	    {
+	    	$dataQuery->limit($limit);
+	    }
+	    
+	    $dataQuery->offset($start);
 	    
 	    $queryResults = $dataQuery->cached(600)->execute()->as_array();  
 	    

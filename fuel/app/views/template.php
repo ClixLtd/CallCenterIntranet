@@ -14,7 +14,9 @@
 	
 	<link rel="shortcut icon" href="/favicon.ico">
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-	
+
+    <?php echo Asset::css('bootstrap.min.css'); ?>
+
 	<!-- CSS Styles -->
 	<?php echo Asset::css('style.css'); ?>
 	<?php echo Asset::css('colors.css'); ?>
@@ -31,7 +33,9 @@
   
   <?php echo Asset::css('hr.css'); ?>
 	
-	
+
+
+
 	<?php echo Asset::js('jquery/jquery.datatables.js'); ?>
 	<?php echo Asset::js('jquery/jquery.datatables.datesort.js'); ?>
 	
@@ -47,6 +51,8 @@
 	<link href='https://fonts.googleapis.com/css?family=Rambla:400,700' rel='stylesheet' type='text/css'>
 
 	<?php echo Asset::js('libs/modernizr-1.7.min.js'); ?>
+
+
 </head>
 
 <!-- Add class .fixed for fixed layout. You would need also edit CSS file for width -->

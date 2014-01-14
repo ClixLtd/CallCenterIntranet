@@ -2,8 +2,10 @@
 
 namespace Data;
 
-class Controller_Data extends \Controller_BaseHybrid
+class Controller_Data extends \Templates\Controller_Force
 {
+
+    public $_intranetVersion = 1;
 
     public function action_index($supplier_id=null)
     {
