@@ -2507,13 +2507,13 @@ Gregson and Brooke.');
                               ,SUM(IF(LOG.comments = 'MANUAL', 1, 0)) AS manual_calls
                               ,SUM(IF(status = 'SALE', 1, 0)) AS sales
                              FROM
-                               vicidial_log_archive AS LOG
+                               vicidial_log AS LOG
                              LEFT JOIN
                                vicidial_users AS USER USING(user)
                              INNER JOIN
                                vicidial_statuses AS STATUS USING(status)
                              WHERE
-                               DATE(LOG.call_date) <= CURDATE()
+                               DATE(LOG.call_date) = CURDATE()
                              GROUP BY
                                LOG.user
                             ", \DB::SELECT)->execute('gabdialler')->as_array();
@@ -2523,7 +2523,7 @@ Gregson and Brooke.');
       $email = \Email::forge();
       $email->from('noreply@expertmoneysolutions.co.uk', 'Dialler: MMS');
 
-      $email->to(array('d.stansfield@clix.co.uk'));
+      $email->to(array('d.stansfield@clix.co.uk', 's.skinner@clix.co.uk', 'gary@gabfs.co.uk'));
           
       $email->subject('Dialler Call Stats for' . ' ' . date("d-m-Y"));
   
