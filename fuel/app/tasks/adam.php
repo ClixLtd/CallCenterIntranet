@@ -2513,7 +2513,7 @@ Gregson and Brooke.');
                              INNER JOIN
                                vicidial_statuses AS STATUS USING(status)
                              WHERE
-                               DATE(LOG.call_date) = CURDATE()
+                               DATE(LOG.call_date) <= CURDATE()
                              GROUP BY
                                LOG.user
                             ", \DB::SELECT)->execute('gabdialler')->as_array();
