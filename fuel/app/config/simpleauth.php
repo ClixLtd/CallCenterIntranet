@@ -85,7 +85,7 @@ return array(
 		 
 		 75	  => array('name' => 'Area Manager', 'roles' => array('telesales_manager_all', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi', 'ppireports')),
 		 
-		 80   => array('name' => 'Director', 'roles' => array('telesales_manager_all', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi', 'ppireports')),
+		 80   => array('name' => 'Director', 'roles' => array('telesales_manager_all', 'manager', 'area_manager', 'best_solution', 'supplier', 'ppi', 'ppireports', 'superuser')),
 		 
 		 85   => array('name' => 'Dialler Administrator', 'roles' => array('support')),
 		 

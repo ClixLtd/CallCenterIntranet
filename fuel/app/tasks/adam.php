@@ -383,7 +383,7 @@
 		
 		public function monday_morning_tasks()
 		{
-			@Adam::move_telesales_staff();
+			Adam::move_telesales_staff();
 		}
 
         // These are tasks to be run at 8am every morning.
@@ -1241,28 +1241,28 @@ Gregson and Brooke.');
 				
 				if ($dial_rate == 0)
 				{
-					$dial_rate = 0.5;
+					$dial_rate = 1;
 				}
 				
 				// Reduce the dial rate based on the current drop rate to try and bring us under the limit quicker.
-				if ($drop_rate > 4)
+				if ($drop_rate > 3)
 				{
-					$dial_rate = ($dial_rate * 0.5);
+					$dial_rate = ($dial_rate * 0.2);
 				}
-				else if ($drop_rate >= 3)
+				else if ($drop_rate >= 2)
 				{
 					$dial_rate = ($dial_rate * 0.7);
 				} 
 				else if ($drop_rate < 2)
 				{
-					$dial_rate = ($dial_rate * 2.5);
+					$dial_rate = ($dial_rate * 2);
 				}
 				
 				$campaign_stats->differential_onemin . "\n";
 				$required_channels = ($dial_rate*($campaign_stats->differential_onemin*1.8));
 				
 				
-				$channels = 500;
+				$channels = 1000;
 				
 				if ($required_channels > $channels)
 				{
@@ -1271,7 +1271,7 @@ Gregson and Brooke.');
 
 				$campaign = \Goautodial\Model_Vicidial_Campaigns::find($campaign_id,array(),$connection);
 				
-				$campaign->auto_dial_level = number_format($dial_rate,3,'.','');
+				$campaign->auto_dial_level = number_format(($dial_rate < 1) ? 1 : $dial_rate,3,'.','');
 				$campaign->save();
 				
 				print $message = $campaign_id . " Dial rate set to: " . number_format($dial_rate,3,'.','');
@@ -1700,6 +1700,59 @@ Gregson and Brooke.');
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
     		    \Cli::write(date("jS F Y", $checkDay)." Done\n");
             }
+
+ \Cli::write("\nStarting June\n");
+                    for ($i = 1; $i <= 30; $i++)
+                    {
+                    $checkDay = mktime(0,0,0,6,$i,2013);
+                    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+                    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+
+ \Cli::write("\nStarting July\n");
+                    for ($i = 1; $i <= 31; $i++)
+                    {
+                    $checkDay = mktime(0,0,0,7,$i,2013);
+                    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+                    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+
+ \Cli::write("\nStarting August\n");
+                    for ($i = 1; $i <= 31; $i++)
+                    {
+                    $checkDay = mktime(0,0,0,8,$i,2013);
+                    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+                    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+
+ \Cli::write("\nStarting September\n");
+                    for ($i = 1; $i <= 30; $i++)
+                    {
+                    $checkDay = mktime(0,0,0,9,$i,2013);
+                    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+                    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+
+ \Cli::write("\nStarting October\n");
+                    for ($i = 1; $i <= 31; $i++)
+                    {
+                    $checkDay = mktime(0,0,0,10,$i,2013);
+                    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+                    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+
+ \Cli::write("\nStarting November\n");
+                    for ($i = 1; $i <= 20; $i++)
+                    {
+                    $checkDay = mktime(0,0,0,11,$i,2013);
+                    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+                    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+
+
+
+
+
     		
 		}
 		
@@ -1712,6 +1765,7 @@ Gregson and Brooke.');
 		 */
 		public function move_telesales_staff($chosenDay=null)
 		{
+			print "Running";
 		    // Work out days are required
 		    $chosenDate = (is_null($chosenDay)) ? strtotime(date('o-\\WW'))  : strtotime($chosenDay);
 		    $earlyDate  = (is_null($chosenDay)) ? strtotime(date("jS F Y", $chosenDate) . ' -7 days') : strtotime($chosenDay . ' -7 days');
@@ -1760,12 +1814,12 @@ Gregson and Brooke.');
                 foreach ($premierGBS as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GBS');
                 
                 // Get PREMIER-GBS
-                $premierRESOLVEPART = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVEPART';")->cached(0)->execute('gabdialler');
-                foreach ($premierRESOLVEPART as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVEPART');
+                //$premierRESOLVEPART = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVEPART';")->cached(0)->execute('gabdialler');
+                //foreach ($premierRESOLVEPART as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVEPART');
                 
                 // Get PREMIER-GBS
-                $premierRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVE';")->cached(0)->execute('gabdialler');
-                foreach ($premierRESOLVE as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
+                //$premierRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVE';")->cached(0)->execute('gabdialler');
+                //foreach ($premierRESOLVE as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
                 
                 // Get PREMIER-GAB
                 $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(0)->execute('gabdialler');
@@ -1776,12 +1830,12 @@ Gregson and Brooke.');
                 foreach ($standardGBS as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GBS');
                 
                 // Get STANDARD-GAB
-                $standardRESOLVEPART = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-RESOLVEPART';")->cached(0)->execute('gabdialler');
-                foreach ($standardRESOLVEPART as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'RESOLVEPART');
+                //$standardRESOLVEPART = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-RESOLVEPART';")->cached(0)->execute('gabdialler');
+                //foreach ($standardRESOLVEPART as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'RESOLVEPART');
                 
                 // Get STANDARD-GAB
-                $standardRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-RESOLVE';")->cached(0)->execute('gabdialler');
-                foreach ($standardRESOLVE as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
+                //$standardRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-RESOLVE';")->cached(0)->execute('gabdialler');
+                //foreach ($standardRESOLVE as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
                 
                 // Get STANDARD-GAB
                 $standardGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GAB';")->cached(0)->execute('gabdialler');
