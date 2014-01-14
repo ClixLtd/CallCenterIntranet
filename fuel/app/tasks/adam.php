@@ -2501,7 +2501,7 @@ Gregson and Brooke.');
                               ,USER.full_name AS agent_name
                               ,COUNT(LOG.uniqueid) AS dials
                               ,SUM(IF(STATUS.human_answered = 'Y', 1, 0)) AS connections
-                              ,SUM(IF(STATUS.human_answered = 'N', 1, 0)) AS none_Connections
+                              ,SUM(IF(STATUS.human_answered = 'N', 1, 0)) AS none_connections
                               ,SUM(IF(length_in_sec > 30 AND STATUS.human_answered = 'Y', 1, 0)) AS pitched_to
                               ,SUM(IF(LOG.comments = 'AUTO', 1, 0)) AS auto_calls
                               ,SUM(IF(LOG.comments = 'MANUAL', 1, 0)) AS manual_calls
@@ -2521,7 +2521,7 @@ Gregson and Brooke.');
       // -- Send email out
       // -----------------
       $email = \Email::forge();
-      $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+      $email->from('noreply@expertmoneysolutions.co.uk', 'Dialler: MMS');
 
       $email->to(array('d.stansfield@clix.co.uk'));
           
