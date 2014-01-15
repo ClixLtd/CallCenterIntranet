@@ -581,25 +581,25 @@ class Source
                                       0
                                     END AS Score
                                 FROM
-                                  LeadPool_DM.dbo.Client_LeadDetails AS L_CLD
+                                  Leadpool_MMS.dbo.Client_LeadDetails AS L_CLD
                                 LEFT JOIN
-                                  Leadpool_DM.dbo.LeadBatch AS L_LB ON L_CLD.LeadBatchID=L_LB.ID
+                                  Leadpool_MMS.dbo.LeadBatch AS L_LB ON L_CLD.LeadBatchID=L_LB.ID
                                 LEFT JOIN
-                                  Debtsolv.dbo.Type_Lead_Source AS L_TLS ON L_LB.LeadSourceID=L_TLS.ID
+                                  Debtsolv_MMS.dbo.Type_Lead_Source AS L_TLS ON L_LB.LeadSourceID=L_TLS.ID
                                 LEFT JOIN
-                                  LeadPool_DM.dbo.Campaign_Contacts AS CC ON L_CLD.ClientID = CC.ClientID
+                                  Leadpool_MMS.dbo.Campaign_Contacts AS CC ON L_CLD.ClientID = CC.ClientID
                                 LEFT JOIN
-                                  LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                                  Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
                                 LEFT JOIN
-                                  Debtsolv.dbo.Client_LeadData AS D_CLD ON L_CLD.ClientID = D_CLD.LeadPoolReference
+                                  Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON L_CLD.ClientID = D_CLD.LeadPoolReference
                                 LEFT JOIN
                                   Dialler.dbo.client_dates AS DCD ON D_CLD.Client_ID=DCD.ClientID
                                 LEFT JOIN
-                                  Debtsolv.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID = D_TLS.ID
+                                  Debtsolv_MMS.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID = D_TLS.ID
                                 LEFT JOIN
                                   Dialler.dbo.referrals AS DMR ON D_CLD.LeadPoolReference=DMR.leadpool_id
                                 LEFT JOIN
-                                  Debtsolv.dbo.Client_PaymentData AS D_PD ON D_CLD.Client_ID=D_PD.ClientID
+                                  Debtsolv_MMS.dbo.Client_PaymentData AS D_PD ON D_CLD.Client_ID=D_PD.ClientID
                                 WHERE
                                   L_TLS.Reference = '".$this->listID."'
                                 OR
@@ -621,15 +621,15 @@ class Source
                                       0
                                     END AS Score
                                 FROM
-                                  BS_LeadPool_DM.dbo.Client_LeadDetails AS L_CLD
+                                  BS_Leadpool_MMS.dbo.Client_LeadDetails AS L_CLD
                                 LEFT JOIN
-                                  BS_Leadpool_DM.dbo.LeadBatch AS L_LB ON L_CLD.LeadBatchID=L_LB.ID
+                                  BS_Leadpool_MMS.dbo.LeadBatch AS L_LB ON L_CLD.LeadBatchID=L_LB.ID
                                 LEFT JOIN
                                   BS_Debtsolv_DM.dbo.Type_Lead_Source AS L_TLS ON L_LB.LeadSourceID=L_TLS.ID
                                 LEFT JOIN
-                                  BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON L_CLD.ClientID = CC.ClientID
+                                  BS_Leadpool_MMS.dbo.Campaign_Contacts AS CC ON L_CLD.ClientID = CC.ClientID
                                 LEFT JOIN
-                                  BS_LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                                  BS_Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
                                 LEFT JOIN
                                   BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON L_CLD.ClientID = D_CLD.LeadPoolReference
                                 LEFT JOIN

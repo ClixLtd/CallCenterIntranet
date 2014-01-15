@@ -764,17 +764,17 @@ WHERE
 			        SELECT Top (1)
 			          Undersigned
 			        FROM
-			          Debtsolv.dbo.Users AS D_URS
+			          Debtsolv_MMS.dbo.Users AS D_URS
 			        LEFT JOIN
-			          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+			          Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
 			        WHERE
 			          D_CLD.LeadPoolReference = CLD.ClientID
 			      ),(SELECT Top (1)
 			      	  Undersigned
 			      	FROM
-			      	  Debtsolv.dbo.Users AS DURS
+			      	  Debtsolv_MMS.dbo.Users AS DURS
 			      	LEFT JOIN
-			      	  Leadpool_DM.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
+			      	  Leadpool_MMS.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
 			      	WHERE
 			      	  CCA.CampaignContactID = CC.ID
 			      	ORDER BY
@@ -794,7 +794,7 @@ WHERE
 			      	SELECT Top (1)
 			      		ResponseText
 			      	FROM
-			      		Debtsolv.dbo.Client_CustomQuestionResponses
+			      		Debtsolv_MMS.dbo.Client_CustomQuestionResponses
 			      	WHERE
 			      		QuestionID = 1
 			      		AND ClientID = D_CLD.Client_ID
@@ -809,27 +809,27 @@ WHERE
 			       END AS 'Call Back Date'
 			       , CC.ContactResult AS ContactResult
 			  FROM
-			    LeadPool_DM.dbo.Client_LeadDetails AS CLD
+			    Leadpool_MMS.dbo.Client_LeadDetails AS CLD
 			  LEFT JOIN
-			    LeadPool_DM.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
+			    Leadpool_MMS.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
 			  LEFT JOIN
-			    LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+			    Leadpool_MMS.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
 			  LEFT JOIN
-			    LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+			    Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
 			  LEFT JOIN
-				LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+				Leadpool_MMS.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
 			  LEFT JOIN
-				LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+				Leadpool_MMS.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
 			  
 			  LEFT JOIN
-				Debtsolv.dbo.Type_Lead_Source AS DSLSO ON LBA.LeadSourceID = DSLSO.ID
+				Debtsolv_MMS.dbo.Type_Lead_Source AS DSLSO ON LBA.LeadSourceID = DSLSO.ID
 				
 			  LEFT JOIN
-			    Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+			    Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
 			  LEFT JOIN
-			    Debtsolv.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+			    Debtsolv_MMS.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
 			  LEFT JOIN
-			    Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+			    Debtsolv_MMS.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
 			  LEFT JOIN
 			  	Dialler.dbo.referrals AS DI_REF ON CLD.ClientID = DI_REF.leadpool_id
 			  WHERE
@@ -2637,14 +2637,14 @@ Gregson and Brooke.');
 		public function checkLists()
 		{
 			
-			$gabLists      = \DB::select('ID','Reference')->from('Leadpool_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
-			$gabListsDM    = \DB::select('ID')->from('Debtsolv.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
-			$gabListsBat   = \DB::select('ID')->from('Leadpool_DM.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
+			$gabLists      = \DB::select('ID','Reference')->from('Leadpool_MMS.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
+			$gabListsDM    = \DB::select('ID')->from('Debtsolv_MMS.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
+			$gabListsBat   = \DB::select('ID')->from('Leadpool_MMS.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
 			
 			
-			$resolveLists  = \DB::select('ID','Reference')->from('BS_Leadpool_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
+			$resolveLists  = \DB::select('ID','Reference')->from('BS_Leadpool_MMS.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
 			$resolveListsDM    = \DB::select('ID')->from('BS_Debtsolv_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
-			$resolveListsBat   = \DB::select('ID')->from('BS_Leadpool_DM.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
+			$resolveListsBat   = \DB::select('ID')->from('BS_Leadpool_MMS.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
 			
 			$gabAll = $resolveAll = array();
 			foreach ($gabLists as $one)
@@ -2683,7 +2683,7 @@ Gregson and Brooke.');
 				
 				$listDetails  = \DB::select('list_description')->from('vicidial_lists')->where('list_id', $missing)->execute('dialler');
 				
-				list($leadSourceID, $rows_affected) = \DB::insert('Leadpool_DM.dbo.Type_Lead_Source')->set(array(
+				list($leadSourceID, $rows_affected) = \DB::insert('Leadpool_MMS.dbo.Type_Lead_Source')->set(array(
 				 	'ID'             => $lastGab,
 					'Description'    => $listDetails[0]['list_description'],
 					'Reference'      => $missing,
@@ -2694,7 +2694,7 @@ Gregson and Brooke.');
 				))->execute('debtsolv');
 				
 				
-				list($leadSourceID, $rows_affected) = \DB::insert('Debtsolv.dbo.Type_Lead_Source')->set(array(
+				list($leadSourceID, $rows_affected) = \DB::insert('Debtsolv_MMS.dbo.Type_Lead_Source')->set(array(
 				 	'ID'             => $lastGabDM,
 					'Alias'          => $listDetails[0]['list_description'],
 					'Reference'      => $missing,
@@ -2707,7 +2707,7 @@ Gregson and Brooke.');
 				))->execute('debtsolv');
 				
 				
-				list($dialler_lead_id, $rows_affected) = \DB::insert('Leadpool_DM.dbo.LeadBatch')->set(array(
+				list($dialler_lead_id, $rows_affected) = \DB::insert('Leadpool_MMS.dbo.LeadBatch')->set(array(
 					'Description'    => $listDetails[0]['list_description'],
 					'Filename'       => '',
 					'LeadSourceID'   => $lastGab,
@@ -2735,7 +2735,7 @@ Gregson and Brooke.');
 				
 				$listDetails  = \DB::select('list_description')->from('vicidial_lists')->where('list_id', $missing)->execute('dialler');
 				
-				list($leadSourceID, $rows_affected) = \DB::insert('BS_Leadpool_DM.dbo.Type_Lead_Source')->set(array(
+				list($leadSourceID, $rows_affected) = \DB::insert('BS_Leadpool_MMS.dbo.Type_Lead_Source')->set(array(
 				 	'ID'             => $lastRes,
 					'Description'    => $listDetails[0]['list_description'],
 					'Reference'      => $missing,
@@ -2759,7 +2759,7 @@ Gregson and Brooke.');
 				))->execute('debtsolv');
 				
 				
-				list($dialler_lead_id, $rows_affected) = \DB::insert('BS_Leadpool_DM.dbo.LeadBatch')->set(array(
+				list($dialler_lead_id, $rows_affected) = \DB::insert('BS_Leadpool_MMS.dbo.LeadBatch')->set(array(
 					'Description'    => $listDetails[0]['list_description'],
 					'Filename'       => '',
 					'LeadSourceID'   => $lastRes,
@@ -2831,11 +2831,11 @@ Gregson and Brooke.');
                                ,CONVERT(VARCHAR, LEAD_DATA.DatePackReceived, 103) AS PackReceived
                                ," . $packOutValue . " AS Payment
                              FROM
-                               Debtsolv.dbo.Client_LeadData AS LEAD_DATA
+                               Debtsolv_MMS.dbo.Client_LeadData AS LEAD_DATA
                              INNER JOIN
-                               Debtsolv.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_DATA.SourceID = LEAD_SOURCE.ID
+                               Debtsolv_MMS.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_DATA.SourceID = LEAD_SOURCE.ID
                              INNER JOIN
-                               Debtsolv.dbo.Lead_Introducers AS INTRODUCER ON LEAD_SOURCE.IntroducerID = INTRODUCER.ID
+                               Debtsolv_MMS.dbo.Lead_Introducers AS INTRODUCER ON LEAD_SOURCE.IntroducerID = INTRODUCER.ID
                              WHERE
                                LEAD_SOURCE.IntroducerID = " . (int)$introducerID . "
                              AND
@@ -2898,7 +2898,7 @@ Gregson and Brooke.');
                                 ,RANK() OVER (PARTITION BY PAYMENT_IN.ClientID ORDER BY PAYMENT_IN.ClientID, PAYMENT_IN.ID) AS RowN
                                 ,PAYMENT_DATA.DIPayment
                               FROM
-                                Debtsolv.dbo.Payment_In AS PAYMENT_IN
+                                Debtsolv_MMS.dbo.Payment_In AS PAYMENT_IN
                               INNER JOIN
                                 (
                                   SELECT
@@ -2907,7 +2907,7 @@ Gregson and Brooke.');
                                        WHEN InitialAgreedAmount > NormalExpectedPayment THEN NormalExpectedPayment ELSE InitialAgreedAmount
                                      END AS DIPayment
                                   FROM
-                                    Debtsolv.dbo.Client_PaymentData
+                                    Debtsolv_MMS.dbo.Client_PaymentData
                                 ) AS PAYMENT_DATA ON PAYMENT_IN.ClientID = PAYMENT_DATA.ClientID
                               INNER JOIN
                                 (
@@ -2917,7 +2917,7 @@ Gregson and Brooke.');
                                     ,[Date]
                                     ,FLOOR(SUM(Amount)) AS RunningTotal
                                   FROM
-                                    Debtsolv.dbo.Payment_In AS P1
+                                    Debtsolv_MMS.dbo.Payment_In AS P1
                                   GROUP BY
                                      ClientID
                                     ,[Date]
@@ -2937,11 +2937,11 @@ Gregson and Brooke.');
                                 ISNULL((SUM(RunningTotal)) / NULLIF((PAYMENT_DATA.DIPayment),0), 0) > 0
                               ) AS DI_PAYMENTS_TABLE
                               INNER JOIN
-                                Debtsolv.dbo.Client_LeadData AS LEAD_DATA ON DI_Payments_Table.ClientID = LEAD_DATA.Client_ID
+                                Debtsolv_MMS.dbo.Client_LeadData AS LEAD_DATA ON DI_Payments_Table.ClientID = LEAD_DATA.Client_ID
                               INNER JOIN
-                                Debtsolv.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_DATA.SourceID = LEAD_SOURCE.ID
+                                Debtsolv_MMS.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_DATA.SourceID = LEAD_SOURCE.ID
                               INNER JOIN
-                                Debtsolv.dbo.Lead_Introducers AS INTRODUCERS ON LEAD_SOURCE.IntroducerID = INTRODUCERS.ID
+                                Debtsolv_MMS.dbo.Lead_Introducers AS INTRODUCERS ON LEAD_SOURCE.IntroducerID = INTRODUCERS.ID
                               WHERE
                                 INTRODUCERS.ID = " . (int)$introducerID . "
                               AND
@@ -2974,9 +2974,9 @@ Gregson and Brooke.');
                               --LEFT JOIN
                               --  TEMP_PAYMENT_TABLE AS TABLE3 ON TEMP_TABLE.ClientID = TABLE3.ClientID AND TABLE3.DIPaymentNumber = 3
                               INNER JOIN
-                                Debtsolv.dbo.Client_PaymentData AS PAYMENT_DATA ON TEMP_TABLE.ClientID = PAYMENT_DATA.ClientID
+                                Debtsolv_MMS.dbo.Client_PaymentData AS PAYMENT_DATA ON TEMP_TABLE.ClientID = PAYMENT_DATA.ClientID
                               INNER JOIN
-                                Debtsolv.dbo.Type_Payment_Method AS PAYMENT_METHOD ON PAYMENT_DATA.PaymentMethod = PAYMENT_METHOD.ID
+                                Debtsolv_MMS.dbo.Type_Payment_Method AS PAYMENT_METHOD ON PAYMENT_DATA.PaymentMethod = PAYMENT_METHOD.ID
                               WHERE
                               (
                                   YEAR(TABLE1.[Date]) = YEAR(GETDATE())
