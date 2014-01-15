@@ -835,7 +835,7 @@ GROUP BY
         $resolveSeniorQuery = "SELECT
                                   leadpool_id
                                 , D_CLD.Client_ID
-                                , ISNULL((SELECT TOP 1 D_U.Login FROM BS_Leadpool_DM.dbo.CampaignContactAccess AS CCA LEFT JOIN BS_Debtsolv_DM.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
+                                , ISNULL((SELECT TOP 1 D_U.Login FROM BS_Leadpool_MMS.dbo.CampaignContactAccess AS CCA LEFT JOIN BS_Debtsolv_DM.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
                                 , TCR.Description
                                 , referral_date
                                 , D_CLD.DatePackSent
@@ -847,9 +847,9 @@ GROUP BY
                             LEFT JOIN
                                 BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON DR.leadpool_id = D_CLD.LeadPoolReference
                             LEFT JOIN
-                                BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON DR.leadpool_id = CC.ClientID
+                                BS_Leadpool_MMS.dbo.Campaign_Contacts AS CC ON DR.leadpool_id = CC.ClientID
                             LEFT JOIN
-                                BS_LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                                BS_Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
                             LEFT JOIN
                                 Dialler.dbo.client_dates AS DCD ON D_CLD.Client_ID =  DCD.ClientID
                             LEFT JOIN
@@ -1160,12 +1160,12 @@ GROUP BY
         			      ) AS 'ProductType'
                       , (CD.Forename + ' ' + CD.Surname) AS Name
                   FROM Dialler.dbo.referrals AS DR
-                  LEFT JOIN BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
-                  LEFT JOIN BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
-                  LEFT JOIN BS_LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                  LEFT JOIN BS_Leadpool_MMS.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
+                  LEFT JOIN BS_Leadpool_MMS.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+                  LEFT JOIN BS_Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
                   LEFT JOIN BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
                   LEFT JOIN BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
-                  LEFT JOIN BS_LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
+                  LEFT JOIN BS_Leadpool_MMS.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                   WHERE DR.user_login IN (" . $inList . ")
                       AND DR.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS', 'EMS', 'EMS-GBS')
                       AND TCR.[Description] <> 'Referred'

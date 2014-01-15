@@ -69,9 +69,9 @@ class Controller_incentive extends Controller_BaseApi
                         	, D_URS.Login
                         	, D_CLD.DatePackSent
                         FROM
-                        	Debtsolv.dbo.Client_LeadData AS D_CLD
+                        	Debtsolv_MMS.dbo.Client_LeadData AS D_CLD
                         LEFT JOIN
-                        	Debtsolv.dbo.Users AS D_URS ON D_CLD.TelesalesAgent = D_URS.ID
+                        	Debtsolv_MMS.dbo.Users AS D_URS ON D_CLD.TelesalesAgent = D_URS.ID
                         WHERE
                         	D_CLD.DatePackSent >= '2013-03-01'
                         	AND D_CLD.DatePackSent < '2013-06-01'
@@ -84,9 +84,9 @@ class Controller_incentive extends Controller_BaseApi
                         	, D_URS.Login
                         	, D_CLD.DatePackReceived
                         FROM
-                        	Debtsolv.dbo.Client_LeadData AS D_CLD
+                        	Debtsolv_MMS.dbo.Client_LeadData AS D_CLD
                         LEFT JOIN
-                        	Debtsolv.dbo.Users AS D_URS ON D_CLD.Counsellor = D_URS.ID
+                        	Debtsolv_MMS.dbo.Users AS D_URS ON D_CLD.Counsellor = D_URS.ID
                         WHERE
                         	D_CLD.DatePackReceived >= '2013-03-01'
                         	AND D_CLD.DatePackReceived < '2013-06-01'

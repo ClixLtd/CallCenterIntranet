@@ -15,9 +15,9 @@ ISNULL((
 SELECT Top (1)
 Undersigned COLLATE DATABASE_DEFAULT
 FROM
-Debtsolv.dbo.Users AS D_URS
+Debtsolv_MMS.dbo.Users AS D_URS
 LEFT JOIN
-Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
+Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
 WHERE
 D_CLD.LeadPoolReference = CLD.ClientID
 ), '')
@@ -28,17 +28,17 @@ ISNULL((
 SELECT Top (1)
 Undersigned
 FROM
-Debtsolv.dbo.Users AS D_URS
+Debtsolv_MMS.dbo.Users AS D_URS
 LEFT JOIN
-Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
 WHERE
 D_CLD.LeadPoolReference = CLD.ClientID
 ),(SELECT Top (1)
 Undersigned
 FROM
-Debtsolv.dbo.Users AS DURS
+Debtsolv_MMS.dbo.Users AS DURS
 LEFT JOIN
-Leadpool_DM.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
+Leadpool_MMS.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
 WHERE
 CCA.CampaignContactID = CC.ID
 ORDER BY
@@ -51,7 +51,7 @@ CCA.AccessDate DESC)) AS 'Consolidator'
 SELECT Top (1)
 ResponseText
 FROM
-Debtsolv.dbo.Client_CustomQuestionResponses
+Debtsolv_MMS.dbo.Client_CustomQuestionResponses
 WHERE
 QuestionID = 10001
 AND ClientID = D_CLD.Client_ID
@@ -60,7 +60,7 @@ AND ClientID = D_CLD.Client_ID
 SELECT Top (1)
 ResponseVal
 FROM
-Debtsolv.dbo.Client_CustomQuestionResponses
+Debtsolv_MMS.dbo.Client_CustomQuestionResponses
 WHERE
 QuestionID = 10007
 AND ClientID = D_CLD.Client_ID
@@ -75,26 +75,26 @@ ELSE
 END AS 'Call Back Date'
 , CC.ContactResult AS ContactResult
 FROM
-LeadPool_DM.dbo.Client_LeadDetails AS CLD
+Leadpool_MMS.dbo.Client_LeadDetails AS CLD
 LEFT JOIN
-LeadPool_DM.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
+Leadpool_MMS.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
 LEFT JOIN
-LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+Leadpool_MMS.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
 LEFT JOIN
-LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
 LEFT JOIN
-LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+Leadpool_MMS.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
 LEFT JOIN
-Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
 LEFT JOIN
-Debtsolv.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+Debtsolv_MMS.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
 LEFT JOIN
-Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+Debtsolv_MMS.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
 LEFT JOIN
 Dialler.dbo.referrals AS DI_REF ON CLD.ClientID = DI_REF.leadpool_id
 
 LEFT JOIN
-LeadPool_DM.dbo.Type_Lead_Source AS LSO ON DI_REF.list_id COLLATE DATABASE_DEFAULT = LSO.Reference COLLATE DATABASE_DEFAULT
+Leadpool_MMS.dbo.Type_Lead_Source AS LSO ON DI_REF.list_id COLLATE DATABASE_DEFAULT = LSO.Reference COLLATE DATABASE_DEFAULT
 
 WHERE
 
