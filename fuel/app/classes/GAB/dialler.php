@@ -278,7 +278,7 @@ class Dialler {
 				foreach ($results AS $single_list)
 				{
 					
-					$dupes = \Model_Data_Supplier_Campaign_Lists_Duplicate::find()->where('database_server_id',$server)->where('list_id',$single_list['List ID']);
+					$dupes = \Model_Data_Supplier_Campaign_Lists_Duplicate::select()->where('database_server_id',$server)->where('list_id',$single_list['List ID']);
 					
 					if ( isset($sorted_by_list[$single_list['List Reference']]) )
 					{

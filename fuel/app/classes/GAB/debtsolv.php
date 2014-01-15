@@ -532,11 +532,11 @@ class Debtsolv {
 			}
 			else if ($center == "GAB")
 			{
-				$center_query = "AND DI_REF.short_code IN ('GAB','1TICK')";
+				$center_query = "AND DI_REF.short_code IN ('GAB','1TICK','EMS')";
 			}
 			else if ($center == "GBS")
 			{
-				$center_query = "AND DI_REF.short_code IN ('GBS','1TICK-GBS')";
+				$center_query = "AND DI_REF.short_code IN ('GBS','1TICK-GBS', 'EMS-GBS')";
 			}
 			else
 			{
