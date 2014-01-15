@@ -270,7 +270,7 @@ class Controller_Reports extends \Templates\Controller_Force
 	    
 	    $db_choice = array(
 	       'GAB' => array('DS'     => 'Debtsolv',
-	                      'LP'     => 'Leadpool_DM',
+	                      'LP'     => 'Leadpool_MMS',
 	                      'QU'     => 'Office <> \'RESOLVE\''),
 	       'RESOLVE' => array('DS' => 'BS_Debtsolv_DM',
 	                      'LP'     => 'BS_Leadpool_DM',
@@ -342,7 +342,7 @@ ORDER BY
 	, D_LI.Name AS Introducer
 	, ISNULL(L_CLD.LeadRef2, 'NONE') AS Shortcode
 	, (SELECT SUM(CASE WHEN EstimatedBalance > 0 THEN EstimatedBalance ELSE AmountOwed END)/100 FROM ".$thisDB['DS'].".[dbo].[Finstat_Debt] WHERE ClientID = D_PA.ClientID) AS TotalOwed
-	, (SELECT Top (1) ResponseVal FROM Debtsolv.dbo.Client_CustomQuestionResponses WHERE QuestionID = 10007 AND ClientID = D_CLD.Client_ID) AS 'ProductType'
+	, (SELECT Top (1) ResponseVal FROM Debtsolv_MMS.dbo.Client_CustomQuestionResponses WHERE QuestionID = 10007 AND ClientID = D_CLD.Client_ID) AS 'ProductType'
 FROM
 	".$thisDB['DS'].".dbo.Payment_Receipt AS D_PA
 LEFT JOIN
@@ -808,7 +808,7 @@ GROUP BY
 	    $gabSeniorQuery = "SELECT
                                   leadpool_id
                                 , D_CLD.Client_ID
-                                , ISNULL((SELECT TOP 1 D_U.Login FROM Leadpool_DM.dbo.CampaignContactAccess AS CCA LEFT JOIN Debtsolv.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
+                                , ISNULL((SELECT TOP 1 D_U.Login FROM Leadpool_MMS.dbo.CampaignContactAccess AS CCA LEFT JOIN Debtsolv_MMS.dbo.Users AS D_U ON CCA.UserID=D_U.ID WHERE CCA.CampaignContactID=CC.ID ORDER BY CCA.AccessDate DESC), '<NONE>') AS Senior
                                 , TCR.Description
                                 , referral_date
                                 , D_CLD.DatePackSent
@@ -818,15 +818,15 @@ GROUP BY
                             FROM
                                 [Dialler].[dbo].[referrals] AS DR
                             LEFT JOIN
-                                Debtsolv.dbo.Client_LeadData AS D_CLD ON DR.leadpool_id = D_CLD.LeadPoolReference
+                                Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON DR.leadpool_id = D_CLD.LeadPoolReference
                             LEFT JOIN
-                                LeadPool_DM.dbo.Campaign_Contacts AS CC ON DR.leadpool_id = CC.ClientID
+                                Leadpool_MMS.dbo.Campaign_Contacts AS CC ON DR.leadpool_id = CC.ClientID
                             LEFT JOIN
-                                LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                                Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
                             LEFT JOIN
                                 Dialler.dbo.client_dates AS DCD ON D_CLD.Client_ID =  DCD.ClientID
                             LEFT JOIN
-                                Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+                                Debtsolv_MMS.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
                             WHERE
                                 (DR.referral_date >= '".$startDate."' AND DR.referral_date < '".$endDate."')
                             ORDER BY
@@ -1099,7 +1099,7 @@ GROUP BY
 	    }
 	    
     	
-    	// Select all the required details from Debtsolv.
+    	// Select all the required details from Debtsolv_MMS.
     	$reportQuery = "SELECT  DR.leadpool_id
                               , DR.short_code
                               , DR.user_login
@@ -1117,19 +1117,19 @@ GROUP BY
                 			      	SELECT Top (1)
                 			      		ResponseVal
                 			      	FROM
-                			      		Debtsolv.dbo.Client_CustomQuestionResponses
+                			      		Debtsolv_MMS.dbo.Client_CustomQuestionResponses
                 			      	WHERE
                 			      		QuestionID = 10007
                 			      		AND ClientID = D_CLD.Client_ID
                 			      ) AS 'ProductType'
                               , (CD.Forename + ' ' + CD.Surname) AS Name
                           FROM Dialler.dbo.referrals AS DR
-                          LEFT JOIN LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
-                          LEFT JOIN LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
-                          LEFT JOIN LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
-                          LEFT JOIN Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
-                          LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
-                          LEFT JOIN LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
+                          LEFT JOIN Leadpool_MMS.dbo.Client_LeadDetails AS CLD ON DR.leadpool_id=CLD.ClientID
+                          LEFT JOIN Leadpool_MMS.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+                          LEFT JOIN Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                          LEFT JOIN Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+                          LEFT JOIN Debtsolv_MMS.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+                          LEFT JOIN Leadpool_MMS.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                           WHERE DR.user_login IN (" . $inList . ")
                               AND DR.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS', 'EMS', 'EMS-GBS')
                               AND TCR.[Description] <> 'Referred'
@@ -1179,8 +1179,8 @@ GROUP BY
                                 , D_CLD.LeadPoolReference AS LeadpoolID
                                 , D_R.user_login
                           FROM [Dialler].[dbo].[client_dates] AS D_CD
-                          LEFT JOIN Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CD.ClientID = D_CPD.ClientID
-                          LEFT JOIN Debtsolv.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
+                          LEFT JOIN Debtsolv_MMS.dbo.Client_PaymentData AS D_CPD ON D_CD.ClientID = D_CPD.ClientID
+                          LEFT JOIN Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
                               AND D_R.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS', 'EMS', 'EMS-GBS')
@@ -1494,13 +1494,13 @@ GROUP BY
 		  FROM 
 			[Dialler].[dbo].[referrals] AS Ref
 		  LEFT JOIN
-		    LeadPool_DM.dbo.Campaign_Contacts AS CC ON Ref.leadpool_id = CC.ClientID
+		    Leadpool_MMS.dbo.Campaign_Contacts AS CC ON Ref.leadpool_id = CC.ClientID
 		  LEFT JOIN
-			LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+			Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
 		  LEFT JOIN
-		    Debtsolv.dbo.Client_LeadData AS D_CLD ON Ref.leadpool_id = D_CLD.LeadPoolReference
+		    Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON Ref.leadpool_id = D_CLD.LeadPoolReference
 		  LEFT JOIN
-			Debtsolv.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+			Debtsolv_MMS.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
 		  WHERE
 			[product] = 'DR'
 			AND short_code = 'GAB'
@@ -2446,9 +2446,9 @@ GROUP BY
 				$results1 = DB::query("SELECT CLD.ClientID
 				  ,CLD.LeadRef AS 'Dialler Lead ID'
 			      ,(CD.Forename + ' ' + CD.Surname) AS Name
-			      , CASE WHEN D_CLD.SourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv.dbo.Type_Lead_Source WHERE ID=D_CLD.SourceID)
-                      WHEN LBA.LeadSourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
-                      ELSE (SELECT TOP (1) Description FROM Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
+			      , CASE WHEN D_CLD.SourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv_MMS.dbo.Type_Lead_Source WHERE ID=D_CLD.SourceID)
+                      WHEN LBA.LeadSourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv_MMS.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
+                      ELSE (SELECT TOP (1) Description FROM Leadpool_MMS.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
                     END AS 'Lead Source'
 			      ,CASE WHEN
 			      	ISNULL(DI_REF.short_code,'<None>') = '<None>'
@@ -2464,9 +2464,9 @@ GROUP BY
 				       SELECT Top (1)
 				         Undersigned COLLATE DATABASE_DEFAULT 
 				       FROM
-				         Debtsolv.dbo.Users AS D_URS
+				         Debtsolv_MMS.dbo.Users AS D_URS
 				       LEFT JOIN
-				         Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
+				         Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.TelesalesAgent
 				       WHERE
 				         D_CLD.LeadPoolReference = CLD.ClientID
 				     ), '')
@@ -2477,17 +2477,17 @@ GROUP BY
 			        SELECT Top (1)
 			          Undersigned
 			        FROM
-			          Debtsolv.dbo.Users AS D_URS
+			          Debtsolv_MMS.dbo.Users AS D_URS
 			        LEFT JOIN
-			          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+			          Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
 			        WHERE
 			          D_CLD.LeadPoolReference = CLD.ClientID
 			      ),(SELECT Top (1)
 			      	  Undersigned
 			      	FROM
-			      	  Debtsolv.dbo.Users AS DURS
+			      	  Debtsolv_MMS.dbo.Users AS DURS
 			      	LEFT JOIN
-			      	  Leadpool_DM.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
+			      	  Leadpool_MMS.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
 			      	WHERE
 			      	  CCA.CampaignContactID = CC.ID
 			      	ORDER BY
@@ -2500,7 +2500,7 @@ GROUP BY
 			      	SELECT Top (1)
 			      		ResponseText
 			      	FROM
-			      		Debtsolv.dbo.Client_CustomQuestionResponses
+			      		Debtsolv_MMS.dbo.Client_CustomQuestionResponses
 			      	WHERE
 			      		QuestionID = 10001
 			      		AND ClientID = D_CLD.Client_ID
@@ -2509,7 +2509,7 @@ GROUP BY
 			      	SELECT Top (1)
 			      		ResponseVal
 			      	FROM
-			      		Debtsolv.dbo.Client_CustomQuestionResponses
+			      		Debtsolv_MMS.dbo.Client_CustomQuestionResponses
 			      	WHERE
 			      		QuestionID = 10007
 			      		AND ClientID = D_CLD.Client_ID
@@ -2524,22 +2524,22 @@ GROUP BY
 			       END AS 'Call Back Date'
 			       , CC.ContactResult AS ContactResult
 			  FROM
-			    LeadPool_DM.dbo.Client_LeadDetails AS CLD
+			    Leadpool_MMS.dbo.Client_LeadDetails AS CLD
 			  LEFT JOIN
-			    LeadPool_DM.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
+			    Leadpool_MMS.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
 			  LEFT JOIN
-			    LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+			    Leadpool_MMS.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
 			  LEFT JOIN
-			    LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+			    Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
 			  LEFT JOIN
-				LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+				Leadpool_MMS.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
 
 			  LEFT JOIN
-			    Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+			    Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
 			  LEFT JOIN
-			    Debtsolv.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+			    Debtsolv_MMS.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
 			  LEFT JOIN
-			    Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+			    Debtsolv_MMS.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
 			  LEFT JOIN
 			  	Dialler.dbo.referrals AS DI_REF ON CLD.ClientID = DI_REF.leadpool_id
 
@@ -2724,9 +2724,9 @@ GROUP BY
 					  ,D_CPD.ClientID AS ClientID
 					  ,CLD.LeadRef AS 'Dialler Lead ID'
 				      ,(CD.Forename + ' ' + CD.Surname) AS Name
-				      , CASE WHEN D_CLD.SourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv.dbo.Type_Lead_Source WHERE ID=D_CLD.SourceID)
-                          WHEN LBA.LeadSourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
-                          ELSE (SELECT TOP (1) Description FROM Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
+				      , CASE WHEN D_CLD.SourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv_MMS.dbo.Type_Lead_Source WHERE ID=D_CLD.SourceID)
+                          WHEN LBA.LeadSourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv_MMS.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
+                          ELSE (SELECT TOP (1) Description FROM Leadpool_MMS.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
                         END AS 'Lead Source'
 				      ,CLD.LeadRef2 AS Office
 				      ,TCR.[Description]
@@ -2744,17 +2744,17 @@ GROUP BY
 				        SELECT Top (1)
 				          Undersigned
 				        FROM
-				          Debtsolv.dbo.Users AS D_URS
+				          Debtsolv_MMS.dbo.Users AS D_URS
 				        LEFT JOIN
-				          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+				          Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
 				        WHERE
 				          D_CLD.LeadPoolReference = CLD.ClientID
 				      ),(SELECT Top (1)
 				      	  Undersigned
 				      	FROM
-				      	  Debtsolv.dbo.Users AS DURS
+				      	  Debtsolv_MMS.dbo.Users AS DURS
 				      	LEFT JOIN
-				      	  Leadpool_DM.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
+				      	  Leadpool_MMS.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
 				      	WHERE
 				      	  CCA.CampaignContactID = CC.ID
 				      	ORDER BY
@@ -2773,7 +2773,7 @@ GROUP BY
 				      	SELECT Top (1)
 				      		ResponseText
 				      	FROM
-				      		Debtsolv.dbo.Client_CustomQuestionResponses
+				      		Debtsolv_MMS.dbo.Client_CustomQuestionResponses
 				      	WHERE
 				      		QuestionID = 10001
 				      		AND ClientID = D_CLD.Client_ID
@@ -2788,23 +2788,23 @@ GROUP BY
 				           ''
 				       END AS 'Call Back Date'
 				  FROM
-				    LeadPool_DM.dbo.Client_LeadDetails AS CLD
+				    Leadpool_MMS.dbo.Client_LeadDetails AS CLD
 				  LEFT JOIN
-				    LeadPool_DM.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
+				    Leadpool_MMS.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
 				  LEFT JOIN
-				    LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+				    Leadpool_MMS.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
 				  LEFT JOIN
-				    LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+				    Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
 				  LEFT JOIN
-					LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+					Leadpool_MMS.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
 				  LEFT JOIN
-					LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+					Leadpool_MMS.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
 				  LEFT JOIN
-				    Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+				    Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
 				  LEFT JOIN
-				    Debtsolv.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+				    Debtsolv_MMS.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
 				  LEFT JOIN
-				    Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+				    Debtsolv_MMS.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
 				  LEFT JOIN
 				  	Dialler.dbo.referrals AS DI_REF ON CLD.ClientID = DI_REF.leadpool_id
 				  WHERE 
@@ -2865,9 +2865,9 @@ GROUP BY
                                                 D_CD.ClientID
                                               , D_CLD.LeadPoolReference
                                               , (CD.Forename + ' ' + CD.Surname) AS Name
-                                              , CASE WHEN D_CLD.SourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv.dbo.Type_Lead_Source WHERE ID=D_CLD.SourceID)
-                                                  WHEN LBA.LeadSourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
-                                                  ELSE (SELECT TOP (1) Description FROM Leadpool_DM.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
+                                              , CASE WHEN D_CLD.SourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv_MMS.dbo.Type_Lead_Source WHERE ID=D_CLD.SourceID)
+                                                  WHEN LBA.LeadSourceID > 0 THEN (SELECT TOP (1) Description FROM Debtsolv_MMS.dbo.Type_Lead_Source WHERE ID=LBA.LeadSourceID)
+                                                  ELSE (SELECT TOP (1) Description FROM Leadpool_MMS.dbo.Type_Lead_Source WHERE Reference COLLATE DATABASE_DEFAULT=DI_REF.list_id COLLATE DATABASE_DEFAULT)
                                                 END AS 'Lead Source'
 											  , CLD.LeadRef2 AS Office
 											  , CASE
@@ -2882,17 +2882,17 @@ GROUP BY
                             				        SELECT Top (1)
                             				          Undersigned
                             				        FROM
-                            				          Debtsolv.dbo.Users AS D_URS
+                            				          Debtsolv_MMS.dbo.Users AS D_URS
                             				        LEFT JOIN
-                            				          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+                            				          Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
                             				        WHERE
                             				          D_CLD.LeadPoolReference = CLD.ClientID
                             				      ),(SELECT Top (1)
                             				      	  Undersigned
                             				      	FROM
-                            				      	  Debtsolv.dbo.Users AS DURS
+                            				      	  Debtsolv_MMS.dbo.Users AS DURS
                             				      	LEFT JOIN
-                            				      	  Leadpool_DM.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
+                            				      	  Leadpool_MMS.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
                             				      	WHERE
                             				      	  CCA.CampaignContactID = CC.ID
                             				      	ORDER BY
@@ -2902,7 +2902,7 @@ GROUP BY
                             			      	SELECT Top (1)
                             			      		ResponseVal
                             			      	FROM
-                            			      		Debtsolv.dbo.Client_CustomQuestionResponses
+                            			      		Debtsolv_MMS.dbo.Client_CustomQuestionResponses
                             			      	WHERE
                             			      		QuestionID = 10007
                             			      		AND ClientID = D_CLD.Client_ID
@@ -2913,23 +2913,23 @@ GROUP BY
                                             FROM
                                               Dialler.dbo.client_dates AS D_CD
                                             LEFT JOIN
-                                              Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CPD.ClientID=D_CD.ClientID
+                                              Debtsolv_MMS.dbo.Client_PaymentData AS D_CPD ON D_CPD.ClientID=D_CD.ClientID
                                             LEFT JOIN
-                                              Debtsolv.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
+                                              Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
                                             LEFT JOIN
                                               Dialler.dbo.referrals AS DI_REF ON D_CLD.LeadPoolReference = DI_REF.leadpool_id
                                             LEFT JOIN
-                                              LeadPool_DM.dbo.Client_LeadDetails AS CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+                                              Leadpool_MMS.dbo.Client_LeadDetails AS CLD ON CLD.ClientID = D_CLD.LeadPoolReference
                                             LEFT JOIN
-                                              LeadPool_DM.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
+                                              Leadpool_MMS.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                                             LEFT JOIN
-                                              LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+                                              Leadpool_MMS.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
                                             LEFT JOIN
-                                              LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+                                              Leadpool_MMS.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
 				  LEFT JOIN
-				    LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+				    Leadpool_MMS.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
 				  LEFT JOIN
-				    Debtsolv.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+				    Debtsolv_MMS.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
                                             WHERE
                                               " . $paid_duration . "
                                               ". $call_center_choice ."
