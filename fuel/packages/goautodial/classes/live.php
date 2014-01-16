@@ -65,7 +65,7 @@
 				
 				$allReferrals = \DB::query("SELECT id FROM Dialler.dbo.referrals WHERE product = 'DR' AND user_login = '".$agent->user_details->user."' AND referral_date >= CONVERT(datetime, '".date('Y-d-m')."', 105) ")->cached(30)->execute('debtsolv');
 				
-				$allPackOuts = \DB::query("SELECT REF.id FROM [Dialler].[dbo].[referrals] AS REF LEFT JOIN LeadPool_DM.dbo.Campaign_Contacts AS CC ON REF.leadpool_id = CC.ClientID LEFT JOIN LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID WHERE product = 'DR' AND TCR.Description = 'Lead Completed' AND user_login = '".$agent->user_details->user."' AND referral_date >= CONVERT(datetime, '".date('Y-d-m')."', 105) ")->cached(30)->execute('debtsolv');
+				$allPackOuts = \DB::query("SELECT REF.id FROM [Dialler].[dbo].[referrals] AS REF LEFT JOIN Leadpool_MMS.dbo.Campaign_Contacts AS CC ON REF.leadpool_id = CC.ClientID LEFT JOIN Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID WHERE product = 'DR' AND TCR.Description = 'Lead Completed' AND user_login = '".$agent->user_details->user."' AND referral_date >= CONVERT(datetime, '".date('Y-d-m')."', 105) ")->cached(30)->execute('debtsolv');
 				
 				$results[]                = array(
 					'user'                  => array(
