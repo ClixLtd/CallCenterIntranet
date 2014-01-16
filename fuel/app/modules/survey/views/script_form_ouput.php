@@ -21,7 +21,7 @@
           foreach($form['questions'] as $question)
           {
             ?>              
-            <div class="row-fluid onequestion" id="form-q<?=$question['id'];?>" style="padding: 5px; border-bottom: 2px dotted #0090d2;">
+            <div class="row-fluid onequestion" id="form-q<?=$question['id'];?>" style="">
               <div class="span7"><?=$question['question'];?></div>
               <div class="span4" id="Input-<?=$question['id'];?>">
                 <input type="hidden" name="Group-Ref" value="1" />
@@ -79,7 +79,7 @@
             <?php
           }
           
-          if($form['repeat'] == 'no')
+          if($form['repeat'] == 'yes')
           {
             ?>
             <div class="span12" style="margin-top: 35px; padding-top: 15px; border-top: 1px dotted #039BED; text-align: right;">
