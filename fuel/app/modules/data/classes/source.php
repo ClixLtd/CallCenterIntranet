@@ -217,7 +217,7 @@ class Source
             $tpsNumbers = array();
             
             // Check the numbers for duplicates
-            if (count($telephoneNumbers) > 0)
+            if (in_array(\Data\Source::DUPES, (array)$this->importOptions) && count($telephoneNumbers) > 0)
             {
                 list($telephoneNumbers,$duplicateNumbers) = $this->checkDuplicate($telephoneNumbers);
                 $isDuplicate = (count($telephoneNumbers) > 0) ? false : true;
@@ -449,14 +449,7 @@ class Source
     protected function _complete()
     {
         $this->_load();
-        
-        
-        
-        
-        
-        
-        
-        
+
         // E-Mail Managers with new campaign lists
 		$email = \Email::forge();
 		
@@ -574,55 +567,92 @@ class Source
 	    ")->execute('dialler')->as_array();
 	    
 	    // Get Debtsolv referrals from this list
-	    $gabDebtsolvCountQuery = "
-			SELECT 
-				DMR.lead_id AS LeadID
-				, CASE WHEN TCR.Description = 'Lead Completed' THEN 'TRUE' ELSE 'FALSE' END AS PackOut
-				, CASE WHEN D_CLD.DatePackReceived >= CONVERT(datetime, '2000-01-01 00:00:00', 105) THEN 'TRUE' ELSE 'FALSE' END AS PackIn
-				, CASE WHEN DCD.FirstPaymentDate >= '2000-01-01' THEN 'TRUE' ELSE 'FALSE' END AS FirstPayment
-			FROM 
-				Dialler.dbo.referrals AS DMR
-			LEFT JOIN
-				LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DMR.leadpool_id=CLD.ClientID
-			LEFT JOIN
-				LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
-			LEFT JOIN
-				LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
-			LEFT JOIN
-				Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
-			LEFT JOIN
-				Dialler.dbo.client_dates AS DCD ON D_CLD.Client_ID=DCD.ClientID
-			WHERE 
-				list_id = '".$this->listID."'
-	    ";
+
+        $gabDebtsolvCountQuery = "SELECT
+                                    DISTINCT L_CLD.ClientID AS LeadID
+                                  , CASE WHEN TCR.Description = 'Lead Completed' THEN 'TRUE' ELSE 'FALSE' END AS PackOut
+                                  , CASE WHEN D_CLD.DatePackReceived >= CONVERT(datetime, '2000-01-01 00:00:00', 105) THEN 'TRUE' ELSE 'FALSE' END AS PackIn
+                                  , CASE WHEN DCD.FirstPaymentDate >= '2000-01-01' THEN 'TRUE' ELSE 'FALSE' END AS FirstPayment
+                                  , CASE
+                                      WHEN DCD.FirstPaymentDate >= '2000-01-01' THEN (D_PD.NormalExpectedPayment * 1) / 100
+                                      WHEN D_CLD.DatePackReceived >= CONVERT(datetime, '2000-01-01 00:00:00', 105) THEN (D_PD.NormalExpectedPayment * 0.65) / 100
+                                      WHEN TCR.Description = 'Lead Completed' THEN (D_PD.NormalExpectedPayment * 0.3) / 100
+                                    ELSE
+                                      0
+                                    END AS Score
+                                FROM
+                                  Leadpool_MMS.dbo.Client_LeadDetails AS L_CLD
+                                LEFT JOIN
+                                  Leadpool_MMS.dbo.LeadBatch AS L_LB ON L_CLD.LeadBatchID=L_LB.ID
+                                LEFT JOIN
+                                  Debtsolv_MMS.dbo.Type_Lead_Source AS L_TLS ON L_LB.LeadSourceID=L_TLS.ID
+                                LEFT JOIN
+                                  Leadpool_MMS.dbo.Campaign_Contacts AS CC ON L_CLD.ClientID = CC.ClientID
+                                LEFT JOIN
+                                  Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                                LEFT JOIN
+                                  Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON L_CLD.ClientID = D_CLD.LeadPoolReference
+                                LEFT JOIN
+                                  Dialler.dbo.client_dates AS DCD ON D_CLD.Client_ID=DCD.ClientID
+                                LEFT JOIN
+                                  Debtsolv_MMS.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID = D_TLS.ID
+                                LEFT JOIN
+                                  Dialler.dbo.referrals AS DMR ON D_CLD.LeadPoolReference=DMR.leadpool_id
+                                LEFT JOIN
+                                  Debtsolv_MMS.dbo.Client_PaymentData AS D_PD ON D_CLD.Client_ID=D_PD.ClientID
+                                WHERE
+                                  L_TLS.Reference = '".$this->listID."'
+                                OR
+                                  D_TLS.Reference = '".$this->listID."'
+                                OR
+                                  DMR.list_id = '".$this->listID."'";
+
 	    
-	    $resolveDebtsolvCountQuery = "
-			SELECT 
-				DMR.lead_id AS LeadID
-				, CASE WHEN TCR.Description = 'Lead Completed' THEN 'TRUE' ELSE 'FALSE' END AS PackOut
-				, CASE WHEN D_CLD.DatePackReceived >= CONVERT(datetime, '2000-01-01 00:00:00', 105) THEN 'TRUE' ELSE 'FALSE' END AS PackIn
-				, CASE WHEN DCD.FirstPaymentDate >= '2000-01-01' THEN 'TRUE' ELSE 'FALSE' END AS FirstPayment
-			FROM 
-				Dialler.dbo.referrals AS DMR
-			LEFT JOIN
-				BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD ON DMR.leadpool_id=CLD.ClientID
-			LEFT JOIN
-				BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
-			LEFT JOIN
-				BS_LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
-			LEFT JOIN
-				BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
-			LEFT JOIN
-				Dialler.dbo.client_dates AS DCD ON D_CLD.Client_ID=DCD.ClientID
-			WHERE 
-				list_id = '".$this->listID."'
-	    ";
+	    $resolveDebtsolvCountQuery = "SELECT
+                                    DISTINCT L_CLD.ClientID AS LeadID
+                                  , CASE WHEN TCR.Description = 'Lead Completed' THEN 'TRUE' ELSE 'FALSE' END AS PackOut
+                                  , CASE WHEN D_CLD.DatePackReceived >= CONVERT(datetime, '2000-01-01 00:00:00', 105) THEN 'TRUE' ELSE 'FALSE' END AS PackIn
+                                  , CASE WHEN DCD.FirstPaymentDate >= '2000-01-01' THEN 'TRUE' ELSE 'FALSE' END AS FirstPayment
+                                  , CASE
+                                      WHEN DCD.FirstPaymentDate >= '2000-01-01' THEN (D_PD.NormalExpectedPayment * 1) / 100
+                                      WHEN D_CLD.DatePackReceived >= CONVERT(datetime, '2000-01-01 00:00:00', 105) THEN (D_PD.NormalExpectedPayment * 0.65) / 100
+                                      WHEN TCR.Description = 'Lead Completed' THEN (D_PD.NormalExpectedPayment * 0.3) / 100
+                                    ELSE
+                                      0
+                                    END AS Score
+                                FROM
+                                  BS_Leadpool_MMS.dbo.Client_LeadDetails AS L_CLD
+                                LEFT JOIN
+                                  BS_Leadpool_MMS.dbo.LeadBatch AS L_LB ON L_CLD.LeadBatchID=L_LB.ID
+                                LEFT JOIN
+                                  BS_Debtsolv_DM.dbo.Type_Lead_Source AS L_TLS ON L_LB.LeadSourceID=L_TLS.ID
+                                LEFT JOIN
+                                  BS_Leadpool_MMS.dbo.Campaign_Contacts AS CC ON L_CLD.ClientID = CC.ClientID
+                                LEFT JOIN
+                                  BS_Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+                                LEFT JOIN
+                                  BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON L_CLD.ClientID = D_CLD.LeadPoolReference
+                                LEFT JOIN
+                                  Dialler.dbo.client_dates AS DCD ON D_CLD.Client_ID=DCD.ClientID
+                                LEFT JOIN
+                                  BS_Debtsolv_DM.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID = D_TLS.ID
+                                LEFT JOIN
+                                  Dialler.dbo.referrals AS DMR ON D_CLD.LeadPoolReference=DMR.leadpool_id
+                                LEFT JOIN
+                                  BS_Debtsolv_DM.dbo.Client_PaymentData AS D_PD ON D_CLD.Client_ID=D_PD.ClientID
+                                WHERE
+                                  L_TLS.Reference = '".$this->listID."'
+                                OR
+                                  D_TLS.Reference = '".$this->listID."'
+                                OR
+                                  DMR.list_id = '".$this->listID."'";
 	    
 	    $gabDebtsolvCount 	  = \DB::query($gabDebtsolvCountQuery)->execute('debtsolv')->as_array();
 	    $resolveDebtsolvCount = \DB::query($resolveDebtsolvCountQuery)->execute('debtsolv')->as_array();
 	    
 	    $combinedList = array();
-	    
+	    $listScore = 0;
+
 	    foreach ($gabDebtsolvCount as $singleLead)
 	    {
 		    $combinedList[$singleLead['LeadID']] = array(
@@ -630,6 +660,7 @@ class Source
 		    	'PackIn'       => $singleLead['PackIn'],
 		    	'FirstPayment' => $singleLead['FirstPayment'],
 		    );
+            $listScore = $listScore + $singleLead['Score'];
 	    }
 	    
 	    
@@ -671,14 +702,14 @@ class Source
 		    }
 		    
 	    }
-	    
-	    
+
 	    \DB::update('data')->set(array(
 	    	'contacted_leads' => $diallerCount[0]['contacted'],
             'referrals'       => $referralCount,
             'pack_out'        => $packOutCount,
             'pack_in'         => $packInCount,
             'first_payment'   => $paidCount,
+            'score'           => $listScore,
         ))->where('id', $this->id)->execute();
 	    
     }

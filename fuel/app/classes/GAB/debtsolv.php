@@ -43,7 +43,7 @@ class Debtsolv {
 				, LeadRef2
 				, CONVERT(datetime, DateCreated, 120) AS DateCreated
 			FROM
-				Leadpool_DM.dbo.Client_LeadDetails
+				Leadpool_MMS.dbo.Client_LeadDetails
 			WHERE
 				ClientID = ".$ds_lead_id."
 		")->cached(0)->execute(static::$_connection);
@@ -52,7 +52,7 @@ class Debtsolv {
 		
 		if ($leadpool->count() > 0)
 		{
-			\DB::query("UPDATE Leadpool_DM.dbo.Client_LeadDetails SET LeadRef2='".$new_center."' WHERE ClientID=".$ds_lead_id)->execute(static::$_connection);
+			\DB::query("UPDATE Leadpool_MMS.dbo.Client_LeadDetails SET LeadRef2='".$new_center."' WHERE ClientID=".$ds_lead_id)->execute(static::$_connection);
 			
 			$referral_table = \DB::query("
 				SELECT
@@ -155,7 +155,7 @@ class Debtsolv {
 				, LeadRef2
 				, CONVERT(datetime, DateCreated, 120) AS DateCreated
 			FROM
-				BS_Leadpool_DM.dbo.Client_LeadDetails
+				BS_Leadpool_MMS.dbo.Client_LeadDetails
 			WHERE
 				ClientID = ".$ds_lead_id."
 		")->cached(0)->execute(static::$_connection);
@@ -164,7 +164,7 @@ class Debtsolv {
 		
 		if ($leadpool->count() > 0)
 		{
-			\DB::query("UPDATE BS_Leadpool_DM.dbo.Client_LeadDetails SET LeadRef2='".$new_center."' WHERE ClientID=".$ds_lead_id)->execute(static::$_connection);
+			\DB::query("UPDATE BS_Leadpool_MMS.dbo.Client_LeadDetails SET LeadRef2='".$new_center."' WHERE ClientID=".$ds_lead_id)->execute(static::$_connection);
 			
 			$referral_table = \DB::query("
 				SELECT
@@ -323,7 +323,7 @@ class Debtsolv {
 				count(AmountIn) AS paid,
 				(SUM(AmountIn)/100) AS payments
 			FROM
-				Debtsolv.dbo.Payment_Account AS PA
+				Debtsolv_MMS.dbo.Payment_Account AS PA
 			WHERE
 				".$date_where.";
 		")->cached(600)->execute(static::$_connection);
@@ -351,28 +351,28 @@ class Debtsolv {
 				, (CD.Forename + ' ' + CD.Surname) AS Name
 				, ISNULL(LCLD.LeadRef2,'NONE') AS Office
 				, DCPD.NormalExpectedPayment AS DI
-				, (SELECT COUNT(AmountIn) FROM Debtsolv.dbo.Payment_Account WHERE AmountIn > 0 AND ClientID=PA.ClientID) AS TotalPayments
-				, (SELECT SUM(AmountIn) FROM Debtsolv.dbo.Payment_Account WHERE AmountIn > 0 AND ClientID=PA.ClientID) AS TotalPaid
+				, (SELECT COUNT(AmountIn) FROM Debtsolv_MMS.dbo.Payment_Account WHERE AmountIn > 0 AND ClientID=PA.ClientID) AS TotalPayments
+				, (SELECT SUM(AmountIn) FROM Debtsolv_MMS.dbo.Payment_Account WHERE AmountIn > 0 AND ClientID=PA.ClientID) AS TotalPaid
 				, (
 			        SELECT Top (1)
 			          Undersigned
 			        FROM
-			          Debtsolv.dbo.Users AS D_URS
+			          Debtsolv_MMS.dbo.Users AS D_URS
 			        LEFT JOIN
-			          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+			          Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
 			        WHERE
 			          D_CLD.LeadPoolReference = LCLD.ClientID
 			      ) AS 'Consolidator'
 			FROM
-				Debtsolv.dbo.Payment_Account AS PA
+				Debtsolv_MMS.dbo.Payment_Account AS PA
 			LEFT JOIN
-				Debtsolv.dbo.Client_PaymentData AS DCPD ON PA.ClientID=DCPD.ClientID
+				Debtsolv_MMS.dbo.Client_PaymentData AS DCPD ON PA.ClientID=DCPD.ClientID
 			LEFT JOIN
-				Debtsolv.dbo.Client_LeadData AS DCLD ON PA.ClientID=DCLD.Client_ID
+				Debtsolv_MMS.dbo.Client_LeadData AS DCLD ON PA.ClientID=DCLD.Client_ID
 			LEFT JOIN 
-				Leadpool_DM.dbo.Client_LeadDetails AS LCLD ON DCLD.LeadPoolReference=LCLD.ClientID
+				Leadpool_MMS.dbo.Client_LeadDetails AS LCLD ON DCLD.LeadPoolReference=LCLD.ClientID
 			LEFT JOIN
-				LeadPool_DM.dbo.Client_Details AS CD ON LCLD.ClientID = CD.ClientID
+				Leadpool_MMS.dbo.Client_Details AS CD ON LCLD.ClientID = CD.ClientID
 			WHERE
 				".$date_where."
 				AND PA.AmountIn > 0
@@ -404,7 +404,7 @@ class Debtsolv {
 					{
 						// Client has already reached their DI, but when?
 						// Check database and find out
-						$quickCheck = \DB::query("SELECT Date,AmountIn FROM Debtsolv.dbo.Payment_Account WHERE AmountIn > 0 AND ClientID=".$result['ClientID']." ORDER BY Date ASC")->cached(3600)->execute(static::$_connection);
+						$quickCheck = \DB::query("SELECT Date,AmountIn FROM Debtsolv_MMS.dbo.Payment_Account WHERE AmountIn > 0 AND ClientID=".$result['ClientID']." ORDER BY Date ASC")->cached(3600)->execute(static::$_connection);
 						$running_total = 0;
 						$first_pay_date = null;
 						foreach ($quickCheck AS $check)
@@ -532,11 +532,11 @@ class Debtsolv {
 			}
 			else if ($center == "GAB")
 			{
-				$center_query = "AND DI_REF.short_code IN ('GAB','1TICK')";
+				$center_query = "AND DI_REF.short_code IN ('GAB','1TICK','EMS')";
 			}
 			else if ($center == "GBS")
 			{
-				$center_query = "AND DI_REF.short_code IN ('GBS','1TICK-GBS')";
+				$center_query = "AND DI_REF.short_code IN ('GBS','1TICK-GBS', 'EMS-GBS')";
 			}
 			else
 			{
@@ -577,9 +577,9 @@ class Debtsolv {
 	        SELECT Top (1)
 	          Undersigned
 	        FROM
-	          Debtsolv.dbo.Users AS D_URS
+	          Debtsolv_MMS.dbo.Users AS D_URS
 	        LEFT JOIN
-	          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+	          Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
 	        WHERE
 	          D_CLD.LeadPoolReference = CLD.ClientID
 	      ) AS 'Consolidator'
@@ -597,7 +597,7 @@ class Debtsolv {
 	      	SELECT Top (1)
 	      		ResponseText
 	      	FROM
-	      		Debtsolv.dbo.Client_CustomQuestionResponses
+	      		Debtsolv_MMS.dbo.Client_CustomQuestionResponses
 	      	WHERE
 	      		QuestionID = 1
 	      		AND ClientID = D_CLD.Client_ID
@@ -606,7 +606,7 @@ class Debtsolv {
 	      	SELECT Top (1)
 	      		ResponseText
 	      	FROM
-	      		Debtsolv.dbo.Client_CustomQuestionResponses
+	      		Debtsolv_MMS.dbo.Client_CustomQuestionResponses
 	      	WHERE
 	      		QuestionID = 10007
 	      		AND ClientID = D_CLD.Client_ID
@@ -620,23 +620,23 @@ class Debtsolv {
 	           ''
 	       END AS 'Call Back Date'
 	  FROM
-	    LeadPool_DM.dbo.Client_LeadDetails AS CLD
+	    Leadpool_MMS.dbo.Client_LeadDetails AS CLD
 	  LEFT JOIN
-	    LeadPool_DM.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
+	    Leadpool_MMS.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
 	  LEFT JOIN
-	    LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+	    Leadpool_MMS.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
 	  LEFT JOIN
-	    LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+	    Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
 	  LEFT JOIN
-		LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+		Leadpool_MMS.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
 	  LEFT JOIN
-		LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+		Leadpool_MMS.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
 	  LEFT JOIN
-	    Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+	    Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
 	  LEFT JOIN
-	    Debtsolv.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+	    Debtsolv_MMS.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
 	  LEFT JOIN
-	    Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+	    Debtsolv_MMS.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
 	  LEFT JOIN
 	  	Dialler.dbo.referrals AS DI_REF ON CLD.ClientID = DI_REF.leadpool_id
 	  WHERE
@@ -707,17 +707,17 @@ class Debtsolv {
 	           ''
 	       END AS 'Call Back Date'
 	  FROM
-	    BS_LeadPool_DM.dbo.Client_LeadDetails AS CLD
+	    BS_Leadpool_MMS.dbo.Client_LeadDetails AS CLD
 	  LEFT JOIN
-	    BS_LeadPool_DM.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
+	    BS_Leadpool_MMS.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
 	  LEFT JOIN
-	    BS_LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+	    BS_Leadpool_MMS.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
 	  LEFT JOIN
-	    BS_LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+	    BS_Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
 	  LEFT JOIN
-		BS_LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+		BS_Leadpool_MMS.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
 	  LEFT JOIN
-		BS_LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+		BS_Leadpool_MMS.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
 	  LEFT JOIN
 	    BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
 	  LEFT JOIN
@@ -910,19 +910,19 @@ class Debtsolv {
 				, CPD.InitialAgreedAmount AS DI
 				, PA.AmountIn AS Payment
 			FROM
-				Debtsolv.dbo.Payment_Account AS PA
+				Debtsolv_MMS.dbo.Payment_Account AS PA
 			LEFT JOIN 
-				Debtsolv.dbo.Client_Contact AS CD ON PA.ClientID=CD.ID
+				Debtsolv_MMS.dbo.Client_Contact AS CD ON PA.ClientID=CD.ID
 			LEFT JOIN
-				Debtsolv.dbo.Client_LeadData AS CLD ON PA.ClientID=CLD.Client_ID
+				Debtsolv_MMS.dbo.Client_LeadData AS CLD ON PA.ClientID=CLD.Client_ID
 			LEFT JOIN
-				Debtsolv.dbo.Client_PaymentData AS CPD ON PA.ClientID=CPD.ClientID
+				Debtsolv_MMS.dbo.Client_PaymentData AS CPD ON PA.ClientID=CPD.ClientID
 			LEFT JOIN
-				LeadPool_DM.dbo.Client_LeadDetails AS CLDe ON CLD.LeadPoolReference=CLDe.ClientID
+				Leadpool_MMS.dbo.Client_LeadDetails AS CLDe ON CLD.LeadPoolReference=CLDe.ClientID
 			LEFT JOIN
-				LeadPool_DM.dbo.LeadBatch AS LBA ON CLDe.LeadBatchID = LBA.ID
+				Leadpool_MMS.dbo.LeadBatch AS LBA ON CLDe.LeadBatchID = LBA.ID
 			LEFT JOIN
-				LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+				Leadpool_MMS.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
 			WHERE
 				LSO.Reference IN ('".$client_ids."')
 				AND PA.AmountIn > 0
@@ -956,19 +956,19 @@ class Debtsolv {
 				, PD.InitialAgreedAmount/100 AS DI
 				, COUNT(AmountIn) AS 'Number of Payments'
 			FROM
-				Debtsolv.dbo.Payment_Account AS PA
+				Debtsolv_MMS.dbo.Payment_Account AS PA
 			LEFT JOIN 
-				Debtsolv.dbo.Client_Contact AS CD ON PA.ClientID=CD.ID
+				Debtsolv_MMS.dbo.Client_Contact AS CD ON PA.ClientID=CD.ID
 			LEFT JOIN
-				Debtsolv.dbo.Client_LeadData AS CLD ON PA.ClientID=CLD.Client_ID
+				Debtsolv_MMS.dbo.Client_LeadData AS CLD ON PA.ClientID=CLD.Client_ID
 			LEFT JOIN
-				LeadPool_DM.dbo.Client_LeadDetails AS CLDe ON CLD.LeadPoolReference=CLDe.ClientID
+				Leadpool_MMS.dbo.Client_LeadDetails AS CLDe ON CLD.LeadPoolReference=CLDe.ClientID
 			LEFT JOIN
-				LeadPool_DM.dbo.LeadBatch AS LBA ON CLDe.LeadBatchID = LBA.ID
+				Leadpool_MMS.dbo.LeadBatch AS LBA ON CLDe.LeadBatchID = LBA.ID
 			LEFT JOIN
-				LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+				Leadpool_MMS.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
 			LEFT JOIN
-				DebtSolv.dbo.Client_PaymentData AS PD ON PA.ClientID = PD.ClientID
+				Debtsolv_MMS.dbo.Client_PaymentData AS PD ON PA.ClientID = PD.ClientID
 			WHERE
 				LSO.Reference IN ('".$client_ids."')
 				AND PA.AmountIn > 0
@@ -1018,23 +1018,23 @@ class Debtsolv {
 	           ''
 	       END AS 'Call Back Date'
 	  FROM
-	    LeadPool_DM.dbo.Client_LeadDetails AS CLD
+	    Leadpool_MMS.dbo.Client_LeadDetails AS CLD
 	  LEFT JOIN
-	    LeadPool_DM.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
+	    Leadpool_MMS.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
 	  LEFT JOIN
-	    LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+	    Leadpool_MMS.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
 	  LEFT JOIN
-	    LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+	    Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
 	  LEFT JOIN
-		LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+		Leadpool_MMS.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
 	  LEFT JOIN
-		LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+		Leadpool_MMS.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
 	  LEFT JOIN
-	    Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+	    Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
 	  LEFT JOIN
-	    Debtsolv.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+	    Debtsolv_MMS.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
 	  LEFT JOIN
-	    Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+	    Debtsolv_MMS.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
 	  WHERE 
 	      LSO.[Reference] IN ('".$list_ids."')
 		AND NOT ((D_CPD.InitialAgreedAmount is null OR D_CPD.InitialAgreedAmount <= 0) AND CC.ContactResult = 1500)

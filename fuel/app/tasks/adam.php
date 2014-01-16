@@ -383,7 +383,7 @@
 		
 		public function monday_morning_tasks()
 		{
-			@Adam::move_telesales_staff();
+			Adam::move_telesales_staff();
 		}
 
         // These are tasks to be run at 8am every morning.
@@ -406,6 +406,10 @@
       // -- Terminated and Suspended Clients
       // -----------------------------------
       @Adam::terminated_suspended_clients_report();
+      
+      // -- Spark E Report for Sahil to Accounts
+      // ---------------------------------------
+      @Adam::sahilPaymentReport();
       
 			@Adam::daily_stats();
 			
@@ -760,17 +764,17 @@ WHERE
 			        SELECT Top (1)
 			          Undersigned
 			        FROM
-			          Debtsolv.dbo.Users AS D_URS
+			          Debtsolv_MMS.dbo.Users AS D_URS
 			        LEFT JOIN
-			          Debtsolv.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
+			          Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON D_URS.ID = D_CLD.Counsellor
 			        WHERE
 			          D_CLD.LeadPoolReference = CLD.ClientID
 			      ),(SELECT Top (1)
 			      	  Undersigned
 			      	FROM
-			      	  Debtsolv.dbo.Users AS DURS
+			      	  Debtsolv_MMS.dbo.Users AS DURS
 			      	LEFT JOIN
-			      	  Leadpool_DM.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
+			      	  Leadpool_MMS.dbo.CampaignContactAccess AS CCA ON DURS.ID = CCA.UserID
 			      	WHERE
 			      	  CCA.CampaignContactID = CC.ID
 			      	ORDER BY
@@ -790,7 +794,7 @@ WHERE
 			      	SELECT Top (1)
 			      		ResponseText
 			      	FROM
-			      		Debtsolv.dbo.Client_CustomQuestionResponses
+			      		Debtsolv_MMS.dbo.Client_CustomQuestionResponses
 			      	WHERE
 			      		QuestionID = 1
 			      		AND ClientID = D_CLD.Client_ID
@@ -805,27 +809,27 @@ WHERE
 			       END AS 'Call Back Date'
 			       , CC.ContactResult AS ContactResult
 			  FROM
-			    LeadPool_DM.dbo.Client_LeadDetails AS CLD
+			    Leadpool_MMS.dbo.Client_LeadDetails AS CLD
 			  LEFT JOIN
-			    LeadPool_DM.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
+			    Leadpool_MMS.dbo.Client_Details AS CD ON CLD.ClientID = CD.ClientID
 			  LEFT JOIN
-			    LeadPool_DM.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
+			    Leadpool_MMS.dbo.Campaign_Contacts AS CC ON CLD.ClientID = CC.ClientID
 			  LEFT JOIN
-			    LeadPool_DM.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
+			    Leadpool_MMS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
 			  LEFT JOIN
-				LeadPool_DM.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
+				Leadpool_MMS.dbo.LeadBatch AS LBA ON CLD.LeadBatchID = LBA.ID
 			  LEFT JOIN
-				LeadPool_DM.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
+				Leadpool_MMS.dbo.Type_Lead_Source AS LSO ON LBA.LeadSourceID = LSO.ID
 			  
 			  LEFT JOIN
-				Debtsolv.dbo.Type_Lead_Source AS DSLSO ON LBA.LeadSourceID = DSLSO.ID
+				Debtsolv_MMS.dbo.Type_Lead_Source AS DSLSO ON LBA.LeadSourceID = DSLSO.ID
 				
 			  LEFT JOIN
-			    Debtsolv.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
+			    Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON CLD.ClientID = D_CLD.LeadPoolReference
 			  LEFT JOIN
-			    Debtsolv.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
+			    Debtsolv_MMS.dbo.Users AS D_U ON D_CLD.TelesalesAgent = D_U.ID
 			  LEFT JOIN
-			    Debtsolv.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
+			    Debtsolv_MMS.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
 			  LEFT JOIN
 			  	Dialler.dbo.referrals AS DI_REF ON CLD.ClientID = DI_REF.leadpool_id
 			  WHERE
@@ -1238,28 +1242,28 @@ Gregson and Brooke.');
 				
 				if ($dial_rate == 0)
 				{
-					$dial_rate = 0.5;
+					$dial_rate = 1;
 				}
 				
 				// Reduce the dial rate based on the current drop rate to try and bring us under the limit quicker.
-				if ($drop_rate > 4)
+				if ($drop_rate > 3)
 				{
-					$dial_rate = ($dial_rate * 0.5);
+					$dial_rate = ($dial_rate * 0.2);
 				}
-				else if ($drop_rate >= 3)
+				else if ($drop_rate >= 2)
 				{
 					$dial_rate = ($dial_rate * 0.7);
 				} 
 				else if ($drop_rate < 2)
 				{
-					$dial_rate = ($dial_rate * 2.5);
+					$dial_rate = ($dial_rate * 2);
 				}
 				
 				$campaign_stats->differential_onemin . "\n";
 				$required_channels = ($dial_rate*($campaign_stats->differential_onemin*1.8));
 				
 				
-				$channels = 500;
+				$channels = 1000;
 				
 				if ($required_channels > $channels)
 				{
@@ -1268,7 +1272,7 @@ Gregson and Brooke.');
 
 				$campaign = \Goautodial\Model_Vicidial_Campaigns::find($campaign_id,array(),$connection);
 				
-				$campaign->auto_dial_level = number_format($dial_rate,3,'.','');
+				$campaign->auto_dial_level = number_format(($dial_rate < 1) ? 1 : $dial_rate,3,'.','');
 				$campaign->save();
 				
 				print $message = $campaign_id . " Dial rate set to: " . number_format($dial_rate,3,'.','');
@@ -1697,6 +1701,59 @@ Gregson and Brooke.');
     		    Adam::move_telesales_staff(date("jS F Y", $checkDay));
     		    \Cli::write(date("jS F Y", $checkDay)." Done\n");
             }
+
+ \Cli::write("\nStarting June\n");
+                    for ($i = 1; $i <= 30; $i++)
+                    {
+                    $checkDay = mktime(0,0,0,6,$i,2013);
+                    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+                    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+
+ \Cli::write("\nStarting July\n");
+                    for ($i = 1; $i <= 31; $i++)
+                    {
+                    $checkDay = mktime(0,0,0,7,$i,2013);
+                    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+                    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+
+ \Cli::write("\nStarting August\n");
+                    for ($i = 1; $i <= 31; $i++)
+                    {
+                    $checkDay = mktime(0,0,0,8,$i,2013);
+                    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+                    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+
+ \Cli::write("\nStarting September\n");
+                    for ($i = 1; $i <= 30; $i++)
+                    {
+                    $checkDay = mktime(0,0,0,9,$i,2013);
+                    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+                    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+
+ \Cli::write("\nStarting October\n");
+                    for ($i = 1; $i <= 31; $i++)
+                    {
+                    $checkDay = mktime(0,0,0,10,$i,2013);
+                    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+                    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+
+ \Cli::write("\nStarting November\n");
+                    for ($i = 1; $i <= 20; $i++)
+                    {
+                    $checkDay = mktime(0,0,0,11,$i,2013);
+                    Adam::move_telesales_staff(date("jS F Y", $checkDay));
+                    \Cli::write(date("jS F Y", $checkDay)." Done\n");
+            }
+
+
+
+
+
     		
 		}
 		
@@ -1709,6 +1766,7 @@ Gregson and Brooke.');
 		 */
 		public function move_telesales_staff($chosenDay=null)
 		{
+			print "Running";
 		    // Work out days are required
 		    $chosenDate = (is_null($chosenDay)) ? strtotime(date('o-\\WW'))  : strtotime($chosenDay);
 		    $earlyDate  = (is_null($chosenDay)) ? strtotime(date("jS F Y", $chosenDate) . ' -7 days') : strtotime($chosenDay . ' -7 days');
@@ -1757,12 +1815,12 @@ Gregson and Brooke.');
                 foreach ($premierGBS as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'GBS');
                 
                 // Get PREMIER-GBS
-                $premierRESOLVEPART = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVEPART';")->cached(0)->execute('gabdialler');
-                foreach ($premierRESOLVEPART as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVEPART');
+                //$premierRESOLVEPART = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVEPART';")->cached(0)->execute('gabdialler');
+                //foreach ($premierRESOLVEPART as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVEPART');
                 
                 // Get PREMIER-GBS
-                $premierRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVE';")->cached(0)->execute('gabdialler');
-                foreach ($premierRESOLVE as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
+                //$premierRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-RESOLVE';")->cached(0)->execute('gabdialler');
+                //foreach ($premierRESOLVE as $single) $premierAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
                 
                 // Get PREMIER-GAB
                 $premierGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='PREMIER-GAB';")->cached(0)->execute('gabdialler');
@@ -1773,12 +1831,12 @@ Gregson and Brooke.');
                 foreach ($standardGBS as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'GBS');
                 
                 // Get STANDARD-GAB
-                $standardRESOLVEPART = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-RESOLVEPART';")->cached(0)->execute('gabdialler');
-                foreach ($standardRESOLVEPART as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'RESOLVEPART');
+                //$standardRESOLVEPART = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-RESOLVEPART';")->cached(0)->execute('gabdialler');
+                //foreach ($standardRESOLVEPART as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'RESOLVEPART');
                 
                 // Get STANDARD-GAB
-                $standardRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-RESOLVE';")->cached(0)->execute('gabdialler');
-                foreach ($standardRESOLVE as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
+                //$standardRESOLVE = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-RESOLVE';")->cached(0)->execute('gabdialler');
+                //foreach ($standardRESOLVE as $single) $standardAll[] = array('user' => $single['user'], 'center' => 'RESOLVE');
                 
                 // Get STANDARD-GAB
                 $standardGAB = \DB::query("SELECT user FROM vicidial_users WHERE user_group='STANDARD-GAB';")->cached(0)->execute('gabdialler');
@@ -2125,7 +2183,7 @@ Gregson and Brooke.');
       $lunchTime = '3600';
       
       $totalMonToThurs = '5400';
-      $totalFri = '4500';
+      $totalFri = '5400'; #Old Time 4500
       
       $date = date("Y-m-d", strtotime("-1 day", time()));
       $startDateTime = date("Y-m-d 00:00:01", strtotime("-1 day", time()));
@@ -2139,7 +2197,7 @@ Gregson and Brooke.');
         'GABSENIOR',
         'GABPPISNR',
       );
-      
+      /*
       $resolveGroup = array(
         'PREMIER-RESOLVE',
         'PREMIER-RESOLVEPART',
@@ -2147,20 +2205,19 @@ Gregson and Brooke.');
         'STANDARD-RESOLVEPART',
         'RESOLVE',
       );
-      
+      */
       $hqEmailDetails = array(
         'to' => array('d.stansfield@expertmoneysolutions.co.uk',
                       'k.wallwork@expertmoneysolutions.co.uk',
                       'l.davenport@expertmoneysolutions.co.uk',
                       'a.brooke@expertmoneysolutions.co.uk',
-                      'i.patterson@expertmoneysolutions.co.uk',
                       'g.gregson@expertmoneysolutions.co.uk',
                       's.jayne@expertmoneysolutions.co.uk',
                      ),
         'subject' => 'Bolton: Staff Break/Lunch Late Report',
         'results' => array(),
       );
-      
+      /*
       $resolveEmailDetails = array(
         'to' => array('d.stansfield@expertmoneysolutions.co.uk',
                       'l.baker@resolvemm.co.uk',
@@ -2174,6 +2231,7 @@ Gregson and Brooke.');
         'subject' => 'Resolve: Staff Break/Lunch Late Report',
         'results' => array(),
       );
+      */
       
       // -- Get the Results
       // ------------------
@@ -2202,7 +2260,7 @@ Gregson and Brooke.');
                                GROUP BY
                                  VAL.user
                                HAVING
-                                 time_diff > 0
+                                 time_diff >= 60
                                ORDER BY
                                  time_diff DESC
                             ", \DB::SELECT)->execute('gabdialler')->as_array();
@@ -2250,12 +2308,14 @@ Gregson and Brooke.');
           // -----------
           $hqEmailDetails['results'][] = $results[$key];
         }
+        /*
         else if(in_array($result['user_group'], $resolveGroup))
         {
           // -- Resolve Group
           // ----------------
           $resolveEmailDetails['results'][] = $results[$key];
         }
+        */
       }
       
       // -- Send the emails out to the sales managers
@@ -2284,6 +2344,7 @@ Gregson and Brooke.');
       
       // -- Resolve Email
       // ----------------
+      /*
       if(count($resolveEmailDetails['results']) > 0)
       {
         $email = \Email::forge();
@@ -2300,6 +2361,7 @@ Gregson and Brooke.');
                       
         $email->send();
       }
+      */
     }
     
     /**
@@ -2575,14 +2637,14 @@ Gregson and Brooke.');
 		public function checkLists()
 		{
 			
-			$gabLists      = \DB::select('ID','Reference')->from('Leadpool_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
-			$gabListsDM    = \DB::select('ID')->from('Debtsolv.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
-			$gabListsBat   = \DB::select('ID')->from('Leadpool_DM.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
+			$gabLists      = \DB::select('ID','Reference')->from('Leadpool_MMS.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
+			$gabListsDM    = \DB::select('ID')->from('Debtsolv_MMS.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
+			$gabListsBat   = \DB::select('ID')->from('Leadpool_MMS.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
 			
 			
-			$resolveLists  = \DB::select('ID','Reference')->from('BS_Leadpool_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
+			$resolveLists  = \DB::select('ID','Reference')->from('BS_Leadpool_MMS.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
 			$resolveListsDM    = \DB::select('ID')->from('BS_Debtsolv_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
-			$resolveListsBat   = \DB::select('ID')->from('BS_Leadpool_DM.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
+			$resolveListsBat   = \DB::select('ID')->from('BS_Leadpool_MMS.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
 			
 			$gabAll = $resolveAll = array();
 			foreach ($gabLists as $one)
@@ -2621,7 +2683,7 @@ Gregson and Brooke.');
 				
 				$listDetails  = \DB::select('list_description')->from('vicidial_lists')->where('list_id', $missing)->execute('dialler');
 				
-				list($leadSourceID, $rows_affected) = \DB::insert('Leadpool_DM.dbo.Type_Lead_Source')->set(array(
+				list($leadSourceID, $rows_affected) = \DB::insert('Leadpool_MMS.dbo.Type_Lead_Source')->set(array(
 				 	'ID'             => $lastGab,
 					'Description'    => $listDetails[0]['list_description'],
 					'Reference'      => $missing,
@@ -2632,7 +2694,7 @@ Gregson and Brooke.');
 				))->execute('debtsolv');
 				
 				
-				list($leadSourceID, $rows_affected) = \DB::insert('Debtsolv.dbo.Type_Lead_Source')->set(array(
+				list($leadSourceID, $rows_affected) = \DB::insert('Debtsolv_MMS.dbo.Type_Lead_Source')->set(array(
 				 	'ID'             => $lastGabDM,
 					'Alias'          => $listDetails[0]['list_description'],
 					'Reference'      => $missing,
@@ -2645,7 +2707,7 @@ Gregson and Brooke.');
 				))->execute('debtsolv');
 				
 				
-				list($dialler_lead_id, $rows_affected) = \DB::insert('Leadpool_DM.dbo.LeadBatch')->set(array(
+				list($dialler_lead_id, $rows_affected) = \DB::insert('Leadpool_MMS.dbo.LeadBatch')->set(array(
 					'Description'    => $listDetails[0]['list_description'],
 					'Filename'       => '',
 					'LeadSourceID'   => $lastGab,
@@ -2673,7 +2735,7 @@ Gregson and Brooke.');
 				
 				$listDetails  = \DB::select('list_description')->from('vicidial_lists')->where('list_id', $missing)->execute('dialler');
 				
-				list($leadSourceID, $rows_affected) = \DB::insert('BS_Leadpool_DM.dbo.Type_Lead_Source')->set(array(
+				list($leadSourceID, $rows_affected) = \DB::insert('BS_Leadpool_MMS.dbo.Type_Lead_Source')->set(array(
 				 	'ID'             => $lastRes,
 					'Description'    => $listDetails[0]['list_description'],
 					'Reference'      => $missing,
@@ -2697,7 +2759,7 @@ Gregson and Brooke.');
 				))->execute('debtsolv');
 				
 				
-				list($dialler_lead_id, $rows_affected) = \DB::insert('BS_Leadpool_DM.dbo.LeadBatch')->set(array(
+				list($dialler_lead_id, $rows_affected) = \DB::insert('BS_Leadpool_MMS.dbo.LeadBatch')->set(array(
 					'Description'    => $listDetails[0]['list_description'],
 					'Filename'       => '',
 					'LeadSourceID'   => $lastRes,
@@ -2746,5 +2808,241 @@ Gregson and Brooke.');
 	
 	
 		}
+    
+    /**
+     * Daily and monthy report
+     * 
+     * @author David Stansfield
+     */
+    public function sahilPaymentReport()
+    {
+      // --------------------
+      // -- Pack-In Report --
+      // --------------------
+      $introducerID = 53;
+      $packOutValue = 100;
+      $date = date("d-m-Y");
+      $emailTo = "sparke-reports@gabfs.co.uk";
+      
+      $results = array();
+      $results = \DB::query("SELECT
+                                LEAD_DATA.Client_ID
+                               ,INTRODUCER.Name
+                               ,CONVERT(VARCHAR, LEAD_DATA.DatePackReceived, 103) AS PackReceived
+                               ," . $packOutValue . " AS Payment
+                             FROM
+                               Debtsolv_MMS.dbo.Client_LeadData AS LEAD_DATA
+                             INNER JOIN
+                               Debtsolv_MMS.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_DATA.SourceID = LEAD_SOURCE.ID
+                             INNER JOIN
+                               Debtsolv_MMS.dbo.Lead_Introducers AS INTRODUCER ON LEAD_SOURCE.IntroducerID = INTRODUCER.ID
+                             WHERE
+                               LEAD_SOURCE.IntroducerID = " . (int)$introducerID . "
+                             AND
+                               LEAD_DATA.DatePackReceived >= DATEADD(day, DATEDIFF(day, 0, GetDate()), 0);
+                            ", \DB::SELECT)->execute('debtsolv')->as_array();
+                            
+      $email = \Email::forge();
+      
+      $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+  
+      $email->to($emailTo);
+            
+      $email->subject('Sahil Pack-In Payment Report' . ' - ' . $date);
+    
+      $email->html_body(\View::forge('emails/sparke/pack-in-report', array('clients' => $results,
+                                                                           'date' => $date,
+                                                                                      )
+          				       ));
+                  
+      $email->send();
+      
+      unset($results);
+      
+      // -------------------------------
+      // -- Monthly SO Payment Report --
+      // -------------------------------
+      
+      // -- Check to see if today is the first day of the month
+      // ------------------------------------------------------
+      if(date("d-m-Y") != date("01-m-Y"))
+        return;
+        
+      $results = array();
+      $results = \DB::query("WITH TEMP_PAYMENT_TABLE AS
+                              (
+                              SELECT
+                                 DI_PAYMENTS_TABLE.ID
+                                ,ClientID
+                                ,[Date]
+                                ,DIPayments
+                                ,DIPaymentNumber
+                                ,DIPayment
+                              FROM
+                              (
+                              SELECT
+                                 PAYMENT_IN.ID
+                                ,PAYMENT_IN.ClientID
+                                ,PAYMENT_IN.[Date]
+                                ,Amount
+                                ,ISNULL((SUM(RunningTotal)) / NULLIF((PAYMENT_DATA.DIPayment),0), 0) AS DIPayments
+                                ,CASE
+                                   WHEN ISNULL((SUM(RunningTotal)) / NULLIF((PAYMENT_DATA.DIPayment), 0), 0) >= 1 AND RANK() OVER (PARTITION BY PAYMENT_IN.ClientID ORDER BY PAYMENT_IN.ClientID, PAYMENT_IN.ID) = 1 THEN 1    
+                                   WHEN ISNULL((SUM(RunningTotal)) / NULLIF((PAYMENT_DATA.DIPayment), 0), 0) >= 2 AND RANK() OVER (PARTITION BY PAYMENT_IN.ClientID ORDER BY PAYMENT_IN.ClientID, PAYMENT_IN.ID) = 2 THEN 2		     
+                                   WHEN ISNULL((SUM(RunningTotal)) / NULLIF((PAYMENT_DATA.DIPayment), 0), 0) >= 3 AND RANK() OVER (PARTITION BY PAYMENT_IN.ClientID ORDER BY PAYMENT_IN.ClientID, PAYMENT_IN.ID) = 3 THEN 3
+                                   WHEN ISNULL((SUM(RunningTotal)) / NULLIF((PAYMENT_DATA.DIPayment), 0), 0) = 1 THEN 1
+                                   WHEN ISNULL((SUM(RunningTotal)) / NULLIF((PAYMENT_DATA.DIPayment), 0), 0) = 2 THEN 2
+                                   WHEN ISNULL((SUM(RunningTotal)) / NULLIF((PAYMENT_DATA.DIPayment), 0), 0) = 3 THEN 3
+                                 END AS DIPaymentNumber     
+                                ,ROW_NUMBER() OVER (PARTITION BY PAYMENT_IN.ClientID, FLOOR(ISNULL((SUM(RunningTotal)) / NULLIF((PAYMENT_DATA.DIPayment),0), 0)) ORDER BY PAYMENT_IN.ID) AS Row
+                                ,RANK() OVER (PARTITION BY PAYMENT_IN.ClientID ORDER BY PAYMENT_IN.ClientID, PAYMENT_IN.ID) AS RowN
+                                ,PAYMENT_DATA.DIPayment
+                              FROM
+                                Debtsolv_MMS.dbo.Payment_In AS PAYMENT_IN
+                              INNER JOIN
+                                (
+                                  SELECT
+                                     ClientID
+                                    ,CASE
+                                       WHEN InitialAgreedAmount > NormalExpectedPayment THEN NormalExpectedPayment ELSE InitialAgreedAmount
+                                     END AS DIPayment
+                                  FROM
+                                    Debtsolv_MMS.dbo.Client_PaymentData
+                                ) AS PAYMENT_DATA ON PAYMENT_IN.ClientID = PAYMENT_DATA.ClientID
+                              INNER JOIN
+                                (
+                                  SELECT
+                                     ID
+                                    ,ClientID
+                                    ,[Date]
+                                    ,FLOOR(SUM(Amount)) AS RunningTotal
+                                  FROM
+                                    Debtsolv_MMS.dbo.Payment_In AS P1
+                                  GROUP BY
+                                     ClientID
+                                    ,[Date]
+                                    ,ID
+                                ) AS DTABLE_PAYMENT_IN ON PAYMENT_IN.ClientID = DTABLE_PAYMENT_IN.ClientID
+                              WHERE
+                                DTABLE_PAYMENT_IN.[Date] <= PAYMENT_IN.[Date]
+                              GROUP BY
+                                 PAYMENT_IN.ID
+                                ,PAYMENT_IN.ClientID
+                                ,PAYMENT_IN.[Date]
+                                ,Amount
+                                ,PAYMENT_DATA.DIPayment
+                              HAVING
+                                ISNULL((SUM(RunningTotal)) / NULLIF((PAYMENT_DATA.DIPayment),0), 0) <= 5
+                              AND
+                                ISNULL((SUM(RunningTotal)) / NULLIF((PAYMENT_DATA.DIPayment),0), 0) > 0
+                              ) AS DI_PAYMENTS_TABLE
+                              INNER JOIN
+                                Debtsolv_MMS.dbo.Client_LeadData AS LEAD_DATA ON DI_Payments_Table.ClientID = LEAD_DATA.Client_ID
+                              INNER JOIN
+                                Debtsolv_MMS.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_DATA.SourceID = LEAD_SOURCE.ID
+                              INNER JOIN
+                                Debtsolv_MMS.dbo.Lead_Introducers AS INTRODUCERS ON LEAD_SOURCE.IntroducerID = INTRODUCERS.ID
+                              WHERE
+                                INTRODUCERS.ID = " . (int)$introducerID . "
+                              AND
+                                DI_PAYMENTS_TABLE.Row = 1
+                              AND
+                                DI_PAYMENTS_TABLE.DIPayments > 0
+                              AND
+                                DI_PAYMENTS_TABLE.DIPaymentNumber IS NOT NULL
+                              )
+                              
+                              /** ***************************************** **/
+                              /** Pull Out the Information we need by Month **/
+                              /** ***************************************** **/
+                              SELECT
+                                 TEMP_TABLE.ClientID
+                                ,TABLE1.[Date] AS FirstPaymentDate
+                                ,TABLE2.[Date] AS SecondPaymentDate
+                              --  ,TABLE3.[Date] AS ThirdPaymentDate
+                                ,CONVERT(VARCHAR, CONVERT(MONEY, TEMP_TABLE.DIPayment / 100), 1) AS UsedDI
+                                ,CONVERT(VARCHAR, CONVERT(MONEY, PAYMENT_DATA.InitialAgreedAmount / 100), 1) AS 'AgreedDI'
+                                ,CONVERT(VARCHAR, CONVERT(MONEY, PAYMENT_DATA.NormalExpectedPayment / 100), 1) AS 'NormalExpectedDI'
+                                ,PAYMENT_METHOD.[Description] AS PaymentMethod
+                                ,CONVERT(VARCHAR, CONVERT(MONEY, ((TEMP_TABLE.DIPayment * 2) - 10000) / 100), 1) AS PaymentToMake
+                              FROM
+                                TEMP_PAYMENT_TABLE AS TEMP_TABLE
+                              LEFT JOIN
+                                TEMP_PAYMENT_TABLE AS TABLE1 ON TEMP_TABLE.ClientID = TABLE1.ClientID AND TABLE1.DIPaymentNumber = 1
+                              LEFT JOIN
+                                TEMP_PAYMENT_TABLE AS TABLE2 ON TEMP_TABLE.ClientID = TABLE2.ClientID AND TABLE2.DIPaymentNumber = 2
+                              --LEFT JOIN
+                              --  TEMP_PAYMENT_TABLE AS TABLE3 ON TEMP_TABLE.ClientID = TABLE3.ClientID AND TABLE3.DIPaymentNumber = 3
+                              INNER JOIN
+                                Debtsolv_MMS.dbo.Client_PaymentData AS PAYMENT_DATA ON TEMP_TABLE.ClientID = PAYMENT_DATA.ClientID
+                              INNER JOIN
+                                Debtsolv_MMS.dbo.Type_Payment_Method AS PAYMENT_METHOD ON PAYMENT_DATA.PaymentMethod = PAYMENT_METHOD.ID
+                              WHERE
+                              (
+                                  YEAR(TABLE1.[Date]) = YEAR(GETDATE())
+                                AND
+                                  MONTH(TABLE1.[Date]) = MONTH(GETDATE()) - 1
+                                AND
+                                  PAYMENT_DATA.PaymentMethod = 3
+                                OR
+                                  YEAR(TABLE2.[Date]) = YEAR(GETDATE())
+                                AND
+                                  MONTH(TABLE2.[Date]) = MONTH(GETDATE()) - 1
+                                AND
+                                  PAYMENT_DATA.PaymentMethod = 11
+                              )
+                              GROUP BY
+                                 TEMP_TABLE.ClientID
+                                ,TABLE1.[Date]
+                                ,TABLE2.[Date]
+                              --  ,TABLE3.[Date]
+                                ,TEMP_TABLE.DIPayment
+                                ,PAYMENT_DATA.InitialAgreedAmount
+                                ,PAYMENT_DATA.NormalExpectedPayment
+                                ,PAYMENT_DATA.PaymentMethod
+                                ,PAYMENT_METHOD.[Description]
+                              ORDER BY
+                                 PAYMENT_DATA.PaymentMethod
+                                ,PaymentToMake ASC
+                            ", \DB::SELECT)->execute('debtsolv')->as_array();
+                            
+      // -- Get Totals
+      // -------------
+      $totalDI = 0;
+      $totalToPayOut = 0;
+      
+      if(count($results) > 0)
+      {
+        foreach($results as $clients)
+        {
+          if($clients['UsedDI'] > 0)
+            $totalDI += $clients['UsedDI'];
+            
+          if($clients['PaymentToMake'] > 0)
+            $totalToPayOut += $clients['PaymentToMake'];
+        }
+      }
+                            
+      $month = date("F", strtotime("-1 Month", time()));
+                            
+      $email = \Email::forge();
+      
+      $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+  
+      $email->to($emailTo);
+            
+      $email->subject('Sahil Monthly Payment Report' . ' - ' . $month);
+    
+      $email->html_body(\View::forge('emails/sparke/monthly-payment-report', array('clients' => $results,
+                                                                                   'month' => $month,
+                                                                                   'totalDI' => $totalDI,
+                                                                                   'totalToPayOut' => $totalToPayOut,
+                                                                                  )
+          				       ));
+                  
+      $email->send();
+      
+      unset($results);
+    }
 		
 	}

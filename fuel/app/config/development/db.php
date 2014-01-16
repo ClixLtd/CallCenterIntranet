@@ -24,7 +24,8 @@ return array(
 		'type'       => 'pdo',
 		'table_prefix' => '',
 		'connection' => array(
-				'dsn'            => 'dblib:host=192.168.3.31,1433;dbname=LeadPool_MMS',
+				#'dsn'            => 'dblib:host=192.168.3.31:1433;dbname=LeadPool_MMS',
+        'dsn'            => 'sqlsrv:Server=192.168.3.31,1433;Database=LeadPool_MMS',
 		        'username'       => 'debtsolv',
 		        'password'       => '76GerZnu871',
 		        'persistent'     => false,
