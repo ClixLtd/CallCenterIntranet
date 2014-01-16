@@ -21,7 +21,7 @@
                 <th>Connections</th>
                 <th>None Connections</th>
                 <th>Pitched To</th>
-                <th>Sales</th>
+                <th>Transfers</th>
               </tr>
             </thead>
             <tbody>
@@ -29,6 +29,13 @@
               if(count($results) > 0)
               {
                 $background = 0;
+                
+                $dialsTotal = 0;
+                $connectionsTotal = 0;
+                $noneConnectionsTotal = 0;
+                $pitchedToTotal = 0;
+                $salesTotal = 0;
+                
                 foreach($results as $result)
                 {
                   ?>
@@ -43,7 +50,26 @@
                   </tr>
                   <?php
                   $background = ($background==0) ? 1 : 0;
+                  
+                  $dialsTotal = ($dialsTotal + $result['dials']);
+                  $connectionsTotal = ($connectionsTotal + $result['connections']);
+                  $noneConnectionsTotal = ($noneConnectionsTotal + $result['none_connections']);
+                  $pitchedToTotal = ($pitchedToTotal + $result['pitched_to']);
+                  $salesTotal = ($salesTotal + $result['sales']);
                 }
+                ?>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td colspan="2"><strong>Totals</strong></td>
+                  <td align="center"><strong><?=number_format($dialsTotal);?></strong></td>
+                  <td align="center"><strong><?=number_format($connectionsTotal);?></strong></td>
+                  <td align="center"><strong><?=number_format($noneConnectionsTotal);?></strong></td>
+                  <td align="center"><strong><?=number_format($pitchedToTotal);?></strong></td>
+                  <td align="center"><strong><?=number_format($salesTotal);?></strong></td>
+                </tr>
+                <?php
               }
               else
               {
