@@ -2576,6 +2576,8 @@ Gregson and Brooke.');
                                vicidial_statuses AS STATUS USING(status)
                              WHERE
                                DATE(LOG.call_date) = CURDATE()
+                             AND
+                               USER.user_group LIKE '%GAB%'
                              GROUP BY
                                LOG.user
                             ", \DB::SELECT)->execute('gabdialler')->as_array();
@@ -2586,6 +2588,7 @@ Gregson and Brooke.');
       $email->from('noreply@expertmoneysolutions.co.uk', 'Dialler: MMS');
 
       $email->to(array('d.stansfield@clix.co.uk', 's.skinner@clix.co.uk', 'gary@gabfs.co.uk'));
+      #$email->to(array('d.stansfield@clix.co.uk'));
           
       $email->subject('Dialler Call Stats for' . ' ' . date("d-m-Y"));
   
