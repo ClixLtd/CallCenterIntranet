@@ -39,16 +39,35 @@
      return Model_ScriptForms::scriptFormData();     
    }
    
+   public function getProductsRecomendations($logID = 0)
+   {       
+     // -- Get a list of unique products for each question
+     // --------------------------------------------------
+     $products = array();
+     $products = Model_ScriptForms::loadProductsRecomendations((int)$logID);
+                            
+     return $products;
+   }
+   
    // **********************
    // *** Static Classes ***
    // **********************
    
-   public static function saveFormData($referralID = 0, $clientID = 0, $userID = 0, $scriptTypeID = 0, array $data)
+   public static function saveFormData($referralID = 0, $clientID = 0, $userID = 0, $scriptTypeID = 0, $scriptFormsID = 0, array $data)
    {     
      if(count($data) == 0)
-       return;
+       return false;
        
-     Model_ScriptForms::saveScriptForm($referralID, $clientID, $userID, $scriptTypeID, $data);
+     /*
+     if(Model_ScriptForms::saveScriptForm($referralID, $clientID, $userID, $scriptTypeID, $scriptFormsID, $data))
+       return true;
+     else
+       return false;
+     */
+     $responseLogID = 0;
+     $responseLogID = Model_ScriptForms::saveScriptForm($referralID, $clientID, $userID, $scriptTypeID, $scriptFormsID, $data);
+     
+     return $responseLogID;
    }
    
    public static function createForm(array $data)
@@ -108,5 +127,13 @@
      $result = Model_ScriptForms::loadResponse($referralID, $clientID, $typeID);
      
      return $result;    
+   }
+   
+   public static function loadProducts()
+   {
+     $results = array();
+     $results = Model_ScriptForms::loadProducts();
+     
+     return $results;
    }
  }

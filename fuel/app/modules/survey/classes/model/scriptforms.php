@@ -142,6 +142,7 @@
                                                ,name
                                                ,`repeat`
                                                ,`active`
+                                               ,rebuttal_script
                                                ,created_at
                                               )
                                               VALUES
@@ -149,6 +150,7 @@
                                                 NULL
                                                ," . \DB::quote($data['name']) . "
                                                ," . \DB::quote($data['repeat']) . "
+                                               ,''
                                                ,'yes'
                                                ," . time() . "
                                               )
@@ -180,7 +182,7 @@
                                                  ," . (int)$field['fieldType'] . "
                                                  ," . \DB::quote((isset($field['required']) && $field['required'] == 'on' ? 'yes' : 'no')) . "
                                                 )
-                                               ")->execute();
+                                               ", \DB::INSERT)->execute();
          
          // -- Save the Option Answers if any have been added
          // -------------------------------------------------             
@@ -203,7 +205,41 @@
                                                  ," . \DB::quote($option['value']) . "
                                                  ," . \DB::quote($option['value']) . "
                                                 )
-                                               ")->execute();
+                                               ", \DB::INSERT)->execute();
+           }
+         }
+         
+         // -- Save Product Information
+         // ---------------------------
+         if(isset($field['products']) && count($field['products']) > 0)
+         {
+           #print_r($field['products']);
+           #die();
+           
+           foreach($field['products'] as $product)
+           {
+             list($questionProductID,) = \DB::query("INSERT INTO
+                                                     scripts_forms_questions_products
+                                                   (
+                                                     id
+                                                    ,question_id
+                                                    ,product_id
+                                                    ,positive_value
+                                                    ,negative_value
+                                                    ,weight
+                                                    ,priority
+                                                   )
+                                                   VALUES
+                                                   (
+                                                     NULL
+                                                    ," . (int)$questionID . "
+                                                    ," . (int)$product['product'] . "
+                                                    ," . \DB::quote($product['positive']) . "
+                                                    ," . \DB::quote($product['negative']) . "
+                                                    ,0
+                                                    ," . (int)$product['priority'] . "
+                                                   )
+                                                  ", \DB::INSERT)->execute();
            }
          }
        }
@@ -263,7 +299,7 @@
      return $results;
    }
    
-   public static function saveScriptForm($referralID, $clientID, $userID = 0, $scriptTypeID = 0, array $data)
+   public static function saveScriptForm($referralID, $clientID, $userID = 0, $scriptTypeID = 0, $scriptFormID = 0, array $data)
    {
      // -- Save the Response to the Response Log
      // ----------------------------------------
@@ -291,8 +327,10 @@
      $questionData = array();
      
      $questionData['response_log_id'] = (int)$responseLogID;
-     $questionData['script_forms_id'] = 1;
+     $questionData['script_forms_id'] = (int)$scriptFormID;
      $questionData['reference'] = 1;
+     
+     $saved = false;
      
      foreach($data as $key => $answers)
      {
@@ -324,7 +362,10 @@
                
                // -- Save to DB
                // -------------
-               static::saveFormAnswer($questionData);
+               if(static::saveFormAnswer($questionData) === true)
+                 $saved = true;
+               else
+                 $saved = false;
              }
            }
            else
@@ -340,7 +381,10 @@
                $questionData['answer'] = '';
              }
              
-             static::saveFormAnswer($questionData);
+             if(static::saveFormAnswer($questionData) === true)
+                 $saved = true;
+               else
+                 $saved = false;
            }
          }
        }
@@ -372,7 +416,10 @@
                  
                  // -- Save to DB
                  // -------------
-                 static::saveFormAnswer($questionData);
+                 if(static::saveFormAnswer($questionData) === true)
+                 $saved = true;
+               else
+                 $saved = false;
                }
              }
              else
@@ -380,39 +427,105 @@
                $questionData['script_forms_answer_id'] = 0;
                $questionData['answer'] = $answerItem['answer'];
                
-               static::saveFormAnswer($questionData);
+               if(static::saveFormAnswer($questionData) === true)
+                 $saved = true;
+               else
+                 $saved = false;
              }
            }
          }
        }
      }
      
-     return true;
+     return (int)$responseLogID;
    }
    
    private static function saveFormAnswer(array $data)
    {
-     \DB::query("INSERT INTO
-                   scripts_forms_responses
-                 (
-                   id
-                  ,response_log_id
-                  ,script_forms_id
-                  ,script_forms_question_id
-                  ,script_forms_answer_id
-                  ,repeat_group
-                  ,answer
-                 )
-                 VALUES
-                 (
-                   NULL
-                  ," . (int)$data['response_log_id'] . "
-                  ," . (int)$data['script_forms_id'] . "
-                  ," . (int)$data['script_forms_question_id'] . "
-                  ," . (int)$data['script_forms_answer_id'] . "
-                  ," . (int)$data['repeat_group'] . "
-                  ," . \DB::quote($data['answer']) . "
-                 )
-                ", \DB::INSERT)->execute();
+     list($id,) = \DB::query("INSERT INTO
+                               scripts_forms_responses
+                             (
+                               id
+                              ,response_log_id
+                              ,script_forms_id
+                              ,script_forms_question_id
+                              ,script_forms_answer_id
+                              ,repeat_group
+                              ,answer
+                             )
+                             VALUES
+                             (
+                               NULL
+                              ," . (int)$data['response_log_id'] . "
+                              ," . (int)$data['script_forms_id'] . "
+                              ," . (int)$data['script_forms_question_id'] . "
+                              ," . (int)$data['script_forms_answer_id'] . "
+                              ," . (int)$data['repeat_group'] . "
+                              ," . \DB::quote($data['answer']) . "
+                             )
+                            ", \DB::INSERT)->execute();
+                            
+     if((int)$id > 0)
+       return true;
+     else
+       return false;
+   }
+   
+   public static function saveResponseProducts()
+   {
+     
+   }
+   
+   public static function loadProducts()
+   {
+     $reuslts = array();
+     $results = \DB::query("SELECT
+                              id
+                             ,name
+                             ,description
+                            FROM
+                              scripts_forms_products
+                            ORDER BY
+                              name ASC
+                           ", \DB::SELECT)->execute()->as_array();
+                           
+     return $results;
+   }
+   
+   public static function loadProductsRecomendations($logID = 0, $scriptFormID = 0)
+   {       
+     // -- Get a list of unique products for each question
+     // --------------------------------------------------
+     $products = array();
+     $products = \DB::query("SELECT
+                               product_id
+                              ,name AS product_name
+                              ,SUM(priority) AS score
+                             FROM
+                             (
+                             SELECT
+                               QUESTIONS.product_id
+                              ,PRODUCTS.name
+                              ,QUESTIONS.priority
+                             FROM
+                               scripts_forms_responses AS RESPONSE
+                             INNER JOIN
+                               scripts_forms_questions_products AS QUESTIONS ON RESPONSE.answer = QUESTIONS.positive_value AND RESPONSE.script_forms_question_id = QUESTIONS.question_id
+                             INNER JOIN
+                               scripts_forms_products AS PRODUCTS ON QUESTIONS.product_id = PRODUCTS.id
+                             WHERE
+                               RESPONSE.response_log_id = " . (int)$logID . "
+                             AND
+                               RESPONSE.script_forms_question_id IN (SELECT id FROM scripts_forms_questions WHERE script_form_id = " . static::$_scriptFormID . ")
+                             GROUP BY
+                               RESPONSE.script_forms_question_id
+                             ) AS DATA_TABLE
+                             GROUP BY
+                               product_id
+                             ORDER BY
+                               score ASC
+                            ", \DB::SELECT)->execute()->as_array();
+                            
+     return $products;
    }
  }

@@ -53,4 +53,15 @@
      
      die();
    }
+   
+   public function post_load_products()
+   {
+     $results = array();
+     $results = ScriptForms::loadProducts();
+     
+     $this->response(array(
+       'status' => 'SUCCESS',
+       'results' => $results,
+     ));
+   }
  }

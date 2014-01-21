@@ -85,7 +85,7 @@ $(document).ready(function()
         if(data['status'] == 'SUCCESS')
         {
           alert('Script has been saved');
-          location.reload(true);
+          //location.reload(true);
         }
         else
         {
@@ -99,6 +99,7 @@ $(document).ready(function()
     });
   });
   
+  return false;
 });
 
 // -- Load all the Scripts

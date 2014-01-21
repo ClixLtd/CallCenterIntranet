@@ -114,6 +114,7 @@ return array(
 				4 => '005_alter_scripts_forms_responses_add_answers',
 				5 => '006_create_scripts_forms_reponses_log',
 				6 => '007_alter_scripts_add_domain_id',
+				7 => '008_create_scripts_forms_products',
 			),
 		),
 		'package' => 

@@ -79,6 +79,48 @@ $(document).ready(function()
         html += '<td>' + values + '</td>';
         html += '<td><label for="Required-' + fieldID + '"><input type="checkbox" name="form[fields][' + fieldID + '][required]" ' + isRequired + ' /> Required</label></td>';
         html += '<td><button type="button" class="btn btn-primary" id="Remove-Row" rel="' + fieldID + '"><i class="icon-remove"></i></button></td>';
+        html += '</tr>';
+        html += '<tr>';
+        html += '<td><b>Select Product</b></td>';
+        
+        var products = '';
+        
+        products += '<div class="row-fluid">'
+          products += '<input type="hidden" name="Product-Count-' + fieldID + '" id="Product-Count-' + fieldID + '" value="1" />'
+          products += '<div id="product-group-' + fieldID + '">';
+          
+            products += '<div class="row-fluid">';
+              products += '<div class="span4">'
+                products += '<select name="form[fields][' + fieldID + '][products][1][product]">';
+                  products += loadProductsSelectList();
+                products += '</select>';
+              products += '</div>';
+              products += '<div class="span2">Positive Value</div>';
+              products += '<div class="span3"><input type="text" name="form[fields][' + fieldID + '][products][1][positive]" class="input-small" /></div>';
+            products += '</div>';
+            
+            products += '<div class="row-fluid">';
+              products += '<div class="span4"></div>';
+              products += '<div class="span2">Negative Value</div>';
+              products += '<div class="span3"><input type="text" name="form[fields][' + fieldID + '][products][1][negative]" class="input-small" /></div>';
+            products += '</div>';
+            
+            products += '<div class="row-fluid">';
+              products += '<div class="span4"></div>';
+              products += '<div class="span2">Priority</div>';
+              products += '<div class="span3"><input type="text" name="form[fields][' + fieldID + '][products][1][priority]" class="input-small" /></div>';
+            products += '</div><hr />';
+          
+          products += '</div>'
+          products += '<div class="row-fluid">';
+            products += '<div class="span12"><button type="button" class="btn" id="Add-Another-Product-Button" rel="' + fieldID + '">Add Another Product</button></div>';
+          products += '</div>';
+        products += '</div>';
+        
+        
+        html += '<td colspan="4">' + products + '</td>'
+        
+        html += '</tr>';
         
         formElements.append(html);
       }
@@ -109,6 +151,36 @@ $(document).ready(function()
       $("#Option-Count-" + fieldID).val(countField);
     
     }
+    else if(ID == 'Add-Another-Product-Button')
+    {
+      var productCount = parseInt($("#Product-Count-" + fieldID).val(), 10) + parseInt(1, 10);
+      var products = '';
+      
+      products += '<div class="row-fluid">';
+        products += '<div class="span4">'
+          products += '<select name="form[fields][' + fieldID + '][products][' + productCount + '][product]">';
+            products += loadProductsSelectList();
+          products += '</select>';
+        products += '</div>';
+        products += '<div class="span2">Positive Value</div>';
+        products += '<div class="span3"><input type="text" name="form[fields][' + fieldID + '][products][' + productCount + '][positive]" class="input-small" /></div>';
+      products += '</div>';
+      
+      products += '<div class="row-fluid">';
+        products += '<div class="span4"></div>';
+        products += '<div class="span2">Negative Value</div>';
+        products += '<div class="span3"><input type="text" name="form[fields][' + fieldID + '][products][' + productCount + '][negative]" class="input-small" /></div>';
+      products += '</div>';
+      
+      products += '<div class="row-fluid">';
+        products += '<div class="span4"></div>';
+        products += '<div class="span2">Priority</div>';
+        products += '<div class="span3"><input type="text" name="form[fields][' + fieldID + '][products][' + productCount + '][priority]" class="input-small" /></div>';
+      products += '</div><hr />';
+      
+      $("#product-group-" + fieldID).append(products);
+      $("#Product-Count-" + fieldID).val(productCount);
+    }
     else if(ID == 'Remove-Row')
     {
       $("#Row-" + fieldID).remove();
@@ -117,3 +189,30 @@ $(document).ready(function()
     return false;
   });
 });
+
+function loadProductsSelectList()
+{
+  var output = '';
+  
+  $.ajax({
+    url: '/survey/ajax/load_products/0.json',
+    type: 'post',
+    dataType: 'json',
+    async: false,
+    success: function(data)
+    {
+      if(data['status'] == 'SUCCESS')
+      {
+        if(data['results'].length > 0)
+        {
+          $.each(data['results'], function(index, value)
+          {
+            output += '<option value="' + value['id'] + '">' + value['name'] + '</option>';
+          });
+        }
+      }
+    }
+  });
+  
+  return output;
+}

@@ -13,7 +13,6 @@
   if(isset($form['questions']))
   {
     ?>
-    <form action="#" method="POST" id="Script-Form">
       <div class="row-fluid">
         <div class="span12">
           <?php
@@ -93,8 +92,6 @@
         </div>
       </div>
       
-      
-    </form>
     <?php
   }
   else

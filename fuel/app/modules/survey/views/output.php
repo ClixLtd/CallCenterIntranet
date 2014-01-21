@@ -1,8 +1,9 @@
 <script>
 	var apiKey = "<?php echo $apiKey; ?>";
+  var surveyID = "<?php echo $surveyID;?>";
 </script>
 
-<form id="checkForm">
+<form id="SurveyForm">
 				
 	<input type="hidden" name="agent" value="<?php #echo $gets['agent']; ?>">
 	<input type="hidden" name="list" value="<?php #echo $gets['list']; ?>">
@@ -26,12 +27,14 @@
 	
 	
 	<div id="drClient" class="decisionPopup">
-		<h1>DR Client</h1>
+		<h1>Product Recommendation</h1>
 		
-		<p>Please give the following reference to the senior</p>
+		<p>These Products have been recommended</p>
 		
-		<h2 id="drClientID">182440</h2>
-	
+		<h2 id="drClientID">
+      
+    </h2>
+    <div id="Products"></div>
 	</div>
 	
 	
@@ -39,7 +42,7 @@
 	
 		<div id="validateSpinner" style="display: none;"><?php echo Asset::img('darkspinner.gif'); ?> Please Wait...</div>
 		
-		<input type="submit" value="<?php #echo $buttonText;?> Save Survey" id="validateButton">
+		<input type="submit" value="<?php #echo $buttonText;?> Save Survey" id="saveButton" />
 	
 	</div>
 
