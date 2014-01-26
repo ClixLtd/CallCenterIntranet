@@ -3,12 +3,17 @@
 
 <div class="row-fluid">
   <div class="span12">
-    <h2><?=$form['name'];?></h2>
+    <div id="Rebuttal" style="float: right; width: 150px;">
+      <button type="button" name="RebuttalButton" id="RebuttalButton">Open Rebuttal Script</button></div>
+      <div style="float: left;">
+        <h3><?=$form['name'];?></h3>
+      </div>
   </div>
 </div>
 
 <div class="row-fluid" style="margin-bottom: 35px;">
   <div class="span12">
+  <input type="hidden" name="surveyName" value="<?=$form['name'];?>" />
   <?php
   if(isset($form['questions']))
   {
@@ -31,7 +36,7 @@
                 switch($question['field_type'])
                 {
                   case 'text' :
-                    $field .= '<input type="text" name="scriptForm[1][' . $question['id'] . '][answer]" class="Master-Input ' . ($question['required'] == 'yes' ? 'Required' : false) . '" id="Question-' . $question['id'] . '" />';
+                    $field .= '<input type="text" name="scriptForm[1][' . $question['id'] . '][answer]" class="required Master-Input ' . ($question['required'] == 'yes' ? 'Required' : false) . '" id="Question-' . $question['id'] . '" />';
                   break;
                   case 'textarea' :
                     $field .= '<textarea name="scriptForm[1][' . $question['id'] . '][answer]" class="Master-Input ' . ($question['required'] == 'yes' ? 'Required' : false) . '" id="Question-' . $question['id'] . '"></textarea>';
@@ -55,7 +60,7 @@
                     }
                   break;
                   case 'select' :
-                    $field = '<select name="scriptForm[1][' . $question['id'] . '][answer][select$BoxInput]" id="Question-' . $question['id'] . '" class="Master-Input ' . ($question['required'] == 'yes' ? 'Required' : false) . '">';
+                    $field = '<select name="scriptForm[1][' . $question['id'] . '][answer][select$BoxInput]" id="Question-' . $question['id'] . '" class="required Master-Input ' . ($question['required'] == 'yes' ? 'Required' : false) . '">';
                     $field .= '<option value="-1">-- Select --</option>';
                     
                     if(isset($question['options']) && count($question) > 0)

@@ -1,18 +1,28 @@
 <script>
 	var apiKey = "<?php echo $apiKey; ?>";
   var surveyID = "<?php echo $surveyID;?>";
+  var rebuttalURL = "<?php echo $rebuttalURL;?>";
 </script>
 
+<!--
+<div id="Rebuttal">
+  <iframe width="100%" height="100%" src="<?php echo $rebuttalURL;?>" seamless></iframe>
+</div>
+-->
+
 <form id="SurveyForm">
-				
-	<input type="hidden" name="agent" value="<?php #echo $gets['agent']; ?>">
-	<input type="hidden" name="list" value="<?php #echo $gets['list']; ?>">
+	
+  <input type="hidden" name="AgentID" value="<?php echo $gets['AgentID']; ?>" />			
+	<input type="hidden" name="agent" value="<?php echo $gets['agent']; ?>" />
+	<input type="hidden" name="list" value="<?php echo $gets['list']; ?>" />
+  <input type="hidden" name="lead_id" value="<?php echo $gets['lead_id'];?>" />
+  <input type="hidden" name="ListName" value="<?php echo $gets['ListName'];?>" />
 	
 	<div id="thankYou" class="decisionPopup">
 		<h1>Thank You</h1>
 		
-		<p>This Survey has been received.</p>
-	
+		<p><div id="Success-Message"></div></p>
+    <p><div id="LeadpoolID"></div></p>
 	</div>
 	
 	

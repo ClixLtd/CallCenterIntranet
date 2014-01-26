@@ -117,6 +117,9 @@
                                                            WHERE
                                                              " . $where . "
                                                            " . ((int)$typeID > 0 ?  " AND script_type_id = " . $typeID : false) . "
+                                                           ORDER BY
+                                                             created_at DESC
+                                                           LIMIT 1
                                                          )                                            
                           ", \DB::SELECT)->execute()->as_array();
                           
@@ -471,11 +474,6 @@
        return false;
    }
    
-   public static function saveResponseProducts()
-   {
-     
-   }
-   
    public static function loadProducts()
    {
      $reuslts = array();
@@ -492,7 +490,7 @@
      return $results;
    }
    
-   public static function loadProductsRecomendations($logID = 0, $scriptFormID = 0)
+   public static function loadProductsRecomendations($logID = 0)
    {       
      // -- Get a list of unique products for each question
      // --------------------------------------------------
@@ -501,6 +499,7 @@
                                product_id
                               ,name AS product_name
                               ,SUM(priority) AS score
+                              ,COUNT(product_id) AS total_products
                              FROM
                              (
                              SELECT
@@ -524,8 +523,56 @@
                                product_id
                              ORDER BY
                                score ASC
+                              ,total_products DESC
                             ", \DB::SELECT)->execute()->as_array();
                             
      return $products;
+   }
+   
+   public static function saveResponseProducts($logID = 0)
+   {
+     $data = array();
+     $data = static::loadProductsRecomendations($logID);
+     
+     if(count($data) == 0)
+       return;
+       
+     foreach($data as $value)
+     {
+       list($id,) = \DB::query("INSERT INTO
+                                scripts_forms_responses_products
+                              (
+                                id
+                               ,response_log_id
+                               ,product_id
+                               ,callback
+                              )
+                              VALUES
+                              (
+                                NULL
+                               ," . (int)$logID . "
+                               ," . (int)$value['product_id'] . "
+                               ,'no'
+                              )
+                             ", \DB::INSERT)->execute();
+     }
+   }
+   
+   public static function loadRebuttalURL()
+   {
+     $result = array();
+     $result = \DB::query("SELECT
+                             rebuttal_script
+                           FROM
+                             scripts_forms
+                           WHERE
+                             id = " . static::$_scriptFormID . "
+                           LIMIT 1
+                          ", \DB::SELECT)->execute()->as_array();
+                          
+     if(isset($result[0]['rebuttal_script']))
+       return $result[0]['rebuttal_script'];
+     else
+       return '';
    }
  }

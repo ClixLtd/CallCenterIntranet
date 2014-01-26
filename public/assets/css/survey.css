@@ -31,13 +31,14 @@
 	z-index: 99;
 	position: absolute;
 	bottom: -200px;
-	left: 25px;
+	/*left: 25px;*/
+  right: 10px;
 	
 	text-align: center;
 	
 	padding: 5px;
 	
-	width: 440px;
+	width: 240px;
 
 	background-color: #4987ad;
 	-moz-border-radius-topleft: 15px;
@@ -58,6 +59,7 @@
 	{
 		color: white;
 		text-shadow: 1px 1px 2px black;
+    font-size: 14px;
 	
 		margin: 0px;
 		padding: 0px;
@@ -86,11 +88,12 @@
 	bottom: -200px;
 	left: 25px;
 	
-	text-align: center;
+	text-align: left;
+  font-size: 12px;
 	
 	padding: 5px;
 	
-	width: 240px;
+	width: 340px;
 
 	background-color: #4987ad;
 	-moz-border-radius-topleft: 15px;
@@ -107,10 +110,11 @@
 		
 	}
 
-	#drClient h1, #drClient h2, #Product
+	#drClient h1, #drClient h2, #Product, #LeadpoolID
 	{
 		color: white;
 		text-shadow: 1px 1px 2px black;
+    font-size: 18px;
 	
 		margin: 0px;
 		padding: 0px;
@@ -378,4 +382,10 @@ form label {
 	height: 20px;
 	line-height: 20px;
 	font-weight: bold;
-}	
+}
+
+.highlight
+{
+  background-color: #FF8080;
+  color: #FFF;
+}

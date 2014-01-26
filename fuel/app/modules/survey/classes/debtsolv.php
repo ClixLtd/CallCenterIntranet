@@ -59,43 +59,44 @@ class Debtsolv
   
   public function data($data = array())
   {
-    $this->_values = $data;
+    $this->_values = array_merge_recursive($this->_values, $data);
   }
   
   public function addNewLead()
   {
     // -- Create a new array the matches the Debtsolv API
     // --------------------------------------------------
-    $data = array();
+    $portal_form = array();
     
-    $data = $this->_values;
+    $portal_form = $this->_values;
     
-    if(count($data) <= 0)
-      return;
+    if(count($portal_form) <= 0)
+      return 0;
       
     $debtsolvData = array();
     
-    $debtsolvData['title']        = $data['title'];
-    $debtsolvData['first_name']   = $data['forename'];
-    $debtsolvData['last_name']    = $data['surname'];
-    $debtsolvData['address1']     = $data['street_and_number'];
-    $debtsolvData['address2']     = $data['area'];
-    $debtsolvData['city']         = $data['town'];
-    $debtsolvData['county']       = $data['county'];
-    $debtsolvData['postal_code']  = $data['post_code'];
-    $debtsolvData['email']        = $data['email'];
-    $debtsolvData['comments']     = $data['notes'];
+    $debtsolvData['title']        = isset($portal_form['title']) ? $portal_form['title'] : '';
+    $debtsolvData['first_name']   = isset($portal_form['first_name']) ? $portal_form['first_name'] : '';
+    $debtsolvData['last_name']    = isset($portal_form['last_name']) ? $portal_form['last_name'] : '';
+    $debtsolvData['address1']     = isset($portal_form['address1']) ? $portal_form['address1'] : '';
+    $debtsolvData['address2']     = isset($portal_form['address2']) ? $portal_form['address2'] : '';
+    $debtsolvData['city']         = isset($portal_form['city']) ? $portal_form['city'] : '';
+    $debtsolvData['county']       = isset($portal_form['state']) ? $portal_form['state'] : '';
+    $debtsolvData['postal_code']  = isset($portal_form['postal_code']) ? $portal_form['postal_code'] : '';
+    $debtsolvData['email']        = isset($portal_form['email']) ? $portal_form['email'] : '';
+    $debtsolvData['comments']     = isset($portal_form['comments']) ? $portal_form['comments'] : '';
     
-    $debtsolvData['LeadID'] = 0;
-    $debtsolvData['LeadRef2']     = \Model_Call_Center::find($data['introducer_id'])->shortcode; // -- Needs to be short code from the company
+    $debtsolvData['LeadID']       = (int)$portal_form['lead_id'];
+    $debtsolvData['LeadRef2']     = \Model_Call_Center::find($portal_form['introducer_id'])->shortcode; // -- Needs to be short code from the company
     
-    $debtsolvData['phone_number'] = $data['tel_home'];
-    $debtsolvData['alt_phone']    = $data['tel_mobile'];
+    $debtsolvData['phone_number'] = isset($portal_form['phone_number']) ? $portal_form['phone_number'] : '';
+    $debtsolvData['alt_phone']    = isset($portal_form['alt_phone']) ? $portal_form['alt_phone'] : '';
     
-    $debtsolvData['AgentID']        = '';#$this->userInfo('username');
-    $debtsolvData['AgentFullName']  = $data['agent'];#$this->userInfo('name');
+    $debtsolvData['AgentID']        = isset($portal_form['AgentID']) ? $portal_form['AgentID'] : '';
+    $debtsolvData['AgentFullName']  = isset($portal_form['agent']) ? $portal_form['agent'] : '';#$this->userInfo('name');
     
-    $debtsolvData['ListID'] = $data['list']; // -- This needs to be changed to the call centres list in Debtsolv
+    $debtsolvData['ListID'] = isset($portal_form['list']) ? $portal_form['list'] : '0'; // -- This needs to be changed to the call centres list in Debtsolv
+    $debtsolvData['ListName'] = isset($portal_form['ListName']) ? $portal_form['ListName'] : '';
     
     $this->clientID = $this->send('add_new_lead', $debtsolvData);
     
@@ -103,7 +104,10 @@ class Debtsolv
     // -------------------------------------------
     if($this->clientID > 0)
     {
-      $this->updateCallResult(900);
+      #$this->updateCallResult(900);
+      
+      // -- Test
+      $this->updateCallResult(2040);
     }
     
     $this->_values['debtsolvLeadID'] = $this->clientID;

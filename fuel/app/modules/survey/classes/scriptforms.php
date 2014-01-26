@@ -34,6 +34,11 @@
      return $output;
    }
    
+   public function getRebuttalURL()
+   {
+     return Model_ScriptForms::loadRebuttalURL();
+   }
+   
    public function scriptFormData()
    {
      return Model_ScriptForms::scriptFormData();     
@@ -47,6 +52,13 @@
      $products = Model_ScriptForms::loadProductsRecomendations((int)$logID);
                             
      return $products;
+   }
+   
+   public function saveResponseProducts($logID = 0)
+   {
+     Model_ScriptForms::saveResponseProducts((int)$logID);
+     
+     return;
    }
    
    // **********************
