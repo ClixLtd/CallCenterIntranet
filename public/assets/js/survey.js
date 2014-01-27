@@ -1,7 +1,8 @@
 $(function () {
 	
 	//var portalAddress = "https://intranet.gregsonandbrooke.co.uk/crm/portal/";
-  var portalAddress = "http://callcenterintranet.clix.dev/survey/";
+  //var portalAddress = "http://callcenterintranet.clix.dev/survey/";
+  var portalAddress = "https://intranet.financecloud.net/survey/";
 	var decisionMade = false;
 	var questionArray = [];
 	
