@@ -18,7 +18,8 @@ class Debtsolv
     // -- Set the variables up
     // -----------------------
     $this->apiKey = 'KJAH8qw';
-    $this->apiAddress = 'http://109.235.124.18:82/apipost.php';
+    #$this->apiAddress = 'http://109.235.124.18:82/apipost.php';
+    $this->apiAddress = 'http://192.168.1.100:82/apipost.php';
     
     // -- Set the Model
     // ----------------
