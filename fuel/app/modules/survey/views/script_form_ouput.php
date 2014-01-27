@@ -1,5 +1,5 @@
-<script type="text/javascript" src="http://focus.clix.dev/assets/js/modules/script/jquery.formparams.min.js"></script>
-<script type="text/javascript" src="http://focus.clix.dev/assets/js/modules/script/script-form-ouput.js"></script>
+<?=Asset::js('modules/script/jquery.formparams.min.js');?>
+<?=Asset::js('modules/script/script-form-ouput.js');?>
 
 <div class="row-fluid">
   <div class="span12">
