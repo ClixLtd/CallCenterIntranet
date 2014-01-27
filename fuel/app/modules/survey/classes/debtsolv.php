@@ -19,7 +19,7 @@ class Debtsolv
     // -----------------------
     $this->apiKey = 'KJAH8qw';
     #$this->apiAddress = 'http://109.235.124.18:82/apipost.php';
-    $this->apiAddress = 'http://192.168.1.100:82/apipost.php';
+    $this->apiAddress = 'http://85.199.245.2:82/apipost.php';
     
     // -- Set the Model
     // ----------------
@@ -105,10 +105,10 @@ class Debtsolv
     // -------------------------------------------
     if($this->clientID > 0)
     {
-      #$this->updateCallResult(900);
+      $this->updateCallResult(900);
       
       // -- Test
-      $this->updateCallResult(2040);
+      #$this->updateCallResult(2040);
     }
     
     $this->_values['debtsolvLeadID'] = $this->clientID;
