@@ -157,7 +157,7 @@ $(function () {
     
     if(rebuttalURL != '')
     {
-      myWindow=window.open('','MyNewWindow','width=550,height=650,left=200,top=100');
+      var myWindow = window.open('','MyNewWindow','width=550,height=650,left=200,top=100');
       myWindow.document.write('<html><head><title>Rebuttal Script</title></head><body><iframe width="100%" height="100%" src="' + rebuttalURL + '" seamless></iframe></body></html>');
       myWindow.document.close();
   
