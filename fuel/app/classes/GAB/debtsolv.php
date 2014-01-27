@@ -592,25 +592,7 @@ class Debtsolv {
 	         ELSE
 	           ''
 	         END AS Product
-	      ,D_CPD.InitialAgreedAmount / 100 AS DI,
-	      (
-	      	SELECT Top (1)
-	      		ResponseText
-	      	FROM
-	      		Debtsolv_MMS.dbo.Client_CustomQuestionResponses
-	      	WHERE
-	      		QuestionID = 1
-	      		AND ClientID = D_CLD.Client_ID
-	      ) AS 'Delivery',
-	      (
-	      	SELECT Top (1)
-	      		ResponseText
-	      	FROM
-	      		Debtsolv_MMS.dbo.Client_CustomQuestionResponses
-	      	WHERE
-	      		QuestionID = 10007
-	      		AND ClientID = D_CLD.Client_ID
-	      ) AS 'MyProduct'
+	      ,D_CPD.InitialAgreedAmount / 100 AS DI
 	      ,CONVERT(varchar, CLD.DateCreated, 105) AS 'Referred Date'
 	      ,CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
 	      ,CASE
@@ -651,9 +633,10 @@ class Debtsolv {
 		CLD.LeadRef2
 	    ,TCR.[Description]
 	    ,Product
-	    ,CLD.DateCreated DESC")->cached($data_cache)->execute(static::$_connection);
+	    ,CLD.DateCreated DESC")->cached($data_cache)->execute('debtsolv');
 	    
-	    
+
+/*
 	    $results2 = \DB::query("SELECT CLD.ClientID
 		  ,CLD.LeadRef AS 'Dialler Lead ID'
 	      ,(CD.Forename + ' ' + CD.Surname) AS Name
@@ -679,25 +662,7 @@ class Debtsolv {
 	         ELSE
 	           ''
 	         END AS Product
-	      ,D_CPD.InitialAgreedAmount / 100 AS DI,
-	      (
-	      	SELECT Top (1)
-	      		ResponseText
-	      	FROM
-	      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
-	      	WHERE
-	      		QuestionID = 1
-	      		AND ClientID = D_CLD.Client_ID
-	      ) AS 'Delivery',
-	      (
-	      	SELECT Top (1)
-	      		ResponseText
-	      	FROM
-	      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
-	      	WHERE
-	      		QuestionID = 10007
-	      		AND ClientID = D_CLD.Client_ID
-	      ) AS 'MyProduct'
+	      ,D_CPD.InitialAgreedAmount / 100 AS DI
 	      ,CONVERT(varchar, CLD.DateCreated, 105) AS 'Referred Date'
 	      ,CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
 	      ,CASE
@@ -738,7 +703,9 @@ class Debtsolv {
 		CLD.LeadRef2
 	    ,TCR.[Description]
 	    ,Product
-	    ,CLD.DateCreated DESC")->cached($data_cache)->execute(static::$_connection);
+	    ,CLD.DateCreated DESC")->cached($data_cache)->execute('debtsolv');
+
+*/
 	    
 	    $results = array();
 	    
