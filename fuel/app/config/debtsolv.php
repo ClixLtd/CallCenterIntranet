@@ -3,6 +3,21 @@
 return array(
 
 
+	'connection' => array(
+                'type'       => 'pdo',
+                'connection' => array(
+                       #'dsn'            => 'dblib:host=192.168.3.31:1433;dbname=LeadPool_MMS',
+		        'dsn'            => 'sqlsrv:Server=192.168.3.31,1433;Database=LeadPool_MMS',
+                        'username'	 => 'debtsolv',
+                        'password'	 => '76GerZnu871',
+                        'persistent'     => false,
+                ),
+                'Identifier'  => '' ,
+                'Charset'    => '',
+                'profiling' => true,
+        ),
+
+/*
 	"connection" => array(
 		'type'       => 'pdo',
 		'connection' => array(
@@ -15,6 +30,8 @@ return array(
 		'Charset'    => '',
 		'profiling' => true,
 	),
+
+*/
 
 	"debtsolv_database" => "Debtsolv_Test",
 	"leadpool_database" => "LeadPool_Test",
