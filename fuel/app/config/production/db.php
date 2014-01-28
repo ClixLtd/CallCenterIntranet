@@ -21,6 +21,15 @@ return array(
 		        'persistent'     => false,
 		),
 	),
+  'debtsolv_1tick' => array(
+		'type'       => 'pdo',
+		'connection' => array(
+				'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Leadpool_DM',
+        'username'       => 'superuser',
+		    'password'       => 'Rfd32xs12B',
+		    'persistent'     => false,
+		),
+	),
     'dialler' => array(
         'type'       => 'pdo',
         'table_prefix' => '',

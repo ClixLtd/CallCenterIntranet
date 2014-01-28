@@ -2375,14 +2375,6 @@ Gregson and Brooke.');
         'Bolton' => array('database' => 'Debtsolv',
                           'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
                          ),
-                         
-        'Burton' => array('database' => 'BS_Debtsolv_DM',
-                          'to' => array('burton-client-status-report@expertmoneysolutions.co.uk')
-                         ),
-                         
-        'Clear View' => array('database' => 'CV_Debtsolv_DM',
-                              'to' => array('clear-view-client-status-report@expertmoneysolutions.co.uk')
-                             ),
       );
       
       foreach($offices as $office => $officeData)
@@ -2513,7 +2505,7 @@ Gregson and Brooke.');
                                        PROCESSING_LOG.ProcessingStatus
                                       ,FirstPaymentMade
                                       ,CORRESPONDENCE.DateCreated ASC
-                            ", \DB::SELECT)->execute('debtsolv')->as_array();
+                            ", \DB::SELECT)->execute('debtsolv_1tick')->as_array();
                             
         if(count($officeResults) > 0)
         {
