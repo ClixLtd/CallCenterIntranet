@@ -2645,19 +2645,19 @@ Gregson and Brooke.');
 			$gabListsBat   = \DB::select('ID')->from('Leadpool_MMS.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
 			
 			
-			$resolveLists  = \DB::select('ID','Reference')->from('BS_Leadpool_MMS.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
-			$resolveListsDM    = \DB::select('ID')->from('BS_Debtsolv_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
-			$resolveListsBat   = \DB::select('ID')->from('BS_Leadpool_MMS.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
+			//$resolveLists  = \DB::select('ID','Reference')->from('BS_Leadpool_MMS.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
+			//$resolveListsDM    = \DB::select('ID')->from('BS_Debtsolv_DM.dbo.Type_Lead_Source')->order_by('ID')->execute('debtsolv');
+			//$resolveListsBat   = \DB::select('ID')->from('BS_Leadpool_MMS.dbo.LeadBatch')->order_by('ID')->execute('debtsolv');
 			
 			$gabAll = $resolveAll = array();
 			foreach ($gabLists as $one)
 			{
 				$gabAll[] = $one['Reference'];
 			}
-			foreach ($resolveLists as $one)
-			{
-				$resolveAll[] = $one['Reference'];
-			}
+//			foreach ($resolveLists as $one)
+//			{
+//				$resolveAll[] = $one['Reference'];
+//			}
 			
 			$diallerLists  = \DB::select('list_id')->from('vicidial_lists')->execute('dialler');
 			
@@ -2724,7 +2724,7 @@ Gregson and Brooke.');
 			}
 			
 			
-			
+/*			
 			
 			$lastRes    = $resolveLists[count($resolveLists)-1]['ID'];
 			$lastResBat = $resolveListsBat[count($resolveListsBat)-1]['ID'];
@@ -2775,15 +2775,15 @@ Gregson and Brooke.');
 				
 			}
 			
+*/			
 			
 			
 			
-			/*
 			$email = \Email::forge();
 			
 			$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
       
-			$email->to("it@expertmoneysolutions.co.uk");
+			$email->to(array("s.skinner@clix.co.uk","j.bedward@clix.co.uk","d.stansfield@clix.co.uk"));
                 
 			$email->subject("Lists Missing from GAB Debtsolv");
         
@@ -2792,7 +2792,7 @@ Gregson and Brooke.');
 			$email->send();
 			
 			
-			
+			/*
 			
 			
 			

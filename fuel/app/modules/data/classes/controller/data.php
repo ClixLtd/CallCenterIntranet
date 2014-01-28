@@ -279,6 +279,10 @@ class Controller_Data extends \Templates\Controller_Force
     
     public function action_view($data_id=null)
     {
+
+	ini_set('memory_limit', '-1');
+        ini_set('max_execution_time', 300);
+
 	    if (!is_null($data_id))
 	    {
 		    $listDetails = \Data\Model_Data::get_stats($data_id);
@@ -298,7 +302,7 @@ class Controller_Data extends \Templates\Controller_Force
 		    	'listid'     => $oneList['dialler_id'],
 		    );
 		    
-		    $invalidLeads = \Data\Model_Data::get_invalids($data_id);
+	//	    $invalidLeads = \Data\Model_Data::get_invalids($data_id);
 		    
 		    $tpsNumbers = $duplicateNumbers = array();
 		    foreach ($invalidLeads as $singleLead)

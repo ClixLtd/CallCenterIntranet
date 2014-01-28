@@ -46,13 +46,13 @@ class Debtsolv {
 				Leadpool_MMS.dbo.Client_LeadDetails
 			WHERE
 				ClientID = ".$ds_lead_id."
-		")->cached(0)->execute(static::$_connection);
+		")->cached(0)->execute("debtsolv");
 		
 		// Change LeadRef2
 		
 		if ($leadpool->count() > 0)
 		{
-			\DB::query("UPDATE Leadpool_MMS.dbo.Client_LeadDetails SET LeadRef2='".$new_center."' WHERE ClientID=".$ds_lead_id)->execute(static::$_connection);
+			\DB::query("UPDATE Leadpool_MMS.dbo.Client_LeadDetails SET LeadRef2='".$new_center."' WHERE ClientID=".$ds_lead_id)->execute("debtsolv");
 			
 			$referral_table = \DB::query("
 				SELECT
@@ -70,7 +70,7 @@ class Debtsolv {
 					Dialler.dbo.referrals
 				WHERE
 					leadpool_id = ".$ds_lead_id."
-			")->execute(static::$_connection);
+			")->execute("debtsolv");
 			
 			$our_referral = $leadpool->as_array();
 			
@@ -94,7 +94,7 @@ class Debtsolv {
 					$updateArray['full_name'] = $getStaffDetails[0]['first_name'].' '.$getStaffDetails[0]['last_name'];
 				}
 				
-				\DB::update('Dialler.dbo.referrals')->set($updateArray)->where('leadpool_id', $ds_lead_id)->execute(static::$_connection);
+				\DB::update('Dialler.dbo.referrals')->set($updateArray)->where('leadpool_id', $ds_lead_id)->execute("debtsolv");
 				
 			}
 			else
@@ -119,7 +119,7 @@ class Debtsolv {
 					, ''
 					, ''
 					, '".$our_referral[0]['DateCreated']."'
-					, 'DR')")->execute(static::$_connection);
+					, 'DR')")->execute("debtsolv");
 			}
 			
 			\Cache::delete_all("disposition.report/");
