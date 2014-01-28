@@ -20,6 +20,15 @@ return array(
 			'password'   => 'Wvts231ct6D',
 		),
 	),
+  'debtsolv_1tick' => array(
+		'type'       => 'pdo',
+		'connection' => array(
+				'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Leadpool_DM',
+        'username'       => 'superuser',
+		    'password'       => 'Rfd32xs12B',
+		    'persistent'     => false,
+		),
+	),
 	'debtsolv' => array(
 		'type'       => 'pdo',
 		'table_prefix' => '',
