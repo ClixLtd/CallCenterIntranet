@@ -1204,9 +1204,9 @@ GROUP BY
     	
     	// Loop through the results and create the report
     	$reportResultsGAB = DB::query($reportQuery)->cached(60)->execute('debtsolv');
-    	$reportResultsResolve = DB::query($reportQueryResolve)->cached(60)->execute('debtsolv');
+    	#$reportResultsResolve = DB::query($reportQueryResolve)->cached(60)->execute('debtsolv');
     	$paymentsResults = DB::query($paymentsQuery)->cached(60)->execute('debtsolv');
-    	$paymentsResultsResolve = DB::query($paymentsQueryResolve)->cached(60)->execute('debtsolv');
+    	#$paymentsResultsResolve = DB::query($paymentsQueryResolve)->cached(60)->execute('debtsolv');
     	
     	
     	$reportResults = array();
@@ -1214,11 +1214,13 @@ GROUP BY
     	{
         	$reportResults[] = $result;
     	}
+      /*
     	foreach ($reportResultsResolve AS $result)
     	{
         	$reportResults[] = $result;
     	}
-    	
+    	*/
+      
     	$reportArray = array();
     	foreach ($reportResults AS $result)
     	{
@@ -1306,11 +1308,12 @@ GROUP BY
     	}
     	
     	// Finally look through the first payments and create the comissions
+      /*
     	foreach ($paymentsResultsResolve AS $payment)
     	{
     	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ((($payment['DI']/100)/100)*$centerValue['payment_percentage']) : ((($payment['DI']/100)/100)*$centerValue['payment_percentage']);
     	}
-    	
+    	*/
     	
     	// Last but not least. Create a nice array to return
     	$sendArray = array();
