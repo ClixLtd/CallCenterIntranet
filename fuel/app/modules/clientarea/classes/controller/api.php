@@ -34,12 +34,12 @@
      
      switch($this->_company)
      {
-       case 'expertmoneysolutions' :
+       case 'moneymanagementservices' :
        case '1-tick' :
-         $dbName = 'Debtsolv';
+         $dbName = 'Debtsolv_MMS';
        break;
        case 'clixmedia' :
-         $dbName = 'Debtsolv_Test';
+         $dbName = 'Test_Debtsolv_MMS';
        break;
      }
      
