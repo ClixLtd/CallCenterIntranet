@@ -34,7 +34,7 @@
      
      switch($this->_company)
      {
-       case 'expertmoneysolutions' :
+       case 'moneymanagementservices' :
        case '1-tick' :
          $dbName = 'Debtsolv_MMS';
        break;
