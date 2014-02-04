@@ -39,7 +39,7 @@
          $dbName = 'Debtsolv_MMS';
        break;
        case 'clixmedia' :
-         $dbName = 'Test_Debtsolv_MMS';
+         $dbName = 'Debtsolv_MMS';
        break;
      }
      
