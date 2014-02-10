@@ -2587,7 +2587,8 @@ Gregson and Brooke.');
       $email = \Email::forge();
       $email->from('noreply@expertmoneysolutions.co.uk', 'Dialler: MMS');
 
-      $email->to(array('d.stansfield@clix.co.uk', 's.skinner@clix.co.uk', 'gary@gabfs.co.uk'));
+      $email->to(array('d.stansfield@clix.co.uk', 's.skinner@clix.co.uk', 'a.brooke@gregsonandbrooke.co.uk'));
+      #gary@gabfs.co.uk
       #$email->to(array('d.stansfield@clix.co.uk'));
           
       $email->subject('Dialler Call Stats for' . ' ' . date("d-m-Y"));

@@ -59,8 +59,8 @@ return array(
   'debtsolv_clientarea_1-tick' => array(
 		'type'       => 'pdo',
 		'connection' => array(
-            #'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Debtsolv_Test',
-				    'dsn'            => 'sqlsrv:Server=109.235.124.18,1334;Database=Debtsolv_Test',
+            'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Debtsolv_Test',
+				    #'dsn'            => 'sqlsrv:Server=109.235.124.18,1334;Database=Debtsolv_Test',
 		        'username'       => 'superuser',
 		        'password'       => 'Rfd32xs12B',
 		        'persistent'     => false,

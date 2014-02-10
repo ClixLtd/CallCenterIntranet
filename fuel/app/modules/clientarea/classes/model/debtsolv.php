@@ -10,20 +10,26 @@
  class Model_Debtsolv extends \Model
  {
 
-   public static $database = 'debtsolv';
-   public static $databaseName;
-   public static $clientID;
+   public static $database = null;
    
-   public static function forge($databaseName = null, $clientID = 0)
+   protected static $databaseName = null;
+   public static $clientID = 0;
+   
+   protected static $_database = null;
+   protected static $_debtsolvDatabase = null;
+	 protected static $_leadpoolDatabase = null;
+	
+	 protected static $_connection = null;
+   
+   public static function forge($companyID = 0, $clientID = 0)
    {
      // -- Set the database name
-     // ------------------------
-     #if(!is_null($database))
-     #  static::$database = 'debtsolv_clientarea_' . $database;
-     
-     if(!is_null($databaseName))
-       static::$databaseName = $databaseName;
+     // ------------------------     
+     $Database = Database::connect((int)$companyID);
        
+     static::$databaseName = $Database->debtsolvDBName();
+     static::$_connection = $Database->connection();
+     
      // -- Set the Client ID
      // --------------------
      static::$clientID = (int)$clientID;
@@ -42,14 +48,18 @@
        return false;
      
      $result = \DB::query("SELECT Top (1)
-                             Client_ID
+                             LEAD_DATA.Client_ID
                            FROM
-                             " . static::$databaseName . ".dbo.Client_LeadData
+                             " . static::$databaseName . ".dbo.Client_LeadData AS LEAD_DATA
+                           INNER JOIN
+                             " . static::$databaseName . ".dbo.Client_Contact AS CONTACT ON LEAD_DATA.Client_ID = CONTACT.ID
                            WHERE
-                             Client_ID = " . (int)$clientID . "
+                             LEAD_DATA.Client_ID = " . (int)$clientID . "
                            AND
-                             [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $password) . "')
-                          ")->execute(static::$database)->as_array();
+                             LEAD_DATA.[Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $password) . "')
+                           AND
+                             CONTACT.[Status] IN (9, 13)
+                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
      
      // -- Check for a returned row, then return it
      // -------------------------------------------            
@@ -74,7 +84,7 @@
                              Client_ID = " . static::$clientID . "
                            AND
                              [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $data['currentPassword']) . "')
-                          ", \DB::UPDATE)->execute(static::$database);
+                          ", \DB::UPDATE)->execute(static::$_connection);
                           
      if($result > 0)
        return true;
@@ -114,7 +124,7 @@
                              " . static::$databaseName . ".dbo.Client_Contact
                            WHERE
                              ID = " . (int)static::$clientID . "
-                          ", \DB::select())->execute(static::$database)->as_array();
+                          ", \DB::select())->execute(static::$_connection)->as_array();
      
      // -- Check results and return
      // ---------------------------                    
@@ -140,7 +150,7 @@
                              ClientID = " . static::$clientID . "
                            AND
                              TransactionType = 1                             
-                          ", \DB::SELECT)->execute(static::$database)->as_array();
+                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
                           
      if(isset($result[0]['Paid_to_Date']))
        return $result[0]['Paid_to_Date'];
@@ -159,7 +169,7 @@
                              " . static::$databaseName . ".dbo.Finstat_Debt AS FSD ON PO.AccountRef = FSD.AccountReference
                            WHERE
                              PO.ClientID = " . static::$clientID . "
-                          ", \DB::SELECT)->execute(static::$database)->as_array();
+                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
                           
      if(isset($result[0]['total_out']))
        return $result[0]['total_out'];
@@ -191,7 +201,7 @@
                             " . static::$databaseName . ".dbo.Finstat_Debt AS FSD
                           WHERE 
                             FSD.ClientID = " . static::$clientID
-                         , \DB::SELECT)->execute(static::$database)->as_array();
+                         , \DB::SELECT)->execute(static::$_connection)->as_array();
                          
      return $result;
    }
@@ -249,7 +259,7 @@
                             )
                             ORDER BY
                               [Date] DESC
-                          ", \DB::SELECT)->execute(static::$database)->as_array();
+                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
                           
      return $results;
    }
