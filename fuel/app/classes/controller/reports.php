@@ -1131,7 +1131,7 @@ GROUP BY
                           LEFT JOIN Debtsolv_MMS.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
                           LEFT JOIN Leadpool_MMS.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                           WHERE DR.user_login IN (" . $inList . ")
-                              AND DR.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS', 'EMS', 'EMS-GBS')
+                              AND DR.short_code IN ('RESOLVE', 'GAB','GBS', 'MMS', 'MMS-GBS', 'EMS', 'EMS-GBS')
                               AND TCR.[Description] <> 'Referred'
                               AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
                               AND CONVERT(date, DR.referral_date, 105) < '" . $endDate . "'";
@@ -1167,7 +1167,7 @@ GROUP BY
                   LEFT JOIN BS_Debtsolv_DM.dbo.Client_PaymentData AS D_CPD ON D_CLD.Client_ID = D_CPD.ClientID
                   LEFT JOIN BS_Leadpool_MMS.dbo.Client_Details AS CD ON D_CLD.LeadPoolReference = CD.ClientID
                   WHERE DR.user_login IN (" . $inList . ")
-                      AND DR.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS', 'EMS', 'EMS-GBS')
+                      AND DR.short_code IN ('RESOLVE', 'GAB','GBS', 'MMS', 'MMS-GBS', 'EMS', 'EMS-GBS')
                       AND TCR.[Description] <> 'Referred'
                       AND CONVERT(date, DR.referral_date, 105) >= '" . $startDate . "'
                       AND CONVERT(date, DR.referral_date, 105) < '" . $endDate . "'";
@@ -1183,7 +1183,7 @@ GROUP BY
                           LEFT JOIN Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
-                              AND D_R.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS', 'EMS', 'EMS-GBS')
+                              AND D_R.short_code IN ('RESOLVE', 'GAB','GBS', 'MMS', 'MMS-GBS', 'EMS', 'EMS-GBS')
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) < '" . $endDate . "'";
     	
@@ -1198,15 +1198,15 @@ GROUP BY
                           LEFT JOIN BS_Debtsolv_DM.dbo.Client_LeadData AS D_CLD ON D_CD.ClientID = D_CLD.Client_ID
                           LEFT JOIN Dialler.dbo.referrals AS D_R ON D_CLD.LeadPoolReference = D_R.leadpool_id
                           WHERE D_R.user_login IN (" . $inList . ")
-                              AND D_R.short_code IN ('RESOLVE', 'GAB','GBS', '1TICK', '1TICK-GBS', 'EMS', 'EMS-GBS')
+                              AND D_R.short_code IN ('RESOLVE', 'GAB','GBS', 'MMS', 'MMS-GBS', 'EMS', 'EMS-GBS')
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) >= '" . $startDate . "'
                               AND CONVERT(date, D_CD.FirstPaymentDate, 105) < '" . $endDate . "'";
     	
     	// Loop through the results and create the report
     	$reportResultsGAB = DB::query($reportQuery)->cached(60)->execute('debtsolv');
-    	$reportResultsResolve = DB::query($reportQueryResolve)->cached(60)->execute('debtsolv');
+    	#$reportResultsResolve = DB::query($reportQueryResolve)->cached(60)->execute('debtsolv');
     	$paymentsResults = DB::query($paymentsQuery)->cached(60)->execute('debtsolv');
-    	$paymentsResultsResolve = DB::query($paymentsQueryResolve)->cached(60)->execute('debtsolv');
+    	#$paymentsResultsResolve = DB::query($paymentsQueryResolve)->cached(60)->execute('debtsolv');
     	
     	
     	$reportResults = array();
@@ -1214,11 +1214,13 @@ GROUP BY
     	{
         	$reportResults[] = $result;
     	}
+      /*
     	foreach ($reportResultsResolve AS $result)
     	{
         	$reportResults[] = $result;
     	}
-    	
+    	*/
+      
     	$reportArray = array();
     	foreach ($reportResults AS $result)
     	{
@@ -1306,11 +1308,12 @@ GROUP BY
     	}
     	
     	// Finally look through the first payments and create the comissions
+      /*
     	foreach ($paymentsResultsResolve AS $payment)
     	{
     	    $reportArray[$payment['user_login']]['commission'] = (isset($reportArray[$payment['user_login']]['commission'])) ? $reportArray[$payment['user_login']]['commission'] + ((($payment['DI']/100)/100)*$centerValue['payment_percentage']) : ((($payment['DI']/100)/100)*$centerValue['payment_percentage']);
     	}
-    	
+    	*/
     	
     	// Last but not least. Create a nice array to return
     	$sendArray = array();

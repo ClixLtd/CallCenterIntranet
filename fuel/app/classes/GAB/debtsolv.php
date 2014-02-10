@@ -46,13 +46,13 @@ class Debtsolv {
 				Leadpool_MMS.dbo.Client_LeadDetails
 			WHERE
 				ClientID = ".$ds_lead_id."
-		")->cached(0)->execute(static::$_connection);
+		")->cached(0)->execute("debtsolv");
 		
 		// Change LeadRef2
 		
 		if ($leadpool->count() > 0)
 		{
-			\DB::query("UPDATE Leadpool_MMS.dbo.Client_LeadDetails SET LeadRef2='".$new_center."' WHERE ClientID=".$ds_lead_id)->execute(static::$_connection);
+			\DB::query("UPDATE Leadpool_MMS.dbo.Client_LeadDetails SET LeadRef2='".$new_center."' WHERE ClientID=".$ds_lead_id)->execute("debtsolv");
 			
 			$referral_table = \DB::query("
 				SELECT
@@ -70,7 +70,7 @@ class Debtsolv {
 					Dialler.dbo.referrals
 				WHERE
 					leadpool_id = ".$ds_lead_id."
-			")->execute(static::$_connection);
+			")->execute("debtsolv");
 			
 			$our_referral = $leadpool->as_array();
 			
@@ -94,7 +94,7 @@ class Debtsolv {
 					$updateArray['full_name'] = $getStaffDetails[0]['first_name'].' '.$getStaffDetails[0]['last_name'];
 				}
 				
-				\DB::update('Dialler.dbo.referrals')->set($updateArray)->where('leadpool_id', $ds_lead_id)->execute(static::$_connection);
+				\DB::update('Dialler.dbo.referrals')->set($updateArray)->where('leadpool_id', $ds_lead_id)->execute("debtsolv");
 				
 			}
 			else
@@ -119,7 +119,7 @@ class Debtsolv {
 					, ''
 					, ''
 					, '".$our_referral[0]['DateCreated']."'
-					, 'DR')")->execute(static::$_connection);
+					, 'DR')")->execute("debtsolv");
 			}
 			
 			\Cache::delete_all("disposition.report/");
@@ -532,11 +532,11 @@ class Debtsolv {
 			}
 			else if ($center == "GAB")
 			{
-				$center_query = "AND DI_REF.short_code IN ('GAB','1TICK','EMS')";
+				$center_query = "AND DI_REF.short_code IN ('GAB','MMS','EMS')";
 			}
 			else if ($center == "GBS")
 			{
-				$center_query = "AND DI_REF.short_code IN ('GBS','1TICK-GBS', 'EMS-GBS')";
+				$center_query = "AND DI_REF.short_code IN ('GBS','MMS-GBS', 'EMS-GBS')";
 			}
 			else
 			{
@@ -592,25 +592,7 @@ class Debtsolv {
 	         ELSE
 	           ''
 	         END AS Product
-	      ,D_CPD.InitialAgreedAmount / 100 AS DI,
-	      (
-	      	SELECT Top (1)
-	      		ResponseText
-	      	FROM
-	      		Debtsolv_MMS.dbo.Client_CustomQuestionResponses
-	      	WHERE
-	      		QuestionID = 1
-	      		AND ClientID = D_CLD.Client_ID
-	      ) AS 'Delivery',
-	      (
-	      	SELECT Top (1)
-	      		ResponseText
-	      	FROM
-	      		Debtsolv_MMS.dbo.Client_CustomQuestionResponses
-	      	WHERE
-	      		QuestionID = 10007
-	      		AND ClientID = D_CLD.Client_ID
-	      ) AS 'MyProduct'
+	      ,D_CPD.InitialAgreedAmount / 100 AS DI
 	      ,CONVERT(varchar, CLD.DateCreated, 105) AS 'Referred Date'
 	      ,CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
 	      ,CASE
@@ -651,9 +633,10 @@ class Debtsolv {
 		CLD.LeadRef2
 	    ,TCR.[Description]
 	    ,Product
-	    ,CLD.DateCreated DESC")->cached($data_cache)->execute(static::$_connection);
+	    ,CLD.DateCreated DESC")->cached($data_cache)->execute('debtsolv');
 	    
-	    
+
+/*
 	    $results2 = \DB::query("SELECT CLD.ClientID
 		  ,CLD.LeadRef AS 'Dialler Lead ID'
 	      ,(CD.Forename + ' ' + CD.Surname) AS Name
@@ -679,25 +662,7 @@ class Debtsolv {
 	         ELSE
 	           ''
 	         END AS Product
-	      ,D_CPD.InitialAgreedAmount / 100 AS DI,
-	      (
-	      	SELECT Top (1)
-	      		ResponseText
-	      	FROM
-	      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
-	      	WHERE
-	      		QuestionID = 1
-	      		AND ClientID = D_CLD.Client_ID
-	      ) AS 'Delivery',
-	      (
-	      	SELECT Top (1)
-	      		ResponseText
-	      	FROM
-	      		BS_Debtsolv_DM.dbo.Client_CustomQuestionResponses
-	      	WHERE
-	      		QuestionID = 10007
-	      		AND ClientID = D_CLD.Client_ID
-	      ) AS 'MyProduct'
+	      ,D_CPD.InitialAgreedAmount / 100 AS DI
 	      ,CONVERT(varchar, CLD.DateCreated, 105) AS 'Referred Date'
 	      ,CONVERT(varchar, CC.LastContactAttempt, 120) AS 'Last Contact Date'
 	      ,CASE
@@ -738,7 +703,9 @@ class Debtsolv {
 		CLD.LeadRef2
 	    ,TCR.[Description]
 	    ,Product
-	    ,CLD.DateCreated DESC")->cached($data_cache)->execute(static::$_connection);
+	    ,CLD.DateCreated DESC")->cached($data_cache)->execute('debtsolv');
+
+*/
 	    
 	    $results = array();
 	    

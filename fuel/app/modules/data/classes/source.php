@@ -607,7 +607,7 @@ class Source
                                 OR
                                   DMR.list_id = '".$this->listID."'";
 
-	    
+/*	    
 	    $resolveDebtsolvCountQuery = "SELECT
                                     DISTINCT L_CLD.ClientID AS LeadID
                                   , CASE WHEN TCR.Description = 'Lead Completed' THEN 'TRUE' ELSE 'FALSE' END AS PackOut
@@ -646,9 +646,9 @@ class Source
                                   D_TLS.Reference = '".$this->listID."'
                                 OR
                                   DMR.list_id = '".$this->listID."'";
-	    
+*/	    
 	    $gabDebtsolvCount 	  = \DB::query($gabDebtsolvCountQuery)->execute('debtsolv')->as_array();
-	    $resolveDebtsolvCount = \DB::query($resolveDebtsolvCountQuery)->execute('debtsolv')->as_array();
+//	    $resolveDebtsolvCount = \DB::query($resolveDebtsolvCountQuery)->execute('debtsolv')->as_array();
 	    
 	    $combinedList = array();
 	    $listScore = 0;
@@ -663,6 +663,7 @@ class Source
             $listScore = $listScore + $singleLead['Score'];
 	    }
 	    
+/*
 	    
 	    foreach ($resolveDebtsolvCount as $singleLead)
 	    {
@@ -675,6 +676,8 @@ class Source
 			    );		    	
 	    	}
 	    }
+
+*/
 	    
 	    $referralCount = 0;
 	    $packOutCount  = 0;
