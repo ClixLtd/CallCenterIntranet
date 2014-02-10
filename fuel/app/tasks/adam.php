@@ -481,11 +481,11 @@
 				$minute_message = "";
 				
 				
-				$minute_message .= @Adam::guess_dial_rate('PREMIER', TRUE)."\n";
-				$minute_message .= @Adam::guess_dial_rate('STANDARD', TRUE)."\n";
+				//$minute_message .= @Adam::guess_dial_rate('PREMIER', TRUE)."\n";
+				//$minute_message .= @Adam::guess_dial_rate('STANDARD', TRUE)."\n";
 				
-				$minute_message .= @Adam::guess_dial_rate('GBS-1', TRUE)."\n";
-				$minute_message .= @Adam::guess_dial_rate('GAB-3', TRUE)."\n";
+				//$minute_message .= @Adam::guess_dial_rate('GBS-1', TRUE)."\n";
+				//$minute_message .= @Adam::guess_dial_rate('GAB-3', TRUE)."\n";
 				
 				//$minute_message .= @Adam::guess_dial_rate('GAB-1', TRUE)."\n";
 				//$minute_message .= @Adam::guess_dial_rate('GAB2013', TRUE)."\n";
@@ -494,11 +494,11 @@
 				
 				
 				
-				@Adam::check_dialable_leads('PREMIER');
-				@Adam::check_dialable_leads('STANDARD');
+				//@Adam::check_dialable_leads('PREMIER');
+				//@Adam::check_dialable_leads('STANDARD');
 				
-				@Adam::check_dialable_leads('GBS-1');
-				@Adam::check_dialable_leads('GAB-3');
+				//@Adam::check_dialable_leads('GBS-1');
+				//@Adam::check_dialable_leads('GAB-3');
 				
 				//@Adam::check_dialable_leads('GAB-1');
 				//@Adam::check_dialable_leads('OPT-IN');
@@ -508,11 +508,11 @@
 				
 				/*
 				
-				$minute_message .= @Adam::guess_dial_rate('BURTON1', TRUE, "resolvedialler")."\n";
-				@Adam::check_dialable_leads('BURTON1', "resolvedialler");
+				//$minute_message .= @Adam::guess_dial_rate('BURTON1', TRUE, "resolvedialler")."\n";
+				//@Adam::check_dialable_leads('BURTON1', "resolvedialler");
 				
-				$minute_message .= @Adam::guess_dial_rate('SMS-1', TRUE, "resolvedialler")."\n";
-				@Adam::check_dialable_leads('SMS-1', "resolvedialler");
+				//$minute_message .= @Adam::guess_dial_rate('SMS-1', TRUE, "resolvedialler")."\n";
+				//@Adam::check_dialable_leads('SMS-1', "resolvedialler");
 				*/
 				
 				
@@ -576,7 +576,13 @@
 		
 		
 		
-		
+		public function quickUpdate()
+{
+    for ($i = 1; $i <= 28; $i++) {
+        \Cli::write('Checking 2014-01-'.$i);
+        Adam::get_first_payment_date('2014-01-'.$i);
+    }
+}
 		
 		public function five_minute_tasks()
 		{
@@ -588,7 +594,7 @@
 			
 			Adam::get_first_payment_date();
 			
-			Adam::get_first_payment_date(null, 'RESOLVE');
+			// Adam::get_first_payment_date(null, 'RESOLVE');
 			
 			
 		}
@@ -1431,7 +1437,7 @@ Gregson and Brooke.');
 		public function get_first_payment_date($date=null, $office='GAB')
 		{
 		
-    		$debtsolv = ($office == "GAB") ? "Debtsolv.dbo" : "BS_Debtsolv_DM.dbo";
+    		$debtsolv = ($office == "GAB") ? "Debtsolv_MMS.dbo" : "BS_Debtsolv_DM.dbo";
 				    
 		    $chosenDate = (is_null($date)) ? date('Y-m-d') : date('Y-m-d', strtotime($date));
     		// Find a list of all payments from today that do not already have a first payment
@@ -1457,6 +1463,8 @@ Gregson and Brooke.');
     		// Loop through all payments and check if a first payment has been made
     		foreach ($todayPayments AS $paymentDetails)
     		{
+			\Cli::write('Checking Client: ' . $paymentDetails['ClientID']);
+
         		if ($paymentDetails['TotalPaid'] >= $paymentDetails['DI'])
         		{
             		
@@ -1525,7 +1533,7 @@ Gregson and Brooke.');
         				
                 		// Print to console
                 		
-                		print "Client ID " . $clientID . " first DI of £" . number_format(($di/100),2) . " paid on " . $firstPaymentDate . "\n";
+                		\Cli::write("Client ID " . $clientID . " first DI of £" . number_format(($di/100),2) . " paid on " . $firstPaymentDate . "\n");
 
                 		$result = @\DB::query("INSERT INTO Dialler.dbo.client_dates (ClientID, FirstPaymentDate, Office) VALUES (".$clientID.", '".$firstPaymentDate."', '".$office."')")->execute('debtsolv');
                 		
@@ -2769,7 +2777,7 @@ Gregson and Brooke.');
 			
 */			
 			
-			
+			/*			
 			
 			$email = \Email::forge();
 			
@@ -2782,7 +2790,8 @@ Gregson and Brooke.');
 			$email->html_body("The following lists are missing from the GAB Debtsolv<br /><br />".implode("<br />", $gabMissing));
                       
 			$email->send();
-			
+			*/
+
 			
 			/*
 			
