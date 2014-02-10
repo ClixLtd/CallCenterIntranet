@@ -25,30 +25,18 @@
      // ------------
      $this->_clientID = (int)\Input::post('clientID');
      
-     $this->setDatabases();
+     $this->_setDatabases();
    }
    
-   private function setDatabases()
-   {
-     $dbName = null;
-     
-     switch($this->_company)
-     {
-       case 'moneymanagementservices' :
-       case '1-tick' :
-         $dbName = 'Debtsolv_MMS';
-       break;
-       case 'clixmedia' :
-         $dbName = 'Debtsolv_MMS';
-       break;
-     }
-     
-     if(!is_null($dbName))
+   private function _setDatabases()
+   {     
+     if(!is_null($this->_company))
      {
        // -- Set the database name and client ID
        // --------------------------------------
-       Model_Debtsolv::forge($dbName, $this->_clientID);
        Model_Intranet::forge($this->_company, $this->_clientID);
+       
+       Model_Debtsolv::forge(Model_Intranet::getCompanyID(), $this->_clientID);
      }
      else
      {

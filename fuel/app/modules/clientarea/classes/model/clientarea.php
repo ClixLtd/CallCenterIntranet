@@ -13,11 +13,19 @@
    public static $companyID;
    public static $debtsolvDatabase;
    
+   protected static $_database = null;
+   protected static $_debtsolvDatabase = null;
+	 protected static $_leadpoolDatabase = null;
+	
+	 protected static $_connection = null;
+   
    public static function forge($companyID = 0, $clientID = 0)
    {
      static::$clientID = $clientID;
      static::$companyID = $companyID;
-     static::$debtsolvDatabase = static::getDatabaseName();
+     static::$debtsolvDatabase = static::setDatabaseConnection();
+     
+     
    }
    
    /**
@@ -25,8 +33,9 @@
     * 
     * @author David stansfield
     */
-   public static function getDatabaseName()
+   public static function setDatabaseConnection()
    {
+     /*
      $result = '';
      
      $result = \DB::query("SELECT
@@ -39,7 +48,17 @@
                           ", \DB::select())->execute()->as_array();
                           
      if(isset($result[0]['alias']))
-       return 'debtsolv_clientarea_' . $result[0]['alias'];
+     {
+       #return 'debtsolv_clientarea_' . $result[0]['alias'];
+       
+     }
+     */
+     
+     $Database = Database::connect(static::$companyID);
+     
+     static::$_connection = $Database->connection();
+     
+     #print $Database->debtsolvDBName();
    }
    
    /**
@@ -57,7 +76,7 @@
                              dbo.Client_Contact
                            WHERE
                              ID = " . static::$clientID . "
-                          ", \DB::SELECT)->execute(static::$debtsolvDatabase)->as_array();
+                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
                           
      if(isset($result[0]['ID']) && $result[0]['ID'] == static::$clientID)
        return true;
@@ -230,7 +249,7 @@
                              dbo.Client_Contact
                            WHERE
                              ID = " . (int)static::$clientID . "
-                          ", \DB::select())->execute(static::$debtsolvDatabase)->as_array();
+                          ", \DB::select())->execute(static::$_connection)->as_array();
      
      // -- Check results and return
      // ---------------------------                    
