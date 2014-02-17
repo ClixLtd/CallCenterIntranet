@@ -96,8 +96,7 @@ return array(
 			),
 			'clientarea' => 
 			array(
-				0 => '009_alter_clientarea_companies_add_centre_id',
-				1 => '010_alter_clientarea_companies_remove_centre_id',
+
 			),
 			'survey' => 
 			array(
