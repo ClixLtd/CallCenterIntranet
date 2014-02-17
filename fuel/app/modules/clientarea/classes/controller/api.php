@@ -425,6 +425,19 @@
     }
     
     /**
+     * Get the amount in the Warchest (Holding account)
+     * 
+     * @author David Stansfield
+     */
+     public function post_get_warchest()
+     {
+       $results = array();
+       $results = Model_Debtsolv::warchest();
+
+       return Json::output('success', '', $results);
+     }
+    
+    /**
      * Get the Client's Account Statement
      * 
      * @author David Stansfield
@@ -436,4 +449,44 @@
       
       return Json::output('success', '', $results);
     }
+
+    /**
+     * Get the Client's Standing order date
+     *
+     * @author David Stansfield
+     */
+
+     public function post_get_standing_order_date()
+     {
+         $results = array();
+         $results = Model_Debtsolv::standingOrderDate();
+
+         return Json::output('success', '', $results);
+     }
+
+     /**
+      * 1-Tick Client Claims
+      *
+      * @author David Stansfield
+      */
+     public function post_get_claims()
+     {
+         $results = array();
+         $results = Model_Debtsolv::claims();
+
+         return Json::output('success', '', $results);
+     }
+
+     /**
+      * Client Fees
+      *
+      * @author David Stansfield
+      */
+     public function post_get_fees()
+     {
+         $results = array();
+         $results = Model_Debtsolv::totalFeesPaid();
+
+         return Json::output('success', '', $results);
+     }
  }

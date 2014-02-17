@@ -34,7 +34,7 @@
      
      if($this->_companyID > 0)
      {
-       $this->_setDatabase();
+       $this->_setDebtsolvDatabase();
      }
      else
      {
@@ -42,7 +42,7 @@
      }
    }
    
-   private function _setDatabase()
+   private function _setDebtsolvDatabase()
    {
      // -- Get the Alias of the company based on Company ID
      // ---------------------------------------------------
