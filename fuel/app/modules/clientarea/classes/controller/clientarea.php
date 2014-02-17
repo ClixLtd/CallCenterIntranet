@@ -45,7 +45,7 @@
        }
      }
      
-     $this->template->title = 'Messages';
+     $this->template->title = 'Client Area | Messages';
      $this->template->content = \View::forge('messages', $data);
    }
    

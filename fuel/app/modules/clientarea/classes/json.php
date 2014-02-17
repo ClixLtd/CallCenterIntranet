@@ -25,7 +25,7 @@
     * 
     * @author David Stansfield
     * @return output method
-    */
+    **/
    public static function success($message = '')
    {
      return static::output('success', $message);

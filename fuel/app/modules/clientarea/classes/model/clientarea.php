@@ -12,20 +12,23 @@
    public static $clientID;
    public static $companyID;
    public static $debtsolvDatabase;
-   
+
+   protected static $_userCentreID = 0;
    protected static $_database = null;
    protected static $_debtsolvDatabase = null;
-	 protected static $_leadpoolDatabase = null;
+   protected static $_leadpoolDatabase = null;
 	
-	 protected static $_connection = null;
+   protected static $_connection = null;
    
    public static function forge($companyID = 0, $clientID = 0)
    {
      static::$clientID = $clientID;
      static::$companyID = $companyID;
+
+     // -- Check that the user
+     static::$_userCentreID = \Auth::get('call_center_id');
+
      static::$debtsolvDatabase = static::setDatabaseConnection();
-     
-     
    }
    
    /**
@@ -35,30 +38,9 @@
     */
    public static function setDatabaseConnection()
    {
-     /*
-     $result = '';
-     
-     $result = \DB::query("SELECT
-                             alias
-                           FROM
-                             clientarea_companies
-                           WHERE
-                             id = " . static::$companyID . "
-                           LIMIT 1                           
-                          ", \DB::select())->execute()->as_array();
-                          
-     if(isset($result[0]['alias']))
-     {
-       #return 'debtsolv_clientarea_' . $result[0]['alias'];
-       
-     }
-     */
-     
      $Database = Database::connect(static::$companyID);
      
      static::$_connection = $Database->connection();
-     
-     #print $Database->debtsolvDBName();
    }
    
    /**
@@ -301,6 +283,8 @@
                                 date DESC
                             ) AS CMP ON (CM.id = CMP.message_id)
                             WHERE
+                              CM.company_id = " . \Auth::get('call_center_id') . "
+                            AND
                               CM.status_id = 1
                             GROUP BY
                               CMP.message_id
@@ -358,6 +342,8 @@
                                clientarea_messages_statuses AS CMS ON CM.status_id = CMS.id
                             AND
                               `from` = 'user'
+                            AND
+                              CM.company_id = " . \Auth::get('call_center_id') . "
                             ORDER BY
                               date DESC
                            ", \DB::SELECT)->execute()->as_array();

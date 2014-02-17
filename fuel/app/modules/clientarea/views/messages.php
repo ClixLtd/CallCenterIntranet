@@ -1,11 +1,11 @@
 <h1>Client Messages</h1>
 
 <div style="float: left; margin: 25px 0px 35px 0px;">
-  <button type="button" type="submit" id="Create-Message-Button" class="btn btn-alt btn-large btn-primary">Send a New Message</button>
+  <button type="button" type="submit" id="Create-Message-Button" class="btn btn-primary">Send a New Message</button>
   &nbsp;&nbsp;
-  <button type="button" type="submit" id="Inbox-List-Button" class="btn btn-alt btn-large btn-primary">Inbox</button>
-  <button type="button" type="submit" id="Sent-List-Button" class="btn btn-alt btn-large btn-primary">Sent</button>
-  <button type="button" type="submit" id="Refresh-Message-Button" class="btn btn-alt btn-large btn-primary">Refresh Messages</button>
+  <button type="button" type="submit" id="Inbox-List-Button" class="btn btn-primary">Inbox</button>
+  <button type="button" type="submit" id="Sent-List-Button" class="btn btn-primary">Sent</button>
+  <button type="button" type="submit" id="Refresh-Message-Button" class="btn btn-primary">Refresh Messages</button>
 </div>
 
 <div style="clear: both;"><!-- --></div>
