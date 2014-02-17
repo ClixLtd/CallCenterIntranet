@@ -57,8 +57,8 @@
                              LEAD_DATA.Client_ID = " . (int)$clientID . "
                            AND
                              LEAD_DATA.[Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $password) . "')
-                           AND
-                             CONTACT.[Status] IN (9, 13)
+                           --AND
+                           --  CONTACT.[Status] IN (9, 13)
                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
      
      // -- Check for a returned row, then return it
@@ -263,4 +263,132 @@
                           
      return $results;
    }
+   
+   /**
+    * Get the amount in the Warchest (Holding Account)
+    * 
+    * @author David Stansfield
+    */
+   public static function warchest()
+   {
+     $results = array();
+     $results = \DB::query("SELECT TOP (1)
+                              SUM(Amount * 1.0) / 100 As warchest_amount
+                            FROM
+                              " . static::$databaseName . ".dbo.Payment_Warchest
+                            WHERE
+                              ClientID = " . static::$clientID . "
+                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                           
+     if(isset($results[0]['warchest_amount']))
+       return $results[0]['warchest_amount'];
+     else
+       return 0;
+   }
+
+   /**
+    * Get the Client's standing order date
+    *
+    * @author David Stansfield
+    */
+    public static function standingOrderDate()
+    {
+        $result = array();
+        $result = \DB::query("SELECT TOP (1)
+                                PAYMENT_SCHEDULE.DateExpected AS next_payment_date
+                               ,PAYMENT_METHOD.[Description] AS payment_method
+                              FROM
+                                " . static::$databaseName . ".dbo.Payment_Schedule AS PAYMENT_SCHEDULE
+                              INNER JOIN
+                                " . static::$databaseName . ".dbo.Type_Payment_Method AS PAYMENT_METHOD ON PAYMENT_METHOD.ID = PAYMENT_SCHEDULE.PaymentMethod
+                              WHERE
+                                PAYMENT_SCHEDULE.ClientID = " . static::$clientID . "
+                              AND
+                                PAYMENT_SCHEDULE.DateExpected >= GETDATE()
+                              AND
+                                PAYMENT_SCHEDULE.AmountPaid = '0'
+                              ORDER BY
+                                PAYMENT_SCHEDULE.SequenceID ASC
+                             ", \DB::SELECT)->execute(static::$_connection)->as_array();
+
+        if(isset($result[0]))
+            return $result[0];
+        else
+            return $result;
+    }
+
+    /**
+     * Client Claims (Handled by 1-Tick)
+     *
+     * @author David Stansfield
+     */
+     public static function claims()
+     {
+         $results = array();
+         $results = \DB::query("SELECT
+                                  CLIENT_SERVICE.ClientID
+                                 ,CLIENT_DEBT.[Description] AS creditor_name
+                                 ,TYPE_SERVICE.[Description] AS claim_type
+                                 ,PROCESSING_STAGE.[Description] AS processing_stage
+                                 ,DEBT_STATUS.[Description] AS creditor_status
+                                 ,CLIENT_DEBT.AccountReference AS account_reference
+                                FROM
+                                  " . static::$databaseName . ".dbo.Client_Services AS CLIENT_SERVICE
+                                INNER JOIN
+                                  " . static::$databaseName . ".dbo.Type_Service As TYPE_SERVICE ON CLIENT_SERVICE.ServiceType = TYPE_SERVICE.ID
+                                INNER JOIN
+                                  " . static::$databaseName . ".dbo.ProcessingStage_Threads AS THREADS ON CLIENT_SERVICE.ThreadID = THREADS.ID
+                                INNER JOIN
+                                  " . static::$databaseName . ".dbo.Type_ProcStage_ThreadStatus AS THREAD_STATUS ON THREADS.[Status] = THREAD_STATUS.ID
+                                INNER JOIN
+                                  (
+                                    SELECT
+                                      ClientID
+                                     ,StageID
+                                     ,ThreadID
+                                     ,DateStart
+                                     ,ROW_NUMBER() OVER (PARTITION BY ThreadID ORDER BY DateStart DESC) AS StageRow
+                                    FROM
+                                      " . static::$databaseName . ".dbo.Client_InitialProcessingStages
+                                  ) AS CLIENT_STAGE ON CLIENT_SERVICE.ThreadID = CLIENT_STAGE.ThreadID
+                                INNER JOIN
+                                  " . static::$databaseName . ".dbo.Type_IVAProcessingStatus AS PROCESSING_STAGE ON CLIENT_STAGE.StageID = PROCESSING_STAGE.ID AND THREADS.ThreadTypeID = PROCESSING_STAGE.ThreadTypeID
+                                INNER JOIN
+                                  " . static::$databaseName . ".dbo.Finstat_Debt AS CLIENT_DEBT ON CLIENT_SERVICE.ObjectID = CLIENT_DEBT.ID
+                                INNER JOIN
+                                  " . static::$databaseName . ".dbo.Type_Debt_Status AS DEBT_STATUS ON CLIENT_DEBT.[Status] = DEBT_STATUS.ID
+                                WHERE
+                                  CLIENT_SERVICE.ClientID = " . static::$clientID . "
+                                AND
+                                  CLIENT_SERVICE.ServiceType IN (1, 2, 4)
+                                AND
+                                  CLIENT_STAGE.StageRow = 1
+                                ", \DB::SELECT)->execute(static::$_connection)->as_array();
+
+         return $results;
+     }
+
+     /**
+      * Total Client Fees Paid
+      *
+      * @author David Stansfield
+      */
+     public static function totalFeesPaid()
+     {
+         $results = array();
+         $results = \DB::query("SELECT TOP (1)
+                                  SUM(Amount * 1.0) / 100 AS total_fee_amount
+                                FROM
+                                  " . static::$databaseName . ".dbo.Payment_Fee
+                                WHERE
+                                  ClientID = " . static::$clientID . "
+                                AND
+                                  [Status] = 10
+                               ", \DB::SELECT)->execute(static::$_connection)->as_array();
+
+         if(isset($results[0]['total_fee_amount']))
+             return $results[0]['total_fee_amount'];
+         else
+             return 0;
+     }
  }
