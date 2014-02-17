@@ -38,7 +38,7 @@
      }
      else
      {
-       throw new \Exception('Invalid Company ID. ID id 0');
+       throw new \Exception('Database Class - Client Area: Invalid Company ID. ID is 0');
      }
    }
    
@@ -69,7 +69,7 @@
        $this->_connection = \Database_Connection::instance('Debtsolv', \Config::get('debtsolv.' . $this->_companyAlias . '.database', $this->_connection));
        
        if($this->_connection instanceof \Database_Connection)
-         \Log::info('CLIENT AREA: Database connected for for Company ' . $this->_companyAlias);
+         \Log::info('CLIENT AREA: Database connected for for Company ' . $this->_companyAlias . ' ID: ' . $this->_companyID);
        else
          \Log::error('CLIENT AREA: Failed to connect to ' . $this->_companyAlias);
      }
