@@ -25,7 +25,7 @@
      // -- Set the variables for the database
      // -------------------------------------
      Model_ClientArea::forge($companyID, $clientID); 
-     
+     #\Log::info('COmpany ID is ' . $companyID);
      $this->load();
    }
    
