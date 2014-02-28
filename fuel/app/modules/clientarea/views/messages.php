@@ -120,8 +120,8 @@
               </tr>
               <tr>
                 <td colspan="2" style="text-align: center;">
-                  <button type="button" type="submit" id="Send-Reply-Button" class="btn btn-alt btn-large btn-primary">Reply</button>
-                  <button type="button" type="submit" id="Close-Message-Button" class="btn btn-alt btn-large btn-primary">Close</button>
+                  <button type="button" type="submit" id="Send-Reply-Button" class="btn btn-primary">Reply</button>
+                  <button type="button" type="submit" id="Close-Message-Button" class="btn btn-primary">Close</button>
                 </td>
               </tr>
             </table>
@@ -141,7 +141,7 @@
               <tr>
                 <td colspan="2" style="text-align: center;">
                   <input type="hidden" name="MessageID" id="MessageID" />
-                  <button type="button" type="submit" id="Send-Reply" class="btn btn-alt btn-large btn-primary">Send</button>
+                  <button type="button" type="submit" id="Send-Reply" class="btn btn-primary">Send</button>
                 </td>
               </tr>
             </table>

@@ -4,7 +4,7 @@ return array(
 
   // -- Expert Money Solutions Connection
   // ------------------------------------
-   'expertmoneysolutions' => array(
+   'moneymanagementservices' => array(
         'database' => array(
             'type'       => 'pdo',
             'connection' => array(
@@ -19,14 +19,15 @@ return array(
         'Charset'     => '',
         'profiling'   => true,
         'debtsolv_db' => 'Debtsolv_MMS',
+        'leadpool_db' => 'LeadPool_MMS',
    ),
 
   'clixmedia' => array(
       'database' => array(
           'type'       => 'pdo',
           'connection' => array(
-              'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Leadpool_DM',
-              #'dsn'        => 'sqlsrv:Server=192.168.1.100,1334;Database=LeadPool_DM',
+              #'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Leadpool_DM',
+              'dsn'        => 'sqlsrv:Server=192.168.1.100,1334;Database=LeadPool_DM',
               'username'	 => 'superuser',
               'password'	 => 'Rfd32xs12B',
               'persistent' => false,
@@ -36,6 +37,7 @@ return array(
     'Charset'     => '',
     'profiling'   => true,
     'debtsolv_db' => 'Debtsolv',
+    'leadpool_db' => 'LeadPool_DM'
   ),
 		
 );
