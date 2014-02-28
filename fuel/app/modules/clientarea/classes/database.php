@@ -64,12 +64,12 @@
        \Config::load('clientarea', 'debtsolv');
        
        $this->_debtsolvDatabase = \Config::get('debtsolv.' . $this->_companyAlias . '.debtsolv_db', $this->_debtsolvDatabase);
-       $this->_leadpoolDatabase = \Config::get('debtsolv.' . $this->_companyAlias . '.debtsolv_db', $this->_leadpoolDatabase);
+       $this->_leadpoolDatabase = \Config::get('debtsolv.' . $this->_companyAlias . '.leadpool_db', $this->_leadpoolDatabase);
        
        $this->_connection = \Database_Connection::instance('Debtsolv', \Config::get('debtsolv.' . $this->_companyAlias . '.database', $this->_connection));
        
        if($this->_connection instanceof \Database_Connection)
-         \Log::info('CLIENT AREA: Database connected for for Company ' . $this->_companyAlias . ' ID: ' . $this->_companyID);
+         \Log::info('CLIENT AREA: Database connected for for Company ' . $this->_companyAlias . ' ID: ' . $this->_companyID . ' DS Name: ' . $this->_debtsolvDatabase);
        else
          \Log::error('CLIENT AREA: Failed to connect to ' . $this->_companyAlias);
      }

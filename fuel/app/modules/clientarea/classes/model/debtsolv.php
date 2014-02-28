@@ -17,9 +17,9 @@
    
    protected static $_database = null;
    protected static $_debtsolvDatabase = null;
-	 protected static $_leadpoolDatabase = null;
+   protected static $_leadpoolDatabase = null;
 	
-	 protected static $_connection = null;
+   protected static $_connection = null;
    
    public static function forge($companyID = 0, $clientID = 0)
    {
@@ -100,7 +100,7 @@
    public static function loadClient()
    {
      $result = array();
-     
+
      $result = \DB::query("SELECT Top (1)
                               Title
                              ,Initials
