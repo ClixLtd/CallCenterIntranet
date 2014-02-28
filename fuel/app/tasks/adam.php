@@ -2584,22 +2584,25 @@ Gregson and Brooke.');
                             
       // -- Send email out
       // -----------------
-      $email = \Email::forge();
-      $email->from('noreply@expertmoneysolutions.co.uk', 'Dialler: MMS');
+      if(count($results) > 0)
+      {
+          $email = \Email::forge();
+          $email->from('noreply@expertmoneysolutions.co.uk', 'Dialler: MMS');
 
-      $email->to(array('d.stansfield@clix.co.uk', 's.skinner@clix.co.uk', 'a.brooke@gregsonandbrooke.co.uk'));
-      #gary@gabfs.co.uk
-      #$email->to(array('d.stansfield@clix.co.uk'));
-          
-      $email->subject('Dialler Call Stats for' . ' ' . date("d-m-Y"));
-  
-      $email->html_body(\View::forge('emails/dialler/agentcallstats', array('results' => $results,)
-        				       ));
-                
-      $email->send();
-    
+          $email->to(array('d.stansfield@clix.co.uk', 's.skinner@clix.co.uk', 'a.brooke@gregsonandbrooke.co.uk'));
+          #gary@gabfs.co.uk
+          #$email->to(array('d.stansfield@clix.co.uk'));
+
+          $email->subject('Dialler Call Stats for' . ' ' . date("d-m-Y"));
+
+          $email->html_body(\View::forge('emails/dialler/agentcallstats', array('results' => $results,)
+          ));
+
+          $email->send();
+          unset($email);
+      }
+
       unset($results);
-      unset($email);
     }
     
     /**

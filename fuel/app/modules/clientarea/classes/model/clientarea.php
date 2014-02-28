@@ -28,6 +28,8 @@
      // -- Check that the user
      static::$_userCentreID = \Auth::get('call_center_id');
 
+     \Log::info('User 2 center ID is ' . static::$companyID);
+
      static::$debtsolvDatabase = static::setDatabaseConnection();
    }
    
@@ -38,9 +40,10 @@
     */
    public static function setDatabaseConnection()
    {
-     $Database = Database::connect(static::$companyID);
+     $Database = Database::connect(static::$_userCentreID);
      
      static::$_connection = $Database->connection();
+     static::$_debtsolvDatabase = $Database->debtsolvDBName();
    }
    
    /**
@@ -228,7 +231,7 @@
                              ,Tel_Mobile
                              ,email
                            FROM
-                             dbo.Client_Contact
+                             " . static::$_debtsolvDatabase . ".dbo.Client_Contact
                            WHERE
                              ID = " . (int)static::$clientID . "
                           ", \DB::select())->execute(static::$_connection)->as_array();
