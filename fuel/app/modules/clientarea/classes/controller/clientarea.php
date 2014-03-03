@@ -14,6 +14,12 @@
      $this->template->title = 'Index | Client Area';
      $this->template->content = \View::forge('index');
    }
+
+   public function action_clientaccounts()
+   {
+       $this->template->title = 'Client Accounts';
+       $this->template->content = \View::forge('client_accounts');
+   }
    
    public function action_client_change_details()
    {
