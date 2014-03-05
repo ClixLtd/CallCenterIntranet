@@ -149,7 +149,7 @@
                            WHERE
                              ClientID = " . static::$clientID . "
                            AND
-                             TransactionType = 1                             
+                             TransactionType = 1
                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
                           
      if(isset($result[0]['Paid_to_Date']))
@@ -165,8 +165,8 @@
                              SUM(PO.Amount * 1.0) / 100 AS total_out
                            FROM
                              " . static::$databaseName . ".dbo.Payment_Out AS PO
-                           INNER JOIN
-                             " . static::$databaseName . ".dbo.Finstat_Debt AS FSD ON PO.AccountRef = FSD.AccountReference
+                           --INNER JOIN
+                           --  " . static::$databaseName . ".dbo.Finstat_Debt AS FSD ON PO.AccountRef = FSD.AccountReference AND PO.ClientID = FSD.ClientID
                            WHERE
                              PO.ClientID = " . static::$clientID . "
                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
@@ -253,7 +253,7 @@
                               LEFT JOIN
                                 " . static::$databaseName . ".dbo.Type_Payment_Status AS TPS ON PO.[Status] = TPS.ID
                               LEFT JOIN
-                                " . static::$databaseName . ".dbo.Finstat_Debt AS FD ON PO.AccountRef = FD.AccountReference
+                                " . static::$databaseName . ".dbo.Finstat_Debt AS FD ON PO.AccountRef = FD.AccountReference AND PO.ClientID = FD.ClientID
                               WHERE
                                 PO.ClientID = " . static::$clientID . "
                             )

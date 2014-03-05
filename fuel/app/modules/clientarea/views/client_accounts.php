@@ -33,7 +33,7 @@
                                             <td>Confirm Password</td>
                                             <td><input type="password" name="Confirm_Password" maxlength="10"/> </td>
 
-                                            <td><button type="button" name="Add_Client" class="btn btn-primary">Save</button> </td>
+                                            <td><button type="button" name="Add_Client" class="btn btn-primary" id="Add-Client-Submit">Save</button> </td>
                                         </tr>
                                     </table>
                                 </div>
@@ -53,3 +53,5 @@
 <article class="full-block clearrm">
 
 </article>
+
+<?=asset::js('client-area.js');?>
