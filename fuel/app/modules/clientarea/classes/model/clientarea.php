@@ -68,8 +68,52 @@
      else
        return false;
    }
-   
-   /**
+
+     /**
+      * Check for a valid Client to add
+      *
+      * @author David Stansfield
+      */
+     public static function checkClient($clientID = 0)
+     {
+         // -- Check Debtsolv
+         // -----------------
+
+     }
+
+     /**
+      * Add a new Client to the Client Area
+      *
+      * @author David Stansfield
+      */
+     public static function addClient($clientID = 0, $password = '')
+     {
+         $result = \DB::query("INSERT INTO
+                                 Clix_Client_Portal.dbo.client_accounts
+                               (
+                                 client_id
+                                ,company_id
+                                ,status_id
+                                ,[password]
+                                ,created_at
+                               )
+                               VALUES
+                               (
+                                 " . (int)$clientID . "
+                                ," . \Auth::get('call_center_id') . "
+                                ,1
+                                ,HASHBYTES('SHA1', '" . $password . "')
+                                ,GETDATE()
+                               )
+                              ", \DB::INSERT)->execute(static::$_connection);
+
+         if($result > 0)
+             return true;
+         else
+             return false;
+     }
+
+     /**
     * Get a full list of requests for change of details
     * 
     * @author David Stansfield
