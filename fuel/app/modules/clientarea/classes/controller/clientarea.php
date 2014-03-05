@@ -9,10 +9,21 @@
 
  class Controller_Clientarea extends \Controller_BaseHybrid
  {
+   public function before()
+   {
+       Model_ClientArea::forge();
+   }
+
    public function action_index()
    {
      $this->template->title = 'Index | Client Area';
      $this->template->content = \View::forge('index');
+   }
+
+   public function action_clientaccounts()
+   {
+       $this->template->title = 'Client Accounts';
+       $this->template->content = \View::forge('client_accounts');
    }
    
    public function action_client_change_details()
@@ -52,6 +63,28 @@
    // ------------------------------------------------\\
    // -- Ajax Calls ----------------------------------\\
    // ------------------------------------------------\\
+   public function post_add_client_account()
+   {
+       $clientID = \Input::post('ClientID');
+       $password = \Input::post('Password');
+
+       // -- Check that the Client Exists and hasn't already got an account
+       // -----------------------------------------------------------------
+
+
+       // -- Add the Client
+       // -----------------
+       if(Model_ClientArea::addClient((int)$clientID, $password) === true)
+         $status = 'success';
+       else
+         $status = 'failed';
+
+       $this->response(array(
+           'status' => $status,
+           'message' => '',
+           'data' => array(),
+       ));
+   }
    
    public function post_getChangeDetailsList($clientID)
    {
@@ -80,8 +113,8 @@
      
      $message = '';
           
-     // -- This list is check agaist the posted field. For security
-     // -----------------------------------------------------------
+     // -- This list is check against the posted field. For security
+     // ------------------------------------------------------------
      $fieldsList = array('Title',
                          'Forename',
                          'Surname',
