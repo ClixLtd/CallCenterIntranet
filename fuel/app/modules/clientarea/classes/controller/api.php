@@ -86,7 +86,7 @@
        
        // -- Log it
        // ---------
-       \Log::info('Notice', 'Client Logged In ID: ' . $clientID);
+       \Log::info('Client Logged In ID: ' . $clientID);
        Log::write(1);
      }
      else
