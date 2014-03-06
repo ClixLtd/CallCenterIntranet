@@ -45,7 +45,7 @@ return array(
         'database' => array(
             'type'       => 'pdo',
             'connection' => array(
-                'dsn'            => 'dblib:host=10.150.4.100:1334;dbname=Leadpool_DM',
+                'dsn'            => 'dblib:host=10.150.4.100:1334;dbname=BS_Leadpool_DM',
                 #'dsn'        => 'sqlsrv:Server=10.150.4.100,1433;Database=BS_Leadpool_DM',
                 'username'	 => 'superuser',
                 'password'	 => '6532SaSfcDa34CV',
