@@ -2215,12 +2215,7 @@ Gregson and Brooke.');
       );
       */
       $hqEmailDetails = array(
-        'to' => array('d.stansfield@expertmoneysolutions.co.uk',
-                      'k.wallwork@expertmoneysolutions.co.uk',
-                      'l.davenport@expertmoneysolutions.co.uk',
-                      'a.brooke@expertmoneysolutions.co.uk',
-                      'g.gregson@expertmoneysolutions.co.uk',
-                      's.jayne@expertmoneysolutions.co.uk',
+        'to' => array('dialler-lateness-report@moneymanagementservices.co.uk',
                      ),
         'subject' => 'Bolton: Staff Break/Lunch Late Report',
         'results' => array(),
