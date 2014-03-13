@@ -51,7 +51,7 @@
     * 
     * @author David Stansfield
     */
-   public static function validateClientID()
+   public static function validateClientID($clientID = 0)
    {
      $result = 0;
      
@@ -60,10 +60,10 @@
                            FROM
                              dbo.Client_Contact
                            WHERE
-                             ID = " . static::$clientID . "
+                             ID = " . (int)$clientID . "
                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
                           
-     if(isset($result[0]['ID']) && $result[0]['ID'] == static::$clientID)
+     if(isset($result[0]['ID']) && $result[0]['ID'] == (int)$clientID)
        return true;
      else
        return false;
@@ -88,29 +88,40 @@
       */
      public static function addClient($clientID = 0, $password = '')
      {
-         $result = \DB::query("INSERT INTO
-                                 Clix_Client_Portal.dbo.client_accounts
-                               (
-                                 client_id
-                                ,company_id
-                                ,status_id
-                                ,[password]
-                                ,created_at
-                               )
-                               VALUES
-                               (
-                                 " . (int)$clientID . "
-                                ," . \Auth::get('call_center_id') . "
-                                ,1
-                                ,HASHBYTES('SHA1', '" . $password . "')
-                                ,GETDATE()
-                               )
-                              ", \DB::INSERT)->execute(static::$_connection);
+         // -- Check that the Client Exists in Debtsolv
+         // -------------------------------------------
+         if(static::validateClientID((int)$clientID) === true)
+         {
+             $result = \DB::query("INSERT INTO
+                                     Clix_Client_Portal.dbo.client_accounts
+                                   (
+                                     client_id
+                                    ,company_id
+                                    ,status_id
+                                    ,[password]
+                                    ,created_at
+                                   )
+                                   VALUES
+                                   (
+                                     " . (int)$clientID . "
+                                    ," . \Auth::get('call_center_id') . "
+                                    ,1
+                                    ,HASHBYTES('SHA1', '" . $password . "')
+                                    ,GETDATE()
+                                   )
+                                  ", \DB::INSERT)->execute(static::$_connection);
 
-         if($result > 0)
-             return true;
+             if($result > 0)
+                 return true;
+             else
+                 return false;
+         }
          else
+         {
              return false;
+         }
+
+
      }
 
      /**

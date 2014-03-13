@@ -11,6 +11,7 @@
  {
    public function before()
    {
+       parent::before();
        Model_ClientArea::forge();
    }
 
