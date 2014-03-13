@@ -72,6 +72,8 @@
      // ------------
      $clientID = \Input::post('clientID');
      $password = \Input::post('password');
+
+     \Log::info('Client ID (API): ' . $clientID);
      
      $data = array();
      

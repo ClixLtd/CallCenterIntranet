@@ -18,6 +18,7 @@
    protected static $_database = null;
    protected static $_debtsolvDatabase = null;
    protected static $_leadpoolDatabase = null;
+   protected static $_companyID = 0;
 	
    protected static $_connection = null;
    
@@ -33,6 +34,7 @@
      // -- Set the Client ID
      // --------------------
      static::$clientID = (int)$clientID;
+     static::$_companyID = (int)$companyID;
    }
    
    /**
@@ -46,7 +48,8 @@
      
      if($clientID == 0 || $password == null)
        return false;
-     
+
+     /*
      $result = \DB::query("SELECT Top (1)
                              LEAD_DATA.Client_ID
                            FROM
@@ -60,10 +63,26 @@
                            --AND
                            --  CONTACT.[Status] IN (9, 13)
                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
+     */
+     $result = \DB::query("SELECT TOP (1)
+                             CLIX_CLIENT_ACCOUNT.id
+                           FROM
+                             Clix_Client_Portal.dbo.client_accounts AS CLIX_CLIENT_ACCOUNT
+                           INNER JOIN
+                             " . static::$databaseName . ".dbo.Client_Contact AS CONTACT ON CLIX_CLIENT_ACCOUNT.client_id = CONTACT.ID
+                           WHERE
+                             CLIX_CLIENT_ACCOUNT.client_id = " . (int)$clientID . "
+                           AND
+                             CLIX_CLIENT_ACCOUNT.company_id = " . static::$_companyID . "
+                           AND
+                             [Password] = HASHBYTES('SHA1', '" . str_replace("'", "''", $password) . "')
+                           --AND
+                           --  CONTACT.[Status] IN (9, 13)
+                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
      
      // -- Check for a returned row, then return it
      // -------------------------------------------            
-     if(isset($result[0]['Client_ID']) && $result[0]['Client_ID'] > 0)
+     if(isset($result[0]['id']) && $result[0]['id'] > 0)
        return true;
      else
        return false;
