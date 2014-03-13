@@ -2321,7 +2321,7 @@ Gregson and Brooke.');
       if(count($hqEmailDetails['results']) > 0)
       {
         $email = \Email::forge();
-        $email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+        $email->from('noreply@moneymanagementservices.co.uk', 'Money Management Services');
       
         $email->to($hqEmailDetails['to']);
                 
