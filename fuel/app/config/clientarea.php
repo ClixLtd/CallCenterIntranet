@@ -26,8 +26,8 @@ return array(
       'database' => array(
           'type'       => 'pdo',
           'connection' => array(
-              #'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Leadpool_DM',
-              'dsn'        => 'sqlsrv:Server=192.168.1.100,1334;Database=LeadPool_DM',
+              'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Leadpool_DM',
+              #'dsn'        => 'sqlsrv:Server=192.168.1.100,1334;Database=LeadPool_DM',
               'username'	 => 'superuser',
               'password'	 => 'Rfd32xs12B',
               'persistent' => false,
