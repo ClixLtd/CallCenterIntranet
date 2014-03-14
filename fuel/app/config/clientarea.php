@@ -19,7 +19,7 @@ return array(
         'Charset'     => '',
         'profiling'   => true,
         'debtsolv_db' => 'Debtsolv_MMS_REMOVE',
-        'leadpool_db' => 'LeadPool_MMS',
+        'leadpool_db' => 'LeadPool_MMS_REMOVE',
    ),
 
   'expertmoneysolutions' => array(
