@@ -2,8 +2,6 @@
 
 return array(
 
-    // -- Expert Money Solutions Connection
-    // ------------------------------------
     'moneymanagementservices' => array(
         'database' => array(
             'type'       => 'pdo',
@@ -26,18 +24,18 @@ return array(
         'database' => array(
             'type'       => 'pdo',
             'connection' => array(
-                'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Debtsolv',
-                #'dsn'        => 'sqlsrv:Server=192.168.1.100,1334;Database=LeadPool_DM',
-                'username'	 => 'superuser',
-                'password'	 => 'Rfd32xs12B',
+                'dsn'            => 'dblib:host=192.168.3.11:1433;dbname=Debtsolv_GABFS',
+                #'dsn'        => 'sqlsrv:Server=192.168.3.11,1433;Database=LeadPool_DM',
+                'username'	 => 'sa',
+                'password'	 => 'kC934CEWew2',
                 'persistent' => false,
             ),
         ),
         'Identifier'  => '' ,
         'Charset'     => '',
         'profiling'   => true,
-        'debtsolv_db' => 'Debtsolv',
-        'leadpool_db' => 'LeadPool_DM'
+        'debtsolv_db' => 'Debtsolv_GABFS',
+        'leadpool_db' => 'LeadPool_GABFS'
     ),
 
     '1-tick' => array(
