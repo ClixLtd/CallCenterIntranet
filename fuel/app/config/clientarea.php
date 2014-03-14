@@ -8,7 +8,7 @@ return array(
         'database' => array(
             'type'       => 'pdo',
             'connection' => array(
-                'dsn'       => 'dblib:host=192.168.3.31:1433;dbname=Leadpool_MMS',
+                'dsn'       => 'dblib:host=192.168.3.31:1433;dbname=Debtsolv_MMS',
                 #'dsn'        => 'sqlsrv:Server=192.168.3.31,1433;Database=LeadPool_MMS',
                 'username'	 => 'debtsolv',
                 'password'	 => '76GerZnu871',
@@ -18,15 +18,15 @@ return array(
         'Identifier'  => '' ,
         'Charset'     => '',
         'profiling'   => true,
-        'debtsolv_db' => 'Debtsolv_MMS_REMOVE',
-        'leadpool_db' => 'LeadPool_MMS_REMOVE',
+        'debtsolv_db' => 'Debtsolv_MMS',
+        'leadpool_db' => 'LeadPool_MMS',
    ),
 
   'expertmoneysolutions' => array(
       'database' => array(
           'type'       => 'pdo',
           'connection' => array(
-              'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Leadpool_DM',
+              'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Debtsolv',
               #'dsn'        => 'sqlsrv:Server=192.168.1.100,1334;Database=LeadPool_DM',
               'username'	 => 'superuser',
               'password'	 => 'Rfd32xs12B',
@@ -44,7 +44,7 @@ return array(
         'database' => array(
             'type'       => 'pdo',
             'connection' => array(
-                'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Leadpool_DM',
+                'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Debtsolv',
                 #'dsn'        => 'sqlsrv:Server=192.168.1.100,1334;Database=LeadPool_DM',
                 'username'	 => 'superuser',
                 'password'	 => 'Rfd32xs12B',
