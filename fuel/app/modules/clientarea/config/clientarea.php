@@ -18,8 +18,8 @@ return array(
     'Identifier'  => '' ,
     'Charset'     => '',
     'profiling'   => true,
-    'debtsolv_db' => 'Debtsolv_MMS',
-    'leadpool_db' => 'Leadpool_MMS',
+    'debtsolv_db' => 'Debtsolv_MMS_HAHA',
+    'leadpool_db' => 'Leadpool_MMS_HAA2',
   ),
 
   // -- Expert Money Solutions Connection
