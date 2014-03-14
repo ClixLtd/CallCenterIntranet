@@ -18,7 +18,7 @@ return array(
         'Identifier'  => '' ,
         'Charset'     => '',
         'profiling'   => true,
-        'debtsolv_db' => 'Debtsolv_MMS',
+        'debtsolv_db' => 'Debtsolv_MMS_REMOVE',
         'leadpool_db' => 'LeadPool_MMS',
    ),
 
