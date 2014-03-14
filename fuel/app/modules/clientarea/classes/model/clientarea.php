@@ -28,7 +28,7 @@
      // -- Check that the user
      static::$_userCentreID = \Auth::get('call_center_id');
 
-     \Log::info('User 2 center ID is ' . static::$companyID);
+     \Log::info('User 2 center ID is ' . static::$_userCentreID);
 
      static::$debtsolvDatabase = static::setDatabaseConnection();
    }
@@ -90,8 +90,8 @@
      {
          // -- Check that the Client Exists in Debtsolv
          // -------------------------------------------
-         if(static::validateClientID((int)$clientID) === true)
-         {
+         #if(static::validateClientID((int)$clientID) === true)
+         #{
              $result = \DB::query("INSERT INTO
                                      Clix_Client_Portal.dbo.client_accounts
                                    (
@@ -115,11 +115,11 @@
                  return true;
              else
                  return false;
-         }
-         else
-         {
-             return false;
-         }
+         #}
+         #else
+         #{
+         #    return false;
+         #}
 
 
      }
