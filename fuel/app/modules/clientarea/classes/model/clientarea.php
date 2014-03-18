@@ -158,6 +158,8 @@
                               " . $client . "
                               date_approved = '0000-00-00 00:00:00'
                             AND
+                              company_id = " . static::$_userCentreID . "
+                            AND
                               CCCP.id IN (
                                           SELECT
                                             MAX(id)
