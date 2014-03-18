@@ -224,7 +224,7 @@
                              " . $set . "
                            WHERE
                              ID = " . static::$clientID . "
-                          ", \DB::update())->execute(static::$debtsolvDatabase);
+                          ", \DB::update())->execute(static::$_connection);
                           
      if($result > 0)
        return true;
