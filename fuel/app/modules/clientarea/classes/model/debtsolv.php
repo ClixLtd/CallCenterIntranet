@@ -145,7 +145,7 @@
                              " . static::$databaseName . ".dbo.Client_Contact
                            WHERE
                              ID = " . (int)static::$clientID . "
-                          ", \DB::select())->execute(static::$_connection)->as_array();
+                          ", \DB::select())->cached(1800)->execute(static::$_connection)->as_array();
      
      // -- Check results and return
      // ---------------------------                    
@@ -171,7 +171,7 @@
                              ClientID = " . static::$clientID . "
                            AND
                              TransactionType = 1
-                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                          ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
                           
      if(isset($result[0]['Paid_to_Date']))
        return $result[0]['Paid_to_Date'];
@@ -190,7 +190,7 @@
                            --  " . static::$databaseName . ".dbo.Finstat_Debt AS FSD ON PO.AccountRef = FSD.AccountReference AND PO.ClientID = FSD.ClientID
                            WHERE
                              PO.ClientID = " . static::$clientID . "
-                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                          ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
                           
      if(isset($result[0]['total_out']))
        return $result[0]['total_out'];
@@ -222,7 +222,7 @@
                             " . static::$databaseName . ".dbo.Finstat_Debt AS FSD
                           WHERE 
                             FSD.ClientID = " . static::$clientID
-                         , \DB::SELECT)->execute(static::$_connection)->as_array();
+                         , \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
                          
      return $result;
    }
@@ -280,7 +280,7 @@
                             )
                             ORDER BY
                               [Date] DESC
-                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                          ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
                           
      return $results;
    }
@@ -299,7 +299,7 @@
                               " . static::$databaseName . ".dbo.Payment_Warchest
                             WHERE
                               ClientID = " . static::$clientID . "
-                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                           ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
                            
      if(isset($results[0]['warchest_amount']))
        return $results[0]['warchest_amount'];
@@ -330,7 +330,7 @@
                                 PAYMENT_SCHEDULE.AmountPaid = '0'
                               ORDER BY
                                 PAYMENT_SCHEDULE.SequenceID ASC
-                             ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                             ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
 
         if(isset($result[0]))
             return $result[0];
@@ -384,7 +384,7 @@
                                   CLIENT_SERVICE.ServiceType IN (1, 2, 4)
                                 AND
                                   CLIENT_STAGE.StageRow = 1
-                                ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                                ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
 
          return $results;
      }
@@ -405,7 +405,7 @@
                                   ClientID = " . static::$clientID . "
                                 AND
                                   [Status] = 10
-                               ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                               ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
 
          if(isset($results[0]['total_fee_amount']))
              return $results[0]['total_fee_amount'];
