@@ -96,11 +96,13 @@
    public static function changePassword($data = array())
    {
      $result = \DB::query("UPDATE Top (1)
-                             " . static::$databaseName . ".dbo.Client_LeadData
+                             Clix_Client_Portal.dbo.client_accounts
                            SET
-                             [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $data['newPassword']) . "')
+                             [password] = HASHBYTES('sha1', '" . str_replace("'", "''", $data['newPassword']) . "')
                            WHERE
-                             Client_ID = " . static::$clientID . "
+                             client_id = " . static::$clientID . "
+                           AND
+                             company_id = " . static::$_companyID . "
                            AND
                              [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $data['currentPassword']) . "')
                           ", \DB::UPDATE)->execute(static::$_connection);
