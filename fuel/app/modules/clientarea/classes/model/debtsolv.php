@@ -64,8 +64,9 @@
                            --  CONTACT.[Status] IN (9, 13)
                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
      */
-     $result = \DB::query("SELECT TOP (1)
+     $result = \DB::query("SELECT
                              CLIX_CLIENT_ACCOUNT.id
+                             ,CLIX_CLIENT_ACCOUNT.password
                            FROM
                              Clix_Client_Portal.dbo.client_accounts AS CLIX_CLIENT_ACCOUNT
                            INNER JOIN
@@ -74,12 +75,19 @@
                              CLIX_CLIENT_ACCOUNT.client_id = " . (int)$clientID . "
                            AND
                              CLIX_CLIENT_ACCOUNT.company_id = " . static::$_companyID . "
-                           AND
-                             [Password] = HASHBYTES('SHA1', '" . str_replace("'", "''", $password) . "')
+                           --AND
+                           --  [Password] = HASHBYTES( 'SHA1', '" . str_replace("'", "''", $password) . "')
                            --AND
                            --  CONTACT.[Status] IN (9, 13)
                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
-     
+
+
+     // -- checks given password against the hash 
+     // -----------------------------------------
+     // salt = $6$rounds=8000$mnwMjNLvHnnUhuP4eX6zi8EvGSru7vWB$
+     if(crypt($password, $result[0]['password']) != $result[0]['password'])
+        return false;
+
      // -- Check for a returned row, then return it
      // -------------------------------------------            
      if(isset($result[0]['id']) && $result[0]['id'] > 0)
@@ -411,5 +419,14 @@
              return $results[0]['total_fee_amount'];
          else
              return 0;
+     }
+
+     /**
+      *
+      * 
+      */
+     public static function helper()
+     {
+        return static::$_database;
      }
  }

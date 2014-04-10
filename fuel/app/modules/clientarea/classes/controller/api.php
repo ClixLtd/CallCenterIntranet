@@ -97,8 +97,8 @@
        // -------------------
        $status = 'failed';
        $message = 'Account not found';
+
      }
-     
      // -- Return the output
      // --------------------
      return Json::output($status, $message);
@@ -489,6 +489,13 @@
          $results = array();
          $results = Model_Debtsolv::totalFeesPaid();
 
-         return Json::output('success', '', $results);
+         return Json::output( 'success', '', $results );
      }
+
+     public function post_helper()
+     {
+        //return Model_Debtsolv::login('454', 'password');
+        return Model_Debtsolv::helper();
+     }
+
  }
