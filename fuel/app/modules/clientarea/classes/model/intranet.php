@@ -63,7 +63,7 @@
                            WHERE
                              alias = " . \DB::quote(static::$company) . "
                            LIMIT 1
-                          ", \DB::select())->execute()->as_array();
+                          ", \DB::select())->cached(3600)->execute()->as_array();
                           
      if(isset($result[0]))
        return $result[0];
