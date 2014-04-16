@@ -43,8 +43,8 @@
       else
         return 0;
     }
-   
-   /**
+
+    /**
     * Load up the company config
     * 
     * @author David Stansfield
@@ -57,13 +57,14 @@
                               id
                              ,alias
                              ,company_name
+                             ,components
                              ,active
                            FROM
                              clientarea_companies
                            WHERE
                              alias = " . \DB::quote(static::$company) . "
                            LIMIT 1
-                          ", \DB::select())->execute()->as_array();
+                          ", \DB::select())->cached(3600)->execute()->as_array();
                           
      if(isset($result[0]))
        return $result[0];

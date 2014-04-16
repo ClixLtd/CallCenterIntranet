@@ -54,7 +54,7 @@
                            WHERE
                              id = " . (int)$this->_companyID . "
                            LIMIT 1                           
-                          ", \DB::select())->execute()->as_array();
+                          ", \DB::select())->cached(3600)->execute()->as_array();
                           
      if(isset($result[0]['alias']))
      {
