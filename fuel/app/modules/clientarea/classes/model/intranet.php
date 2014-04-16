@@ -43,8 +43,8 @@
       else
         return 0;
     }
-   
-   /**
+
+    /**
     * Load up the company config
     * 
     * @author David Stansfield
@@ -57,6 +57,7 @@
                               id
                              ,alias
                              ,company_name
+                             ,components
                              ,active
                            FROM
                              clientarea_companies
