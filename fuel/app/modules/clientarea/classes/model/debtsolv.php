@@ -422,6 +422,45 @@
      }
 
      /**
+      * Total Owed
+      */
+     public static function totalOwed()
+     {
+         $results = array();
+         $results = \DB::query("SELECT TOP (1)
+                                  SUM(EstimatedBalance * 1.0) / 100 AS total_owed
+                                FROM
+                                  " . static::$databaseName . ".[dbo].[Finstat_Debt]
+                                WHERE
+                                  ClientID = " . static::$clientID . "
+                               ", \DB::SELECT)->execute(static::$_connection)->as_array();
+
+         if(isset($results[0]['total_owed']))
+             return $results[0]['total_owed'];
+         else
+             return 0;
+     }
+
+     public static function accountMangerInformation()
+     {
+         $results = array();
+         $results = \DB::query("SELECT TOP (1)
+                                  USERS.Undersigned
+                                FROM
+                                  Debtsolv_GABFS.dbo.Client_LeadData AS LEAD_DATA
+                                INNER JOIN
+                                  Debtsolv_GABFS.dbo.Users AS USERS ON LEAD_DATA.Administrator = USERS.ID
+                                WHERE
+                                  LEAD_DATA.Client_ID = " . static::$clientID . "
+                               ", \DB::SELECT)->execute(static::$_connection)->as_array();
+
+         if(isset($results[0]['Undersigned']))
+             return $results[0]['Undersigned'];
+         else
+             return '';
+     }
+
+     /**
       *
       * 
       */
