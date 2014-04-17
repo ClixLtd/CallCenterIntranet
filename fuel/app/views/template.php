@@ -112,6 +112,9 @@
 					<ul>
 						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('reports/disposition', 'Disposition Report'); ?></li><?php endif; ?>
 						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('reports/telesales_report', 'Telesales Report'); ?></li><?php endif; ?>
+
+						<?php if (Auth::has_access('reports.hotkey')): ?><li><?php echo Html::anchor('reports/hotkey_report', 'Hotkey Report'); ?></li><?php endif; ?>
+
 						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('reports/externals', 'Externals Report'); ?></li><?php endif; ?>
 						
 						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('reports/senior_report', 'Senior Report'); ?></li><?php endif; ?>

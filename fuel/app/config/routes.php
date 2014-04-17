@@ -14,8 +14,6 @@ return array(
 	'heartbeat/server_stats/(:string)/:showtime'                 => 'heartbeat/server_stats/$1',
 	'heartbeat/server_stats/(:string)'                           => 'heartbeat/server_stats/$1',
 	
-	
-	
 	'reports/disposition/center/:center/:startdate/:enddate'     => 'reports/disposition',
 	'reports/disposition/center/:center/:startdate'              => 'reports/disposition',
 	'reports/disposition/center/:center'                         => 'reports/disposition',
@@ -27,9 +25,6 @@ return array(
 	'reports/dispositions/center/:center'                        => 'reports/dispositions',
 	'reports/dispositions/:startdate/:enddate'                   => 'reports/dispositions',
 	'reports/dispositions/:startdate'                            => 'reports/dispositions',
-	
-	
-	
 	
 	'reports/commission/center/:center/:startdate/:enddate'      => 'reports/commission',
 	'reports/commission/center/:center/:startdate'               => 'reports/commission',
@@ -51,14 +46,21 @@ return array(
 	'reports/get_telesales_report/(:center)/:month'              => 'reports/get_telesales_report/$1',
 	'reports/get_telesales_report/(:center)'                     => 'reports/get_telesales_report/$1',
 	'reports/get_telesales_report'                               => 'reports/get_telesales_report',
+
+	//Hot keyed  Report 
+	'reports/get_hotkey_report/agent/(:agent)/:startdate/:enddate' => 'reports/get_hotkey_report',
+	'reports/get_hotkey_report/agent/(:agent)/:startdate'          => 'reports/get_hotkey_report',
+	'reports/get_hotkey_report/agent/(:agent)'                     => 'reports/get_hotkey_report',
+	'reports/get_hotkey_report/:startdate/:enddate'              	=> 'reports/get_hotkey_report',
+	'reports/get_hotkey_report/:startdate'                       	=> 'reports/get_hotkey_report',
 	
 	'reports/get_senior_report/(:center)/:month'                 => 'reports/get_senior_report/$1',
 	'reports/get_senior_report/(:center)'                        => 'reports/get_senior_report/$1',
 	'reports/get_senior_report'                                  => 'reports/get_senior_report',
 
-	'reports/get_monthly_payment/(:center)/:month'                 => 'reports/get_monthly_payment/$1',
-	'reports/get_monthly_payment/(:center)'                        => 'reports/get_monthly_payment/$1',
-	'reports/get_monthly_payment'                                  => 'reports/get_monthly_payment',
+	'reports/get_monthly_payment/(:center)/:month'               => 'reports/get_monthly_payment/$1',
+	'reports/get_monthly_payment/(:center)'                      => 'reports/get_monthly_payment/$1',
+	'reports/get_monthly_payment'                                => 'reports/get_monthly_payment',
 
 	
 	'reports/supplier/fulllist/:listid'                          => 'reports/supplier',

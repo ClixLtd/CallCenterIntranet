@@ -103,6 +103,9 @@
     */
    public static function changePassword($data = array())
    {
+
+
+    /*
      $result = \DB::query("UPDATE Top (1)
                              Clix_Client_Portal.dbo.client_accounts
                            SET
@@ -114,8 +117,24 @@
                            AND
                              [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $data['currentPassword']) . "')
                           ", \DB::UPDATE)->execute(static::$_connection);
-                          
-     if($result > 0)
+    */ 
+    /**
+     * Update to use bcrypt lib (crypt function)
+     */
+    $result = \DB::query("UPDATE Top (1)
+                             Clix_Client_Portal.dbo.client_accounts
+                           SET
+                             [password] = '" . $data['newPassword'] . "'
+                           WHERE
+                             client_id = " . static::$clientID . "
+                           AND
+                             company_id = " . static::$_companyID . "
+                           AND
+                             [Password] = '" . $data['currentPassword'] . "'
+                          ", \DB::UPDATE)->execute(static::$_connection);
+
+
+     if($result == 1)
        return true;
      else
        return false;

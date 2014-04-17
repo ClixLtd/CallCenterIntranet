@@ -79,6 +79,7 @@
     */
    public static function saveChangedPassword($data = array())
    {
+
      list($lastID, $rows) = \DB::query("INSERT INTO
                                           clientarea_change_password
                                         (
@@ -95,8 +96,8 @@
                                            NULL
                                           ," . (int)static::$clientID . "
                                           ," . (int)static::$companyID . "
-                                          ," . \DB::quote(sha1($data['currentPassword'])) . "
-                                          ," . \DB::quote(sha1($data['newPassword'])) . "
+                                          ," . \DB::quote($data['currentPassword']) . "
+                                          ," . \DB::quote($data['currentPassword']) . "
                                           ,NOW()
                                           ,'PENDING'
                                         )
