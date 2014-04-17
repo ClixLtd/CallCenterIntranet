@@ -17,6 +17,6 @@ class Alter_clientarea_companies_add_components
 
     public function down()
     {
-        \DB::query('ALTER TABLE `clientarea_companies` DROP `components`;');
+        \DB::query('ALTER TABLE `clientarea_companies` DROP `components`;')->execute();
     }
 }
