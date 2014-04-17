@@ -48,7 +48,7 @@
    {      
      return false;
    }
-   
+
    /**
     * Load the company config
     * 
@@ -57,6 +57,8 @@
    public function post_loadCompany()
    {
      $result = Model_Intranet::loadCompany();
+
+     #print_r($result);
      
      return Json::output('success', '', $result);
    }
@@ -475,6 +477,22 @@
      {
          $results = array();
          $results = Model_Debtsolv::claims();
+
+         return Json::output('success', '', $results);
+     }
+
+     public function post_get_total_owed()
+     {
+         $results = array();
+         $results = Model_Debtsolv::totalOwed();
+
+         return Json::output('success', '', $results);
+     }
+
+     public function post_get_account_manager()
+     {
+         $results = array();
+         $results = Model_Debtsolv::accountMangerInformation();
 
          return Json::output('success', '', $results);
      }
