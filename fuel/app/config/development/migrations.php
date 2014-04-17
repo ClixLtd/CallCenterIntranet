@@ -106,6 +106,7 @@ return array(
 				7 => '008_create_clientarea_type_access_log_type',
 				8 => '009_alter_clientarea_companies_add_centre_id',
 				9 => '010_alter_clientarea_companies_remove_centre_id',
+				10 => '011_alter_clientarea_companies_add_components',
 			),
 			'survey' => 
 			array(
