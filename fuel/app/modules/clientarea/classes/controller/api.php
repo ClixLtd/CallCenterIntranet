@@ -133,44 +133,47 @@
     * 
     * @author David Stansfield
     */
-   public function post_change_password()
-   {
-     $data = array(
-       'currentPassword'  => \Input::post('currentPassword'),
-       'newPassword'      => \Input::post('newPassword'),
-     );
+  public function post_change_password()
+  {  
+    //salt need a better place
+    $salt = '$6$rounds=8000$mnwMjNLvHnnUhuP4eX6zi8EvGSru7vWB$';
+
+    $data = array(
+      'currentPassword'  => crypt(\Input::post('currentPassword'), $salt),
+      'newPassword'      => crypt(\Input::post('newPassword'), $salt),
+    );
      
-     // -- Save the request to the Intranet first
-     // -----------------------------------------
-     $ID = 0;
-     $ID = Model_Intranet::saveChangedPassword($data);
+    // -- Save the request to the Intranet first
+    // -----------------------------------------
+    $ID = 0;
+    $ID = Model_Intranet::saveChangedPassword($data);
      
-     if($ID > 0)
-     {
-       // -- If TRUE then make the change in Debtsolv
-       // -------------------------------------------
-       if(Model_Debtsolv::changePassword($data) === true)
-       {
-         Model_Intranet::updateChangePasswordLog($ID, 'DONE');
-         
-         return Json::output('success');
-       }
-       else
-       {
-         // -- Error
-         // --------
-         Model_Intranet::updateChangePasswordLog($ID, 'ACCOUNT NOT FOUND');
-         
-         return Json::output('failed', 'Your current password was incorrect');
-       }
-     }
-     else
-     {
-       // -- Return Error
-       // ---------------
-       return Json::output('failed', 'Unable to change your password at this time');
-     }
-   }
+    if($ID > 0)
+    {
+      // -- If TRUE then make the change in Debtsolv
+      // -------------------------------------------
+      if(Model_Debtsolv::changePassword($data) === true)
+      {
+        Model_Intranet::updateChangePasswordLog($ID, 'DONE');
+        
+        return Json::output('success');
+      }
+      else
+      {
+        // -- Error
+        // --------
+        Model_Intranet::updateChangePasswordLog($ID, 'ACCOUNT NOT FOUND');
+        
+        return Json::output('failed', 'Your current password was incorrect');
+      }
+    }
+    else
+    {
+      // -- Return Error
+      // ---------------
+      return Json::output('failed', 'Unable to change your password at this time');
+    }
+  }
    
    /**
     * Get a list of profile change request that are awaiting approval
