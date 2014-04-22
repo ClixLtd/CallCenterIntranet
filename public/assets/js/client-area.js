@@ -117,16 +117,18 @@ $(document).ready(function()
           {
               if(data['status'] == 'success')
               {
-                  alert('Client Has Been Added');
+                  alert('Success : ' + data.message);
+                  $('#AddNewClient')[0].reset();
               }
               else
               {
-                  alert('Client Hasn\'t Been Added');
+                  alert('Error : ' + data.message);
               }
           },
-          error: function()
+          error: function(o,s,m)
           {
-
+            alert('Error : Unable to process request your request, please try again later.');
+            console.log(m);
           }
 
       });

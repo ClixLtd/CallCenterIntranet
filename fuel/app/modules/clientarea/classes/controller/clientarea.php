@@ -64,27 +64,56 @@
    // ------------------------------------------------\\
    // -- Ajax Calls ----------------------------------\\
    // ------------------------------------------------\\
-   public function post_add_client_account()
-   {
-       $clientID = \Input::post('ClientID');
-       $password = \Input::post('Password');
+  public function post_add_client_account()
+  {
+    $clientID = \Input::post('ClientID');
+    $password = \Input::post('Password');
+    $confirm = \Input::post('Confirm_Password');
 
-       // -- Check that the Client Exists and hasn't already got an account
-       // -----------------------------------------------------------------
+    // -- Check that the Client Exists and hasn't already got an account
+    // -----------------------------------------------------------------
 
 
-       // -- Add the Client
-       // -----------------
-       if(Model_ClientArea::addClient((int)$clientID, $password) === true)
-         $status = 'success';
-       else
-         $status = 'failed';
+    // -- Add the Client
+    // -----------------
+    try 
+    {
+      if(empty($password) || empty($confirm))
+        throw new \Exception('password cannot be empty.');
 
-       $this->response(array(
-           'status' => $status,
-           'message' => '',
-           'data' => array(),
-       ));
+      if($password != $confirm)
+        throw new \Exception('Passwords do not match.');
+
+      if(Model_ClientArea::addClient((int)$clientID, $password) !== true)
+        throw new \Exception('Failed to add new client.');
+
+      //success
+      $this->response(array(
+        'status'  => 'success',
+        'message' => 'Client has been added.',
+        'data'    => array()
+      ));
+
+    } 
+    catch(\Exception $e) //failed
+    {
+      $this->response(array(
+        'status' => 'failed',
+        'message' => $e->getMessage(),
+        'data' => array(),
+      ));
+    }
+
+//       if(Model_ClientArea::addClient((int)$clientID, $password) === true)
+//         $status = 'success';
+//       else
+//         $status = 'failed';
+
+       //$this->response(array(
+           //'status' => $status,
+           //'message' => '',
+           //'data' => array(),
+       //));
    }
    
    public function post_getChangeDetailsList($clientID)
