@@ -1461,7 +1461,6 @@ GROUP BY
 
     /**
      * give EU date formate
-     * 
      */
     public static function generate_hotkey_report($_startDate = null, $_endDate=null, $agent = null )
     {
