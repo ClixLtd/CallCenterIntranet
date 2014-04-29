@@ -33,7 +33,7 @@
     </section>
 
     <section>
-        <div id="telesalesList"><!-- Content --></div>
+        <div id="response"><!-- Content --></div>
     </section>
 
 </article>
@@ -44,4 +44,4 @@
 </script>
 
 <?php echo Asset::js('reports/hotkey.js'); ?>
-<?php echo Asset::css('reports/telesales.css'); ?>
+<?php echo Asset::css('reports/hotkey.css'); ?>
