@@ -1483,71 +1483,134 @@ GROUP BY
         
         if(!is_null($agent) && $agent != -1)
         {
-            $reportQuery = "SELECT 
-                                LEAD_INTRO.Name ,
-                                CONTACT_RESULT.[Description] AS [Status],
-                                COUNT(CAMPAIGN_CONTACTS.ContactResult) AS [Count]
-                            FROM Leadpool_MMS.dbo.Client_LeadDetails AS LEAD_DETAILS
-                                LEFT JOIN
-                                    Leadpool_MMS.dbo.LeadBatch AS LEAD_BATCH ON LEAD_DETAILS.LeadBatchID = LEAD_BATCH.ID
-                                LEFT JOIN
-                                    Leadpool_MMS.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_BATCH.LeadSourceID = LEAD_SOURCE.ID
-                                LEFT JOIN
-                                    Debtsolv_MMS.dbo.Lead_Introducers AS LEAD_INTRO ON LEAD_SOURCE.IntroducerID = LEAD_INTRO.ID
-                                INNER JOIN
-                                    Leadpool_MMS.dbo.Campaign_Contacts AS CAMPAIGN_CONTACTS ON CAMPAIGN_CONTACTS.ClientID = LEAD_DETAILS.ClientID
-                                INNER JOIN
-                                    Leadpool_MMS.dbo.Type_ContactResult AS CONTACT_RESULT ON CAMPAIGN_CONTACTS.ContactResult = CONTACT_RESULT.ID
-                                LEFT JOIN
-                                    Dialler.dbo.referrals AS REFERRALS ON REFERRALS.leadpool_id = LEAD_DETAILS.ClientID 
-                            WHERE 
-                                CAMPAIGN_CONTACTS.DateCreated >= '" . $startDate . "'
-                                AND
-                                CAMPAIGN_CONTACTS.DateCreated < '" . $endDate . "'
-                                AND
-                                REFERRALS.user_login = '" . $agent . "'
-                            GROUP BY
-                                LEAD_INTRO.Name ,CONTACT_RESULT.[Description]";
+            $mms = "SELECT 
+                        LEAD_INTRO.Name
+                        ,CONTACT_RESULT.[Description] AS [Status]
+                        ,COUNT(CAMPAIGN_CONTACTS.ContactResult) AS [Count]
+                        ,'mms' AS 'shortcode'
+                    FROM Leadpool_MMS.dbo.Client_LeadDetails AS LEAD_DETAILS
+                        LEFT JOIN
+                            Leadpool_MMS.dbo.LeadBatch AS LEAD_BATCH ON LEAD_DETAILS.LeadBatchID = LEAD_BATCH.ID
+                        LEFT JOIN
+                            Leadpool_MMS.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_BATCH.LeadSourceID = LEAD_SOURCE.ID
+                        LEFT JOIN
+                            Debtsolv_MMS.dbo.Lead_Introducers AS LEAD_INTRO ON LEAD_SOURCE.IntroducerID = LEAD_INTRO.ID
+                        INNER JOIN
+                            Leadpool_MMS.dbo.Campaign_Contacts AS CAMPAIGN_CONTACTS ON CAMPAIGN_CONTACTS.ClientID = LEAD_DETAILS.ClientID
+                        INNER JOIN
+                            Leadpool_MMS.dbo.Type_ContactResult AS CONTACT_RESULT ON CAMPAIGN_CONTACTS.ContactResult = CONTACT_RESULT.ID
+                        LEFT JOIN
+                            Dialler.dbo.referrals AS REFERRALS ON REFERRALS.leadpool_id = LEAD_DETAILS.ClientID 
+                    WHERE 
+                        CAMPAIGN_CONTACTS.DateCreated >= '" . $startDate . "'
+                        AND
+                        CAMPAIGN_CONTACTS.DateCreated < '" . $endDate . "'
+                        AND
+                        REFERRALS.user_login = '" . $agent . "'
+                    GROUP BY
+                        LEAD_INTRO.Name ,CONTACT_RESULT.[Description]";
+
+            $onetick = "SELECT 
+                            LEAD_INTRO.Name
+                            ,CONTACT_RESULT.[Description] AS [Status]
+                            ,COUNT(CAMPAIGN_CONTACTS.ContactResult) AS [Count]
+                            ,'onetick' AS 'shortcode'
+                        FROM Leadpool_DS.dbo.Client_LeadDetails AS LEAD_DETAILS
+                            LEFT JOIN
+                                Leadpool_DM.dbo.LeadBatch AS LEAD_BATCH ON LEAD_DETAILS.LeadBatchID = LEAD_BATCH.ID
+                            LEFT JOIN
+                                Leadpool_DM.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_BATCH.LeadSourceID = LEAD_SOURCE.ID
+                            LEFT JOIN
+                                Debtsolv.dbo.Lead_Introducers AS LEAD_INTRO ON LEAD_SOURCE.IntroducerID = LEAD_INTRO.ID
+                            INNER JOIN
+                                Leadpool_DM.dbo.Campaign_Contacts AS CAMPAIGN_CONTACTS ON CAMPAIGN_CONTACTS.ClientID = LEAD_DETAILS.ClientID
+                            INNER JOIN
+                                Leadpool_DM.dbo.Type_ContactResult AS CONTACT_RESULT ON CAMPAIGN_CONTACTS.ContactResult = CONTACT_RESULT.ID
+                            LEFT JOIN
+                                Dialler.dbo.referrals AS REFERRALS ON REFERRALS.leadpool_id = LEAD_DETAILS.ClientID 
+                        WHERE 
+                            CAMPAIGN_CONTACTS.DateCreated >= '" . $startDate . "'
+                            AND
+                            CAMPAIGN_CONTACTS.DateCreated < '" . $endDate . "'
+                            AND
+                            REFERRALS.user_login = '" . $agent . "'
+                        GROUP BY
+                            LEAD_INTRO.Name ,CONTACT_RESULT.[Description]";
+
         } 
         else
         {
 
-            $reportQuery = "SELECT
-                                LEAD_INTRO.Name
-                                ,CONTACT_RESULT.[Description] AS [Status]
-                                ,COUNT(CAMPAIGN_CONTACTS.ContactResult) AS [Count]
-                            FROM
-                                Leadpool_MMS.dbo.Client_LeadDetails AS LEAD_DETAILS
-                            LEFT JOIN
-                                Leadpool_MMS.dbo.LeadBatch AS LEAD_BATCH ON LEAD_DETAILS.LeadBatchID = LEAD_BATCH.ID
-                            LEFT JOIN
-                                Leadpool_MMS.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_BATCH.LeadSourceID = LEAD_SOURCE.ID
-                            LEFT JOIN
-                                Debtsolv_MMS.dbo.Lead_Introducers AS LEAD_INTRO ON LEAD_SOURCE.IntroducerID = LEAD_INTRO.ID
-                            INNER JOIN
-                                Leadpool_MMS.dbo.Campaign_Contacts AS CAMPAIGN_CONTACTS ON CAMPAIGN_CONTACTS.ClientID = LEAD_DETAILS.ClientID
-                            INNER JOIN
-                                Leadpool_MMS.dbo.Type_ContactResult AS CONTACT_RESULT ON CAMPAIGN_CONTACTS.ContactResult = CONTACT_RESULT.ID
-                            WHERE
-                                CAMPAIGN_CONTACTS.DateCreated >= '" .$startDate . "'
-                                AND
-                                CAMPAIGN_CONTACTS.DateCreated < '" . $endDate . "'
-                            GROUP BY
-                                LEAD_INTRO.Name
-                                ,CONTACT_RESULT.[Description]
-                            ORDER BY
-                                LEAD_INTRO.Name DESC";
+            $mms = "SELECT
+                        LEAD_DETAILS.ClientID
+                        ,LEAD_INTRO.Name
+                        ,CONTACT_RESULT.[Description] AS [Status]
+                        ,'mms' AS 'shortcode'
+                        --,COUNT(CAMPAIGN_CONTACTS.ContactResult) AS [Count]
+                    FROM
+                        Leadpool_MMS.dbo.Client_LeadDetails AS LEAD_DETAILS
+                    LEFT JOIN
+                        Leadpool_MMS.dbo.LeadBatch AS LEAD_BATCH ON LEAD_DETAILS.LeadBatchID = LEAD_BATCH.ID
+                    LEFT JOIN
+                        Leadpool_MMS.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_BATCH.LeadSourceID = LEAD_SOURCE.ID
+                    LEFT JOIN
+                        Debtsolv_MMS.dbo.Lead_Introducers AS LEAD_INTRO ON LEAD_SOURCE.IntroducerID = LEAD_INTRO.ID
+                    INNER JOIN
+                        Leadpool_MMS.dbo.Campaign_Contacts AS CAMPAIGN_CONTACTS ON CAMPAIGN_CONTACTS.ClientID = LEAD_DETAILS.ClientID
+                    INNER JOIN
+                        Leadpool_MMS.dbo.Type_ContactResult AS CONTACT_RESULT ON CAMPAIGN_CONTACTS.ContactResult = CONTACT_RESULT.ID
+                    WHERE
+                        CAMPAIGN_CONTACTS.DateCreated >= '" .$startDate . "'
+                        AND
+                        CAMPAIGN_CONTACTS.DateCreated < '" . $endDate . "'
+                    --GROUP BY
+                        --LEAD_INTRO.Name
+                        --,CONTACT_RESULT.[Description]
+                    ORDER BY
+                        LEAD_INTRO.Name DESC";
+
+            $onetick = "SELECT
+                            LEAD_DETAILS.ClientID
+                            ,LEAD_INTRO.Name
+                            ,CONTACT_RESULT.[Description] AS [Status]
+                            ,'onetick' AS 'shortcode'
+                            --,COUNT(CAMPAIGN_CONTACTS.ContactResult) AS [Count]
+                        FROM
+                            Leadpool_DM.dbo.Client_LeadDetails AS LEAD_DETAILS
+                        LEFT JOIN
+                            Leadpool_DM.dbo.LeadBatch AS LEAD_BATCH ON LEAD_DETAILS.LeadBatchID = LEAD_BATCH.ID
+                        LEFT JOIN
+                            Leadpool_DM.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_BATCH.LeadSourceID = LEAD_SOURCE.ID
+                        LEFT JOIN
+                            Debtsolv.dbo.Lead_Introducers AS LEAD_INTRO ON LEAD_SOURCE.IntroducerID = LEAD_INTRO.ID
+                        INNER JOIN
+                            Leadpool_DM.dbo.Campaign_Contacts AS CAMPAIGN_CONTACTS ON CAMPAIGN_CONTACTS.ClientID = LEAD_DETAILS.ClientID
+                        INNER JOIN
+                            Leadpool_DM.dbo.Type_ContactResult AS CONTACT_RESULT ON CAMPAIGN_CONTACTS.ContactResult = CONTACT_RESULT.ID
+                        WHERE
+                            CAMPAIGN_CONTACTS.DateCreated >= '" .$startDate . "'
+                            AND
+                            CAMPAIGN_CONTACTS.DateCreated < '" . $endDate . "'
+                        --GROUP BY
+                            --LEAD_INTRO.Name
+                            --,CONTACT_RESULT.[Description]
+                        ORDER BY
+                            LEAD_INTRO.Name DESC";
 
         }
 
-        $query = DB::Query($reportQuery)->cached(3600)->execute('debtsolv')->as_array();
+        $mms = DB::Query($mms)->cached(3600)->execute('debtsolv')->as_array();
+        $onetick = DB::Query($onetick)->cached(3600)->execute('debtsolv_1tick')->as_array();
+
+
+        $debtsolv = array_merge($mms, $onetick);
 
         //var_dump($query);
 
         $return = array();
-        foreach($query as $key => $item)
+        foreach($debtsolv as $key => $item)
         {
-            $return[$item['Name']][] = array($item['Status'], $item['Count']);
+            $return[$item['Name']][$item['Status']][] = array($item['ClientID'], $item['shortcode']);
         }
 
         return $return;
