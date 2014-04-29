@@ -19,42 +19,65 @@ $(function() {
     function getReport()
     {
         $.get(reportUrl, function(data) {
-                
+
             var holder = $('<ul>').attr('id', 'main');
             
             //pops titles
             var titles = $('<ul>').addClass('rows titles');
-            $(data.title).each( function(i,v){titles.append($('<li>').html(v))});
+            $(data['title']).each( function(i,v){titles.append($('<li>').html(v))});
             
             var kk = 0, tClass = 'odd';
             holder.append(titles, $('<ul>').addClass('content rows'));
-            for(intro in data.list )
+            for(intro in data['list'] )
             {   
                 tClass = (tClass == 'even')?'odd':'even';
                 var row = $('<ul>').addClass('rows trigger ' + tClass).attr('data-trigger', ++kk);
                 row.append($('<li>').html(intro));
-                
 
                 //titles
                 var sub = $('<li>').html($('<ul>').addClass('rows titles')).addClass('subDetails').css('display', 'none').attr('data-target', kk);
-                sub.find('ul').append($('<ul>').addClass('rows').append($('<li>').html('Disposition'),$('<li>').html('Amount')));
+                sub.find('ul').append(
+                    $('<ul>').addClass('rows').append(
+                        $('<li>').html('Disposition'),
+                        $('<li>').html('Count'),
+                        $('<li>').html('DI Total')
+                    )
+                );
                 
-                //disposition
+                //Disposition
                 var dispCls = 'even';
-                for(dispo in data.list[intro])
+                for(dispo in data['list'][intro])
                 {
                     dispCls = (dispCls == 'even')?'odd':'even';
                     var tClsSub = 'even';
                     var refSub = $('<li>').html($('<ul>').addClass('rows titles')).addClass('subDetails ').css('display', 'none').attr('data-target', ++kk);
-                    //Ref Title Rows
-                    $(refSub).find('.titles').append($('<li>').html('Client ID'),$('<li>').html('DebtSolv'));
-                    //ref rows
-                    $(data.list[intro][dispo]).each( function(a,b) {
+                    //Client Title Rows
+                    $(refSub).find('.titles').append(
+                        $('<li>').html('Lead ID'),
+                        $('<li>').html('Client ID'),
+                        $('<li>').html('Client Name'),
+                        $('<li>').html('DI Amount'),
+                        $('<li>').html('Company')
+                    );
+                    //Client rows
+                    $(data['list'][intro][dispo]['item']).each( function(a,b) {
                         tClsSub = (tClsSub == 'even')?'odd':'even';
-                        $(refSub).append($('<ul>').append($('<li>').html(b[0]),$('<li>').html(b[1])).addClass('rows ' + tClsSub))});
+                        $(refSub).append($('<ul>').append(
+                            $('<li>').html(b[0]),
+                            $('<li>').html(b[1]),
+                            $('<li>').html(b[2]),
+                            $('<li>').html(b[3]),
+                            $('<li>').html(b[4])
+                        ).addClass('rows ' + tClsSub))
+                    });
                     
                     //Disposition Rows
-                    sub.append($('<ul>').addClass('rows trigger ' + dispCls).append($('<li>').html(dispo),$('<li>').html(dispo.length),refSub).attr('data-trigger', kk));
+                    sub.append($('<ul>').addClass('rows trigger ' + dispCls).append(
+                        $('<li>').html(dispo),
+                        $('<li>').html(data['list'][intro][dispo]['item'].length),
+                        $('<li>').html('&pound;' + parseFloat(data['list'][intro][dispo]['total']).toFixed(2)),
+                        refSub
+                        ).attr('data-trigger', kk));
                 }
                 
                 row.append(sub);
