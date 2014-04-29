@@ -1487,7 +1487,7 @@ GROUP BY
                         LEAD_INTRO.Name
                         ,CONTACT_RESULT.[Description] AS [Status]
                         ,COUNT(CAMPAIGN_CONTACTS.ContactResult) AS [Count]
-                        ,'mms' AS 'shortcode'
+                        ,'MMS' AS 'shortcode'
                     FROM Leadpool_MMS.dbo.Client_LeadDetails AS LEAD_DETAILS
                         LEFT JOIN
                             Leadpool_MMS.dbo.LeadBatch AS LEAD_BATCH ON LEAD_DETAILS.LeadBatchID = LEAD_BATCH.ID
@@ -1545,7 +1545,7 @@ GROUP BY
                         LEAD_DETAILS.ClientID
                         ,LEAD_INTRO.Name
                         ,CONTACT_RESULT.[Description] AS [Status]
-                        ,'mms' AS 'shortcode'
+                        ,'MMS' AS 'shortcode'
                         --,COUNT(CAMPAIGN_CONTACTS.ContactResult) AS [Count]
                     FROM
                         Leadpool_MMS.dbo.Client_LeadDetails AS LEAD_DETAILS
@@ -1602,10 +1602,7 @@ GROUP BY
         $mms = DB::Query($mms)->cached(3600)->execute('debtsolv')->as_array();
         $onetick = DB::Query($onetick)->cached(3600)->execute('debtsolv_1tick')->as_array();
 
-
         $debtsolv = array_merge($mms, $onetick);
-
-        //var_dump($query);
 
         $return = array();
         foreach($debtsolv as $key => $item)
