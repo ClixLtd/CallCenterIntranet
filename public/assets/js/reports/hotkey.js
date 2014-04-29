@@ -18,60 +18,81 @@ $(function() {
 
     function getReport()
     {
+        $.get(reportUrl, function(data) {
 
-        $.ajax({
-            'url'       : reportUrl,
-            'type'      : 'GET',
-            'dataType'  : 'json',
-            'success'   : function(data)
-            {
-                var holder = $('<ul>').addClass('allTelesales').css('display','none');
+            var holder = $('<ul>').attr('id', 'main');
+            
+            //pops titles
+            var titles = $('<ul>').addClass('rows titles');
+            $(data['title']).each( function(i,v){titles.append($('<li>').html(v))});
+            
+            var kk = 0, tClass = 'odd';
+            holder.append(titles, $('<ul>').addClass('content rows'));
+            for(intro in data['list'] )
+            {   
+                tClass = (tClass == 'even')?'odd':'even';
+                var row = $('<ul>').addClass('rows trigger ' + tClass).attr('data-trigger', ++kk);
+                row.append($('<li>').html(intro));
 
                 //titles
-                var titles = $('<ul>').addClass('titles');
-                $(data.title).each(function(key, val){
-                        titles.append($('<li>').text(val));
-                });
-                holder.append(titles);
-
-                //list content
-                var i = 0;
-                var tClass = 'alt1';
-                for( key in data.list )
+                var sub = $('<li>').html($('<ul>').addClass('rows titles')).addClass('subDetails').css('display', 'none').attr('data-target', kk);
+                sub.find('ul').append(
+                    $('<ul>').addClass('rows').append(
+                        $('<li>').html('Disposition'),
+                        $('<li>').html('Count'),
+                        $('<li>').html('DI Total')
+                    )
+                );
+                
+                //Disposition
+                var dispCls = 'even';
+                for(dispo in data['list'][intro])
                 {
-                    var h = $('<ul>').addClass(tClass + ' userClick');
-                    tClass = (tClass == 'alt2')?'alt1':'alt2';
-                    h.append($('<li>').addClass(tClass).html(key));
-
-                    //sub menu
-                    var sub = $('<ul>');
-
-                    sub.append($('<li>').append(
-                        $('<ul>').addClass('titles').append(
-                            $('<li>').html('Status'),
-                            $('<li>').html('Total')
-                        )
-                    ));
-
-                    var tClass1 = (tClass == 'alt2')?'alt1':'alt2';
-                    $(data.list[key]).each(function(k, v){
-                        var tmp = $('<li>').html($('<ul>'));
-                        $(v).each( function( k1, v1){
-                            $(tmp).find('ul').addClass(tClass1).append($('<li>').html(v1));
-                        });
-                        sub.append(tmp);
+                    dispCls = (dispCls == 'even')?'odd':'even';
+                    var tClsSub = 'even';
+                    var refSub = $('<li>').html($('<ul>').addClass('rows titles')).addClass('subDetails ').css('display', 'none').attr('data-target', ++kk);
+                    //Client Title Rows
+                    $(refSub).find('.titles').append(
+                        $('<li>').html('Lead ID'),
+                        $('<li>').html('Client ID'),
+                        $('<li>').html('Client Name'),
+                        $('<li>').html('DI Amount'),
+                        $('<li>').html('Company')
+                    );
+                    //Client rows
+                    $(data['list'][intro][dispo]['item']).each( function(a,b) {
+                        tClsSub = (tClsSub == 'even')?'odd':'even';
+                        $(refSub).append($('<ul>').append(
+                            $('<li>').html(b[0]),
+                            $('<li>').html(b[1]),
+                            $('<li>').html(b[2]),
+                            $('<li>').html(b[3]),
+                            $('<li>').html(b[4])
+                        ).addClass('rows ' + tClsSub))
                     });
-
-                    h.append($('<li>').addClass('subDetails').html(sub));
-                    holder.append(h);
+                    
+                    //Disposition Rows
+                    sub.append($('<ul>').addClass('rows trigger ' + dispCls).append(
+                        $('<li>').html(dispo),
+                        $('<li>').html(data['list'][intro][dispo]['item'].length),
+                        $('<li>').html('&pound;' + parseFloat(data['list'][intro][dispo]['total']).toFixed(2)),
+                        refSub
+                        ).attr('data-trigger', kk));
                 }
-
-                $('#telesalesList').html(holder.fadeIn());
+                
+                row.append(sub);
+                holder.find('ul.content').append(row);
             }
-        }).fail(function(o, s, m){
-            alert('Error: An error occurred please try again later.')
-        });
+            
+            $('#response').css('display','none').html(holder).fadeIn();
+            
+        }, 'json').fail(function(o,s,m){console.log(s + ': ' + m)})
     }
+
+    $(document).on("click", ".trigger", function(e){$("li[data-target=" + $(this).attr('data-trigger') + "]").slideToggle();e.stopPropagation()})
+
+
+
 
     $('#grepHotkey').submit(function(e){
         e.preventDefault();
