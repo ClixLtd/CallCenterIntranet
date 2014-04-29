@@ -34,6 +34,7 @@ li.subDetails{
     width: 100%;
     padding: 0;
     border: 0;
+    overflow: auto;
 }
 
 .subDetails:first-child{
