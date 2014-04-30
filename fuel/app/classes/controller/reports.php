@@ -1490,7 +1490,7 @@ GROUP BY
                         ,ISNULL(LEAD_INTRO.Name, 'Unknown Source') AS [Introducer]
                         ,CONTACT_RESULT.[Description] AS [Disposition]
                         ,ISNULL(PAY_DATA.NormalExpectedPayment*1./100, 0) AS [DI_Amount]
-                        ,'One-Tick' AS 'Company'
+                        ,'Money Management Services' AS 'Company'
                     FROM
                         Leadpool_MMS.dbo.Client_LeadDetails AS LEAD_DETAILS
                     LEFT JOIN
@@ -1513,9 +1513,9 @@ GROUP BY
                         Dialler.dbo.referrals AS REFERRALS ON LEAD_DETAILS.ClientID = REFERRALS.leadpool_id
                     WHERE
                         CAMPAIGN_CONTACTS.DateCreated >= '{$startDate}'
-                        AND
+                    AND
                         CAMPAIGN_CONTACTS.DateCreated < '{$endDate}'
-                        AND
+                    AND
                         REFERRALS.user_login = '{$agent}';";
 
             $onetick = "SELECT
@@ -1539,12 +1539,14 @@ GROUP BY
                         INNER JOIN
                             Leadpool_DM.dbo.Type_ContactResult AS CONTACT_RESULT ON CAMPAIGN_CONTACTS.ContactResult = CONTACT_RESULT.ID
                         LEFT JOIN
-                            Leadpool_DM.dbo.Client_LeadData AS LEAD_DATA ON LEAD_DETAILS.ClientID = LEAD_DATA.LeadPoolReference
+                            Debtsolv.dbo.Client_LeadData AS LEAD_DATA ON LEAD_DETAILS.ClientID = LEAD_DATA.LeadPoolReference
                         LEFT JOIN
                             Leadpool_DM.dbo.Client_Details AS CLIENT_DETAILS ON LEAD_DETAILS.ClientID = CLIENT_DETAILS.ClientID
                         LEFT JOIN
                             Debtsolv.dbo.Client_PaymentData AS PAY_DATA ON PAY_DATA.ClientID = LEAD_DATA.Client_ID
-                        WHERE 
+                        LEFT JOIN
+                            Dialler.dbo.referrals AS REFERRALS ON LEAD_DETAILS.ClientID = REFERRALS.leadpool_id
+                        WHERE
                             CAMPAIGN_CONTACTS.DateCreated >= '{$startDate}'
                         AND
                             CAMPAIGN_CONTACTS.DateCreated < '{$endDate}'
