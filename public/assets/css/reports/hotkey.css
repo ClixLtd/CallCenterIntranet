@@ -27,6 +27,10 @@
     background-image: none;
 }
 
+.rows li span{
+    display: block;
+}
+
 .titles{background:#BBB}
 
 li.subDetails{
@@ -39,4 +43,9 @@ li.subDetails{
 
 .subDetails:first-child{
     border-bottom:2px solid #BBB !important;
+}
+
+.subDetails > .subDetails {
+    max-height: 300px;
+    overflow: auto;
 }

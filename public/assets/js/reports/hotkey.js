@@ -63,8 +63,8 @@ $(function() {
                     $(data['list'][intro][dispo]['item']).each( function(a,b) {
                         tClsSub = (tClsSub == 'even')?'odd':'even';
                         $(refSub).append($('<ul>').append(
-                            $('<li>').html(b[0]),
-                            $('<li>').html(b[1]),
+                            $('<li>').html($('<span>').html(b[0])),
+                            $('<li>').html($('<span>').html(b[1])),
                             $('<li>').html(b[2]),
                             $('<li>').html(b[3]),
                             $('<li>').html(b[4])
@@ -91,7 +91,9 @@ $(function() {
 
     $(document).on("click", ".trigger", function(e){$("li[data-target=" + $(this).attr('data-trigger') + "]").slideToggle();e.stopPropagation()})
 
-
+    $(document).on("click", "li span", function(e){
+        e.stopPropagation();
+    })
 
 
     $('#grepHotkey').submit(function(e){
