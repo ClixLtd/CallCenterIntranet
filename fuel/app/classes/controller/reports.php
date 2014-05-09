@@ -760,17 +760,7 @@ GROUP BY
 	 * End Monthly Payment Report *
 	 ******************************/
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	public static function generate_senior_report($center=null, $_startDate=null, $_endDate=null)
+	public static function generate_senior_report( $center=null, $_startDate=null, $_endDate=null )
 	{
     	
     	
@@ -1032,8 +1022,7 @@ GROUP BY
 	
 		
 	public static function generate_telesales_report($center=null, $_startDate=null, $_endDate=null, $valueScheme=null)
-	{
-	
+	{	
 	    // Pull in the values required for all centers
 	    $_allValues = Model_Telesales_Report_Value::find('all');
 	    $centerValues = array();
@@ -1048,7 +1037,7 @@ GROUP BY
     	        'pack_out_bonus'      => $value->pack_out_bonus,
     	        'payment_percentage'  => $value->payment_percentage,
     	    );
-	    }
+	    } 
 	
 	
 	    // Set the start and end dates
@@ -1376,8 +1365,6 @@ GROUP BY
         	$monthSplit = explode('-', $month);
         	$startDate = date("Y-m-d", mktime(0, 0, 0, (int)$monthSplit[0], 1, (int)$monthSplit[1]));
         	$endDate = date("Y-m-d", mktime(0, 0, 0, ((int)$monthSplit[0] + 1), 1, (int)$monthSplit[1]));
-        	
-        	
     	}
 
 	
@@ -1445,34 +1432,355 @@ GROUP BY
 	{
 	
 	    if (Auth::has_access('reports.disposition'))
-	    {
-    	
-        	if (Auth::has_access('reports.all_centers')) {
-            	$view_all = TRUE;
-        	} else {
-            	$view_all = FALSE;
-        	}
-        	
-        	$all_call_centers = Model_Call_Center::find('all');
-        	
-        	$this->template->title = 'Reports &raquo; Telesales';
-    		$this->template->content = View::forge('reports/telesales', array(
-    		    'view_all' => $view_all,
-    		    'all_call_centers' => $all_call_centers,
-    		    'center' => $center,
-    			'url' => (!is_null($center)) ? '/reports/get_telesales_report/'.$center.'.json' : '/reports/get_telesales_report.json',
-    		));	
-		
-		}
-		else
-		{
-			Session::set_flash('fail', 'You do not have access to that section: This has been logged!');
-			Response::redirect('/');
-		}
+        {
+        
+            if (Auth::has_access('reports.all_centers')) {
+                $view_all = TRUE;
+            } else {
+                $view_all = FALSE;
+            }
+            
+            $all_call_centers = Model_Call_Center::find('all');
+            
+            $this->template->title = 'Reports &raquo; Telesales';
+            $this->template->content = View::forge('reports/telesales', array(
+                'view_all' => $view_all,
+                'all_call_centers' => $all_call_centers,
+                'center' => $center,
+                'url' => (!is_null($center)) ? '/reports/get_telesales_report/'.$center.'.json' : '/reports/get_telesales_report.json',
+            )); 
+        
+        }
+        else
+        {
+            Session::set_flash('fail', 'You do not have access to that section: This has been logged!');
+            Response::redirect('/');
+        }
     	
 	}
-	
-	
+
+    /**
+     * give EU date formate
+     */
+    public static function generate_hotkey_report($_startDate = null, $_endDate=null, $agent = null )
+    {
+
+        if(!is_null($_startDate))
+        {
+            $_startDate = explode('-', $_startDate);
+            $startDate = date('Y-m-d', mktime(0, 0, 0, $_startDate[1], $_startDate[0], $_startDate[2]));
+        } else {
+            $startDate = (is_null($_startDate)) ? date('Y-m-d', mktime(0,0,0,(int)date('m'), 1, (int)date('Y'))) : $_startDate;
+        }
+
+        if(!is_null($_endDate))
+        {
+            $_endDate = explode('-', $_endDate);
+            $endDate = date('Y-m-d', mktime(0, 0, 0, $_endDate[1], $_endDate[0], $_endDate[2]));
+        } else {
+            $endDate = (is_null($_endDate))? date('Y-m-d', mktime(0,0,0,(int)date('m'), (int)date('d'), (int)date('Y'))) : $_endDate;
+        }
+        
+        if(!is_null($agent) && $agent != -1)
+        {
+            $mms = "SELECT
+                        LEAD_DETAILS.ClientID AS Lead_ID
+                        ,ISNULL(LEAD_DATA.Client_ID, 0) AS Client_ID
+                        ,ISNULL((CLIENT_DETAILS.Forename + ' ' + CLIENT_DETAILS.Surname), 'N/A') AS ClientName
+                        ,ISNULL(LEAD_INTRO.Name, 'Unknown Source') AS [Introducer]
+                        ,CONTACT_RESULT.[Description] AS [Disposition]
+                        ,ISNULL(PAY_DATA.NormalExpectedPayment*1./100, 0) AS [DI_Amount]
+                        ,'Money Management Services' AS 'Company'
+                    FROM
+                        Leadpool_MMS.dbo.Client_LeadDetails AS LEAD_DETAILS
+                    LEFT JOIN
+                        Leadpool_MMS.dbo.LeadBatch AS LEAD_BATCH ON LEAD_DETAILS.LeadBatchID = LEAD_BATCH.ID
+                    LEFT JOIN
+                        Leadpool_MMS.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_BATCH.LeadSourceID = LEAD_SOURCE.ID
+                    LEFT JOIN
+                        Debtsolv_MMS.dbo.Lead_Introducers AS LEAD_INTRO ON LEAD_SOURCE.IntroducerID = LEAD_INTRO.ID
+                    INNER JOIN
+                        Leadpool_MMS.dbo.Campaign_Contacts AS CAMPAIGN_CONTACTS ON CAMPAIGN_CONTACTS.ClientID = LEAD_DETAILS.ClientID
+                    INNER JOIN
+                        Leadpool_MMS.dbo.Type_ContactResult AS CONTACT_RESULT ON CAMPAIGN_CONTACTS.ContactResult = CONTACT_RESULT.ID
+                    LEFT JOIN
+                        Debtsolv_MMS.dbo.Client_LeadData AS LEAD_DATA ON LEAD_DETAILS.ClientID = LEAD_DATA.LeadPoolReference
+                    LEFT JOIN
+                        Leadpool_MMS.dbo.Client_Details AS CLIENT_DETAILS ON LEAD_DETAILS.ClientID = CLIENT_DETAILS.ClientID
+                    LEFT JOIN
+                        Debtsolv_MMS.dbo.Client_PaymentData AS PAY_DATA ON PAY_DATA.ClientID = LEAD_DATA.Client_ID
+                    LEFT JOIN
+                        Dialler.dbo.referrals AS REFERRALS ON LEAD_DETAILS.ClientID = REFERRALS.leadpool_id
+                    WHERE
+                        CAMPAIGN_CONTACTS.DateCreated >= '{$startDate}'
+                    AND
+                        CAMPAIGN_CONTACTS.DateCreated < '{$endDate}'
+                    AND
+                        REFERRALS.user_login = '{$agent}';";
+
+            $onetick = "SELECT
+                            LEAD_DETAILS.ClientID AS Lead_ID
+                            ,ISNULL(LEAD_DATA.Client_ID, 0) AS Client_ID
+                            ,ISNULL((CLIENT_DETAILS.Forename + ' ' + CLIENT_DETAILS.Surname), 'N/A') AS ClientName
+                            ,ISNULL(LEAD_INTRO.Name, 'Unknown Source') AS [Introducer]
+                            ,CONTACT_RESULT.[Description] AS [Disposition]
+                            ,ISNULL(PAY_DATA.NormalExpectedPayment*1./100, 0) AS [DI_Amount]
+                            ,'One-Tick' AS 'Company'
+                        FROM
+                            Leadpool_DM.dbo.Client_LeadDetails AS LEAD_DETAILS
+                        LEFT JOIN
+                            Leadpool_DM.dbo.LeadBatch AS LEAD_BATCH ON LEAD_DETAILS.LeadBatchID = LEAD_BATCH.ID
+                        LEFT JOIN
+                            Leadpool_DM.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_BATCH.LeadSourceID = LEAD_SOURCE.ID
+                        LEFT JOIN
+                            Debtsolv.dbo.Lead_Introducers AS LEAD_INTRO ON LEAD_SOURCE.IntroducerID = LEAD_INTRO.ID
+                        INNER JOIN
+                            Leadpool_DM.dbo.Campaign_Contacts AS CAMPAIGN_CONTACTS ON CAMPAIGN_CONTACTS.ClientID = LEAD_DETAILS.ClientID
+                        INNER JOIN
+                            Leadpool_DM.dbo.Type_ContactResult AS CONTACT_RESULT ON CAMPAIGN_CONTACTS.ContactResult = CONTACT_RESULT.ID
+                        LEFT JOIN
+                            Debtsolv.dbo.Client_LeadData AS LEAD_DATA ON LEAD_DETAILS.ClientID = LEAD_DATA.LeadPoolReference
+                        LEFT JOIN
+                            Leadpool_DM.dbo.Client_Details AS CLIENT_DETAILS ON LEAD_DETAILS.ClientID = CLIENT_DETAILS.ClientID
+                        LEFT JOIN
+                            Debtsolv.dbo.Client_PaymentData AS PAY_DATA ON PAY_DATA.ClientID = LEAD_DATA.Client_ID
+                        LEFT JOIN
+                            Dialler.dbo.referrals AS REFERRALS ON LEAD_DETAILS.ClientID = REFERRALS.leadpool_id
+                        WHERE
+                            CAMPAIGN_CONTACTS.DateCreated >= '{$startDate}'
+                        AND
+                            CAMPAIGN_CONTACTS.DateCreated < '{$endDate}'
+                        AND
+                            REFERRALS.user_login = '{$agent}';";
+
+        }
+        else
+        {
+
+            $mms = "SELECT
+                        LEAD_DETAILS.ClientID AS Lead_ID
+                        ,ISNULL(LEAD_DATA.Client_ID, 0) AS Client_ID
+                        ,ISNULL((CLIENT_DETAILS.Forename + ' ' + CLIENT_DETAILS.Surname), 'N/A') AS ClientName
+                        ,ISNULL(LEAD_INTRO.Name, 'Unknown Source') AS [Introducer]
+                        ,CONTACT_RESULT.[Description] AS [Disposition]
+                        ,ISNULL(PAY_DATA.NormalExpectedPayment*1./100, 0) AS [DI_Amount]
+                        ,'Money Management Services' AS 'Company'
+                    FROM
+                        Leadpool_MMS.dbo.Client_LeadDetails AS LEAD_DETAILS
+                    LEFT JOIN
+                        Leadpool_MMS.dbo.LeadBatch AS LEAD_BATCH ON LEAD_DETAILS.LeadBatchID = LEAD_BATCH.ID
+                    LEFT JOIN
+                        Leadpool_MMS.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_BATCH.LeadSourceID = LEAD_SOURCE.ID
+                    LEFT JOIN
+                        Debtsolv_MMS.dbo.Lead_Introducers AS LEAD_INTRO ON LEAD_SOURCE.IntroducerID = LEAD_INTRO.ID
+                    INNER JOIN
+                        Leadpool_MMS.dbo.Campaign_Contacts AS CAMPAIGN_CONTACTS ON CAMPAIGN_CONTACTS.ClientID = LEAD_DETAILS.ClientID
+                    INNER JOIN
+                        Leadpool_MMS.dbo.Type_ContactResult AS CONTACT_RESULT ON CAMPAIGN_CONTACTS.ContactResult = CONTACT_RESULT.ID
+                    LEFT JOIN
+                        Debtsolv_MMS.dbo.Client_LeadData AS LEAD_DATA ON LEAD_DETAILS.ClientID = LEAD_DATA.LeadPoolReference
+                    LEFT JOIN
+                        Leadpool_MMS.dbo.Client_Details AS CLIENT_DETAILS ON LEAD_DETAILS.ClientID = CLIENT_DETAILS.ClientID
+                    LEFT JOIN
+                        Debtsolv_MMS.dbo.Client_PaymentData AS PAY_DATA ON PAY_DATA.ClientID = LEAD_DATA.Client_ID
+                    WHERE
+                        CAMPAIGN_CONTACTS.DateCreated >= '{$startDate}'
+                    AND
+                        CAMPAIGN_CONTACTS.DateCreated < '{$endDate}';";
+
+            $onetick = "SELECT
+                            LEAD_DETAILS.ClientID AS Lead_ID
+                            ,ISNULL(LEAD_DATA.Client_ID, 0) AS Client_ID
+                            ,ISNULL((CLIENT_DETAILS.Forename + ' ' + CLIENT_DETAILS.Surname), 'N/A') AS ClientName
+                            ,ISNULL(LEAD_INTRO.Name, 'Unknown Source') AS [Introducer]
+                            ,CONTACT_RESULT.[Description] AS [Disposition]
+                            ,ISNULL(PAY_DATA.NormalExpectedPayment*1./100, 0) AS [DI_Amount]
+                            ,'One-Tick' AS 'Company'
+                        FROM
+                            Leadpool_DM.dbo.Client_LeadDetails AS LEAD_DETAILS
+                        LEFT JOIN
+                            Leadpool_DM.dbo.LeadBatch AS LEAD_BATCH ON LEAD_DETAILS.LeadBatchID = LEAD_BATCH.ID
+                        LEFT JOIN
+                            Leadpool_DM.dbo.Type_Lead_Source AS LEAD_SOURCE ON LEAD_BATCH.LeadSourceID = LEAD_SOURCE.ID
+                        LEFT JOIN
+                            Debtsolv.dbo.Lead_Introducers AS LEAD_INTRO ON LEAD_SOURCE.IntroducerID = LEAD_INTRO.ID
+                        INNER JOIN
+                            Leadpool_DM.dbo.Campaign_Contacts AS CAMPAIGN_CONTACTS ON CAMPAIGN_CONTACTS.ClientID = LEAD_DETAILS.ClientID
+                        INNER JOIN
+                            Leadpool_DM.dbo.Type_ContactResult AS CONTACT_RESULT ON CAMPAIGN_CONTACTS.ContactResult = CONTACT_RESULT.ID
+                        LEFT JOIN
+                            Debtsolv.dbo.Client_LeadData AS LEAD_DATA ON LEAD_DETAILS.ClientID = LEAD_DATA.LeadPoolReference
+                        LEFT JOIN
+                            Leadpool_DM.dbo.Client_Details AS CLIENT_DETAILS ON LEAD_DETAILS.ClientID = CLIENT_DETAILS.ClientID
+                        LEFT JOIN
+                            Debtsolv.dbo.Client_PaymentData AS PAY_DATA ON PAY_DATA.ClientID = LEAD_DATA.Client_ID
+                        WHERE
+                            CAMPAIGN_CONTACTS.DateCreated >= '{$startDate}'
+                        AND
+                            CAMPAIGN_CONTACTS.DateCreated < '{$endDate}';";
+
+        }
+
+        $mms = DB::Query($mms)->cached(3600)->execute('debtsolv')->as_array();
+        $onetick = DB::Query($onetick)->cached(3600)->execute('debtsolv_1tick')->as_array();
+
+        $debtsolv = array_merge($mms, $onetick);
+
+        $return = array();
+        foreach($debtsolv as $key => $item)
+        {  
+
+            $return[$item['Introducer']][$item['Disposition']]['item'][] = array(
+                $item['Lead_ID'],
+                $item['Client_ID'],
+                $item['ClientName'],
+                number_format($item['DI_Amount'], 2, '.', ''),
+                $item['Company']
+            );
+
+            if(!isset($return[$item['Introducer']][$item['Disposition']]['total']))
+                $return[$item['Introducer']][$item['Disposition']]['total'] = $item['DI_Amount'];
+            else
+                $return[$item['Introducer']][$item['Disposition']]['total'] += $item['DI_Amount'];
+        }
+
+        return $return;
+    }
+
+
+    public function get_get_hotkey_report($agent = null)
+    {
+
+        $startDate  = $this->param('startdate');
+        $endDate    = $this->param('enddate');
+        $agent      = $this->param('agent');
+
+        $reportArray= Controller_Reports::generate_hotkey_report($startDate, $endDate, $agent);
+
+        $this->response(array(
+            'title' => array('Introducer'),
+            'list'  =>  $reportArray,
+        ));
+    }
+
+    public function action_hotkey_report( $agent = null )
+    {
+        if (!Auth::has_access('reports.hotkey'))
+        {
+            Session::set_flash('fail', 'You do not have access to that section: This has been logged!');
+            Response::redirect('/');
+            exit;
+        }
+        
+
+        $agentSql = "SELECT
+                        REFERRALS.user_login
+                        ,REFERRALS.full_name
+                    FROM
+                        Dialler.dbo.referrals AS REFERRALS
+                    WHERE
+                        REFERRALS.short_code IN ('MMS', 'MMS-GBS')
+                    AND
+                        REFERRALS.user_login IS NOT NULL
+                    AND 
+                        REFERRALS.user_login != ''
+                    GROUP BY
+                        REFERRALS.user_login
+                        ,REFERRALS.full_name";
+
+        $all_agents = DB::Query($agentSql)->cached(3600)->execute('debtsolv')->as_array();  
+            
+        $this->template->title = 'Reports &raquo; Hotkey';
+        $this->template->content = View::forge( 'reports/hotkey', array(
+            'all_agents' => $all_agents,
+            'agent' => $agent,
+            'url' => (!is_null($agent)) ? '/reports/get_hotkey_report/'. $agent .'.json' : '/reports/get_hotkey_report.json',
+        ) ); 
+        
+    }
+
+    public static function generate_dialer_report($_startDate = null, $_endDate = null)
+    {
+        //Start Date
+        if(!is_null($_startDate))
+        {
+            $_startDate = explode('-', $_startDate);
+            $startDate = date('Y-m-d', mktime(0, 0, 0, $_startDate[1], $_startDate[0], $_startDate[2]));
+        } else {
+            $startDate = (is_null($_startDate))?date('Y-m-d h:i:s', mktime(23, 59, 59, date('n'), date('j', strtotime('-1 day')), date('Y'))):$_endDate;
+        }  
+
+        //End Date
+        if(!is_null($_endDate))
+        {
+            $_endDate = explode('-', $_endDate);
+            $endDate = date('Y-m-d h:m:i', mktime(0, 0, 0, $_endDate[1], $_endDate[0], $_endDate[2]));
+        } else {
+            $endDate = (is_null($_endDate))?date('Y-m-d h:i:s', mktime(23, 59, 59, date('n'), date('j'), date('Y'))):$_endDate;
+        }
+
+        $sql = "SELECT  
+                    `log`.`lead_id`
+                    ,`lists`.`list_name` AS `lead_source`
+                    ,CONCAT(`list`.`first_name`, ' ', `list`.`last_name`) AS lead_name
+                    ,`log`.`campaign_id`
+                    ,`log`.`call_date`
+                    ,`statuses`.`status_name`
+                    ,`users`.`full_name`
+                FROM 
+                    `vicidial_log` AS  `log` 
+                INNER JOIN 
+                    `vicidial_statuses` AS  `statuses` ON  `log`.`status` =  `statuses`.`status` 
+                INNER JOIN 
+                    `vicidial_list` AS  `list` ON  `log`.`lead_id` =  `list`.`lead_id` 
+                INNER JOIN
+                    `vicidial_lists` AS  `lists` ON  `log`.`list_id` =  `lists`.`list_id`
+                INNER JOIN
+                    `vicidial_users` AS `users` ON `log`.`user` = `users`.`user`
+                WHERE
+                    `log`.`user` != 'VDAD'
+                    AND
+                    `log`.`call_date` BETWEEN  '{$startDate}' AND  '{$endDate}';";
+
+        $query = DB::Query($sql)->cached(3600)->execute('dialler')->as_array();
+
+        $return = array();
+        foreach($query as $row)
+        {
+            $return[$row['lead_source']][$row['campaign_id']][] = array(
+                'lead_id'   => $row['lead_id'],
+                'call_date' => $row['call_date'],
+                'result'    => $row['status_name'],
+                'agent'     => $row['full_name'],
+            );
+
+        }
+
+        return $return;
+
+    }
+
+    public function get_get_dialer_report()
+    {
+        $startDate  = $this->param('startdate');
+        $endDate    = $this->param('enddate');
+
+        return Controller_Reports::generate_dialer_report($startDate, $endDate);
+    }
+
+    public function action_dialer_report()
+    {
+        if (!Auth::has_access('reports.disposition'))
+        {
+            Session::set_flash('fail', 'You do not have access to that section: This has been logged!');
+            Response::redirect('/');
+            exit;
+        }
+
+        $this->template->title = 'Reports &raquo; Dialer';
+        $this->template->content = View::forge('reports/dailer');
+
+    }
 	
 	public static function generate_league_table()
 	{
@@ -1623,10 +1931,7 @@ GROUP BY
 		);
 		
 		$start_date = "";
-		$end_date   = "";
-		
-		
-		
+		$end_date   = ""; 
 		
 		
 		

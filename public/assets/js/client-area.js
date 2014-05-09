@@ -104,6 +104,35 @@ $(document).ready(function()
       $("#New-Value").html('<input type="text" name="New-Value" id="New-Value-Input" value="' + requestList[index]['new_value'] + '" />');
     }
   });
+
+  $("#Add-Client-Submit").click(function()
+  {
+     // -- Check that the Client ID Exists
+     // ----------------------------------
+      $.ajax({
+          url: '/clientarea/add_client_account/0.json',
+          type: 'POST',
+          data: $("#AddNewClient").serialize(),
+          success: function(data)
+          {
+              if(data['status'] == 'success')
+              {
+                  alert('Success : ' + data.message);
+                  $('#AddNewClient')[0].reset();
+              }
+              else
+              {
+                  alert('Error : ' + data.message);
+              }
+          },
+          error: function(o,s,m)
+          {
+            alert('Error : Unable to process request your request, please try again later.');
+            console.log(m);
+          }
+
+      });
+  });
 });
 
 function approveRequest()

@@ -4,6 +4,7 @@
 	margin-top: 2px;
 	width: 385px;
 	display: block;
+	z-index: 0;
 }
 
 .cd-dropdown > span {

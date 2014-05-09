@@ -48,7 +48,7 @@
    {      
      return false;
    }
-   
+
    /**
     * Load the company config
     * 
@@ -57,6 +57,8 @@
    public function post_loadCompany()
    {
      $result = Model_Intranet::loadCompany();
+
+     #print_r($result);
      
      return Json::output('success', '', $result);
    }
@@ -72,6 +74,8 @@
      // ------------
      $clientID = \Input::post('clientID');
      $password = \Input::post('password');
+
+     \Log::info('Client ID (API): ' . $clientID);
      
      $data = array();
      
@@ -86,7 +90,7 @@
        
        // -- Log it
        // ---------
-       \Log::info('Notice', 'Client Logged In ID: ' . $clientID);
+       \Log::info('Client Logged In ID: ' . $clientID);
        Log::write(1);
      }
      else
@@ -95,8 +99,8 @@
        // -------------------
        $status = 'failed';
        $message = 'Account not found';
+
      }
-     
      // -- Return the output
      // --------------------
      return Json::output($status, $message);
@@ -129,44 +133,47 @@
     * 
     * @author David Stansfield
     */
-   public function post_change_password()
-   {
-     $data = array(
-       'currentPassword'  => \Input::post('currentPassword'),
-       'newPassword'      => \Input::post('newPassword'),
-     );
+  public function post_change_password()
+  {  
+    //salt need a better place
+    $salt = '$6$rounds=8000$mnwMjNLvHnnUhuP4eX6zi8EvGSru7vWB$';
+
+    $data = array(
+      'currentPassword'  => crypt(\Input::post('currentPassword'), $salt),
+      'newPassword'      => crypt(\Input::post('newPassword'), $salt),
+    );
      
-     // -- Save the request to the Intranet first
-     // -----------------------------------------
-     $ID = 0;
-     $ID = Model_Intranet::saveChangedPassword($data);
+    // -- Save the request to the Intranet first
+    // -----------------------------------------
+    $ID = 0;
+    $ID = Model_Intranet::saveChangedPassword($data);
      
-     if($ID > 0)
-     {
-       // -- If TRUE then make the change in Debtsolv
-       // -------------------------------------------
-       if(Model_Debtsolv::changePassword($data) === true)
-       {
-         Model_Intranet::updateChangePasswordLog($ID, 'DONE');
-         
-         return Json::output('success');
-       }
-       else
-       {
-         // -- Error
-         // --------
-         Model_Intranet::updateChangePasswordLog($ID, 'ACCOUNT NOT FOUND');
-         
-         return Json::output('failed', 'Your current password was incorrect');
-       }
-     }
-     else
-     {
-       // -- Return Error
-       // ---------------
-       return Json::output('failed', 'Unable to change your password at this time');
-     }
-   }
+    if($ID > 0)
+    {
+      // -- If TRUE then make the change in Debtsolv
+      // -------------------------------------------
+      if(Model_Debtsolv::changePassword($data) === true)
+      {
+        Model_Intranet::updateChangePasswordLog($ID, 'DONE');
+        
+        return Json::output('success');
+      }
+      else
+      {
+        // -- Error
+        // --------
+        Model_Intranet::updateChangePasswordLog($ID, 'ACCOUNT NOT FOUND');
+        
+        return Json::output('failed', 'Your current password was incorrect');
+      }
+    }
+    else
+    {
+      // -- Return Error
+      // ---------------
+      return Json::output('failed', 'Unable to change your password at this time');
+    }
+  }
    
    /**
     * Get a list of profile change request that are awaiting approval
@@ -477,6 +484,22 @@
          return Json::output('success', '', $results);
      }
 
+     public function post_get_total_owed()
+     {
+         $results = array();
+         $results = Model_Debtsolv::totalOwed();
+
+         return Json::output('success', '', $results);
+     }
+
+     public function post_get_account_manager()
+     {
+         $results = array();
+         $results = Model_Debtsolv::accountMangerInformation();
+
+         return Json::output('success', '', $results);
+     }
+
      /**
       * Client Fees
       *
@@ -487,6 +510,13 @@
          $results = array();
          $results = Model_Debtsolv::totalFeesPaid();
 
-         return Json::output('success', '', $results);
+         return Json::output( 'success', '', $results );
      }
+
+     public function post_helper()
+     {
+        //return Model_Debtsolv::login('454', 'password');
+        return Model_Debtsolv::helper();
+     }
+
  }

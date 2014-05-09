@@ -18,6 +18,7 @@
    protected static $_database = null;
    protected static $_debtsolvDatabase = null;
    protected static $_leadpoolDatabase = null;
+   protected static $_companyID = 0;
 	
    protected static $_connection = null;
    
@@ -33,6 +34,7 @@
      // -- Set the Client ID
      // --------------------
      static::$clientID = (int)$clientID;
+     static::$_companyID = (int)$companyID;
    }
    
    /**
@@ -46,7 +48,8 @@
      
      if($clientID == 0 || $password == null)
        return false;
-     
+
+     /*
      $result = \DB::query("SELECT Top (1)
                              LEAD_DATA.Client_ID
                            FROM
@@ -60,10 +63,34 @@
                            --AND
                            --  CONTACT.[Status] IN (9, 13)
                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
-     
+     */
+     $result = \DB::query("SELECT
+                             CLIX_CLIENT_ACCOUNT.id
+                             ,CLIX_CLIENT_ACCOUNT.password
+                           FROM
+                             Clix_Client_Portal.dbo.client_accounts AS CLIX_CLIENT_ACCOUNT
+                           INNER JOIN
+                             " . static::$databaseName . ".dbo.Client_Contact AS CONTACT ON CLIX_CLIENT_ACCOUNT.client_id = CONTACT.ID
+                           WHERE
+                             CLIX_CLIENT_ACCOUNT.client_id = " . (int)$clientID . "
+                           AND
+                             CLIX_CLIENT_ACCOUNT.company_id = " . static::$_companyID . "
+                           --AND
+                           --  [Password] = HASHBYTES( 'SHA1', '" . str_replace("'", "''", $password) . "')
+                           --AND
+                           --  CONTACT.[Status] IN (9, 13)
+                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
+
+
+     // -- checks given password against the hash 
+     // -----------------------------------------
+     // salt = $6$rounds=8000$mnwMjNLvHnnUhuP4eX6zi8EvGSru7vWB$
+     if(crypt($password, $result[0]['password']) != $result[0]['password'])
+        return false;
+
      // -- Check for a returned row, then return it
      // -------------------------------------------            
-     if(isset($result[0]['Client_ID']) && $result[0]['Client_ID'] > 0)
+     if(isset($result[0]['id']) && $result[0]['id'] > 0)
        return true;
      else
        return false;
@@ -76,17 +103,38 @@
     */
    public static function changePassword($data = array())
    {
+
+
+    /*
      $result = \DB::query("UPDATE Top (1)
-                             " . static::$databaseName . ".dbo.Client_LeadData
+                             Clix_Client_Portal.dbo.client_accounts
                            SET
-                             [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $data['newPassword']) . "')
+                             [password] = HASHBYTES('sha1', '" . str_replace("'", "''", $data['newPassword']) . "')
                            WHERE
-                             Client_ID = " . static::$clientID . "
+                             client_id = " . static::$clientID . "
+                           AND
+                             company_id = " . static::$_companyID . "
                            AND
                              [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $data['currentPassword']) . "')
                           ", \DB::UPDATE)->execute(static::$_connection);
-                          
-     if($result > 0)
+    */ 
+    /**
+     * Update to use bcrypt lib (crypt function)
+     */
+    $result = \DB::query("UPDATE Top (1)
+                             Clix_Client_Portal.dbo.client_accounts
+                           SET
+                             [password] = '" . $data['newPassword'] . "'
+                           WHERE
+                             client_id = " . static::$clientID . "
+                           AND
+                             company_id = " . static::$_companyID . "
+                           AND
+                             [Password] = '" . $data['currentPassword'] . "'
+                          ", \DB::UPDATE)->execute(static::$_connection);
+
+
+     if($result == 1)
        return true;
      else
        return false;
@@ -124,7 +172,7 @@
                              " . static::$databaseName . ".dbo.Client_Contact
                            WHERE
                              ID = " . (int)static::$clientID . "
-                          ", \DB::select())->execute(static::$_connection)->as_array();
+                          ", \DB::select())->cached(1800)->execute(static::$_connection)->as_array();
      
      // -- Check results and return
      // ---------------------------                    
@@ -149,8 +197,8 @@
                            WHERE
                              ClientID = " . static::$clientID . "
                            AND
-                             TransactionType = 1                             
-                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                             TransactionType = 1
+                          ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
                           
      if(isset($result[0]['Paid_to_Date']))
        return $result[0]['Paid_to_Date'];
@@ -165,11 +213,11 @@
                              SUM(PO.Amount * 1.0) / 100 AS total_out
                            FROM
                              " . static::$databaseName . ".dbo.Payment_Out AS PO
-                           INNER JOIN
-                             " . static::$databaseName . ".dbo.Finstat_Debt AS FSD ON PO.AccountRef = FSD.AccountReference
+                           --INNER JOIN
+                           --  " . static::$databaseName . ".dbo.Finstat_Debt AS FSD ON PO.AccountRef = FSD.AccountReference AND PO.ClientID = FSD.ClientID
                            WHERE
                              PO.ClientID = " . static::$clientID . "
-                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                          ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
                           
      if(isset($result[0]['total_out']))
        return $result[0]['total_out'];
@@ -201,7 +249,7 @@
                             " . static::$databaseName . ".dbo.Finstat_Debt AS FSD
                           WHERE 
                             FSD.ClientID = " . static::$clientID
-                         , \DB::SELECT)->execute(static::$_connection)->as_array();
+                         , \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
                          
      return $result;
    }
@@ -253,13 +301,13 @@
                               LEFT JOIN
                                 " . static::$databaseName . ".dbo.Type_Payment_Status AS TPS ON PO.[Status] = TPS.ID
                               LEFT JOIN
-                                " . static::$databaseName . ".dbo.Finstat_Debt AS FD ON PO.AccountRef = FD.AccountReference
+                                " . static::$databaseName . ".dbo.Finstat_Debt AS FD ON PO.AccountRef = FD.AccountReference AND PO.ClientID = FD.ClientID
                               WHERE
                                 PO.ClientID = " . static::$clientID . "
                             )
                             ORDER BY
                               [Date] DESC
-                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                          ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
                           
      return $results;
    }
@@ -278,7 +326,7 @@
                               " . static::$databaseName . ".dbo.Payment_Warchest
                             WHERE
                               ClientID = " . static::$clientID . "
-                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                           ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
                            
      if(isset($results[0]['warchest_amount']))
        return $results[0]['warchest_amount'];
@@ -309,7 +357,7 @@
                                 PAYMENT_SCHEDULE.AmountPaid = '0'
                               ORDER BY
                                 PAYMENT_SCHEDULE.SequenceID ASC
-                             ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                             ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
 
         if(isset($result[0]))
             return $result[0];
@@ -363,7 +411,7 @@
                                   CLIENT_SERVICE.ServiceType IN (1, 2, 4)
                                 AND
                                   CLIENT_STAGE.StageRow = 1
-                                ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                                ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
 
          return $results;
      }
@@ -384,11 +432,59 @@
                                   ClientID = " . static::$clientID . "
                                 AND
                                   [Status] = 10
-                               ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                               ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
 
          if(isset($results[0]['total_fee_amount']))
              return $results[0]['total_fee_amount'];
          else
              return 0;
+     }
+
+     /**
+      * Total Owed
+      */
+     public static function totalOwed()
+     {
+         $results = array();
+         $results = \DB::query("SELECT TOP (1)
+                                  SUM(EstimatedBalance * 1.0) / 100 AS total_owed
+                                FROM
+                                  " . static::$databaseName . ".[dbo].[Finstat_Debt]
+                                WHERE
+                                  ClientID = " . static::$clientID . "
+                               ", \DB::SELECT)->execute(static::$_connection)->as_array();
+
+         if(isset($results[0]['total_owed']))
+             return $results[0]['total_owed'];
+         else
+             return 0;
+     }
+
+     public static function accountMangerInformation()
+     {
+         $results = array();
+         $results = \DB::query("SELECT TOP (1)
+                                  USERS.Undersigned
+                                FROM
+                                  Debtsolv_GABFS.dbo.Client_LeadData AS LEAD_DATA
+                                INNER JOIN
+                                  Debtsolv_GABFS.dbo.Users AS USERS ON LEAD_DATA.Administrator = USERS.ID
+                                WHERE
+                                  LEAD_DATA.Client_ID = " . static::$clientID . "
+                               ", \DB::SELECT)->execute(static::$_connection)->as_array();
+
+         if(isset($results[0]['Undersigned']))
+             return $results[0]['Undersigned'];
+         else
+             return '';
+     }
+
+     /**
+      *
+      * 
+      */
+     public static function helper()
+     {
+        return static::$_database;
      }
  }

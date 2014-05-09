@@ -28,7 +28,7 @@
      // -- Check that the user
      static::$_userCentreID = \Auth::get('call_center_id');
 
-     \Log::info('User 2 center ID is ' . static::$companyID);
+     \Log::info('User 2 center ID is ' . static::$_userCentreID);
 
      static::$debtsolvDatabase = static::setDatabaseConnection();
    }
@@ -51,7 +51,7 @@
     * 
     * @author David Stansfield
     */
-   public static function validateClientID()
+   public static function validateClientID($clientID = 0)
    {
      $result = 0;
      
@@ -60,16 +60,101 @@
                            FROM
                              dbo.Client_Contact
                            WHERE
-                             ID = " . static::$clientID . "
+                             ID = " . (int)$clientID . "
                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
                           
-     if(isset($result[0]['ID']) && $result[0]['ID'] == static::$clientID)
+     if(isset($result[0]['ID']) && $result[0]['ID'] == (int)$clientID)
        return true;
      else
        return false;
    }
-   
-   /**
+
+     /**
+      * Check for a valid Client to add
+      *
+      * @author David Stansfield
+      */
+     public static function checkClient($clientID = 0)
+     {
+         // -- Check Debtsolv
+         // -----------------
+
+     }
+
+     /**
+      * Add a new Client to the Client Area
+      *
+      * @author David Stansfield
+      */
+     public static function addClient($clientID = 0, $password = '')
+     {
+         // -- Check that the Client Exists in Debtsolv
+         // -------------------------------------------
+         #if(static::validateClientID((int)$clientID) === true)
+         #{
+            /*
+             $result = \DB::query("INSERT INTO
+                                     Clix_Client_Portal.dbo.client_accounts
+                                   (
+                                     client_id
+                                    ,company_id
+                                    ,status_id
+                                    ,[password]
+                                    ,created_at
+                                   )
+                                   VALUES
+                                   (
+                                     " . (int)$clientID . "
+                                    ," . \Auth::get('call_center_id') . "
+                                    ,1
+                                    ,HASHBYTES('SHA1', '" . $password . "')
+                                    ,GETDATE()
+                                   )
+                                  ", \DB::INSERT)->execute(static::$_connection);
+            */
+            if(empty($password))
+              return false;
+            
+            /**
+            * ======================================
+            *   IMPORTANT move salt to better place      
+            * ======================================
+            */
+            $salt = '$6$rounds=8000$mnwMjNLvHnnUhuP4eX6zi8EvGSru7vWB$';
+
+            $result = \DB::query("INSERT INTO
+                                     Clix_Client_Portal.dbo.client_accounts
+                                   (
+                                     client_id
+                                    ,company_id
+                                    ,status_id
+                                    ,[password]
+                                    ,created_at
+                                   )
+                                   VALUES
+                                   (
+                                     " . (int)$clientID . "
+                                    ," . \Auth::get('call_center_id') . "
+                                    ,1
+                                    ,'" . crypt( $password, $salt ) . "'
+                                    ,GETDATE()
+                                   )
+                                  ", \DB::INSERT)->execute(static::$_connection);
+
+             if($result > 0)
+                 return true;
+             else
+                 return false;
+         #}
+         #else
+         #{
+         #    return false;
+         #}
+
+
+     }
+
+     /**
     * Get a full list of requests for change of details
     * 
     * @author David Stansfield
@@ -102,6 +187,8 @@
                             WHERE
                               " . $client . "
                               date_approved = '0000-00-00 00:00:00'
+                            AND
+                              company_id = " . static::$_userCentreID . "
                             AND
                               CCCP.id IN (
                                           SELECT
@@ -169,7 +256,7 @@
                              " . $set . "
                            WHERE
                              ID = " . static::$clientID . "
-                          ", \DB::update())->execute(static::$debtsolvDatabase);
+                          ", \DB::update())->execute(static::$_connection);
                           
      if($result > 0)
        return true;
@@ -588,4 +675,6 @@
                            
      return $results;
    }
+
+
  }
