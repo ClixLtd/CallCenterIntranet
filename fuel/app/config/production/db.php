@@ -11,16 +11,17 @@ return array(
 			'password'   => 'Wvts231ct6D',
 		),
 	),
+
 	'debtsolv' => array(
 		'type'       => 'pdo',
 		'connection' => array(
-				'dsn'            => 
-'dblib:host=192.168.3.31:1433;dbname=Leadpool_MMS',
+				'dsn'            => 'dblib:host=192.168.3.31:1433;dbname=Leadpool_MMS',
 		        'username'       => 'debtsolv',
 		        'password'       => '76GerZnu871',
 		        'persistent'     => false,
 		),
 	),
+
   'debtsolv_1tick' => array(
 		'type'       => 'pdo',
 		'connection' => array(
@@ -30,6 +31,17 @@ return array(
 		    'persistent'     => false,
 		),
 	),
+
+  'debtsolv_gabfs' => array(
+        'type'       => 'pdo',
+        'connection' => array(
+            'dsn'            => 'dblib:host=192.168.3.11:1433;dbname=Leadpool_GABFS',
+            'username'       => 'debtsolv',
+            'password'       => '63BW3fver3241',
+            'persistent'     => false,
+        ),
+  ),
+
     'dialler' => array(
         'type'       => 'pdo',
         'table_prefix' => '',
