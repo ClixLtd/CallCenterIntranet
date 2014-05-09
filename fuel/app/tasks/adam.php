@@ -2377,20 +2377,20 @@ Gregson and Brooke.');
       $offices = array(
         '1-Tick' => array('connection' => 'debtsolv_1tick',
                           'database' => 'Debtsolv',
-                          #'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
-                          'to' => array('d.stansfield@clix.co.uk')
+                          'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
+                          #'to' => array('d.stansfield@clix.co.uk')
                          ),
 
         'Expert Money Solutions' => array('connection' => 'debtsolv_gabfs',
                                           'database' => 'Debtsolv_GABFS',
-                                          #'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
-                                          'to' => array('d.stansfield@clix.co.uk')
+                                          'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
+                                          #'to' => array('d.stansfield@clix.co.uk')
                                          ),
 
         'Money Management Solutions' => array('connection' => 'debtsolv',
                                               'database' => 'Debtsolv_MMS',
-                                              #'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
-                                              'to' => array('d.stansfield@clix.co.uk')
+                                              'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
+                                              #'to' => array('d.stansfield@clix.co.uk')
                                      ),
 
       );
