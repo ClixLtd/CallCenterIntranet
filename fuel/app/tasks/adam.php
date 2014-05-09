@@ -2375,11 +2375,26 @@ Gregson and Brooke.');
     public function terminated_suspended_clients_report()
     {
       $offices = array(
-        'Bolton' => array('database' => 'Debtsolv',
-                          'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
+        '1-Tick' => array('connection' => 'debtsolv_1tick',
+                          'database' => 'Debtsolv',
+                          #'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
+                          'to' => array('d.stansfield@clix.co.uk')
                          ),
+
+        'Expert Money Solutions' => array('connection' => 'debtsolv_gabfs',
+                                          'database' => 'Debtsolv_GABFS',
+                                          #'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
+                                          'to' => array('d.stansfield@clix.co.uk')
+                                         ),
+
+        'Money Management Solutions' => array('connection' => 'debtsolv',
+                                              'database' => 'Debtsolv_MMS',
+                                              #'to' => array('bolton-client-status-report@expertmoneysolutions.co.uk')
+                                              'to' => array('d.stansfield@clix.co.uk')
+                                     ),
+
       );
-      
+
       foreach($offices as $office => $officeData)
       {
         $officeResults = array();
@@ -2508,7 +2523,7 @@ Gregson and Brooke.');
                                        PROCESSING_LOG.ProcessingStatus
                                       ,FirstPaymentMade
                                       ,CORRESPONDENCE.DateCreated ASC
-                            ", \DB::SELECT)->execute('debtsolv_1tick')->as_array();
+                            ", \DB::SELECT)->execute($officeData['connection'])->as_array();
                             
         if(count($officeResults) > 0)
         {
