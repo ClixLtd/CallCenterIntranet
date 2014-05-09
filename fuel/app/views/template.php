@@ -114,7 +114,7 @@
 						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('reports/telesales_report', 'Telesales Report'); ?></li><?php endif; ?>
 
 						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('reports/hotkey_report', 'Hotkey Report'); ?></li><?php endif; ?>
-						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('reports/dialer_report', 'Dialer Report'); ?></li><?php endif; ?>
+						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('reports/dialler_report', 'Dialler Report'); ?></li><?php endif; ?>
 
 						<?php if (Auth::has_access('reports.disposition')): ?><li><?php echo Html::anchor('reports/externals', 'Externals Report'); ?></li><?php endif; ?>
 						
