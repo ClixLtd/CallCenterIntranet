@@ -1664,7 +1664,7 @@ GROUP BY
     }
 
     public function action_hotkey_report( $agent = null )
-    {
+    {   
         if (!Auth::has_access('reports.hotkey'))
         {
             Session::set_flash('fail', 'You do not have access to that section: This has been logged!');

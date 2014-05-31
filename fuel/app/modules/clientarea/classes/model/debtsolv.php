@@ -191,8 +191,8 @@
                            INNER JOIN
                              " . static::$databaseName .".dbo.Client_Partner AS CP ON CC.ID = CP.ClientID
                            WHERE
-                             ID = " . (int)static::$clientID . "
-                          ", \DB::select())->execute(static::$_connection)->as_array();
+                             ID = " . (int)static::$clientID
+                          , \DB::select())->execute(static::$_connection)->as_array();
      
      // -- Check results and return
      // ---------------------------                    
