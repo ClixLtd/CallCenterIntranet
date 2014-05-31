@@ -55,8 +55,8 @@ return array(
 	'reports/get_hotkey_report/:startdate'                       	=> 'reports/get_hotkey_report',
 
 	//dialer report outcome
-	'reports/get_dialer_report/:startdate/:enddate'              => 'reports/get_dialer_report',
-	'reports/get_dialer_report/:startdate'                       => 'reports/get_dialer_report',
+	'reports/get_dialler_report/:startdate/:enddate'              => 'reports/get_dialler_report',
+	'reports/get_dialler_report/:startdate'                       => 'reports/get_dialler_report',
 	
 	'reports/get_senior_report/(:center)/:month'                 => 'reports/get_senior_report/$1',
 	'reports/get_senior_report/(:center)'                        => 'reports/get_senior_report/$1',

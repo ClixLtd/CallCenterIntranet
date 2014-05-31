@@ -212,9 +212,10 @@
         'newValue'  => serialize(\Input::post('newValue')),
       );
       
-      Model_Intranet::saveProfileChangeRequest($data);
-      
-      return Json::output('success', 'Saved');
+      $result = Model_Intranet::saveProfileChangeRequest($data);
+      if($result)
+        return Json::output('success', 'Saved.');
+      return Json::output('failed', 'Unable to save to DB.');
     }
     
     /**
@@ -496,7 +497,7 @@
      {
          $results = array();
          $results = Model_Debtsolv::accountMangerInformation();
-
+         
          return Json::output('success', '', $results);
      }
 
@@ -517,6 +518,29 @@
      {
         //return Model_Debtsolv::login('454', 'password');
         return Model_Debtsolv::helper();
+     }
+
+     /**
+      * Returns client documents
+      * 
+      */
+     public function post_get_document_list()
+     {
+        //$results = array();
+        //$results = Model_Debtsolv::getDocuments();
+        return json::output('success', '', Model_Debtsolv::getDocumentList());
+     }
+
+     /**
+      * Returns the number of credits for dashboard stats
+      * 
+      */
+     public function post_get_creditors_stats()
+     {
+        $result = Model_Debtsolv::getCreditorCount();
+        if(isset($result['status']) && $result['status'] == 'api-failed')
+          return json::output('failed', '', $result);
+        return json::output('success', '', $result);
      }
 
  }

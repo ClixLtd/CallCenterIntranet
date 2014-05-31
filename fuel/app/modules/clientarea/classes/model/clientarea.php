@@ -234,30 +234,31 @@
     
      $set = '';
      
-     if($data['field'] == 'Address' && count($data['newAddress']) > 0)
+     if(($data['field'] == 'Address' || $data['field'] == 'OverrideAddress' || $data['field'] == 'PartnerAddress')  && count($data['newAddress']) > 0)
      {       
        foreach($data['newAddress'] as $field => $newValue)
        {
-         $set .= $field . " = " . \DB::quote(str_replace("'", "''", $newValue)) . ",";
+         $set .= $field . " = " . \DB::quote(str_replace("'", "''", trim($newValue))) . ",";
        }
        
        $set = rtrim($set, ",");
      }
      else
      {
-       $set = $data['field'] . " = " . \DB::quote(str_replace("'", "''", $data['newValue']));
+       $set = $data['field'] . " = " . \DB::quote(str_replace("'", "''", trim($data['newValue'])));
      }
     
      $result = 0;
      
-     $result = \DB::query("UPDATE Top (1)
-                             dbo.Client_Contact
-                           SET
-                             " . $set . "
-                           WHERE
-                             ID = " . static::$clientID . "
-                          ", \DB::update())->execute(static::$_connection);
-                          
+    // -- Check to update partner table client contact
+    //--------------
+    if($data['field'] == 'PartnerAddress')
+      $query = 'UPDATE TOP(1) %s.dbo.Client_Partner SET %s WHERE ClientID = %d;';
+    else
+      $query = 'UPDATE TOP(1) %s.dbo.Client_Contact SET %s WHERE ID = %d;';
+
+    $result = \DB::query(sprintf($query, static::$_debtsolvDatabase, $set, static::$clientID), \DB::update())->execute(static::$_connection);
+
      if($result > 0)
        return true;
      else
@@ -321,7 +322,7 @@
                              " . static::$_debtsolvDatabase . ".dbo.Client_Contact
                            WHERE
                              ID = " . (int)static::$clientID . "
-                          ", \DB::select())->execute(static::$_connection)->as_array();
+                          ", \DB::select())->cached(1800)->execute(static::$_connection)->as_array();
      
      // -- Check results and return
      // ---------------------------                    
