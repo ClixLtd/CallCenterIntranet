@@ -20,22 +20,35 @@ return array(
 			'password'   => 'Wvts231ct6D',
 		),
 	),
+
   'debtsolv_1tick' => array(
 		'type'       => 'pdo',
 		'connection' => array(
-		#'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Leadpool_DM', //production
-		'dsn'            => 'sqlsrv:Server=192.168.1.100,1334;dbname=Leadpool_DM',
+		'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Leadpool_DM', //production
+		#'dsn'            => 'sqlsrv:Server=192.168.1.100,1334;Database=Leadpool_DM',
         'username'       => 'superuser',
 		    'password'       => 'Rfd32xs12B',
 		    'persistent'     => false,
 		),
 	),
+
+    'debtsolv_gabfs' => array(
+        'type'       => 'pdo',
+        'connection' => array(
+            #'dsn'            => 'sqlsrv:Server=192.168.3.11,1433;Database=Leadpool_GABFS',
+            'dsn'            => 'dblib:host=192.168.3.11:1433;dbname=Leadpool_GABFS',
+            'username'       => 'debtsolv',
+            'password'       => '63BW3fver3241',
+            'persistent'     => false,
+        ),
+    ),
+
 	'debtsolv' => array(
 		'type'       => 'pdo',
 		'table_prefix' => '',
 		'connection' => array(
-			#'dsn'	=> 'dblib:host=192.168.3.31:1433;dbname=LeadPool_MMS', //production
-	        'dsn'	=> 'sqlsrv:Server=192.168.3.31,1433;Database=LeadPool_MMS',
+			'dsn'	=> 'dblib:host=192.168.3.31:1433;dbname=LeadPool_MMS', //production
+	        #'dsn'	=> 'sqlsrv:Server=192.168.3.31,1433;Database=LeadPool_MMS',
 		        'username'       => 'debtsolv',
 		        'password'       => '76GerZnu871',
 		        'persistent'     => false,
