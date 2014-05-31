@@ -10,7 +10,7 @@
 
     <div class="article-container">
         <header>
-            <h2>Dialer Report</h2>
+            <h2>Dialler Report</h2>
             
             <!-- <nav>
                 <ul class="tab-switch">
@@ -33,5 +33,5 @@
 </article>
 
 
-<?php echo Asset::js('reports/dialer.js'); ?>
+<?php echo Asset::js('reports/dialler.js'); ?>
 <?php echo Asset::css('reports/hotkey.css'); ?>

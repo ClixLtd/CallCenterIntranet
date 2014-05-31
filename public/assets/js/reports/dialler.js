@@ -1,4 +1,4 @@
-var reportUrl = '/reports/get_dialer_report';
+var reportUrl = '/reports/get_dialler_report';
 $(document).ready(function(){
 
     $(document).ajaxStart(function(e) {
@@ -79,9 +79,9 @@ $(document).ready(function(){
         var start = ($('#startdate').val() != '')?'/'+$('#startdate').val():'';
         var end = ($('#startdate').val() != '')?'/'+$('#startdate').val():'';
         if(start != '')
-            reportUrl = '/reports/get_dialer_report' + start + end; 
+            reportUrl = '/reports/get_dialler_report' + start + end; 
         else 
-            reportUrl = '/reports/get_dialer_report'; 
+            reportUrl = '/reports/get_dialler_report'; 
         getReport();
     })
 

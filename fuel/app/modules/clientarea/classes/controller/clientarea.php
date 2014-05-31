@@ -128,6 +128,9 @@
      ));
    }
    
+   /**
+    * 
+    */
    public function post_save_client_request()
    {
      // -- Get Post Data
@@ -142,7 +145,7 @@
      $address   = \Input::post('address');
      
      $message = '';
-          
+    
      // -- This list is check against the posted field. For security
      // ------------------------------------------------------------
      $fieldsList = array('Title',
@@ -160,8 +163,22 @@
                          'Tel_Mobile',
                          'Email',
                          'Date_Of_Birth',
-                        );
-     
+                         'OverrideAddress',
+                         'OverrideStreetAndNumber',
+                         'OverrideArea',
+                         'OverrideDistrict',
+                         'OverrideTown', 
+                         'OverrideCounty',
+                         'OverridePostcode',
+                         'PartnerAddress',
+                         'PartnerStreetAndNumber',
+                         'PartnerArea',
+                         'PartnerDistrict',
+                         'PartnerTown', 
+                         'PartnerCounty',
+                         'PartnerPostcode',
+                    );
+
      // -- Check for a valid field
      // --------------------------                  
      if(in_array($field, $fieldsList))
@@ -172,7 +189,7 @@
          $newValue = date("Y-m-d 00:00:00", strtotime($newValue));
        }
        
-       if($field == 'Address')
+       if($field == 'Address' || $field == 'OverrideAddress' || $field == 'PartnerAddress')
        {
          if(count($address) > 0)
          {
@@ -221,7 +238,7 @@
      $this->response(array(
         'status' => $status,
         'message' => $message,
-        'data' => '',
+        'data' => $newAddress,
      ));
    }
    

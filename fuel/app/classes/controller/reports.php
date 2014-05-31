@@ -1664,7 +1664,7 @@ GROUP BY
     }
 
     public function action_hotkey_report( $agent = null )
-    {
+    {   
         if (!Auth::has_access('reports.hotkey'))
         {
             Session::set_flash('fail', 'You do not have access to that section: This has been logged!');
@@ -1699,7 +1699,7 @@ GROUP BY
         
     }
 
-    public static function generate_dialer_report($_startDate = null, $_endDate = null)
+    public static function generate_dialler_report($_startDate = null, $_endDate = null)
     {
         //Start Date
         if(!is_null($_startDate))
@@ -1707,19 +1707,24 @@ GROUP BY
             $_startDate = explode('-', $_startDate);
             $startDate = date('Y-m-d', mktime(0, 0, 0, $_startDate[1], $_startDate[0], $_startDate[2]));
         } else {
-            $startDate = (is_null($_startDate))?date('Y-m-d h:i:s', mktime(23, 59, 59, date('n'), date('j', strtotime('-1 day')), date('Y'))):$_endDate;
-        }  
+            $startDate = (is_null($_startDate))?date('Y-m-d h:i:s', mktime(0, 0, 0, date('n'), date('j', strtotime('-1 day')), date('Y'))):$_endDate;
+        }
 
         //End Date
         if(!is_null($_endDate))
         {
             $_endDate = explode('-', $_endDate);
-            $endDate = date('Y-m-d h:m:i', mktime(0, 0, 0, $_endDate[1], $_endDate[0], $_endDate[2]));
+            $endDate = date('Y-m-d h:i:s', mktime(0, 0, 0, $_endDate[1], $_endDate[0], $_endDate[2]));
         } else {
-            $endDate = (is_null($_endDate))?date('Y-m-d h:i:s', mktime(23, 59, 59, date('n'), date('j'), date('Y'))):$_endDate;
+            $endDate = (is_null($_endDate))?date('Y-m-d h:i:s'):$_endDate;
         }
 
-        $sql = "SELECT  
+        //clamps date
+        if(strtotime($startDate) < strtotime('last month', strtotime($endDate)))
+            $startDate = date('Y-m-d h:i:s', strtotime('last month'));
+
+
+        $dialler = "SELECT  
                     `log`.`lead_id`
                     ,`lists`.`list_name` AS `lead_source`
                     ,CONCAT(`list`.`first_name`, ' ', `list`.`last_name`) AS lead_name
@@ -1740,11 +1745,14 @@ GROUP BY
                 WHERE
                     `log`.`user` != 'VDAD'
                     AND
-                    `log`.`call_date` BETWEEN  '{$startDate}' AND  '{$endDate}';";
+                    `log`.`call_date` >=  '{$startDate}'
+                    AND
+                    `log`.`call_date` < '{$endDate}';";
 
-        $query = DB::Query($sql)->cached(3600)->execute('dialler')->as_array();
 
-        $return = array();
+        $query = DB::Query($dialler)->cached(3600)->execute('dialler')->as_array();
+
+        $return = array(); 
         foreach($query as $row)
         {
             $return[$row['lead_source']][$row['campaign_id']][] = array(
@@ -1753,22 +1761,21 @@ GROUP BY
                 'result'    => $row['status_name'],
                 'agent'     => $row['full_name'],
             );
-
         }
 
         return $return;
 
     }
 
-    public function get_get_dialer_report()
+    public function get_get_dialler_report()
     {
         $startDate  = $this->param('startdate');
         $endDate    = $this->param('enddate');
 
-        return Controller_Reports::generate_dialer_report($startDate, $endDate);
+        return $this->Response(Controller_Reports::generate_dialler_report($startDate, $endDate));
     }
 
-    public function action_dialer_report()
+    public function action_dialler_report()
     {
         if (!Auth::has_access('reports.disposition'))
         {
@@ -1778,7 +1785,7 @@ GROUP BY
         }
 
         $this->template->title = 'Reports &raquo; Dialer';
-        $this->template->content = View::forge('reports/dailer');
+        $this->template->content = View::forge('reports/dialler');
 
     }
 	
