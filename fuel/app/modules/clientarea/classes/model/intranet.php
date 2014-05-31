@@ -163,7 +163,7 @@
     */
     public static function saveProfileChangeRequest($data = array())
     {
-      \DB::query("INSERT INTO
+      $insert = \DB::query("INSERT INTO
                     clientarea_client_change_profile
                   (
                      id
@@ -185,6 +185,11 @@
                     ,NOW()
                   )
                  ", \DB::insert())->execute();
+
+      //DB::Query() returns array first value is the ID, second Value is count
+      if($insert[1] > 0)
+        return true;
+      return false;
     }
    
    /**

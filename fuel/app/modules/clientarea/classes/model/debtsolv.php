@@ -150,29 +150,49 @@
      $result = array();
 
      $result = \DB::query("SELECT Top (1)
-                              Title
-                             ,Initials
-                             ,Forename
-                             ,Surname
-                             ,DateOfBirth
-                             ,Email
-                             ,MaritalStatus
-                             ,Gender
-                             ,StreetAndNumber
-                             ,Area
-                             ,District
-                             ,Town
-                             ,County
-                             ,Postcode
-                             ,Tel_Home
-                             ,Tel_Work
-                             ,Tel_Mobile
-                             ,email
+                              CC.Title
+                             ,CC.Initials
+                             ,CC.Forename
+                             ,CC.Surname
+                             ,CC.DateOfBirth
+                             ,CC.email
+                             ,CC.MaritalStatus
+                             ,CC.Gender
+                             ,CC.StreetAndNumber
+                             ,CC.Area
+                             ,CC.District
+                             ,CC.Town
+                             ,CC.County
+                             ,CC.Postcode
+                             ,CC.Tel_Home
+                             ,CC.Tel_Work
+                             ,CC.Tel_Mobile
+                             ,CC.OverrideStreetAndNumber
+                             ,CC.OverrideArea
+                             ,CC.OverrideDistrict
+                             ,CC.OverrideTown
+                             ,CC.OverrideCounty
+                             ,CC.OverridePostcode
+                             ,CP.Title AS [PartnerTitle]
+                             ,CP.Forename AS [PartnerForename]
+                             ,CP.Surname AS [PartnerSurname]
+                             ,CP.StreetAndNumber AS [PartnerStreetAndNumber]
+                             ,CP.Area AS [PartnerArea]
+                             ,CP.District AS [PartnerDistrict]
+                             ,CP.Town AS [PartnerTown]
+                             ,CP.County AS [PartnerCounty]
+                             ,CP.PostCode AS [PartnerPostCode]
+                             ,CP.Tel_Home AS [PartnerTel_Home]
+                             ,CP.Tel_Home AS [PartnerTel_Work]
+                             ,CP.Tel_Mobile AS [PartnerTel_Mobile]
+                             ,CP.Email AS [PartnerEmail]
                            FROM
-                             " . static::$databaseName . ".dbo.Client_Contact
+                             " . static::$databaseName . ".dbo.Client_Contact AS CC
+                           INNER JOIN
+                             " . static::$databaseName .".dbo.Client_Partner AS CP ON CC.ID = CP.ClientID
                            WHERE
                              ID = " . (int)static::$clientID . "
-                          ", \DB::select())->cached(1800)->execute(static::$_connection)->as_array();
+                          ", \DB::select())->execute(static::$_connection)->as_array();
      
      // -- Check results and return
      // ---------------------------                    
@@ -446,7 +466,7 @@
      public static function totalOwed()
      {
          $results = array();
-         $results = \DB::query("SELECT TOP (1)
+         $results = \DB::query("SELECT
                                   SUM(EstimatedBalance * 1.0) / 100 AS total_owed
                                 FROM
                                   " . static::$databaseName . ".[dbo].[Finstat_Debt]
@@ -466,9 +486,9 @@
          $results = \DB::query("SELECT TOP (1)
                                   USERS.Undersigned
                                 FROM
-                                  Debtsolv_GABFS.dbo.Client_LeadData AS LEAD_DATA
+                                  " . static::$databaseName . ".dbo.Client_LeadData AS LEAD_DATA
                                 INNER JOIN
-                                  Debtsolv_GABFS.dbo.Users AS USERS ON LEAD_DATA.Administrator = USERS.ID
+                                  " . static::$databaseName . ".dbo.Users AS USERS ON LEAD_DATA.Administrator = USERS.ID
                                 WHERE
                                   LEAD_DATA.Client_ID = " . static::$clientID . "
                                ", \DB::SELECT)->execute(static::$_connection)->as_array();
@@ -486,5 +506,38 @@
      public static function helper()
      {
         return static::$_database;
+     }
+
+     /**
+      * Returns client documents
+      * 
+      */
+     public static function getDocumentList()
+     {
+        return \DB::query(
+          "SELECT
+            DOCUMNET.ID
+            ,DOCUMNET.DateScanned
+            ,DOCUMNET.[Filename]
+            ,ISNULL(DOCUMNET.[Description],'N/A') AS [Description]
+          FROM
+            "  . static::$databaseName . ".dbo.ArchivedDocuments AS DOCUMNET
+          WHERE ClientID ='" . static::$clientID . "';"
+        )->execute(static::$_connection)->as_array();
+     }
+
+     public static function getCreditorCount()
+     {
+        $query = 'SELECT
+                    (SELECT SUM(EstimatedBalance*1.0)/100 FROM '.static::$databaseName.'.dbo.Finstat_Debt WHERE ClientID = '.static::$clientID.') AS totalDebt
+                    ,COUNT(*) AS countCreditors
+                  FROM
+                    '.static::$databaseName.'.dbo.Finstat_Debt
+                  WHERE
+                    ClientID = '. static::$clientID . '
+                  AND
+                    EstimatedBalance > 0;';
+
+        return \DB::query($query)->execute(static::$_connection)->as_array();
      }
  }
