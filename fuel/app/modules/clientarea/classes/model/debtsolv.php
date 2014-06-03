@@ -198,8 +198,7 @@
      // ---------------------------                    
      if(isset($result[0]))                   
        return $result[0];
-     else
-       return $result;
+     return $result;
    }
    
    /**
@@ -221,7 +220,7 @@
                           ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
                           
      if(isset($result[0]['Paid_to_Date']))
-       return $result[0]['Paid_to_Date'];
+      return $result[0]['Paid_to_Date'];
      else
        return 0;
    }
@@ -284,7 +283,8 @@
      $results = array();
      $results = \DB::query("(
                               SELECT
-                                 Amount AS Amount_In
+                                PR.ID
+                                ,Amount AS Amount_In
                                 ,'' AS Amount_Out
                                 ,'' AS Creditor
                                 ,[Date]
@@ -303,10 +303,11 @@
                               WHERE
                                 ClientID = " . static::$clientID . "
                             )
-                            UNION
+                            UNION ALL
                             (
                               SELECT
-                                 '' AS Amount_In
+                                PO.ID
+                                ,'' AS Amount_In
                                 ,Amount AS Amount_Out
                                 ,FD.[Description]
                                 ,DateSent
@@ -324,6 +325,13 @@
                                 " . static::$databaseName . ".dbo.Finstat_Debt AS FD ON PO.AccountRef = FD.AccountReference AND PO.ClientID = FD.ClientID
                               WHERE
                                 PO.ClientID = " . static::$clientID . "
+                              GROUP BY
+                                PO.ID
+                                ,PO.Amount
+                                ,FD.[Description]
+                                ,DateSent
+                                ,TPS.[Description]
+                                ,TPM.[Description]
                             )
                             ORDER BY
                               [Date] DESC
