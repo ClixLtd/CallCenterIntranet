@@ -88,7 +88,6 @@ $(document).ready(function()
     if(requestList[index]['field'] == 'Address')
     {
       var addressInput = '';
-      
       addressInput += "<div style='float:left;width:150px;padding-top:5px;'>Street and Number:</div><div style='float:left;'><input type='text' name='address[StreetAndName]' id='StreetAndName' value='" + requestList[index]['new_value']['Street-and-Number'] + "'/></div>";
       addressInput += "<div style='float:left;width:150px;padding-top:5px;clear:both;'>Area:</div><div style='float:left;'><input type='text' name='address[Area]' id='Area' value='" + requestList[index]['new_value']['Area'] + "'/></div>";
       addressInput += "<div style='float:left;width:150px;padding-top:5px;clear:both;'>District:</div><div style='float:left;'><input type='text' name='address[District]' id='District' value='" + requestList[index]['new_value']['District'] + "'/></div>";
@@ -98,11 +97,56 @@ $(document).ready(function()
       
       $("#New-Value").html(addressInput);
     }
+    else if(requestList[index]['field'] == 'OverrideAddress')
+    {
+      var holder = $('<div>');
+      var style = {'float':'left','width':'150px','padding-top':'5px'};
+
+      holder.append($('<div>').css(style).text('Street and Number :'));
+      holder.append($('<div>').css(style).html($('<input>').attr({'type':'text','name':'address[OverrideStreetAndNumber]','value':requestList[index]['new_value']['Street-and-Number']})));
+      holder.append($('<div>').css(style).text('Area :'));
+      holder.append($('<div>').css(style).html($('<input>').attr({'type':'text','name':'address[OverrideArea]','value':requestList[index]['new_value']['Area']})));
+      holder.append($('<div>').css(style).text('District :'));
+      holder.append($('<div>').css(style).html($('<input>').attr({'type':'text','name':'address[OverrideDistrict]','value':requestList[index]['new_value']['District']})));
+      holder.append($('<div>').css(style).text('Town :'));
+      holder.append($('<div>').css(style).html($('<input>').attr({'type':'text','name':'address[OverrideTown]','value':requestList[index]['new_value']['Town']})));
+      holder.append($('<div>').css(style).text('County :'));
+      holder.append($('<div>').css(style).html($('<input>').attr({'type':'text','name':'address[OverrideCounty]','value':requestList[index]['new_value']['County']})));
+      holder.append($('<div>').css(style).text('Post Code :'));
+      holder.append($('<div>').css(style).html($('<input>').attr({'type':'text','name':'address[OverridePostcode]','value':requestList[index]['new_value']['Post-Code']})));
+
+      $('#New-Value').html(holder);
+    }
+    else if(requestList[index]['field'] == 'PartnerAddress')
+    {
+
+
+      var holder = $('<div>');
+      var style = {'float':'left','width':'150px','padding-top':'5px'};
+
+
+
+      holder.append($('<div>').css(style).text('Street and Number :'));
+      holder.append($('<div>').css(style).html($('<input>').attr({'type':'text','name':'address[StreetAndNumber]','value':requestList[index]['new_value']['Street-and-Number']})));
+      holder.append($('<div>').css(style).text('Area :'));
+      holder.append($('<div>').css(style).html($('<input>').attr({'type':'text','name':'address[Area]','value':requestList[index]['new_value']['Area']})));
+      holder.append($('<div>').css(style).text('District :'));
+      holder.append($('<div>').css(style).html($('<input>').attr({'type':'text','name':'address[District]','value':requestList[index]['new_value']['District']})));
+      holder.append($('<div>').css(style).text('Town :'));
+      holder.append($('<div>').css(style).html($('<input>').attr({'type':'text','name':'address[Town]','value':requestList[index]['new_value']['Town']})));
+      holder.append($('<div>').css(style).text('County :'));
+      holder.append($('<div>').css(style).html($('<input>').attr({'type':'text','name':'address[County]','value':requestList[index]['new_value']['County']})));
+      holder.append($('<div>').css(style).text('Post Code :'));
+      holder.append($('<div>').css(style).html($('<input>').attr({'type':'text','name':'address[Postcode]','value':requestList[index]['new_value']['Post-Code']})));
+
+      $('#New-Value').html(holder);
+    }
     else
     {
       $("#New-Value-Input").val();
       $("#New-Value").html('<input type="text" name="New-Value" id="New-Value-Input" value="' + requestList[index]['new_value'] + '" />');
     }
+
   });
 
   $("#Add-Client-Submit").click(function()
@@ -117,16 +161,18 @@ $(document).ready(function()
           {
               if(data['status'] == 'success')
               {
-                  alert('Client Has Been Added');
+                  alert('Success : ' + data.message);
+                  $('#AddNewClient')[0].reset();
               }
               else
               {
-                  alert('Client Hasn\'t Been Added');
+                  alert('Error : ' + data.message);
               }
           },
-          error: function()
+          error: function(o,s,m)
           {
-
+            alert('Error : Unable to process request , please try again later.');
+            console.log(m);
           }
 
       });
@@ -142,7 +188,7 @@ function approveRequest()
   var companyID     = $("#CompanyID").val();
   var addressFields = '';
   
-  if(field == 'Address')
+  if(field == 'Address' || field == 'OverrideAddress' || field == 'PartnerAddress')
   {
     addressFields = $("#Change-Client-Details-Form").serialize();
     newValue = null;

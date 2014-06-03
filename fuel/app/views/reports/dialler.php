@@ -1,14 +1,8 @@
 <div style="float: right;">
-<form id="grepHotkey">
+<form id="grepDialer">
 <input type="text" class="datepicker" name="startdate" id="startdate" rel="tooltip" title="Start Date" value="<?php echo (!empty($start_date)) ? $start_date : "" ; ?>">
 <input type="text" class="datepicker" name="enddate" id="enddate" rel="tooltip" title="End Date" value="<?php echo (!empty($end_date)) ? $end_date : "" ; ?>">
 <input type="submit" class="button" id="dateRangeHotkey" value="View Date Range" /><br />
-<select name="agent" rel="tooltip" title="Call Agent" class="" id="agent" >
-    <option value="-1">All Agents</option>
-    <?php foreach($all_agents AS $item): ?>
-        <option value="<?php echo $item['user_login']; ?>" <?php echo ($item['user_login'] == $agent) ? "SELECTED" : ""; ?>><?php echo $item['full_name']; ?></option>
-    <?php endforeach; ?>
-</select>
 </form>
 </div>
 
@@ -16,14 +10,14 @@
 
     <div class="article-container">
         <header>
-            <h2>Hotkey Report</h2>
+            <h2>Dialler Report</h2>
             
-            <nav>
+            <!-- <nav>
                 <ul class="tab-switch">
                     <li><a class="default-tab" href="#debtSolve">DebtSolve</a></li>
                     <li><a href="#Dialer">Dialer</a></li>
                 </ul>
-            </nav>
+            </nav> -->
             
         </header>
     </div>
@@ -38,10 +32,6 @@
 
 </article>
 
-<script>
-    var currentCenter = "<?php echo (is_null($agent)) ? "NON" : $agent; ?>";
-    var reportURL = "<?php echo $url;?>";
-</script>
 
-<?php echo Asset::js('reports/hotkey.js'); ?>
+<?php echo Asset::js('reports/dialler.js'); ?>
 <?php echo Asset::css('reports/hotkey.css'); ?>
