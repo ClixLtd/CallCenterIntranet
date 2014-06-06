@@ -612,4 +612,32 @@
        else
          return $result;
      }
+
+     /**
+      * Notifies the intranet that document has been uploaded
+      * 
+      * @author James Read
+      * @return boolean 
+      */
+     public static function notifyUploadDocuments($data = array())
+     {
+        if(empty($data))
+          return false;
+
+        $insert = array();
+        foreach($data['documents'] as $file)
+        {
+          $insert[] = '(' . (int)$data['clientID'] . ','. (int)static::$companyID .', ' . \DB::quote($file[1]) . ')';
+        }
+        $insert = implode(',', $insert);
+
+        $result = \DB::query(
+          'INSERT INTO `clientarea_documents` (`client_id`,`company_id`,`filename`) VALUES ' . $insert . ';',
+          \DB::INSERT
+        )->execute();
+
+        return true;
+     }
+
+
  }
