@@ -321,11 +321,7 @@
                                 " . static::$databaseName . ".dbo.Type_Payment_Method AS TPM ON PO.PaymentMethod = TPM.ID
                               INNER JOIN
                                 " . static::$databaseName . ".dbo.Type_Payment_Status AS TPS ON PO.[Status] = TPS.ID
-<<<<<<< HEAD
                               INNER JOIN
-=======
-                              LEFT JOIN
->>>>>>> master
                                 " . static::$databaseName . ".dbo.Finstat_Debt AS FD ON PO.DebtID = FD.ID
                               WHERE
                                 PO.ClientID = " . static::$clientID . "
