@@ -322,7 +322,7 @@
                               LEFT JOIN
                                 " . static::$databaseName . ".dbo.Type_Payment_Status AS TPS ON PO.[Status] = TPS.ID
                               LEFT JOIN
-                                " . static::$databaseName . ".dbo.Finstat_Debt AS FD ON PO.AccountRef = FD.AccountReference AND PO.ClientID = FD.ClientID
+                                " . static::$databaseName . ".dbo.Finstat_Debt AS FD ON PO.DebtID = FD.ID
                               WHERE
                                 PO.ClientID = " . static::$clientID . "
                               GROUP BY
