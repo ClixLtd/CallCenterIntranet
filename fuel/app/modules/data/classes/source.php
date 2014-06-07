@@ -216,18 +216,19 @@ class Source
             $duplicateNumbers = array();
             $tpsNumbers = array();
             
-            // Check the numbers for duplicates
-            if (in_array(\Data\Source::DUPES, (array)$this->importOptions) && count($telephoneNumbers) > 0)
-            {
-                list($telephoneNumbers,$duplicateNumbers) = $this->checkDuplicate($telephoneNumbers);
-                $isDuplicate = (count($telephoneNumbers) > 0) ? false : true;
-            }
             
             // Check the Number for TPS
             if (!in_array(\Data\Source::OPTIN, (array)$this->importOptions) && count($telephoneNumbers) > 0)
             {
                 list($telephoneNumbers,$tpsNumbers) = $this->checkTps($telephoneNumbers);
                 $isTps = (count($telephoneNumbers) > 0) ? false : true;
+            }
+            
+            // Check the numbers for duplicates
+            if (in_array(\Data\Source::DUPES, (array)$this->importOptions) && count($telephoneNumbers) > 0)
+            {
+                list($telephoneNumbers,$duplicateNumbers) = $this->checkDuplicate($telephoneNumbers);
+                $isDuplicate = (count($telephoneNumbers) > 0) ? false : true;
             }
             
             $dialler_lead_id = 0;
