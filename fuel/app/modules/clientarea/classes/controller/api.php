@@ -543,4 +543,16 @@
         return json::output('success', '', $result);
      }
 
+     /**
+      * 
+      * 
+      */
+     public function post_document_uploads()
+     {
+
+        $result = Model_Intranet::notifyUploadDocuments(\Input::post(), $this->_companyID);
+        return json::output('success', '' ,$result);
+        //return json::output('success', '' ,Model_Intranet::notifyUploadDocuments(\Input::post()));
+     }
+
  }
