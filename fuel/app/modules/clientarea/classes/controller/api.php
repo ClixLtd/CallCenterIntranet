@@ -81,7 +81,9 @@
      
      // -- Find the Client
      // ------------------
-     if(Model_Debtsolv::login($clientID, $password) === true)
+     $result = Model_Debtsolv::login($clientID, $password);
+
+     if(!isset($result['error']))
      {
        // -- Client Found
        // ---------------
@@ -98,7 +100,7 @@
        // -- Client Not Found
        // -------------------
        $status = 'failed';
-       $message = 'Account not found';
+       $message = $result['error'];
 
      }
      // -- Return the output

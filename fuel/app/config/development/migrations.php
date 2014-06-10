@@ -6,8 +6,15 @@ return array(
 		array(
 			'default' => 
 			array(
-				0 => '001_create_dialler_all_numbers',
-				1 => '002_create_dialler_all_logs',
+				0 => '003_create_s',
+				1 => '004_create_dialler_campaigns',
+				2 => '005_create_call_centers',
+				3 => '006_create_database_servers',
+				4 => '007_create_database_queries',
+				5 => '008_create_database_query_tags',
+				6 => '009_create_dialler_lists',
+				7 => '010_create_data_suppliers',
+				8 => '011_create_data_supplier_lists',
 			),
 		),
 		'module' => 
@@ -39,7 +46,6 @@ return array(
 				7 => '008_create_clientarea_type_access_log_type',
 				8 => '009_alter_clientarea_companies_add_centre_id',
 				9 => '010_alter_clientarea_companies_remove_centre_id',
-				10 => '011_alter_clientarea_companies_add_components',
 			),
 			'survey' => 
 			array(

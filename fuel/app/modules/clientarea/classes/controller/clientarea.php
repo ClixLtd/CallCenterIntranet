@@ -61,6 +61,15 @@
      $this->template->content = \View::forge('messages', $data);
    }
    
+   public function action_documents()
+   {
+      $data = array();
+      $data['documents'] = Model_ClientArea::getDocuments();
+
+      $this->template->title = "Client Documents";
+      $this->template->content = \View::forge('documents', $data);
+   }
+
    // ------------------------------------------------\\
    // -- Ajax Calls ----------------------------------\\
    // ------------------------------------------------\\

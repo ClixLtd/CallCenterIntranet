@@ -64,9 +64,10 @@
                            --  CONTACT.[Status] IN (9, 13)
                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
      */
-     $result = \DB::query("SELECT
+     list($result) = \DB::query("SELECT
                              CLIX_CLIENT_ACCOUNT.id
                              ,CLIX_CLIENT_ACCOUNT.password
+                             ,CONTACT.status
                            FROM
                              Clix_Client_Portal.dbo.client_accounts AS CLIX_CLIENT_ACCOUNT
                            INNER JOIN
@@ -74,26 +75,31 @@
                            WHERE
                              CLIX_CLIENT_ACCOUNT.client_id = " . (int)$clientID . "
                            AND
-                             CLIX_CLIENT_ACCOUNT.company_id = " . static::$_companyID . "
-                           --AND
-                           --  [Password] = HASHBYTES( 'SHA1', '" . str_replace("'", "''", $password) . "')
-                           --AND
-                           --  CONTACT.[Status] IN (9, 13)
-                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                             CLIX_CLIENT_ACCOUNT.company_id = " . static::$_companyID . ";"
+                          , \DB::SELECT)->execute(static::$_connection)->as_array();
 
 
      // -- checks given password against the hash 
      // -----------------------------------------
      // salt = $6$rounds=8000$mnwMjNLvHnnUhuP4eX6zi8EvGSru7vWB$
-     if(crypt($password, $result[0]['password']) != $result[0]['password'])
-        return false;
+     if(crypt($password, $result['password']) != $result['password'])
+        return array('error' => 'Invalid Password and ID Combination.');
 
      // -- Check for a returned row, then return it
      // -------------------------------------------            
-     if(isset($result[0]['id']) && $result[0]['id'] > 0)
-       return true;
-     else
-       return false;
+     if(isset($result['id']) && $result['id'] > 0)
+     {
+        if(!in_array($result['status'], array(12,13)))
+          return array('success' => 'OK');
+        else
+          return array('error' => 'Account has been locked, Please contact us');
+     } else {
+        return array('error' => 'Account Not Found');
+     }
+
+     //-- Catch Other errors
+     //----------
+     return array('error' => 'Unexpected error occurred.');
    }
    
    /**

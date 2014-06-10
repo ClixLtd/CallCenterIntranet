@@ -677,5 +677,32 @@
      return $results;
    }
 
+   /**
+    * Get list of documents waiting to be approved.
+    * 
+    */
+   public static function getDocuments()
+   {
+      return \DB::query(sprintf(
+        "SELECT
+          `DOC`.`id`
+          ,`DOC`.`client_id`
+          ,`DOC`.`filename`
+          ,`DOC_TYPE`.`description` AS `status`
+          ,`DOC`.`created_at`
+        FROM
+          `clientarea_documents` AS `DOC`
+        INNER JOIN
+          `clientarea_type_documents_status` AS `DOC_TYPE` ON `DOC`.`status` = `DOC_TYPE`.`ID`
+        WHERE
+          `company_id` = %d
+        AND
+          `DOC`.`status` != 2
+
+      ", static::$_userCentreID), \DB::SELECT)->execute()->as_array();
+
+   }
+
+
 
  }
