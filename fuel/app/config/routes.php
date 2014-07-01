@@ -75,6 +75,8 @@ return array(
 	'database/query/tag/:tag'                                    => 'database/query/index',
 	'database/query/(:num)/tag/:tag'                             => 'database/query/index/$1',
 	'database/query/run/(:num)/:format'                          => 'database/query/run/$1',
+
+	'clientarea/documents/view/(:num)'							=> 'clientarea/document_view/$1',
 	
 	
 	

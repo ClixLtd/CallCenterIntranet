@@ -28,21 +28,23 @@
      $this->_setDatabases();
    }
    
-   private function _setDatabases()
-   {     
-     if(!is_null($this->_company))
-     {
-       // -- Set the database name and client ID
-       // --------------------------------------
-       Model_Intranet::forge($this->_company, $this->_clientID);
-       
-       Model_Debtsolv::forge(Model_Intranet::getCompanyID(), $this->_clientID);
-     }
-     else
-     {
-       return;
-     }
-   }
+  private function _setDatabases()
+  {    
+
+    if(!is_null($this->_company))
+    {
+      // -- Set the database name and client ID
+      // --------------------------------------
+      Model_Intranet::forge($this->_company, $this->_clientID);
+
+      $init = Model_Intranet::initCompany();
+      Model_Debtsolv::forge($init['id'], $this->_clientID, $init['settings']);
+      
+      return true; 
+    }
+
+    return false;
+  }
    
    public function action_index()
    {      
@@ -555,6 +557,16 @@
         $result = Model_Intranet::notifyUploadDocuments(\Input::post(), $this->_companyID);
         return json::output('success', '' ,$result);
         //return json::output('success', '' ,Model_Intranet::notifyUploadDocuments(\Input::post()));
+     }
+
+     /**
+      * Returns array of letters sent to creditors
+      * 
+      * @return string
+      */
+     public function post_letters_sent_creditors()
+     {
+        return json::output('success', '', Model_Debtsolv::getSentCreditorLetters());
      }
 
  }

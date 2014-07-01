@@ -15,11 +15,11 @@ $(document).ready(function()
     
     $("#Create-Message").show();
     
-    $(".Input-Required").attr('disabled', 'disabled');
+    //$(".Input-Required").attr('disabled', 'disabled');
     
     // -- Get a list of companies
     // --------------------------
-    $.ajax({
+    /*$.ajax({
       type: 'post',
       url: '/clientarea/company_list/0.json',
       dataType: 'json',
@@ -37,12 +37,12 @@ $(document).ready(function()
           $("#Message-CompanyID").append(option);
         }
       }
-    });
+    }); */
   });
   
   // -- Validate the Client ID
   // -------------------------
-  $("#Message-CompanyID").change(function()
+  /* $("#Message-CompanyID").change(function()
   {
     if($("#Message-To").val() != '')
     {
@@ -79,7 +79,7 @@ $(document).ready(function()
     {
       alert('Please enter a client ID above');
     }
-  });
+  }); */
   
   $("#Inbox-List-Button").click(function()
   {
@@ -109,6 +109,7 @@ $(document).ready(function()
     // -----------
     var errorMsg = '';
     
+
     if($("#Message-To").val() == '')
     {
       errorMsg += "Enter the client's Debtsolv ID\n\n";
@@ -129,21 +130,24 @@ $(document).ready(function()
       // -- No errors, so save it
       // ------------------------
       $.ajax({
-        type: 'post',
-        url: '/clientarea/save_new_message/0.json',
-        data: $("#New-Message-Form").serialize(),
+        'type': 'post',
+        'url': '/clientarea/save_new_message/0.json',
+        'data': $("#New-Message-Form").serialize(),
+        'dataType': 'json',
         success: function(data)
         {
-          if(data['status'] == 'success')
+          if(data.error != undefined)
           {
-            alert('Message has been sent');
+            alert('Oops.. ' + data.error.message);
+          }
+          else 
+          {
+            alert(data.success);
             clearMessageForm();
           }
-          else
-          {
-            alert('Oops..' + data['message']);
-          }
         }
+      }).fail(function(o,s,m) {
+        alert('Error : Unable to process your request at this time.');
       });
     }
     else
@@ -152,24 +156,24 @@ $(document).ready(function()
     }
   });
   
-  $("#Cancel-New-Message").click(function()
+  //-- 
+  //-----
+  $("#Cancel-New-Message").click(function(e)
   {
+
     if(confirm('Are you really, really sure you want to cancel this message?') == true)
     {
       clearMessageForm();
       hidePages();
       $("#Message-List").show();
+      return true;
     }
-    else
-    {
-      return false;
-    }
+    return false;
   });
   
-  $(".Message-Row").click(function()
+  $(".Message-Row td").click(function(e)
   {
-    var messageID = $(this).attr('rel');
-    
+    var messageID = $(this).parents('.Message-Row').attr('rel');
     $("#MessageID").val(messageID);
     
     $.ajax({
@@ -268,7 +272,52 @@ $(document).ready(function()
     $("#Inbox-List-Button").click();
   });
   
-  $("#Send-Reply").click(function()
+  /*
+
+  * ============
+  * 
+  *
+  * ============
+
+    Sends message reply
+  $('#form-reply').submit(function(e){
+    e.preventDefault();
+    if($('#Reply-Message-Body').val() == '')
+    {
+      alert('Please type a message before you send it');
+      return;
+    }
+    var messageID = $("#MessageID").val();
+
+    $.ajax({
+      'url' : '/clientarea/send_reply/' + messageID + '.json',
+      'type' : 'post',
+      'data' : $(this).serialize(),
+      'xhr' : function(){
+        var myXhr = $.ajaxSettings.xhr();
+        if(myXhr.upload){ // Check if upload property exists
+          myXhr.upload.addEventListener('progress', progressHandler, false); // For handling the progress of the upload
+        }
+      },
+      'success' : function(data) {
+        alert(data);
+      },
+      'error' : function(o, s, m) {
+        alert('Error : Unable to process your request.');
+        console.log(m);
+      }
+    });     
+
+  });
+
+  function progressHandler()
+  {
+    if(e.lengthComputable) {
+      $("#uploadProgress").show().text(e.loaded + " / " + e.total);
+    }
+  }*/
+
+  /* $("#Send-Reply").click(function()
   {
     // -- Validate the reply form
     // --------------------------
@@ -305,7 +354,7 @@ $(document).ready(function()
         }
       }
     });
-  });
+  });*/
   
 });
 

@@ -46,28 +46,32 @@
      static::$_debtsolvDatabase = $Database->debtsolvDBName();
    }
    
-   /**
-    * Validate Client ID
-    * 
-    * @author David Stansfield
-    */
-   public static function validateClientID($clientID = 0)
-   {
-     $result = 0;
-     
-     $result = \DB::query("SELECT Top (1)
-                             ID
-                           FROM
-                             dbo.Client_Contact
-                           WHERE
-                             ID = " . (int)$clientID . "
-                          ", \DB::SELECT)->execute(static::$_connection)->as_array();
-                          
-     if(isset($result[0]['ID']) && $result[0]['ID'] == (int)$clientID)
-       return true;
-     else
-       return false;
-   }
+  /**
+  * Validate Client ID
+  * 
+  * @author David Stansfield
+  */
+  public static function validateClientID($clientID = 0)
+  {
+    $result = 0;
+
+    \Log::info(static::$_debtsolvDatabase);
+
+    list($result) = \DB::query("SELECT TOP (1) 
+                                ID
+                              FROM
+                                " . static::$_debtsolvDatabase . ".dbo.Client_Contact
+                              WHERE
+                                ID = :id;",
+                              \DB::SELECT)->param('id', (int)$clientID)
+                                          ->execute(static::$_connection)->as_array();
+    \Log::info($result);
+    return false;
+
+    if(isset($result['ID']) && $result['ID'] == (int)$clientID)
+      return true;
+    return false;
+  }
 
      /**
       * Check for a valid Client to add
@@ -145,11 +149,6 @@
                  return true;
              else
                  return false;
-         #}
-         #else
-         #{
-         #    return false;
-         #}
 
 
      }
@@ -298,38 +297,40 @@
    public static function loadDsClient()
    {
      $result = array();
-     
-     $result = \DB::query("SELECT Top (1)
-                              Title
-                             ,Initials
-                             ,Forename
-                             ,Surname
-                             ,DateOfBirth
-                             ,Email
-                             ,MaritalStatus
-                             ,Gender
-                             ,StreetAndNumber
-                             ,Area
-                             ,District
-                             ,Town
-                             ,County
-                             ,PostCode
-                             ,Tel_Home
-                             ,Tel_Work
-                             ,Tel_Mobile
-                             ,email
-                           FROM
-                             " . static::$_debtsolvDatabase . ".dbo.Client_Contact
-                           WHERE
-                             ID = " . (int)static::$clientID . "
-                          ", \DB::select())->cached(1800)->execute(static::$_connection)->as_array();
+
+     list($result) = \DB::query("SELECT Top (1)
+                                  Title
+                                 ,Initials
+                                 ,Forename
+                                 ,Surname
+                                 ,DateOfBirth
+                                 ,Email
+                                 ,MaritalStatus
+                                 ,Gender
+                                 ,StreetAndNumber
+                                 ,Area
+                                 ,District
+                                 ,Town
+                                 ,County
+                                 ,PostCode
+                                 ,Tel_Home
+                                 ,Tel_Work
+                                 ,Tel_Mobile
+                                 ,email
+                               FROM
+                                 " . static::$_debtsolvDatabase . ".dbo.Client_Contact
+                               WHERE
+                                 ID = :id;",
+                                \DB::select() )->param('id', (int)static::$clientID )
+                                               ->cached(1800)
+                                               ->execute(static::$_connection)
+                                               ->as_array();
      
      // -- Check results and return
      // ---------------------------                    
-     if(isset($result[0]))                   
-       return $result[0];
-     else
+     if(isset($result))                   
        return $result;
+     return $result;
    }
    
    /**
@@ -374,14 +375,14 @@
                                 date DESC
                             ) AS CMP ON (CM.id = CMP.message_id)
                             WHERE
-                              CM.company_id = " . \Auth::get('call_center_id') . "
+                              CM.company_id = :id
                             AND
                               CM.status_id = 1
                             GROUP BY
                               CMP.message_id
                             ORDER BY
                               CMP.date DESC
-                           ", \DB::SELECT)->execute()->as_array();
+                           ", \DB::SELECT)->param('id', \Auth::get('call_center_id'))->execute()->as_array();
 
      foreach($results as $key => $result)
      {
@@ -399,6 +400,11 @@
      return $results;
    }
    
+   /**
+    * Get a list of sent messages
+    * 
+    * @return array
+    */
    public static function getSentMessages()
    {
      $results = array();
@@ -454,7 +460,14 @@
                            
      return $results;
    }
-   
+  
+
+  /**
+   * Loads a single message
+   * 
+   * @param int $messageID - ID of the message to load
+   * @return array
+   */
    public static function messageDetails($messageID = 0)
    {
      $result = array();
@@ -468,9 +481,9 @@
                            FROM
                              clientarea_messages
                            WHERE
-                             id = " . (int)$messageID . "
+                             id = :id
                            LIMIT 1
-                          ", \DB::SELECT)->execute()->as_array();
+                          ", \DB::SELECT)->param('id', (int)$messageID)->execute()->as_array();
                           
      return $result;
    }
@@ -493,172 +506,227 @@
                             LEFT JOIN
                               users AS U ON CMP.user_id = U.id
                             WHERE
-                              message_id = " . (int)$messageID . "
+                              message_id = :id
                             ORDER BY
                               date ASC
-                           ", \DB::SELECT)->execute()->as_array();
+                           ", \DB::SELECT)->param( 'id', (int)$messageID )->execute()->as_array();
                            
      return $results;                   
    }
    
-   public static function createNewMessage($data = array())
-   {     
-     // -- Save the message details
-     // ---------------------------
-     list($lastID, $rows) = \DB::query("INSERT INTO
-                                          clientarea_messages
-                                        (
-                                           id
-                                          ,client_id
-                                          ,company_id
-                                          ,`from`
-                                          ,subject
-                                          ,date
-                                          ,status_id
-                                        )
-                                        VALUES
-                                        (
-                                           NULL
-                                          ," . (int)$data['clientID'] . "
-                                          ," . (int)$data['companyID'] . "
-                                          ,'user'
-                                          ," . \DB::quote($data['subject']) . "
-                                           ,NOW()
-                                          ,1
-                                        )
-                                       ", \DB::INSERT)->execute();
-                          
-     if($lastID > 0)
-     {
-       // -- Saved ok, so save the first message post
-       // -------------------------------------------
-       $data['messageID'] = $lastID;
-       $data['statusID'] = 1;
-       
-       if(static::saveMessagePost($data) === true)
-       {
-         return true;
-       }
-       else
-       {
-         return false;
-       }
-     }
-     else
-     {
-       return false;
-     }
-   }
+  public static function createNewMessage($data = array())
+  {
+
+      //-- Checks that user exists
+      //--------------------------
+      $check = \DB::query("SELECT
+                    ACCOUNT.client_id
+                    ,ACCOUNT.company_id
+                  FROM
+                    Clix_Client_Portal.dbo.client_accounts AS ACCOUNT
+                  INNER JOIN
+                    " . static::$_debtsolvDatabase . ".dbo.Client_Contact AS CONTACT ON ACCOUNT.client_id = CONTACT.ID
+                  WHERE
+                    CONTACT.ID = :id;", \DB::SELECT)->param('id', $data['clientID'])->execute(static::$_connection)->as_array();
+
+
+      if(!isset($check[0]['client_id']))
+        throw new \Exception('Unable to find client.');
+
+      // -- Save the message details
+      // ---------------------------
+      list($lastID, $rows) = \DB::query(
+        "INSERT INTO
+          clientarea_messages ( id, client_id, company_id, `from`, subject, date, status_id )
+        VALUES
+          (NULL, :clientID, :companyID, 'user', :subject, NOW(), 1);",
+        \DB::INSERT
+      )->parameters(array(
+        'clientID'  => (int)$check[0]['client_id'],
+        'companyID' => (int)$check[0]['company_id'],
+        'subject'   => $data['subject'],
+      ))->execute();
+    
+
+    if($lastID < 1)
+      throw new \Exception('Unable to create message');
+
+    $data['messageID'] = $lastID;
+    $data['companyID'] = $check[0]['company_id'];
+    $data['statusID'] = 1;
+
+    if(static::saveMessagePost($data) === false )
+      throw new \Exception('Unable to create message');
+    return true;
+
+  }
    
-   public static function setLastPostRead($messageID = 0)
-   {
-     if($messageID == 0)
-       return false;
-       
-     $result = 0;
-     
-     $result = \DB::query("UPDATE
-                             clientarea_messages_posts
-                           SET
-                             status_id = 2
-                           WHERE
-                             message_id = " . (int)$messageID . "
-                           AND
-                             `from` = 'client'
-                           ORDER BY
-                             id DESC
-                           LIMIT 1
-                          ", \DB::UPDATE)->execute();
+  /**
+  * Updates the message status to read
+  * 
+  * @param int $messageID
+  * @return boolean
+  */
+  public static function setLastPostRead($messageID = 0)
+  {
+    if($messageID == 0)
+      return false; 
+
+    $result = 0;
+    $result = \DB::query(
+        "UPDATE
+           clientarea_messages_posts
+         SET
+           status_id = 2
+         WHERE
+           message_id = :id
+         AND
+           `from` = 'client'
+         ORDER BY
+           id DESC
+         LIMIT 1",
+         \DB::UPDATE
+    )->param('id', (int)$messageID)->execute();
+                           
+    if($result > 0)
+      return true;
+    return false;
+  }
+  
+  /**
+  * updates the message status to replied
+  * 
+  * @param int $messageID
+  * @return boolean
+  */
+  public static function setLastPostReplied($messageID = 0)
+  {
+
+    if($messageID == 0)
+      return false;   
+    $result = 0;
+   
+    $result = \DB::query(
+      "UPDATE
+        clientarea_messages_posts
+      SET
+        status_id = 3
+      WHERE
+        message_id = :id
+      AND
+        `from` = 'client'
+      ORDER BY
+        id DESC LIMIT 1",
+      \DB::UPDATE
+      )->param('id', (int)$messageID)->execute();
                            
      if($result > 0)
        return true;
-     else
-       return false;
+    return false;
    }
    
-   public static function setLastPostReplied($messageID = 0)
-   {
-     if($messageID == 0)
-       return false;
-       
-     $result = 0;
-     
-     $result = \DB::query("UPDATE
-                             clientarea_messages_posts
-                           SET
-                             status_id = 3
-                           WHERE
-                             message_id = " . (int)$messageID . "
-                           AND
-                             `from` = 'client'
-                           ORDER BY
-                             id DESC
-                           LIMIT 1
-                          ", \DB::UPDATE)->execute();
-                           
-     if($result > 0)
-       return true;
-     else
-       return false;
-   }
-   
+
+   /**
+    * changes a message status 
+    * 
+    * @param int $postID
+    * @param int $statusID
+    * @return boolean
+    */
    public static function changePostStatus($postID = 0, $statusID = 0)
    {
      if($postID == 0 || $statusID == 0)
-       return false;
+      return false;
        
      $result = 0;
      
-     $result = \DB::query("UPDATE
-                             clientarea_messages_posts
-                           SET
-                             status_id = " . (int)$statusID . "
-                           WHERE
-                             id = " . (int)$postID . "
-                           LIMIT 1
-                          ", \DB::UPDATE)->execute();
+    $result = \DB::query(
+      "UPDATE
+         clientarea_messages_posts
+       SET
+         status_id = :status
+       WHERE
+         id = :id LIMIT 1", \DB::UPDATE)->parameters(array(
+          'status' => (int)$statusID,
+          'id' => (int)$postID
+    ))->execute();
                           
-     if($result > 0)
-       return true;
-     else
-       return false;
-   }
+    if($result > 0)
+      return true;
+    return false;
+    }
    
-   public static function saveMessagePost($data = array())
-   {
-     $result = 0;
+ /**
+  * Create a new message 
+  * 
+  * @param array $data
+  * @return boolean
+  */
+  public static function saveMessagePost( $data = array(), $files = array() )
+  {
+    $result = 0;
      
-     list($driver, $user_id) = \Auth::get_user_id();
+    list($driver, $user_id) = \Auth::get_user_id();
      
-     $result = \DB::query("INSERT INTO
-                             clientarea_messages_posts
-                           (
-                              id
-                             ,message_id
-                             ,user_id
-                             ,`from`
-                             ,message
-                             ,date
-                             ,status_id
-                           )
-                           VALUES
-                           (
-                              NULL
-                             ," . (int)$data['messageID'] . "
-                             ," . (int)$user_id . "
-                             ,'user'
-                             ," . \DB::quote($data['message']) . "
-                             ,NOW()
-                             ," . (int)$data['statusID'] . "
-                           )
-                          ", \DB::INSERT)->execute();
+    list($result, $uuid) = \DB::query(
+    "INSERT INTO
+      clientarea_messages_posts (id, message_id, user_id, `from`, message, date, status_id)
+    VALUES
+      (NULL, :message_id, :user_id, 'user', :message, NOW(), :status_id);",
+    \DB::INSERT)->parameters(array(
+      'message_id' => (int)$data['messageID'],
+      'user_id' => (int)$user_id,
+      'message' => $data['message'],
+      'status_id' => (int)$data['statusID']
+    ))->execute();
+
+    if(!empty($files))
+    {
+      static::saveMessageAttachments($uuid, $files);
+    }
                           
-     if($result > 0)
-       return true;
-     else
-       return false;
-   }
-   
+    if($result > 0)
+      return true;
+    return false;
+  }
+  
+  /**
+   *  Saves message attachments to database and FTP
+   * 
+   * @param $array $files
+   * @return boolean
+   */
+  public static function saveMessageAttachments($msgID, $files)
+  {
+    var_dump($msgID, $files);
+
+    foreach($files as $file)
+    {
+      list($lastid, $rows) = \DB::query(
+        'INSERT INTO
+          `clientarea_message_attachments` (`message_post_id`, `filename`)
+        VALUES (:id, :file);', \DB::INSERT
+      )->parameters(array(
+        'id' => $msgID,
+        'file' => $file['saved_as']
+      ))->execute();
+
+      //-- ^_^
+      if($rows < 1)
+        throw new \Exception('balls');
+
+    }
+
+    return true;
+
+  }
+
+
+   /**
+    * Return a list of comapnys
+    * 
+    * @return
+    */
    public static function companyList()
    {
      $results = array();
@@ -671,8 +739,7 @@
                             FROM
                               clientarea_companies
                             ORDER BY
-                              company_name ASC
-                           ", \DB::SELECT)->execute()->as_array();
+                              company_name ASC", \DB::SELECT)->execute()->as_array();
                            
      return $results;
    }
@@ -688,8 +755,8 @@
           `DOC`.`id`
           ,`DOC`.`client_id`
           ,`DOC`.`filename`
-          ,`DOC_TYPE`.`description` AS `status`
           ,`DOC`.`created_at`
+          ,`DOC_TYPE`.`description` AS `status`
         FROM
           `clientarea_documents` AS `DOC`
         INNER JOIN
@@ -697,11 +764,52 @@
         WHERE
           `company_id` = %d
         AND
-          `DOC`.`status` != 2
+          `DOC`.`status` != 2", static::$_userCentreID
+      ), \DB::SELECT)->execute()->as_array();
+   }
 
-      ", static::$_userCentreID), \DB::SELECT)->execute()->as_array();
+   /**
+    * 
+    * 
+    */
+   public static function viewDocument($id = null)
+   {
+      //gets record
+      $file = \DB::query(sprintf('SELECT
+          `filename`
+          ,`alias`
+        FROM
+          `clientarea_documents` AS `documents`
+        INNER JOIN
+          `clientarea_companies` AS `company` ON `documents`.`company_id` = `company`.`id`
+        WHERE
+          `documents`.`id`=%d
+        AND
+          `status`=1 LIMIT 1;', $id), \DB::SELECT)->execute()->as_array();
+      if(empty($file))
+        return array('error' => 'Unable to find document.');
+      $url = 'ftp://ClientArea:Wvts231ctD6@192.168.1.72/Scanned_Mail/ClientArea/' . $file[0]['alias'] . '/' . $file[0]['filename'];
+
+      //opens stream
+      $handle = fopen($url, 'rb');
+      if($handle)
+      {
+        $content = stream_get_contents($handle);
+        fclose($handle);
+
+        return array(
+          'mime' => 'application/octet-stream',
+          'filename' => $file[0]['filename'],
+          'content' => $content,
+        );
+        
+      } else {
+        return array('error' => 'Unable to open file.');
+      }
 
    }
+
+
 
 
 

@@ -56,7 +56,7 @@
                 <th>To:</th>
                   <td><input type="text" name="Message-To" id="Message-To" placeholder="Enter the client's Debtsolv ID Number" style="width: 80%;" /></td>
                 </tr>
-                <tr>
+                <!-- <tr>
                   <th>Company</th>
                   <td valign="left">
                     <select name="Message-CompanyID" id="Message-CompanyID">
@@ -64,7 +64,7 @@
                     </select>
                     <span style="font-weight: bold; margin-left: 15px;" id="Validate-Result"></span>
                   </td>
-                </tr>
+                </tr> -->
                 <tr>
                   <th>Subject:</th>
                   <td><input type="text" name="Message-Subject" class="Input-Required" id="Message-Subject" placeholder="Enter a Subject" style="width: 80%;" /></td>
@@ -105,47 +105,54 @@
   				</header>
           
           <section>
-            <table>
-              <tr>
-                <th>From:</th>
-                <td id="Latest-Post-From" style="text-align: left;"></td>
-              </tr>
-              <tr>
-                <th>Date:</th>
-                <td id="Latest-Post-Date" style="text-align: left;"></td>
-              </tr>
-              <tr>
-                <th>Message:</th>
-                <td id="Latest-Post-Body" style="text-align: left;"></td>
-              </tr>
-              <tr>
-                <td colspan="2" style="text-align: center;">
-                  <button type="button" type="submit" id="Send-Reply-Button" class="btn btn-primary">Reply</button>
-                  <button type="button" type="submit" id="Close-Message-Button" class="btn btn-primary">Close</button>
-                </td>
-              </tr>
-            </table>
-            
-            <input type="hidden" id="Last-Post-ID" />
-            
-            <table id="Reply-Form">
-              <tr>
-                <th colspan="2">Send a Reply<a name="reply"></a></th>
-              </tr>
-              <tr>
-                <th>Message:</th>
-                <td>
-                  <textarea name="Reply-Message-Body" id="Reply-Message-Body" rows="8" style="width: 80%;"></textarea>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2" style="text-align: center;">
-                  <input type="hidden" name="MessageID" id="MessageID" />
-                  <button type="button" type="submit" id="Send-Reply" class="btn btn-primary">Send</button>
-                </td>
-              </tr>
-            </table>
-            
+            <form id="form-reply" action="/clientarea/send_reply" method="post" enctype="multipart/form-data">
+              <table>
+                <tr>
+                  <th>From:</th>
+                  <td id="Latest-Post-From" style="text-align: left;"></td>
+                </tr>
+                <tr>
+                  <th>Date:</th>
+                  <td id="Latest-Post-Date" style="text-align: left;"></td>
+                </tr>
+                <tr>
+                  <th>Message:</th>
+                  <td id="Latest-Post-Body" style="text-align: left;"></td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="text-align: center;">
+                    <button type="button" type="submit" id="Send-Reply-Button" class="btn btn-primary">Reply</button>
+                    <button type="button" type="submit" id="Close-Message-Button" class="btn btn-primary">Close</button>
+                  </td>
+                </tr>
+              </table>
+              
+              <input type="hidden" name="lastThread" id="Last-Post-ID" />
+              
+              <table id="Reply-Form">
+                <tr>
+                  <th colspan="2">Send a Reply<a name="reply"></a></th>
+                </tr>
+                <tr>
+                  <th>Message:</th>
+                  <td>
+                    <textarea name="Reply-Message-Body" id="Reply-Message-Body" rows="8" style="width: 80%;"></textarea>
+                  </td>
+                </tr>
+                <tr>
+                    <th>Attachment:</th>
+                    <td>
+                      <input type="file" name="replay-file" />
+                    </td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="text-align: center;">
+                    <input type="hidden" name="MessageID" id="MessageID" />
+                    <input type="submit" id="Send-Reply" class="btn btn-primary" value="Send">
+                  </td>
+                </tr>
+              </table>
+            </form>           
           </section>
         
         </article>

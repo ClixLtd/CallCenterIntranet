@@ -6,8 +6,8 @@ return array(
         'database' => array(
             'type'       => 'pdo',
             'connection' => array(
-                'dsn'       => 'dblib:host=192.168.3.31:1433;dbname=Debtsolv_MMS',
-                #'dsn'        => 'sqlsrv:Server=192.168.3.31,1433;Database=LeadPool_MMS', // development 
+                #'dsn'       => 'dblib:host=192.168.3.31:1433;dbname=Debtsolv_MMS',
+                'dsn'        => 'sqlsrv:Server=192.168.3.31,1433;Database=LeadPool_MMS', // development 
                 'username'	 => 'debtsolv',
                 'password'	 => '76GerZnu871',
                 'persistent' => false,
@@ -24,8 +24,8 @@ return array(
         'database' => array(
             'type'       => 'pdo',
             'connection' => array(
-                'dsn'            => 'dblib:host=192.168.3.11:1433;dbname=Debtsolv_GABFS',
-                #'dsn'        => 'sqlsrv:Server=192.168.3.11,1433;Database=LeadPool_DM', //Development
+                #'dsn'            => 'dblib:host=192.168.3.11:1433;dbname=Debtsolv_GABFS',
+                'dsn'        => 'sqlsrv:Server=192.168.3.11,1433;Database=LeadPool_DM', //Development
                 'username'	 => 'sa',
                 'password'	 => 'kC934CEWew2',
                 'persistent' => false,
@@ -42,8 +42,8 @@ return array(
         'database' => array(
             'type'       => 'pdo',
             'connection' => array(
-                'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Debtsolv',
-                #'dsn'        => 'sqlsrv:Server=192.168.1.100,1334;Database=LeadPool_DM', //Development
+                #'dsn'            => 'dblib:host=192.168.1.100:1334;dbname=Debtsolv',
+                'dsn'        => 'sqlsrv:Server=192.168.1.100,1334;Database=LeadPool_DM', //Development
                 'username'	 => 'superuser',
                 'password'	 => 'Rfd32xs12B',
                 'persistent' => false,

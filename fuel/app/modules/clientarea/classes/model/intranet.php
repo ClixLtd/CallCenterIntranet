@@ -34,14 +34,37 @@
                             FROM
                               clientarea_companies
                             WHERE
-                              alias = " . \DB::quote(static::$company) . "
-                            LIMIT 1
-                           ", \DB::select())->execute()->as_array();
-                           
+                              alias = :company
+                            LIMIT 1;",
+                            \DB::select())->param('company', static::$company)->execute()->as_array();
+
       if(isset($result[0]['id']))
         return $result[0]['id'];
-      else
-        return 0;
+      return 0;
+    }
+
+    /**
+     * Returns the company id and settings for DebtSolve Class
+     * 
+     * @return array
+     */
+    public static function initCompany()
+    {
+      $result = array();
+
+      list($result) = \DB::query(
+        "SELECT 
+          `id`
+          ,`settings`
+        FROM
+          `clientarea_companies`
+        WHERE
+          `alias` = :company
+        LIMIT 1;", \DB::SELECT)->param('company', static::$company)->cached(3600)->execute()->as_array();
+
+      if(!empty($result))
+        return $result;
+      return false;
     }
 
     /**
@@ -49,78 +72,69 @@
     * 
     * @author David Stansfield
     */
-   public static function loadCompany()
-   {
-     $result = array();
+  public static function loadCompany()
+  {
+    $result = array();
      
-     $result = \DB::query("SELECT
+     list($result) = \DB::query("SELECT
                               id
                              ,alias
                              ,company_name
                              ,components
+                             ,settings
                              ,active
                            FROM
                              clientarea_companies
                            WHERE
-                             alias = " . \DB::quote(static::$company) . "
+                             alias = :company
                            LIMIT 1
-                          ", \DB::select())->cached(3600)->execute()->as_array();
+                          ", \DB::select())->param('company', static::$company)->cached(3600)->execute()->as_array();
                           
-     if(isset($result[0]))
-       return $result[0];
-     else
-       return $result;
-   }
+    if(!empty($result))
+      return $result;
+    return $result;
+  }
    
-   /**
-    * Change Password request
-    * 
-    * @author David Stansfield
-    */
-   public static function saveChangedPassword($data = array())
-   {
+  /**
+  * Change Password request
+  * 
+  * @author David Stansfield
+  */
+  public static function saveChangedPassword($data = array())
+  {
 
-     list($lastID, $rows) = \DB::query("INSERT INTO
-                                          clientarea_change_password
-                                        (
-                                           id
-                                          ,client_id
-                                          ,company_id
-                                          ,current_password
-                                          ,new_password
-                                          ,date
-                                          ,status
-                                        )
-                                        VALUES
-                                        (
-                                           NULL
-                                          ," . (int)static::$clientID . "
-                                          ," . (int)static::$companyID . "
-                                          ," . \DB::quote($data['currentPassword']) . "
-                                          ," . \DB::quote($data['currentPassword']) . "
-                                          ,NOW()
-                                          ,'PENDING'
-                                        )
-                                       ", \DB::INSERT)->execute();
-                          
-     return $lastID;
-   }
+    list($lastID, $rows) = \DB::query(
+      "INSERT INTO
+      clientarea_change_password (id, client_id, company_id, current_password, new_password, date, status)
+      VALUES
+      (NULL, :client_id, :company_id, :current, :new, NOW(), 'PENDING');",
+      \DB::INSERT
+    )->parameters(array(
+      'client_id' => (int)static::$clientID,
+      'company_id' => (int)static::$companyID,
+      'current' => $data['currentPassword'],
+      'new' => $data['newPassword'],
+    ))->execute();
+
+    return $lastID;
+  }
    
-   /**
-    * Update the change password log
-    * 
-    * @author David Stansfield
-    */
-   public static function updateChangePasswordLog($ID = 0, $status = '')
-   {
-     \DB::query("UPDATE
-                   clientarea_change_password
-                 SET
-                   status = " . \DB::quote($status) . "
-                 WHERE
-                   id = " . (int)$ID . "
-                 LIMIT 1
-                ", \DB::UPDATE)->execute();
+  /**
+  * Update the change password log
+  * 
+  * @author David Stansfield
+  */
+  public static function updateChangePasswordLog($ID = 0, $status = '')
+  {
+    \DB::query(
+      "UPDATE
+        clientarea_change_password
+      SET
+        status = :status
+      WHERE
+        id = :id LIMIT 1;",
+      \DB::UPDATE
+    )->parameters(array('status' => $status, 'id' => $ID))->execute();
    }
    
    /**
@@ -226,20 +240,11 @@
     */
     public static function saveNewMessage($subject = '')
     {      
-      list($lastID, $rows) = \DB::query("INSERT INTO
-                                           clientarea_messages
-                                         (
-                                            id
-                                           ,client_id
-                                           ,company_id
-                                           ,`from`
-                                           ,subject
-                                           ,date
-                                           ,status_id
-                                         )
-                                         VALUES
-                                         (
-                                            NULL
+      list($lastID, $rows) = \DB::query(
+        "INSERT INTO
+          clientarea_messages (id ,client_id ,company_id ,`from` ,subject ,date ,status_id)
+        VALUES
+          ( NULL,
                                            ," . static::$clientID . "
                                            ," . (int)static::$companyID . "
                                            ,'client'

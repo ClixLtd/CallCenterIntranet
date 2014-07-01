@@ -9,11 +9,11 @@
  
  class Model_Debtsolv extends \Model
  {
+   
+   public static $clientID = 0;
 
    public static $database = null;
-   
    protected static $databaseName = null;
-   public static $clientID = 0;
    
    protected static $_database = null;
    protected static $_debtsolvDatabase = null;
@@ -21,21 +21,26 @@
    protected static $_companyID = 0;
 	
    protected static $_connection = null;
+
+   protected static $_settings;
    
-   public static function forge($companyID = 0, $clientID = 0)
-   {
-     // -- Set the database name
-     // ------------------------     
-     $Database = Database::connect((int)$companyID);
-       
-     static::$databaseName = $Database->debtsolvDBName();
-     static::$_connection = $Database->connection();
+  public static function forge($companyID = 0, $clientID = 0, $settings = '')
+  {
+
+    // -- Set the database name
+    // ------------------------     
+    $Database = Database::connect((int)$companyID);
      
-     // -- Set the Client ID
-     // --------------------
-     static::$clientID = (int)$clientID;
-     static::$_companyID = (int)$companyID;
-   }
+    static::$databaseName = $Database->debtsolvDBName();
+    static::$_connection = $Database->connection();
+
+    // -- Set the Client ID
+    // --------------------
+    static::$clientID = (int)$clientID;
+    static::$_companyID = (int)$companyID;
+
+    static::$_settings = unserialize($settings);
+  }
    
    /**
     * Find a valid user based on Client ID and Password
@@ -73,10 +78,13 @@
                            INNER JOIN
                              " . static::$databaseName . ".dbo.Client_Contact AS CONTACT ON CLIX_CLIENT_ACCOUNT.client_id = CONTACT.ID
                            WHERE
-                             CLIX_CLIENT_ACCOUNT.client_id = " . (int)$clientID . "
+                             CLIX_CLIENT_ACCOUNT.client_id = :client_id
                            AND
-                             CLIX_CLIENT_ACCOUNT.company_id = " . static::$_companyID . ";"
-                          , \DB::SELECT)->execute(static::$_connection)->as_array();
+                             CLIX_CLIENT_ACCOUNT.company_id = :company_id;"
+                          , \DB::SELECT)->parameters(array(
+                              'client_id' => (int)$clientID,
+                              'company_id' => static::$_companyID,
+                            ))->execute(static::$_connection)->as_array();
 
 
      // -- checks given password against the hash 
@@ -98,7 +106,7 @@
      }
 
      //-- Catch Other errors
-     //----------
+     //---------------------
      return array('error' => 'Unexpected error occurred.');
    }
    
@@ -124,27 +132,34 @@
                              [Password] = HASHBYTES('sha1', '" . str_replace("'", "''", $data['currentPassword']) . "')
                           ", \DB::UPDATE)->execute(static::$_connection);
     */ 
+
     /**
      * Update to use bcrypt lib (crypt function)
      */
-    $result = \DB::query("UPDATE Top (1)
-                             Clix_Client_Portal.dbo.client_accounts
-                           SET
-                             [password] = '" . $data['newPassword'] . "'
-                           WHERE
-                             client_id = " . static::$clientID . "
-                           AND
-                             company_id = " . static::$_companyID . "
-                           AND
-                             [Password] = '" . $data['currentPassword'] . "'
-                          ", \DB::UPDATE)->execute(static::$_connection);
+    $result = \DB::query(
+      "UPDATE Top (1)
+        Clix_Client_Portal.dbo.client_accounts
+       SET
+         [password] = :password
+       WHERE
+         client_id = :client_id
+       AND
+         company_id = :company_id
+       AND
+         [Password] = :current
+      ", \DB::UPDATE)->parameters(array(
+          'password'  => $data['newPassword'],
+          'current' => $data['currentPassword'],
+          'client_id' => static::$clientID,
+          'company_id' => static::$_companyID,
+        ))->execute(static::$_connection);
 
+      \Log::info($data['currentPassword']);
 
-     if($result == 1)
-       return true;
-     else
-       return false;
-   }
+    if($result == 1)
+      return true;
+    return false;
+  }
    
    /**
     * Load up the clients details
@@ -155,7 +170,7 @@
    {
      $result = array();
 
-     $result = \DB::query("SELECT Top (1)
+     list($result) = \DB::query("SELECT Top (1)
                               CC.Title
                              ,CC.Initials
                              ,CC.Forename
@@ -197,57 +212,65 @@
                            INNER JOIN
                              " . static::$databaseName .".dbo.Client_Partner AS CP ON CC.ID = CP.ClientID
                            WHERE
-                             ID = " . (int)static::$clientID
-                          , \DB::select())->execute(static::$_connection)->as_array();
+                             ID = :id;"
+                          , \DB::select())->param('id', (int)static::$clientID)->execute(static::$_connection)->as_array();
      
      // -- Check results and return
      // ---------------------------                    
-     if(isset($result[0]))                   
-       return $result[0];
+     if(isset($result))                   
+       return $result;
      return $result;
    }
    
-   /**
-    * Get paid to date to creditors
-    * 
-    * @author David Stansfield
-    */
-   public static function paidToDate()
-   {
-     $result = 0;
-     $result = \DB::query("SELECT
-    	                       SUM(Amount*1.0)/100 AS Paid_to_Date
-                           FROM
-                           	 " . static::$databaseName . ".dbo.Payment_Receipt
-                           WHERE
-                             ClientID = " . static::$clientID . "
-                           AND
-                             TransactionType = 1
-                          ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
+  /**
+  * Get paid to date to creditors
+  * 
+  * @author David Stansfield
+  */
+  public static function paidToDate()
+  {
+    $result = 0;
+    list($result) = \DB::query(
+      "SELECT
+    	 SUM(Amount)*1.0/100 AS Paid_to_Date
+      FROM
+       " . static::$databaseName . ".dbo.Payment_Receipt
+      WHERE
+        ClientID = :id
+      AND
+        Date >= :startpoint
+      AND
+       TransactionType = 1;", \DB::SELECT)->parameters(array(
+        'id' => static::$clientID,
+        'startpoint' => date('Y-m-d H:i:s', static::$_settings['debtsolv']['startpoint'])
+      ))->cached(1800)->execute(static::$_connection)->as_array();
                           
-     if(isset($result[0]['Paid_to_Date']))
-      return $result[0]['Paid_to_Date'];
-     else
-       return 0;
+     if(isset($result['Paid_to_Date']))
+      return $result['Paid_to_Date'];
+     return 0;
    }
    
+   /**
+    * Returns the sum amount of money paid out to date
+    * 
+    * @return array
+    */
    public static function paidOutToDate()
    {
      $result = 0;
-     $result = \DB::query("SELECT
-                             SUM(PO.Amount * 1.0) / 100 AS total_out
+     list($result) = \DB::query("SELECT
+                             SUM(PO.Amount) * 1.0 / 100 AS total_out
                            FROM
                              " . static::$databaseName . ".dbo.Payment_Out AS PO
                            --INNER JOIN
                            --  " . static::$databaseName . ".dbo.Finstat_Debt AS FSD ON PO.AccountRef = FSD.AccountReference AND PO.ClientID = FSD.ClientID
                            WHERE
-                             PO.ClientID = " . static::$clientID . "
-                          ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
+                             PO.ClientID = id;"
+                          , \DB::SELECT)->param('id', static::$clientID)->cached(1800)->execute(static::$_connection)->as_array();
                           
-     if(isset($result[0]['total_out']))
-       return $result[0]['total_out'];
-     else
-       return 0;
+     if(isset($result['total_out']))
+       return $result['total_out'];
+     return 0;
    }
    
    /**
@@ -258,23 +281,27 @@
    public static function totalPaidToCreditors()
    {
      $result = array();
+
      $result = \DB::query("SELECT
-                             FSD.ID
-                            ,FSD.Description
-                            ,(
-                               SELECT
-                                 SUM(Amount * 1.0)/100
-                               FROM
-                                 " . static::$databaseName . ".dbo.Payment_Out
-                               WHERE AccountRef = FSD.AccountReference
-                             ) AS Paid
-                            ,(FSD.AmountOwed * 1.0)/100 AS Owed
-                            ,FSD.AccountReference
+                            DEBT.ID
+                            ,DEBT.[Description]
+                            ,(SELECT
+                                SUM(Amount) * 1.0 / 100
+                              FROM
+                                " . static::$databaseName . ".dbo.Payment_Out
+                              WHERE
+                                AccountRef = DEBT.AccountReference
+                            ) AS Paid
+                            ,DEBT.AmountOwed * 1.0/100 AS Owed
+                            ,DEBT.AccountReference
+                            ,HOLDER.[Description] AS Signatory
                           FROM 
-                            " . static::$databaseName . ".dbo.Finstat_Debt AS FSD
+                            " . static::$databaseName . ".dbo.Finstat_Debt AS DEBT
+                          INNER JOIN
+                            " . static::$databaseName . ".dbo.Type_DebtResponsibility AS HOLDER ON DEBT.ClientResponsible = HOLDER.ID
                           WHERE 
-                            FSD.ClientID = " . static::$clientID
-                         , \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
+                            DEBT.ClientID = :id;"
+                         , \DB::SELECT)->param(':id', static::$clientID)->cached(1800)->execute(static::$_connection)->as_array();
                          
      return $result;
    }
@@ -284,10 +311,10 @@
     * 
     * @author David Stansfield
     */
-   public static function accountStatement()
-   {
-     $results = array();
-     $results = \DB::query("(
+  public static function accountStatement()
+  {
+    $results = array();
+    $results = \DB::query("(
                               SELECT
                                 PR.ID
                                 ,Amount AS Amount_In
@@ -307,7 +334,9 @@
                               LEFT JOIN
                                 " . static::$databaseName . ".dbo.Type_Payment_Status AS TPS ON PR.[Status] = TPS.ID
                               WHERE
-                                ClientID = " . static::$clientID . "
+                                ClientID = :id
+                              AND
+                                [Date] >= :startpoint
                             )
                             UNION ALL
                             (
@@ -330,7 +359,9 @@
                               INNER JOIN
                                 " . static::$databaseName . ".dbo.Finstat_Debt AS FD ON PO.DebtID = FD.ID
                               WHERE
-                                PO.ClientID = " . static::$clientID . "
+                                PO.ClientID = :id
+                              AND
+                                DateSent >= :startpoint
                               GROUP BY
                                 PO.ID
                                 ,PO.Amount
@@ -341,7 +372,10 @@
                             )
                             ORDER BY
                               [Date] DESC
-                          ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
+                          ", \DB::SELECT)->parameters(array(
+                              'id' => static::$clientID,
+                              'startpoint' => date('Y-m-d H:i:s', static::$_settings['debtsolv']['startpoint']),
+                            ))->cached(1800)->execute(static::$_connection)->as_array();
                           
      return $results;
    }
@@ -354,58 +388,61 @@
    public static function warchest()
    {
      $results = array();
-     $results = \DB::query("SELECT TOP (1)
-                              SUM(Amount * 1.0) / 100 As warchest_amount
+     list($results) = \DB::query("SELECT TOP (1)
+                              SUM(Amount) * 1.0 / 100 As warchest_amount
                             FROM
                               " . static::$databaseName . ".dbo.Payment_Warchest
                             WHERE
-                              ClientID = " . static::$clientID . "
-                           ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
+                              ClientID = :id
+                            AND
+                              Date >= :startpoint;",
+                            \DB::SELECT)->parameters(array(
+                              'id' => static::$clientID,
+                              'startpoint' => date('Y-m-d H:i:s', static::$_settings['debtsolv']['startpoint'])
+                            ))->cached(1800)->execute(static::$_connection)->as_array();
                            
-     if(isset($results[0]['warchest_amount']))
-       return $results[0]['warchest_amount'];
-     else
-       return 0;
+     if(isset($results['warchest_amount']))
+       return $results['warchest_amount'];
+     return 0;
    }
 
-   /**
-    * Get the Client's standing order date
-    *
-    * @author David Stansfield
-    */
-    public static function standingOrderDate()
-    {
-        $result = array();
-        $result = \DB::query("SELECT TOP (1)
-                                PAYMENT_SCHEDULE.DateExpected AS next_payment_date
-                               ,PAYMENT_METHOD.[Description] AS payment_method
-                              FROM
-                                " . static::$databaseName . ".dbo.Payment_Schedule AS PAYMENT_SCHEDULE
-                              INNER JOIN
-                                " . static::$databaseName . ".dbo.Type_Payment_Method AS PAYMENT_METHOD ON PAYMENT_METHOD.ID = PAYMENT_SCHEDULE.PaymentMethod
-                              WHERE
-                                PAYMENT_SCHEDULE.ClientID = " . static::$clientID . "
-                              AND
-                                PAYMENT_SCHEDULE.DateExpected >= GETDATE()
-                              AND
-                                PAYMENT_SCHEDULE.AmountPaid = '0'
-                              ORDER BY
-                                PAYMENT_SCHEDULE.SequenceID ASC
-                             ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
+  /**
+  * Get the Client's next standing order date
+  *
+  * @author David Stansfield
+  */
+  public static function standingOrderDate()
+  {
+    $result = array();
+    list($result) = \DB::query("SELECT TOP (1)
+                                  PAYMENT_SCHEDULE.DateExpected AS next_payment_date
+                                  ,PAYMENT_METHOD.[Description] AS payment_method
+                                FROM
+                                  " . static::$databaseName . ".dbo.Payment_Schedule AS PAYMENT_SCHEDULE
+                                INNER JOIN
+                                  " . static::$databaseName . ".dbo.Type_Payment_Method AS PAYMENT_METHOD ON PAYMENT_METHOD.ID = PAYMENT_SCHEDULE.PaymentMethod
+                                WHERE
+                                  PAYMENT_SCHEDULE.ClientID = :id
+                                AND
+                                  PAYMENT_SCHEDULE.DateExpected >= GETDATE()
+                                AND
+                                  PAYMENT_SCHEDULE.AmountPaid = '0'
+                                ORDER BY
+                                  PAYMENT_SCHEDULE.SequenceID ASC
+                           ", \DB::SELECT)->param('id', static::$clientID)->cached(1800)->execute(static::$_connection)->as_array();
 
-        if(isset($result[0]))
-            return $result[0];
-        else
-            return $result;
-    }
+      if(isset($result))
+          return $result;
+      return $result;
+  }
 
-    /**
-     * Client Claims (Handled by 1-Tick)
-     *
-     * @author David Stansfield
-     */
-     public static function claims()
-     {
+  /**
+   * Client Claims (Handled by 1-Tick)
+   *
+   * @author David Stansfield
+   */
+   public static function claims()
+   {
          $results = array();
          $results = \DB::query("SELECT
                                   CLIENT_SERVICE.ClientID
@@ -440,36 +477,41 @@
                                 INNER JOIN
                                   " . static::$databaseName . ".dbo.Type_Debt_Status AS DEBT_STATUS ON CLIENT_DEBT.[Status] = DEBT_STATUS.ID
                                 WHERE
-                                  CLIENT_SERVICE.ClientID = " . static::$clientID . "
+                                  CLIENT_SERVICE.ClientID = :id
                                 AND
                                   CLIENT_SERVICE.ServiceType IN (1, 2, 4)
                                 AND
-                                  CLIENT_STAGE.StageRow = 1
-                                ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
+                                  CLIENT_STAGE.StageRow = 1",
+                                  \DB::SELECT)->param('id', static::$clientID)->cached(1800)->execute(static::$_connection)->as_array();
 
          return $results;
      }
 
-     /**
-      * Total Client Fees Paid
-      *
-      * @author David Stansfield
-      */
-     public static function totalFeesPaid()
-     {
-         $results = array();
-         $results = \DB::query("SELECT TOP (1)
-                                  SUM(Amount * 1.0) / 100 AS total_fee_amount
-                                FROM
-                                  " . static::$databaseName . ".dbo.Payment_Fee
-                                WHERE
-                                  ClientID = " . static::$clientID . "
-                                AND
-                                  [Status] = 10
-                               ", \DB::SELECT)->cached(1800)->execute(static::$_connection)->as_array();
+  /**
+  * Total Client Fees Paid
+  *
+  * @author David Stansfield
+  */
+  public static function totalFeesPaid()
+  {
+    $results = array();
+    list($results) = \DB::query("SELECT TOP (1)
+                            SUM(Amount * 1.0) / 100 AS total_fee_amount
+                          FROM
+                            " . static::$databaseName . ".dbo.Payment_Fee
+                          WHERE
+                            ClientID = :id
+                          AND
+                            Date >= :startpoint
+                          AND
+                            [Status] = 10;",
+                        \DB::SELECT)->parameters(array(
+                          'id' => static::$clientID,
+                          'startpoint' => date('Y-m-d H:i:s', static::$_settings['debtsolv']['startpoint']),
+                        ))->cached(1800)->execute(static::$_connection)->as_array();
 
-         if(isset($results[0]['total_fee_amount']))
-             return $results[0]['total_fee_amount'];
+         if(isset($results['total_fee_amount']))
+             return $results['total_fee_amount'];
          else
              return 0;
      }
@@ -485,8 +527,8 @@
                                 FROM
                                   " . static::$databaseName . ".[dbo].[Finstat_Debt]
                                 WHERE
-                                  ClientID = " . static::$clientID . "
-                               ", \DB::SELECT)->execute(static::$_connection)->as_array();
+                                  ClientID = :id;",
+                              \DB::SELECT)->param('id', static::$clientID)->cached(1800)->execute(static::$_connection)->as_array();
 
          if(isset($results[0]['total_owed']))
              return $results[0]['total_owed'];
@@ -537,21 +579,52 @@
           FROM
             "  . static::$databaseName . ".dbo.ArchivedDocuments AS DOCUMNET
           WHERE ClientID ='" . static::$clientID . "';"
-        )->execute(static::$_connection)->as_array();
+        )->cached(1800)->execute(static::$_connection)->as_array();
      }
 
      public static function getCreditorCount()
      {
         $query = 'SELECT
-                    (SELECT SUM(EstimatedBalance*1.0)/100 FROM '.static::$databaseName.'.dbo.Finstat_Debt WHERE ClientID = '.static::$clientID.') AS totalDebt
+                    (SELECT SUM(EstimatedBalance*1.0)/100 FROM '.static::$databaseName.'.dbo.Finstat_Debt WHERE ClientID = :id) AS totalDebt
                     ,COUNT(*) AS countCreditors
                   FROM
                     '.static::$databaseName.'.dbo.Finstat_Debt
                   WHERE
-                    ClientID = '. static::$clientID . '
+                    ClientID = :id
                   AND
                     EstimatedBalance > 0;';
 
-        return \DB::query($query)->execute(static::$_connection)->as_array();
+        return \DB::query($query)->param('id', static::$clientID)->cached(1800)->execute(static::$_connection)->as_array();
+     }
+
+     /**
+      * Returns a list of letters sent to a creditor for a client
+      * 
+      * @return array 
+      */
+     public static function getSentCreditorLetters()
+     {
+        $query = \DB::query("SELECT
+                              LETTER.ID
+                              ,LETTER.DateCreated
+                              ,LETTER_TYPE.Title
+                              ,CREDITOR.Name AS Creditor
+                            FROM
+                              " . static::$databaseName .".dbo.PrintQueue_StdLetters AS LETTER
+                            INNER JOIN
+                              " . static::$databaseName . ".dbo.Type_StdLetter AS LETTER_TYPE ON LETTER.TemplateID = LETTER_TYPE.ID
+                            INNER JOIN
+                              " . static::$databaseName . ".dbo.Creditor_Contact AS CREDITOR ON LETTER.CreditorID = CREDITOR.ID
+                            WHERE
+                              ClientID = :id
+                            AND
+                              CreditorID != 0
+                            ORDER BY
+                              dateCreated DESC;");
+
+        return $query->param('id',static::$clientID)
+              ->cached(1800)
+              ->execute(static::$_connection)
+              ->as_array();
      }
  }
