@@ -80,8 +80,8 @@
                            --AND
                            --  CONTACT.[Status] IN (9, 13)
                           ", \DB::SELECT)->execute(static::$_connection)->as_array();
-
-
+     if(empty($result))
+        return false;
      // -- checks given password against the hash 
      // -----------------------------------------
      // salt = $6$rounds=8000$mnwMjNLvHnnUhuP4eX6zi8EvGSru7vWB$
