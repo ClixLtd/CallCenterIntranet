@@ -211,27 +211,20 @@
     * 
     * @author David Stansfield
     */
-   public static function writeLog($typeID = 0, $data = '')
-   {
-     \DB::query("INSERT INTO
-                   clientarea_client_access_log
-                 (
-                    id
-                   ,log_type_id
-                   ,client_id
-                   ,date_time
-                   ,data
-                 )
-                 VALUES
-                 (
-                    NULL
-                   ," . (int)$typeID . "
-                   ," . static::$clientID . "
-                   ,NOW()
-                   ," . \DB::quote($data) . "
-                 )
-                ", \DB::insert())->execute();
-   }
+  public static function writeLog($typeID = 0, $data = '')
+  {
+    \DB::query("INSERT INTO
+                  clientarea_client_access_log ( log_type_id, company_id, client_id, date_time, data )
+                VALUES
+                  (:type, :company, :client, NOW(), :data);",
+                \DB::insert()
+    )->parameters(array(
+                  'type' => (int)$typeID,
+                  'company' => (int)static::$companyID,
+                  'client' => (int)static::$clientID,
+                  'data' => $data
+    ))->execute();
+}
    
    /**
     * Save a new message

@@ -65,7 +65,6 @@
                                 ID = :id;",
                               \DB::SELECT)->param('id', (int)$clientID)
                                           ->execute(static::$_connection)->as_array();
-    \Log::info($result);
     return false;
 
     if(isset($result['ID']) && $result['ID'] == (int)$clientID)

@@ -86,7 +86,6 @@
                               'company_id' => static::$_companyID,
                             ))->execute(static::$_connection)->as_array();
 
-
      // -- checks given password against the hash 
      // -----------------------------------------
      // salt = $6$rounds=8000$mnwMjNLvHnnUhuP4eX6zi8EvGSru7vWB$

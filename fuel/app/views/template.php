@@ -300,6 +300,13 @@
 	<?php echo Asset::js('jquery/jquery.visualize.tooltip.js'); ?>
 	<?php echo Asset::js('jquery/jquery.dropdown.js'); ?>
 	<?php echo Asset::js('script.js'); ?>
+
+
+<script type="text/javascript" src="https://s3.amazonaws.com/assets.freshdesk.com/widget/freshwidget.js"></script>
+<script type="text/javascript">
+	FreshWidget.init("", {"queryString": "&widgetType=popup", "widgetType": "popup", "buttonType": "text", "buttonText": "Get Help", "buttonColor": "white", "buttonBg": 
+"#ff6d14", "alignment": "2", "offset": "235px", "formHeight": "600px", "url": "https://ticket.clix.co.uk"} );
+</script>
 	
 </body>
 </html>
