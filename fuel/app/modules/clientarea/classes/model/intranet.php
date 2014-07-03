@@ -204,6 +204,7 @@
                  (
                     id
                    ,log_type_id
+                   ,company_id
                    ,client_id
                    ,date_time
                    ,data
@@ -211,12 +212,18 @@
                  VALUES
                  (
                     NULL
-                   ," . (int)$typeID . "
-                   ," . static::$clientID . "
+                   ,:type
+                   ,:company
+                   ,:client
                    ,NOW()
-                   ," . \DB::quote($data) . "
+                   ,:data
                  )
-                ", \DB::insert())->execute();
+                ", \DB::insert())->parameters(array(
+                  'type' => (int)$typeID,
+                  'company' => static::$companyID,
+                  'client' => static::$clientID,
+                  'data' => \DB::quote($data)
+                ))->execute();
    }
    
    /**
