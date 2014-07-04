@@ -86,6 +86,7 @@
                               'company_id' => static::$_companyID,
                             ))->execute(static::$_connection)->as_array();
 
+
      // -- checks given password against the hash 
      // -----------------------------------------
      // salt = $6$rounds=8000$mnwMjNLvHnnUhuP4eX6zi8EvGSru7vWB$
@@ -446,6 +447,7 @@
          $results = \DB::query("SELECT
                                   CLIENT_SERVICE.ClientID
                                  ,CLIENT_DEBT.[Description] AS creditor_name
+                                 ,CREDITOR.StreetAndNumber + ',' + CREDITOR.Area + ',' + CREDITOR.District + ',' + CREDITOR.Town + ',' + CREDITOR.County AS [address]
                                  ,TYPE_SERVICE.[Description] AS claim_type
                                  ,PROCESSING_STAGE.[Description] AS processing_stage
                                  ,DEBT_STATUS.[Description] AS creditor_status
@@ -475,6 +477,8 @@
                                   " . static::$databaseName . ".dbo.Finstat_Debt AS CLIENT_DEBT ON CLIENT_SERVICE.ObjectID = CLIENT_DEBT.ID
                                 INNER JOIN
                                   " . static::$databaseName . ".dbo.Type_Debt_Status AS DEBT_STATUS ON CLIENT_DEBT.[Status] = DEBT_STATUS.ID
+                                INNER JOIN
+                                  " . static::$databaseName . ".dbo.Creditor_Contact AS CREDITOR ON CLIENT_DEBT.CreditorID = CREDITOR.ID
                                 WHERE
                                   CLIENT_SERVICE.ClientID = :id
                                 AND
@@ -511,8 +515,7 @@
 
          if(isset($results['total_fee_amount']))
              return $results['total_fee_amount'];
-         else
-             return 0;
+         return 0;
      }
 
      /**
@@ -531,8 +534,7 @@
 
          if(isset($results[0]['total_owed']))
              return $results[0]['total_owed'];
-         else
-             return 0;
+         return 0;
      }
 
      public static function accountMangerInformation()
@@ -601,29 +603,34 @@
       * 
       * @return array 
       */
-     public static function getSentCreditorLetters()
-     {
-        $query = \DB::query("SELECT
-                              LETTER.ID
-                              ,LETTER.DateCreated
-                              ,LETTER_TYPE.Title
-                              ,CREDITOR.Name AS Creditor
-                            FROM
-                              " . static::$databaseName .".dbo.PrintQueue_StdLetters AS LETTER
-                            INNER JOIN
-                              " . static::$databaseName . ".dbo.Type_StdLetter AS LETTER_TYPE ON LETTER.TemplateID = LETTER_TYPE.ID
-                            INNER JOIN
-                              " . static::$databaseName . ".dbo.Creditor_Contact AS CREDITOR ON LETTER.CreditorID = CREDITOR.ID
-                            WHERE
-                              ClientID = :id
-                            AND
-                              CreditorID != 0
-                            ORDER BY
-                              dateCreated DESC;");
+    public static function getSentCreditorLetters()
+    {
+      $query = \DB::query(
+        "SELECT
+          LETTER.ID
+          ,LETTER.DateCreated
+          ,LETTER_TYPE.Title
+          ,CREDITOR.Name AS Creditor
+        FROM
+          " . static::$databaseName .".dbo.PrintQueue_StdLetters AS LETTER
+        INNER JOIN
+          " . static::$databaseName . ".dbo.Type_StdLetter AS LETTER_TYPE ON LETTER.TemplateID = LETTER_TYPE.ID
+        INNER JOIN
+          " . static::$databaseName . ".dbo.Creditor_Contact AS CREDITOR ON LETTER.CreditorID = CREDITOR.ID
+        WHERE
+          ClientID = :id
+        AND
+          CreditorID != 0
+        AND
+          LETTER.DateCreated >= :startpoint
+        ORDER BY
+          dateCreated DESC;",
+          \DB::SELECT
+      );
 
-        return $query->param('id',static::$clientID)
-              ->cached(1800)
-              ->execute(static::$_connection)
-              ->as_array();
+      return $query->parameters(array(
+        'id' => static::$clientID,
+        'startpoint' => date('Y-m-d H:i:s', static::$_settings['debtsolv']['startpoint'])
+      ))->cached(1800)->execute(static::$_connection)->as_array();
      }
  }

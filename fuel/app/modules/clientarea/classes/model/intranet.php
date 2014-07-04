@@ -105,9 +105,9 @@
 
     list($lastID, $rows) = \DB::query(
       "INSERT INTO
-      clientarea_change_password (id, client_id, company_id, current_password, new_password, date, status)
+        clientarea_change_password (id, client_id, company_id, current_password, new_password, date, status)
       VALUES
-      (NULL, :client_id, :company_id, :current, :new, NOW(), 'PENDING');",
+        (NULL, :client_id, :company_id, :current, :new, NOW(), 'PENDING');",
       \DB::INSERT
     )->parameters(array(
       'client_id' => (int)static::$clientID,
@@ -213,18 +213,20 @@
     */
   public static function writeLog($typeID = 0, $data = '')
   {
+
     \DB::query("INSERT INTO
                   clientarea_client_access_log ( log_type_id, company_id, client_id, date_time, data )
                 VALUES
                   (:type, :company, :client, NOW(), :data);",
-                \DB::insert()
+                \DB::INSERT
     )->parameters(array(
-                  'type' => (int)$typeID,
-                  'company' => (int)static::$companyID,
-                  'client' => (int)static::$clientID,
-                  'data' => $data
+      'type' => (int)$typeID,
+      'company' => (int)static::$companyID,
+      'client' => (int)static::$clientID,
+      'data' => $data
     ))->execute();
-}
+
+  }
    
    /**
     * Save a new message
@@ -235,19 +237,18 @@
     {      
       list($lastID, $rows) = \DB::query(
         "INSERT INTO
-          clientarea_messages (id ,client_id ,company_id ,`from` ,subject ,date ,status_id)
+          clientarea_messages (client_id ,company_id ,`from` ,subject ,date ,status_id)
         VALUES
-          ( NULL,
-                                           ," . static::$clientID . "
-                                           ," . (int)static::$companyID . "
-                                           ,'client'
-                                           ," . \DB::quote($subject) . "
-                                           ,NOW()
-                                           ,1
-                                         )
-                                        ", \DB::INSERT)->execute();
-                                        
+          (:clientID, :comapnyID, 'client', :subject, NOW(), 1);",
+          \DB::INSERT
+      )->parameters(array(
+        'clientID' => (int)static::$clientID,
+        'companyID' => (int)static::$companyID,
+        'subject' => $subject,
+      ))->execute();
+
       return (int)$lastID;
+
     }
     
     /**
@@ -261,28 +262,19 @@
       
       list($driver, $user_id) = \Auth::get_user_id();
       
-      $result = \DB::query("INSERT INTO
-                              clientarea_messages_posts
-                            (
-                               id
-                              ,message_id
-                              ,user_id
-                              ,`from`
-                              ,message
-                              ,date
-                              ,status_id
-                            )
-                            VALUES
-                            (
-                               NULL
-                              ," . (int)$data['messageID'] . "
-                              ," . (int)$user_id . "
-                              ," . \DB::quote($data['from']) . "
-                              ," . \DB::quote($data['message']) . "
-                              ,NOW()
-                              ," . (isset($data['statusID']) ? $data['statusID'] : 1) . "
-                            )
-                           ", \DB::insert())->execute();
+      $result = \DB::query(
+        "INSERT INTO
+          clientarea_messages_posts( message_id, user_id, `from`, message, date, status_id)
+        VALUES
+          (:messageID, :userID, :from, :message, NOW() :status);",
+          \DB::INSERT
+      )->parameters(array(
+        'messageID' => (int)$data['messageID'],
+        'userID' => (int)$user_id,
+        'from' => $data['from'],
+        'message' => $data['message'],
+        'status' => (isset($data['statusID'])?$data['statusID']:1),
+      ))->execute();
                            
       return $result;
     }
