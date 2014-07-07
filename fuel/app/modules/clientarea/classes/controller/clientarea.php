@@ -361,7 +361,7 @@
         'error' => array(
           'message' => $e->getMessage(),
           'code'  => $e->getCode(),
-          'type' => 'logic',
+          'type' => 'Exception',
         )
       ));
     }

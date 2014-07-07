@@ -50,21 +50,12 @@
 					<h2>New Message</h2>
 				</header>  
         <section>
-          <form id="New-Message-Form">
+          <form action="" method="post" id="New-Message-Form" enctype="multipart/form-data" encoding="multipart/form-data">
             <table>
               <tr>
                 <th>To:</th>
                   <td><input type="text" name="Message-To" id="Message-To" placeholder="Enter the client's Debtsolv ID Number" style="width: 80%;" /></td>
                 </tr>
-                <!-- <tr>
-                  <th>Company</th>
-                  <td valign="left">
-                    <select name="Message-CompanyID" id="Message-CompanyID">
-                      <option value="">-- Select a Company --</option>
-                    </select>
-                    <span style="font-weight: bold; margin-left: 15px;" id="Validate-Result"></span>
-                  </td>
-                </tr> -->
                 <tr>
                   <th>Subject:</th>
                   <td><input type="text" name="Message-Subject" class="Input-Required" id="Message-Subject" placeholder="Enter a Subject" style="width: 80%;" /></td>
@@ -74,14 +65,20 @@
                   <td><textarea name="Message-Body" class="Input-Required" id="Message-Body" rows="8" style="width: 80%;"></textarea></td>
                 </tr>
                 <tr>
+                  <th>Attachment</th>
+                  <td><input type="file" id="Message-Attachment" name="attachment" style="width: 80%;"/></td>
+                </tr>
+                <tr>
                   <td>&nbsp;</td>
                   <td>
-                    <button type="button" type="submit" id="Send-New-Message" class="btn btn-alt btn-large btn-primary">Send Message</button>
-                    <button type="button" type="button" id="Cancel-New-Message" class="btn btn-alt btn-large btn-primary">Cancel Message</button>
+                    <input type="submit" id="Send-New-Message" class="btn btn-alt btn-large btn-primary" value="Send Message">
+                    <input type="button" id="Cancel-New-Message" class="btn btn-alt btn-large btn-primary" value="Cancel Message">
                   </td>
                 </tr>
               </table>
             </form>
+            <!--//-->
+            <progress id="form-response" style="display:none"></progress>
           </section>
         </article>
       </section>

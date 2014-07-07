@@ -103,7 +103,57 @@ $(document).ready(function()
     location.href = '/clientarea/messages/?box=' + box;
   });
   
-  $("#Send-New-Message").click(function()
+
+  $('#New-Message-Form').submit(function(e){
+    e.preventDefault();
+    var formData = new FormData($(this)[0]);
+    console.log(formData);
+
+    $.ajax({
+        'url': '/clientarea/save_new_message/0.json', //Server script to process data
+        'type': 'POST',
+        'xhr': function () { // Custom XMLHttpRequest
+            var myXhr = $.ajaxSettings.xhr();
+            if (myXhr.upload) { // Check if upload property exists
+                myXhr.upload.addEventListener('progress', progressHandlingFunction, false); // For handling the progress of the upload
+            }
+            return myXhr;
+        },
+        //Ajax events
+        //'beforeSend': function (stuff) {
+            //console.log("BeforeSend");
+            //console.log(stuff);
+        //},
+        'success': function (data) {
+            if(data.error == undefined)
+            {
+              alert(data.success);
+              clearMessageForm();
+            }
+            else
+            {
+              alert('Oops... ' + data.error.message);
+            }
+        },
+        'error': function (o,s,m) {
+            console.log("Error!");
+            console.log(m);
+        },
+        // Form data
+        'data': formData,
+        //Options to tell jQuery not to process data or worry about content-type.
+        'cache': false,
+        'contentType': false,
+        'processData': false
+    });
+    //alert($(this).serialize());
+  })
+
+  function progressHandlingFunction(evt)
+  {
+    $('#form-response').attr({'max':100,'value':0}).fadeIn();
+  }
+  /*$("#Send-New-Message").click(function()
   {
     // -- Validate
     // -----------
@@ -154,7 +204,7 @@ $(document).ready(function()
     {
       alert(errorMsg);
     }
-  });
+  });*/
   
   //-- 
   //-----

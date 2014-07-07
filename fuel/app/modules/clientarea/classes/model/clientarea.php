@@ -528,7 +528,6 @@
                   WHERE
                     CONTACT.ID = :id;", \DB::SELECT)->param('id', $data['clientID'])->execute(static::$_connection)->as_array();
 
-
       if(!isset($check[0]['client_id']))
         throw new \Exception('Unable to find client.');
 
@@ -545,14 +544,19 @@
         'companyID' => (int)$check[0]['company_id'],
         'subject'   => $data['subject'],
       ))->execute();
-    
 
+    //-- Uploads files to ftp
+    //-----------------------
+    
+    
+    \Upload::save();
     if($lastID < 1)
       throw new \Exception('Unable to create message');
 
     $data['messageID'] = $lastID;
     $data['companyID'] = $check[0]['company_id'];
     $data['statusID'] = 1;
+    $data['files'] = \Upload::get_files(0);
 
     if(static::saveMessagePost($data) === false )
       throw new \Exception('Unable to create message');
@@ -661,13 +665,13 @@
   * @param array $data
   * @return boolean
   */
-  public static function saveMessagePost( $data = array(), $files = array() )
+  public static function saveMessagePost( $data = array() )
   {
     $result = 0;
      
     list($driver, $user_id) = \Auth::get_user_id();
      
-    list($result, $uuid) = \DB::query(
+    list($result, $postID) = \DB::query(
     "INSERT INTO
       clientarea_messages_posts (id, message_id, user_id, `from`, message, date, status_id)
     VALUES
@@ -679,9 +683,10 @@
       'status_id' => (int)$data['statusID']
     ))->execute();
 
-    if(!empty($files))
+    if(!empty($date['files']))
     {
-      static::saveMessageAttachments($uuid, $files);
+      if(!static::saveMessageAttachments($postID, $data['comapnyID'], $date['files']))
+        throw new \Exception('Unable to save message attachment');
     }
                           
     if($result > 0)
@@ -695,25 +700,63 @@
    * @param $array $files
    * @return boolean
    */
-  public static function saveMessageAttachments($msgID, $files)
+  public static function saveMessageAttachments($postID, $companyID, $files)
   {
-    var_dump($msgID, $files);
 
-    foreach($files as $file)
-    {
-      list($lastid, $rows) = \DB::query(
-        'INSERT INTO
-          `clientarea_message_attachments` (`message_post_id`, `filename`)
-        VALUES (:id, :file);', \DB::INSERT
+    \Log::info(print_r($files, 1));
+
+    if(!empty($files))
+    {      
+      $ftp = \Ftp::forge(array(
+        'hostname' => '85.199.245.8',
+        'username' => 'ClientArea',
+        'password' => 'Wvts231ct6D',
+        'timeout' => 3,
+        'port' => 21,
+        'passive' => true,
+        'ssl_mode' => false,
+        'debug' => false
+      ));
+
+      switch($companyID)
+      {
+        case 15:
+          $path = '1-tick';
+          break;
+        case 23:
+          $path = 'expertmoneysolutions';
+          break;
+        case 25:
+          $path = 'moneymanagementservices';
+          break;
+        case 24:
+          $path = 'ukclaimssurgery';
+          break;
+        default:
+          $path = 'error';
+          break;
+      }
+
+      //-- checks path exists
+      //---------------------
+      if(!$ftp->change_dir('/Scanned_Mail/ClientArea/' . $path ))
+        throw new \Exception('Unable to find path.');
+
+
+      $file = \Upload::get_files(0);
+      if(!$ftp->upload($file['saved_to'] . $file['saved_as'], '/Scanned_Mail/ClientArea/' . $path))
+        throw new \Exception('Unable to upload document', 5);
+
+      $update = \DB::query(
+        "INSERT INTO
+          `clientarea_message_attachments` ( message_post_id, filename)
+        VALUES
+          (:postID, :file);",
+        \DB::INSERT
       )->parameters(array(
-        'id' => $msgID,
-        'file' => $file['saved_as']
+        'postID' => $lastID,
+        'file' => $file['saved_as'],
       ))->execute();
-
-      //-- ^_^
-      if($rows < 1)
-        throw new \Exception('balls');
-
     }
 
     return true;
