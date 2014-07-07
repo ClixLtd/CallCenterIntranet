@@ -60,10 +60,85 @@
      $this->template->title = 'Client Area | Messages';
      $this->template->content = \View::forge('messages', $data);
    }
-   
+    
+   public function action_documents()
+   {
+      $data = array();
+      $data['documents'] = Model_ClientArea::getDocuments();
+
+      $this->template->title = "Client Documents";
+      $this->template->content = \View::forge('documents', $data);
+   }
+
+   public function action_document_view($id = null){
+      $this->template = '';
+
+      $result = Model_ClientArea::viewDocument($id);
+
+      if(isset($result['error']))
+      {
+        echo 'Error : '. $result['error'];
+      }
+      else
+      {
+        header("Content-Disposition: attachment; filename=" . urlencode($result['filename'])); 
+        header('Content-Type: application/octet-stream');
+        echo $result['content'];
+      }
+
+   }
+
    // ------------------------------------------------\\
    // -- Ajax Calls ----------------------------------\\
    // ------------------------------------------------\\
+  public function post_approve()
+  {
+    $action = \Input::post('action');
+    $document = \Input::post('document');
+
+    try
+    {
+      if(!in_array($action, [1, 2, 3]))
+        throw new \Exception('invalid action selected');
+
+      if(is_null($document))
+        throw new \Exception('No documents are selected');
+
+
+      list($driver, $uuid) = \Auth::get_user_id();
+
+      //puts all document id into string
+      $update = array();
+      foreach($document as $item)
+        $update[] = $item;
+      $update = implode(', ', $update);
+
+      //Updates database
+      $row = \DB::query(
+        sprintf('UPDATE `clientarea_documents` SET `actioned_by`=%1$d, `status`=%2$d, `updated_at`=NOW() WHERE `id` IN (' . $update . ');', $uuid, $action),
+        \DB::UPDATE
+      )->execute();
+
+      if($row == 0)
+        throw new \Exception('Unable to approve documents');
+
+      return $this->response(array(
+        'status' => 'success',
+        'message' => 'Documents have been approved',
+        'data' => [],
+      ));
+
+    }
+    catch(\Exception $e)
+    {
+      $this->response(array(
+        'status' => 'failed',
+        'message' => $e->getMessage(),
+        'data' => array()
+      ));
+    }
+  }
+
   public function post_add_client_account()
   {
     $clientID = \Input::post('ClientID');
@@ -103,17 +178,6 @@
         'data' => array(),
       ));
     }
-
-//       if(Model_ClientArea::addClient((int)$clientID, $password) === true)
-//         $status = 'success';
-//       else
-//         $status = 'failed';
-
-       //$this->response(array(
-           //'status' => $status,
-           //'message' => '',
-           //'data' => array(),
-       //));
    }
    
    public function post_getChangeDetailsList($clientID)
@@ -273,76 +337,62 @@
      ));
    }
    
-   public function post_save_new_message()
-   {
-     $status = '';
-     $message = '';
+  public function post_save_new_message()
+  {
+    $status = '';
+    $message = '';
     
-     $data = array(
-       'clientID' => \Input::post('Message-To'),
-       'companyID' => \Input::post('Message-CompanyID'),
-       'subject'  => \Input::post('Message-Subject'),
-       'message'  => \Input::post('Message-Body'),
-     );
-     
-     if(Model_ClientArea::createNewMessage($data) === true)
-     {
-       $status = 'success';
-     }
-     else
-     {
-       $status = 'failed';
-     }
-     
-     $this->response(array(
-       'status'   => $status,
-       'message'  => $message,
-       'data'     => array(),
-     ));
-   }
+    $data = array(
+      'clientID' => \Input::post('Message-To'),
+      'subject'  => \Input::post('Message-Subject'),
+      'message'  => \Input::post('Message-Body'),
+    );
+
+    try{
+
+      Model_ClientArea::createNewMessage($data);
+
+      $this->response(array(
+        'success' => 'Message has been sent'
+      ));
+
+    } catch(\Exception $e) {
+      $this->response(array(
+        'error' => array(
+          'message' => $e->getMessage(),
+          'code'  => $e->getCode(),
+          'type' => 'Exception',
+        )
+      ));
+    }
+  }
    
-   public function post_send_reply($messageID = 0)
-   {
-     $data = array(
-       'messageID'  => (int)$messageID,
-       'message'    => \Input::post('message'),
-       'from'       => 'user',
-       'statusID'   => 1,
-     );
+  public function post_send_reply()
+  {
+    $data = array(
+     'messageID'  => \Input::post('MessageID'),
+     'message'    => \Input::post('Reply-Message-Body'),
+     'from'       => 'user',
+     'statusID'   => 1,
+    );
+
+    $lastPostID = \Input::post('lastPostID');
+    //throw new \Exception('err');
+
+    // -- Make last post status ID = 3, Reply
+    // --------------------------------------
+    if(!Model_ClientArea::setLastPostReplied( \Input::post('MessageID') ))
+      throw new \Exception('Changing Status ID of last message failed');
+
+    \Upload::process();
+    \Upload::save();
+    if(!Model_ClientArea::saveMessagePost( $data, \Upload::get_files() ) )
+      throw new \Exception('Saving New Post Failed');
+
+    return $this->response(true);
      
-     $lastPostID = \Input::post('lastPostID');
-     
-     // -- Make last post status ID = 3, Reply
-     // --------------------------------------
-     $status = '';
-     $message = '';
-     
-     if(Model_ClientArea::setLastPostReplied((int)$messageID))
-     {
-       if(Model_ClientArea::saveMessagePost($data) === true)
-       {
-         $status = 'success';
-       }
-       else
-       {
-         $status = 'failed';
-         $message = 'Saving New Post Failed';
-       }
-     }
-     else
-     {
-       $status = 'failed';
-       $message = 'Changing Status ID of last message failed';
-     }
-     
-     $this->response(array(
-       'status' => $status,
-       'message' => $message,
-       'data' => array(),
-     ));
-     
-     $messageBody = \Input::post('message');
-   }
+    //$messageBody = \Input::post('message');
+  }
    
    public function post_company_list()
    {
@@ -392,4 +442,4 @@
        'data' => $data,
      ));
    }
- }
+ }  

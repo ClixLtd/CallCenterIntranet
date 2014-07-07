@@ -2,6 +2,30 @@ var requestList = '';
 
 $(document).ready(function()
 {
+
+  //-- 
+  //------------
+  $('#approvedoc').submit(function(e){
+      e.preventDefault();
+
+      if($('#bulk-action').val() == 0) {
+        alert('Error : Select an action');
+        return;
+      }
+
+      $.post('/clientarea/approve', $(this).serialize(), function(data){
+        if(data.status != 'success')
+          alert('Error : ' + data.message);
+        else{
+          alert(data.message);
+          location.reload();
+        }
+      },'json').error(function(o,s,m){
+        alert('Error : ' + m);
+      });
+  });
+
+
   /* Approve Change Client Details */
   /* ***************************** */
   $("#Change-Client-Details").dialog({
@@ -177,7 +201,9 @@ $(document).ready(function()
 
       });
   });
+
 });
+//-- end of jquery
 
 function approveRequest()
 {

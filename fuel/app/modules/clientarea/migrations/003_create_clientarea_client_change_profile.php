@@ -14,7 +14,7 @@ class Create_clientarea_client_change_profile
       'old_value'       => array('type' => 'text'),
       'new_value'       => array('type' => 'text'),
       'date_requested'  => array('type' => 'datetime'),
-      'approved_by'     => array('constraint' => 11, 'type' => 'int'),
+      'approved_by'     => array('type' => 'int', 'constraint' => 11),
       'date_approved'   => array('type' => 'datetime'),
 		), array('id'));
 	}
