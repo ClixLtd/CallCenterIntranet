@@ -80,7 +80,7 @@ class Data
 	    if (count($currentCopyCount) > Data::SIMULLISTS)
 	    {
 	        // Too many copying or importing to continue so stop
-	        returnfalse;
+	        return false;
 	    }
 	    else
 	    {
