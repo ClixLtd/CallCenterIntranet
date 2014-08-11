@@ -644,7 +644,7 @@
 
         $result = \DB::query(
           "SELECT 
-            accepted_at
+            created_at
           FROM
             clientarea_log_terms_agreements
           WHERE
@@ -652,7 +652,9 @@
           AND
             client_id=:client_id
           AND
-            terms_id =:terms_id",
+            terms_id =:terms_id
+          AND
+            status = 'ACCEPT';",
           \DB::SELECT
         )->parameters(array(
           'company_id' => self::$companyID,
@@ -665,27 +667,26 @@
         return false;
      }
 
-     public static function acceptTemrs($clientID, $termsID = 1)
+
+     public static function logTerms($clientID, $termsID = 1, $status)
      {
 
-        /*
-        return array(
-          'company_id' => self::$companyID,
-          'client_id' => $clientID,
-          'terms_id' => $termsID,
-        );
-        */
+        //throw new \Exception( print_r(\Session::get('store'), 1) );
+
+        if( !in_array($status, array('ACCEPT', 'REJECT')) )
+          throw new \Exception('Invalid status: ' . $status);
 
         $result = \DB::query(
           "INSERT INTO
-            clientarea_log_terms_agreements (company_id, client_id, terms_id, accepted_at)
+            clientarea_log_terms_agreements (company_id, client_id, terms_id, status, created_at)
           VALUES
-            (:company_id, :client_id, :terms_id, NOW());",
+            (:company_id, :client_id, :terms_id, :status, NOW());",
           \DB::INSERT
         )->parameters(array(
           'company_id' => self::$companyID,
           'client_id' => $clientID,
           'terms_id' => $termsID,
+          'status' => $status,
         ))->execute();
 
         if(isset($result[0]))

@@ -579,7 +579,7 @@
      {
         try
         {
-          
+
           $result = Model_Intranet::checkTermsOfUses($this->_clientID);
 
           return json::output('success', $result, \Input::all());
@@ -596,15 +596,15 @@
       * @author James Read
       * @return string
       */
-     public function post_accept_terms()
+     /*public function post_accept_terms()
      {
         try
         {
 
-          if(!Model_Intranet::acceptTemrs(\Input::post('clientID'), 1))
+          if(!Model_Intranet::logTerms(\Input::post('clientID'), 1, 'ACCEPT'))
             throw new \Exception('Unable to process request, please try again later', 501);
 
-          return json::output('success', 'you have accepted our terms.', []);
+          return json::output('success', 'You have accepted our terms.', []);
 
         } catch(\Exception $e)
         {
@@ -613,4 +613,37 @@
 
         }
      }
+
+    public function post_reject_terms()
+    {
+      try
+      {
+        if(!Model_intranet::logTerms(\Input::post('clientID'), 1, 'REJECT'))
+          throw new \Exception('Unable to process request, please try again later', 501);
+
+        return json::output('success', 'You have rejected the terms');
+      } catch(\Exception $e)
+      {
+        return json::response('failed', $e->getMessage(), []);
+      }
+    }*/
+
+    /**
+     * accept or reject terms 
+     */
+    public function post_terms_action()
+    {
+      try
+      {
+
+        if( !Model_intranet::logTerms(\Input::post('clientID'), 1, \Input::post('status')))
+          throw new \Exception('Unable to process, please try again later');
+
+        return json::output('success', 'terms option has been logged.', \Input::all());
+
+      } catch(\Exception $e)
+      {
+        return json::output('failed', $e->getMessage(), []);
+      }
+    }
  }
