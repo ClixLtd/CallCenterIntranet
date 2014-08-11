@@ -569,4 +569,48 @@
         return json::output('success', '', Model_Debtsolv::getSentCreditorLetters());
      }
 
+     /**
+      * checks boolean to see if user accepted the terms of uses
+      * 
+      * @author James Read
+      * @return string
+      */
+     public function post_terms_of_uses()
+     {
+        try
+        {
+          
+          $result = Model_Intranet::checkTermsOfUses($this->_clientID);
+
+          return json::output('success', $result, \Input::all());
+
+        } catch(\Exception $e)
+        {
+          return json::output('failed', $e->getMessage(), []);
+        }
+     }
+
+     /**
+      * clients accepts the terms of use
+      * 
+      * @author James Read
+      * @return string
+      */
+     public function post_accept_terms()
+     {
+        try
+        {
+
+          if(!Model_Intranet::acceptTemrs(\Input::post('clientID'), 1))
+            throw new \Exception('Unable to process request, please try again later', 501);
+
+          return json::output('success', 'you have accepted our terms.', []);
+
+        } catch(\Exception $e)
+        {
+
+          return json::output('failed', $e->getMessage(), []);
+
+        }
+     }
  }

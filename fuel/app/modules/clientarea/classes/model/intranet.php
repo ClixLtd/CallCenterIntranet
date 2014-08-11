@@ -629,5 +629,70 @@
         return true;
      }
 
+     /**
+      * returns boolean to see if client as accepted the terms of use
+      * 
+      * @author James Read
+      * 
+      * @param int $clientID id of client you want to check
+      * @return boolean
+      */
+     public static function checkTermsOfUses($clientID, $termsID = 1)
+     {
+        if(!is_integer($clientID) && (int)$clientID < 1)
+          throw new \Exception('Invalid client ID');
+
+        $result = \DB::query(
+          "SELECT 
+            accepted_at
+          FROM
+            clientarea_log_terms_agreements
+          WHERE
+            company_id=:company_id
+          AND
+            client_id=:client_id
+          AND
+            terms_id =:terms_id",
+          \DB::SELECT
+        )->parameters(array(
+          'company_id' => self::$companyID,
+          'client_id'  => $clientID,
+          'terms_id'   => $termsID
+        ))->execute();
+
+        if(isset($result[0]))
+          return true;
+        return false;
+     }
+
+     public static function acceptTemrs($clientID, $termsID = 1)
+     {
+
+        /*
+        return array(
+          'company_id' => self::$companyID,
+          'client_id' => $clientID,
+          'terms_id' => $termsID,
+        );
+        */
+
+        $result = \DB::query(
+          "INSERT INTO
+            clientarea_log_terms_agreements (company_id, client_id, terms_id, accepted_at)
+          VALUES
+            (:company_id, :client_id, :terms_id, NOW());",
+          \DB::INSERT
+        )->parameters(array(
+          'company_id' => self::$companyID,
+          'client_id' => $clientID,
+          'terms_id' => $termsID,
+        ))->execute();
+
+        if(isset($result[0]))
+          return true;
+        return false;
+
+     }
+
 
  }
