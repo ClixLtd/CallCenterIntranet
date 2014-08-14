@@ -590,46 +590,11 @@
         }
      }
 
-     /**
-      * clients accepts the terms of use
-      * 
-      * @author James Read
-      * @return string
-      */
-     /*public function post_accept_terms()
-     {
-        try
-        {
-
-          if(!Model_Intranet::logTerms(\Input::post('clientID'), 1, 'ACCEPT'))
-            throw new \Exception('Unable to process request, please try again later', 501);
-
-          return json::output('success', 'You have accepted our terms.', []);
-
-        } catch(\Exception $e)
-        {
-
-          return json::output('failed', $e->getMessage(), []);
-
-        }
-     }
-
-    public function post_reject_terms()
-    {
-      try
-      {
-        if(!Model_intranet::logTerms(\Input::post('clientID'), 1, 'REJECT'))
-          throw new \Exception('Unable to process request, please try again later', 501);
-
-        return json::output('success', 'You have rejected the terms');
-      } catch(\Exception $e)
-      {
-        return json::response('failed', $e->getMessage(), []);
-      }
-    }*/
 
     /**
      * accept or reject terms 
+     * 
+     * @return string
      */
     public function post_terms_action()
     {
@@ -646,4 +611,40 @@
         return json::output('failed', $e->getMessage(), []);
       }
     }
+
+    /**
+     * returns the data for the MMS dashboard
+     * 
+     * @return string
+     */
+    public function post_debtowed_stats()
+    {
+      try
+      {
+        return json::output('success','', Model_Debtsolv::getDebtOwedStats());
+      } catch(\Exception $e)
+      {
+        return json::output('failed', $e->getMessage(), []);
+      }
+    }
+
+    /**
+     * returns count of PBA and PPI services
+     * 
+     * @return string
+     */
+    public function post_pba_services_stats()
+    {
+      try{
+
+        \log::info(print_r(Model_Debtsolv::getPBAServicesStats(), 1), 'DEBUG');
+
+        return json::output('success', '', Model_Debtsolv::getPBAServicesStats());
+
+      } catch(\Exception $e)
+      {
+        return json::output('failed', $e->getMessage(), []);
+      }
+    }
+
  }
