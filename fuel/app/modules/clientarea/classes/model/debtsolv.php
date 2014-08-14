@@ -633,4 +633,57 @@
         'startpoint' => date('Y-m-d H:i:s', static::$_settings['debtsolv']['startpoint'])
       ))->cached(1800)->execute(static::$_connection)->as_array();
      }
+
+    /**
+     * returns data for the MMS dashboard stats
+     * 
+     * @return array
+     */
+    public static function getDebtOwedStats()
+    {
+
+      $query = \DB::query(
+        "SELECT
+          pay_data.NormalExpectedPayment*1./100 AS di_amount
+          ,(SELECT SUM(EstimatedBalance)*1./100 FROM  Finstat_Debt WHERE ClientID = lead_data.Client_ID) AS amount_owed
+          ,ISNULL((SELECT TOP (1) CONVERT(VARCHAR,ExpectedResolutionDate, 103) FROM Client_Services WHERE  ClientID = lead_data.Client_ID ORDER BY ExpectedResolutionDate DESC),'Unavailable') AS ResolutionDate
+        FROM
+        " . static::$databaseName . ".dbo.Client_LeadData AS lead_data
+        INNER JOIN
+        " . static::$databaseName . ".dbo.Client_PaymentData AS pay_data ON lead_data.Client_ID = pay_data.ClientID
+        WHERE
+          lead_data.Client_ID = :id",
+        \DB::SELECT
+      )->param('id', static::$clientID)->cached(1800)->execute(static::$_connection)->as_array();
+
+      if(!isset($query[0]))
+        throw new \Exception('Unable to fetch results.');
+
+      return $query[0];
+    }
+
+    /**
+     * returns array for the PPI and PBA quick stats
+     * 
+     * @return array
+     */
+    public static function getPBAServicesStats()
+    {
+      $query = \DB::query(
+        "SELECT
+          (SELECT COUNT(ServiceType) FROM " . static::$databaseName . ".dbo.Client_Services WHERE ClientID = Client.ID AND Client_Services.ServiceType = 1 AND status = 500 ) AS ppi_services
+          ,(SELECT COUNT(ServiceType) FROM " . static::$databaseName . ".dbo.Client_Services WHERE ClientID = Client.ID AND Client_Services.ServiceType = 6 AND status = 500 ) AS pba_services
+        FROM
+          " . static::$databaseName . ".dbo.Client_Contact AS Client
+        WHERE
+          Client.ID = :id"
+      )->param('id', static::$clientID)->cached(1800)->execute(static::$_connection)->as_array();
+
+      if(!isset($query[0]))
+        throw new \Exception('Unable to fetch results');
+
+      return $query[0];
+
+    }
+
  }
