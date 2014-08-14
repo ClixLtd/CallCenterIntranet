@@ -650,7 +650,7 @@
         "SELECT
           pay_data.NormalExpectedPayment*1./100 AS di_amount
           ,(SELECT SUM(EstimatedBalance)*1./100 FROM  " . static::$databaseName . ".dbo.Finstat_Debt WHERE ClientID = lead_data.Client_ID) AS amount_owed
-          ,ISNULL((SELECT TOP (1) CONVERT(VARCHAR,ExpectedResolutionDate, 103) FROM Client_Services WHERE  ClientID = lead_data.Client_ID ORDER BY ExpectedResolutionDate DESC),'Unavailable') AS ResolutionDate
+          ,ISNULL((SELECT TOP (1) CONVERT(VARCHAR,ExpectedResolutionDate, 103) FROM " . static::$databaseName . ".dbo.Client_Services WHERE  ClientID = lead_data.Client_ID ORDER BY ExpectedResolutionDate DESC),'Unavailable') AS ResolutionDate
         FROM
         " . static::$databaseName . ".dbo.Client_LeadData AS lead_data
         INNER JOIN
