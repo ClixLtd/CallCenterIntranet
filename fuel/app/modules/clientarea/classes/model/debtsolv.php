@@ -295,6 +295,10 @@
                             ,DEBT.AmountOwed * 1.0/100 AS Owed
                             ,DEBT.AccountReference
                             ,HOLDER.[Description] AS Signatory
+                            ,CASE
+                              WHEN DEBT.status = 5 THEN 'YES'
+                              ELSE 'NO'
+                            END AS paidoff
                           FROM 
                             " . static::$databaseName . ".dbo.Finstat_Debt AS DEBT
                           INNER JOIN
@@ -587,13 +591,13 @@
      {
         $query = 'SELECT
                     (SELECT SUM(EstimatedBalance*1.0)/100 FROM '.static::$databaseName.'.dbo.Finstat_Debt WHERE ClientID = :id) AS totalDebt
-                    ,COUNT(*) AS countCreditors
+                    ,COUNT(ID) AS countCreditors
                   FROM
                     '.static::$databaseName.'.dbo.Finstat_Debt
                   WHERE
                     ClientID = :id
                   AND
-                    EstimatedBalance > 0;';
+                    Status != 5;'; //5 = Paid off
 
         return \DB::query($query)->param('id', static::$clientID)->cached(1800)->execute(static::$_connection)->as_array();
      }
