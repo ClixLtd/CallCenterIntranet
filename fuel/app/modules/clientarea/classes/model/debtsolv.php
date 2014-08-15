@@ -323,7 +323,7 @@
         ,(SELECT
             SUM(Amount) * 1.0 / 100
           FROM
-            Payment_Out
+            " . static::$databaseName . ".dbo.Payment_Out
           WHERE
             AccountRef = DEBT.AccountReference
         ) AS Paid
