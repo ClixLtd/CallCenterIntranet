@@ -309,6 +309,39 @@
                          
      return $result;
    }
+
+   /**
+    * return a list of creditors and amounts for MMS
+    * 
+    */
+  public static function mmsCreditorsTab()
+  {
+    return \DB::query(
+      "SELECT
+        DEBT.ID
+        ,DEBT.[Description]
+        ,(SELECT
+            SUM(Amount) * 1.0 / 100
+          FROM
+            Payment_Out
+          WHERE
+            AccountRef = DEBT.AccountReference
+        ) AS Paid
+        ,DEBT.EstimatedBalance * 1.0/100 AS CurrentBalance
+        ,HOLDER.[Description] AS Signatory
+        ,CASE
+          WHEN DEBT.status = 5 THEN 'YES'
+          ELSE 'NO'
+        END AS PaidOff
+      FROM 
+         " . static::$databaseName . ".dbo.Finstat_Debt AS DEBT
+      INNER JOIN
+         " . static::$databaseName . ".dbo.Type_DebtResponsibility AS HOLDER ON DEBT.ClientResponsible = HOLDER.ID
+      WHERE 
+        DEBT.ClientID = :id;",
+        \DB::SELECT
+    )->param('id', static::$clientID)->cached(1800)->execute(static::$_connection)->as_array();
+  }
    
    /**
     * Get the Client's Account Statement
@@ -650,13 +683,16 @@
         "SELECT
           pay_data.NormalExpectedPayment*1./100 AS di_amount
           ,(SELECT SUM(EstimatedBalance)*1./100 FROM  " . static::$databaseName . ".dbo.Finstat_Debt WHERE ClientID = lead_data.Client_ID) AS amount_owed
-          ,ISNULL((SELECT TOP (1) CONVERT(VARCHAR,ExpectedResolutionDate, 103) FROM " . static::$databaseName . ".dbo.Client_Services WHERE  ClientID = lead_data.Client_ID ORDER BY ExpectedResolutionDate DESC),'Unavailable') AS ResolutionDate
+          ,ISNULL((SELECT TOP(1) CONVERT(VARCHAR, DateExpected, 103) FROM " . static::$databaseName . ".dbo.Payment_Schedule  AS pay_schedule WHERE ClientID = 454 AND  AmountPaid = 0 ORDER BY DateExpected ASC), 'None') AS expected
+          ,pay_data.PaymentFrequency AS frequency
+          ,pay_data.FeePercentage AS fee_percentage
+          ,pay_data.FeeMinimum*1./100 AS fee_min
         FROM
-        " . static::$databaseName . ".dbo.Client_LeadData AS lead_data
+          " . static::$databaseName . ".dbo.Client_LeadData AS lead_data
         INNER JOIN
-        " . static::$databaseName . ".dbo.Client_PaymentData AS pay_data ON lead_data.Client_ID = pay_data.ClientID
+          ". static::$databaseName .".dbo.Client_PaymentData AS pay_data ON lead_data.Client_ID = pay_data.ClientID
         WHERE
-          lead_data.Client_ID = :id",
+            lead_data.Client_ID = :id",
         \DB::SELECT
       )->param('id', static::$clientID)->cached(1800)->execute(static::$_connection)->as_array();
 
