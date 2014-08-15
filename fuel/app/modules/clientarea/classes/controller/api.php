@@ -435,6 +435,17 @@
       
       return Json::output('success', '', $results);
     }
+
+    /**
+     * get the total paid to creditors
+     * 
+     * @author James Read
+     * @return string
+     */
+    public function post_get_mms_creditors_tab()
+    {
+      return Json::output('success', '', Model_Debtsolv::mmsCreditorsTab());
+    }
     
     /**
      * Get the amount in the Warchest (Holding account)
