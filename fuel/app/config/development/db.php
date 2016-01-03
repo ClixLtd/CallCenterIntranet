@@ -15,9 +15,9 @@ return array(
 		'type'       => 'pdo',
 		'table_prefix' => '',
 		'connection'  => array(
-			'dsn'        => 'mysql:host=192.168.5.215;dbname=asterisk',
-			'username'   => 'intranet',
-			'password'   => 'Wvts231ct6D',
+			'dsn'        => 'mysql:host=clix-voip-services.cri8n9whe7ce.eu-west-1.rds.amazonaws.com;dbname=cc_vicidial',
+			'username'   => 'choiceclaims',
+			'password'   => 'poP2rO5reKsJEu3',
 		),
 	),
 
