@@ -7,8 +7,8 @@ return array(
 	'default' => array(
 		'connection'  => array(
 			'dsn'        => 'mysql:host=127.0.0.1;dbname=gab_intranet',
-			'username'   => 'intranet',
-			'password'   => 'Wvts231ct6D',
+			'username'   => 'vicidial',
+			'password'   => 'kVan9YkcGwKU5aB4',
 		),
 	),
 
@@ -46,9 +46,9 @@ return array(
         'type'       => 'pdo',
         'table_prefix' => '',
         'connection'  => array(
-            'dsn'        => 'mysql:host=clix-voip-services.cri8n9whe7ce.eu-west-1.rds.amazonaws.com;dbname=cc_vicidial',
-            'username'   => 'choiceclaims',
-            'password'   => 'poP2rO5reKsJEu3',
+		'dsn'        => 'mysql:host=127.0.0.1;dbname=gab_intranet',
+		'username'   => 'vicidial',
+		'password'   => 'kVan9YkcGwKU5aB4',
         ),
     ),
 	// GAB Databases
