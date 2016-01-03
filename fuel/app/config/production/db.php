@@ -6,7 +6,7 @@
 return array(
 	'default' => array(
 		'connection'  => array(
-			'dsn'        => 'mysql:host=127.0.0.1;dbname=gab_intranet',
+			'dsn'        => 'mysql:host=127.0.0.1;dbname=gbs_intranet',
 			'username'   => 'vicidial',
 			'password'   => 'kVan9YkcGwKU5aB4',
 		),
@@ -46,7 +46,7 @@ return array(
         'type'       => 'pdo',
         'table_prefix' => '',
         'connection'  => array(
-		'dsn'        => 'mysql:host=127.0.0.1;dbname=gab_intranet',
+		'dsn'        => 'mysql:host=127.0.0.1;dbname=gbs_intranet',
 		'username'   => 'vicidial',
 		'password'   => 'kVan9YkcGwKU5aB4',
         ),
