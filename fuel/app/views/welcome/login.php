@@ -26,7 +26,7 @@
 <body class="login">
 	<section role="main">
 	
-		<img src="/assets/img/gablogo.png" >
+		<img src="https://s3-eu-west-1.amazonaws.com/teleoutsourcing/images/TeleoutsLogo.png" >
 
 		<!-- Login box -->
 		<article id="login-box">
