@@ -100,7 +100,7 @@
 				<li><a href="/" title="" class="dashboard no-submenu">Dashboard</a></li> <!-- Use class .no-submenu to open link instead of a sub menu-->
 				<!-- Use class .current to open submenu on page load -->
 
-				<li><a href="/data/add" class="logs">Upload Data</a></li>
+				<li><a href="/data/add" class="logs no-submenu">Upload Data</a></li>
 			</ul>
 		</nav>
 		<!-- /Main Navigation -->
