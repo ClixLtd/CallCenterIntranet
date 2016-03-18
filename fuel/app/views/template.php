@@ -15,41 +15,37 @@
 	<link rel="shortcut icon" href="/favicon.ico">
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-	<link href="/assetes/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 
 	<!-- CSS Styles -->
-	<link href="/assetes/css/style.css" rel="stylesheet" type="text/css" />
-	<link href="/assetes/css/colors.css" rel="stylesheet" type="text/css" />
-	<link href="/assetes/css/jquery.tipsy.css" rel="stylesheet" type="text/css" />
-	<link href="/assetes/css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
-	<link href="/assetes/css/jquery.wysiwyg.css" rel="stylesheet" type="text/css" />
-	<link href="/assetes/css/jquery.datatables.css" rel="stylesheet" type="text/css" />
-	<link href="/assetes/css/jquery.nyromodal.css" rel="stylesheet" type="text/css" />
-	<link href="/assetes/css/jquery.datepicker.css" rel="stylesheet" type="text/css" />
-	<link href="/assetes/css/jquery.fileinput.css" rel="stylesheet" type="text/css" />
-	<link href="/assetes/css/jquery.fullcalendar.css" rel="stylesheet" type="text/css" />
-	<link href="/assetes/css/jquery.visualize.css" rel="stylesheet" type="text/css" />
-	<link href="/assetes/css/dropdown.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/style.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/colors.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/jquery.tipsy.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/jquery.wysiwyg.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/jquery.datatables.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/jquery.nyromodal.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/jquery.datepicker.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/jquery.fileinput.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/jquery.fullcalendar.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/jquery.visualize.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/dropdown.css" rel="stylesheet" type="text/css" />
 
-	<link href="/assetes/css/hr.css" rel="stylesheet" type="text/css" />
+	<link href="/assets/css/hr.css" rel="stylesheet" type="text/css" />
 
+	<script src="/assets/js/jquery/jquery.datatables.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.datatables.datesort.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.livequery.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.flot.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.flot.pie.js" type="text/javascript"></script
 
-
-	<?php echo Asset::js('jquery/jquery.datatables.js'); ?>
-	<?php echo Asset::js('jquery/jquery.datatables.datesort.js'); ?>
-	
-	<?php echo Asset::js('jquery/jquery.livequery.js'); ?>
-	<?php echo Asset::js('jquery/jquery.flot.js'); ?>
-	<?php echo Asset::js('jquery/jquery.flot.pie.js'); ?>
-	
-	
-	<?php echo Asset::css('print.css', array('media'=>'print')); ?>
+	<link href="/assets/css/print.css" type="text/css" rel="stylesheet" media="print"/>
 	
 	<!-- Google WebFonts -->
 	<link href='https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
 	<link href='https://fonts.googleapis.com/css?family=Rambla:400,700' rel='stylesheet' type='text/css'>
 
-	<?php echo Asset::js('libs/modernizr-1.7.min.js'); ?>
+	<script src="/assets/js/libs/modernizr-1.7.min.js" type="text/javascript"></script>
 
 
 </head>
@@ -61,7 +57,7 @@
 <div id="hideButtonLoading" style="display: none; position: fixed; top: 0px; left: 0px; height: 100%; width: 100%; z-index: 999; background-color: white; background-color: RGBA(255,255,255,0.4);">
 
     <div id="textArea" style="text-align: center; position:fixed; width: 500px; height: 85px; top: 50%; left: 50%; background-color: #95bcd8; margin-left: -250px; margin-top: -50px; border-radius: 20px; -webkit-border-radius: 20px; -moz-border-radius: 20px; background-color: RGBA(149,188,216,0.5); box-shadow: 0px 0px 5px 1px RGBA(67,98,112,0.6); padding-top: 20px;">
-        <?php echo Asset::img('lightspinner.gif'); ?><br />
+		<img src="/assets/img/lightspinner.gif" /><br />
         <b style="font-size: 18px; line-height: 38px;">Please Wait...</b>
     </div>
 
@@ -158,28 +154,28 @@
 	<!-- /Fixed Layout Wrapper -->
 
 	<!-- JS Libs at the end for faster loading -->
-	<?php echo Asset::js('libs/selectivizr.js'); ?>
-	<?php echo Asset::js('jquery/jquery.nyromodal.js'); ?>
-	<?php echo Asset::js('jquery/jquery.tipsy.js'); ?>
-	<?php echo Asset::js('jquery/jquery.wysiwyg.js'); ?>
-	<?php echo Asset::js('jquery/jquery.wysiwyg.link.js'); ?>
-	<?php echo Asset::js('jquery/jquery-ui.min.js'); ?>
-	<?php echo Asset::js('jquery/jquery.datepicker.js'); ?>
-	<?php echo Asset::js('jquery/jquery.timepicker.js'); ?>
-	<?php echo Asset::js('jquery/jquery.fileinput.js'); ?>
-	<?php echo Asset::js('jquery/jquery.fullcalendar.min.js'); ?>
-	<?php echo Asset::js('jquery/excanvas.js'); ?>
-	<?php echo Asset::js('jquery/jquery.visualize.js'); ?>
-	<?php echo Asset::js('jquery/jquery.visualize.tooltip.js'); ?>
-	<?php echo Asset::js('jquery/jquery.dropdown.js'); ?>
-	<?php echo Asset::js('script.js'); ?>
+	<script src="/assets/js/libs/selectivizr.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.nyromodal.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.tipsy.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.wysiwyg.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.wysiwyg.link.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.datepicker.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.timepicker.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.fileinput.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.fullcalendar.min.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/excanvas.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.visualize.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.visualize.tooltip.js" type="text/javascript"></script>
+	<script src="/assets/js/jquery/jquery.dropdown.js" type="text/javascript"></script>
+	<script src="/assets/js/script.js" type="text/javascript"></script>
 
 
-<script type="text/javascript" src="https://s3.amazonaws.com/assets.freshdesk.com/widget/freshwidget.js"></script>
-<script type="text/javascript">
-	FreshWidget.init("", {"queryString": "&widgetType=popup", "widgetType": "popup", "buttonType": "text", "buttonText": "Get Help", "buttonColor": "white", "buttonBg": 
-"#ff6d14", "alignment": "2", "offset": "235px", "formHeight": "600px", "url": "http://ticket.clix.co.uk"} );
-</script>
+<!--<script type="text/javascript" src="https://s3.amazonaws.com/assets.freshdesk.com/widget/freshwidget.js"></script>-->
+<!--<script type="text/javascript">-->
+<!--	FreshWidget.init("", {"queryString": "&widgetType=popup", "widgetType": "popup", "buttonType": "text", "buttonText": "Get Help", "buttonColor": "white", "buttonBg": -->
+<!--"#ff6d14", "alignment": "2", "offset": "235px", "formHeight": "600px", "url": "http://ticket.clix.co.uk"} );-->
+<!--</script>-->
 	
 </body>
 </html>
