@@ -17,8 +17,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -81,6 +81,26 @@
 				methods that can be used from other classes but are not routable.
 			</p>
 
+			<h3 id="http_method_prefixed_actions">HTTP method prefixed action.</h3>
+
+			<p>
+				It's possible to route to HTTP method prefixed actions. Here is an example:
+			</p>
+
+			<pre class="php"><code>class Controller_Example extends Controller
+{
+	public function get_index()
+	{
+		// This will be called when the HTTP method is GET.
+	}
+
+	public function post_index()
+	{
+		// This will be called when the HTTP method is POST.
+	}
+}
+</code></pre>
+
 			<h4 id="controller_in_subdir">Controllers in Sub-Directories</h4>
 
 			<p>
@@ -94,6 +114,10 @@
 				<kbd>fuel/app/classes/controller/subdir1/subdir2/subdir3/test.php</kbd>. would have a class name of
 				<var>Controller_Subdir1_Subdir2_Subdir3_Test</var>.
 			</p>
+
+			<h4 id="controller_namespacing">Namespacing controllers</h4>
+
+			<p>See the page on <a href="../namespacing.html">namespacing</a> to see how you can namespace your controllers.</p>
 
 			<h4 id="more_parameters">Using more parameters from the URL</h4>
 
@@ -115,8 +139,9 @@
 			<h4 id="returning_results">Returning the result</h4>
 
 			<p>
-				A controller action <strong>MUST</strong> return a Response object. Optionally you can specify special HTTP headers,
-				or a custom HTTP status code (a code other than "200 OK").
+				Ideally, a controller action must return a Response object. Optionally you can specify special HTTP headers,
+				or a custom HTTP status code (a code other than "200 OK"). If you don't return a response object, the default
+				<kbd>after()</kbd> method will wrap the return value of the action in a Response object for you.
 			</p>
 
 			<p>
@@ -125,7 +150,7 @@
 			</p>
 			<p>
 				If your controller does not extend one of the base controllers, and you want to use this feature,
-				your controller must contain it's own after() method that will accept the actions return value, and has to wrap it into
+				your controller must contain its own after() method that will accept the actions return value, and has to wrap it into
 				a Reponse object which it must return.
 			</p>
 
@@ -149,8 +174,10 @@
 			<article>
 				<h4 id="before">before()</h4>
 				<p>
-					This method will be executed <strong>before</strong> the method from the URL is called on your
-					controller, even if that method turns out not to exist.
+					The before() method is used as a general pre-method prepping method, to execute code required in
+					every controller method called. This method will be executed <strong>before</strong> the method
+					from the URL is called on your controller. It will not be called if that method turns out not to exist.
+					You should not use this method for routing decisions. If you need that, use the <strong>router</strong> method instead.
 				</p>
 			</article>
 
@@ -160,6 +187,10 @@
 					This method will be executed <strong>after</strong> the method from the URL was called successfully,
 					this will not be called if the method turns out not to exist. <a href="#response"><var>$response</var></a> parameter is required.
 					The after() method <strong>MUST</strong> return a Response object.
+				</p>
+				<p class="note">
+					If the <kbd>after()</kbd> method has to construct a Response object, it can use the <kbd>response_status</kbd> property of
+					the controller to set the HTTP status of the response. By default, this property contains "200" (OK).
 				</p>
 			</article>
 
@@ -244,7 +275,7 @@
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

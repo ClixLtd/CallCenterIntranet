@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -140,7 +140,7 @@
 									<tr>
 										<th><kbd>$filter</kbd></th>
 										<td><pre class="php"><code>null</code></pre></td>
-										<td class="description">tet to <em>true</em> or <em>false</em> to set auto encoding, defaults to main config setting (app/config/config.php)</td>
+										<td class="description">set to <em>true</em> or <em>false</em> to set auto encoding, defaults to main config setting (app/config/config.php)</td>
 									</tr>
 								</table>
 							</td>
@@ -166,7 +166,7 @@ $view = View::forge('path/to/view', array(
 
 			<article>
 				<h4 class="method" id="method_auto_encode">auto_filter($filter = true)</h4>
-				<p>The <strong>auto_filter</strong> sets whether to encode the data or not on a View instance.</p>
+				<p>The <strong>auto_filter</strong> method sets whether to encode the data or not on a View instance.</p>
 				<table class="method">
 					<tbody>
 						<tr>
@@ -224,7 +224,7 @@ $view = View::forge('path/to/view', array(
 
 			<article>
 				<h4 class="method" id="method_set_filename">set_filename($file)</h4>
-				<p>The <strong>set_filename</strong> allows you to set or change the view filename.</p>
+				<p>The <strong>set_filename</strong> method allows you to set or change the view filename.</p>
 				<table class="method">
 					<tbody>
 						<tr>
@@ -265,8 +265,64 @@ $view->set_filename('path/to/view');</code></pre>
 			</article>
 
 			<article>
+				<h4 class="method" id="method_get">get($key = null, $default = null)</h4>
+				<p>The <strong>get</strong> method retrieves one or all variables set on a view.</p>
+				<table class="method">
+					<tbody>
+						<tr>
+							<th>Static</th>
+							<td>No</td>
+						</tr>
+						<tr>
+							<th>Parameters</th>
+							<td>
+								<table class="parameters">
+									<tr>
+										<th>Param</th>
+										<th>Default</th>
+										<th class="description">Description</th>
+									</tr>
+									<tr>
+										<th><kbd>$key</kbd></th>
+										<td><pre class="php"><code>null</code></pre></td>
+										<td class="description">variable name</td>
+									</tr>
+									<tr>
+										<th><kbd>$default</kbd></th>
+										<td><pre class="php"><code>null</code></pre></td>
+										<td class="description">default value to return if the variable isn't set</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<th>Returns</th>
+							<td>mixed</td>
+						</tr>
+						<tr>
+							<th>Example</th>
+							<td>
+								<pre class="php"><code>// create a view and set some data
+$view = new View;
+$view->set(array('field1' =&gt; 'value1', 'field2' =&gt; 'value2');
+
+// get a single value
+$field1 = $view->get('field1');
+
+// get a single value, set a default if the field does not exist
+$field3 = $view->get('field3', 'value3');
+
+// get all values
+$fields = $view->get();</code></pre>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
 				<h4 class="method" id="method_set">set($key, $value = null, $filter = null)</h4>
-				<p>The <strong>set</strong> assigns a variable to a view.</p>
+				<p>The <strong>set</strong> method assigns a variable to a view.</p>
 				<table class="method">
 					<tbody>
 						<tr>
@@ -381,7 +437,7 @@ $view->set_safe(array(
 
 			<article>
 				<h4 class="method" id="method_set_global">set_global($key, $value = null, $filter = null)</h4>
-				<p>The <strong>set_global</strong> sets a variable accessible for all views.</p>
+				<p>The <strong>set_global</strong> method sets a variable accessible for all views.</p>
 				<table class="method">
 					<tbody>
 						<tr>
@@ -496,7 +552,7 @@ $view->bind(array(
 
 			<article>
 				<h4 class="method" id="method_bind_global">bind_global($key, $value = null)</h4>
-				<p>The <strong>bind_global</strong> assigns a global variable by reference accessible for all views.</p>
+				<p>The <strong>bind_global</strong> method assigns a global variable by reference accessible for all views.</p>
 				<p class="note">Please note: these cannot be cleaned by output encoding and should thus be considered unsafe.</p>
 				<table class="method">
 					<tbody>
@@ -543,7 +599,7 @@ $view->bind(array(
 			<article>
 				<h4 class="method" id="method_render">render($file = null)</h4>
 				<p>
-					The <strong>set</strong> renders the view object to a string.
+					The <strong>render</strong> method renders the view object to a string.
 					Global and local data are merged and extracted to create local variables within the view file.
 				</p>
 				<table class="method">
@@ -649,7 +705,7 @@ $html = View::forge()->set_filename('path/to/view')->render();</code></pre>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

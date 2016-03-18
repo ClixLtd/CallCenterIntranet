@@ -5,22 +5,21 @@
  * Fuel is a fast, lightweight, community driven PHP5 framework.
  *
  * @package    Fuel
- * @version    1.6
+ * @version    1.8
  * @author     Fuel Development Team
  * @license    MIT License
- * @copyright  2010 - 2013 Fuel Development Team
+ * @copyright  2010 - 2016 Fuel Development Team
  * @link       http://fuelphp.com
  */
 
 namespace Email;
-
 
 class Email_Driver_Noop extends \Email_Driver
 {
 	/**
 	 * Noop send: only log the request
 	 *
-	 * @return	bool	success boolean.
+	 * @return  bool    Success boolean.
 	 */
 	protected function _send()
 	{

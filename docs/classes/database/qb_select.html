@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -52,8 +52,6 @@
 				The Query_Builder_Select class handles all the select operations for the query building process. It extends the
 				Query_Builder_Where class, so all the methods are inherited.
 			</p>
-
-			<h2 id="methods">Methods</h2>
 
 			<article>
 				<h4 class="method" id="method_distinct">distinct($value = true)</h4>
@@ -151,7 +149,7 @@ $query->select(
 	'birthdate'
 );
 
-// SELECT `surname`, `email`, `is_active` as active, `birthdate` FROM `users`
+// SELECT `name`, `surname`, `email`, `is_active` AS `active`, `birthdate` FROM `users`
 </code></pre>
 							</td>
 						</tr>
@@ -160,7 +158,7 @@ $query->select(
 			</article>
 
 			<article>
-				<h4 class="method" id="method_select_array">select_array(array $columns)</h4>
+				<h4 class="method" id="method_select_array">select_array(array $columns, $reset = false)</h4>
 				<p>The <strong>select_array</strong> method appends columns to select.</p>
 				<table class="method">
 					<tbody>
@@ -184,6 +182,12 @@ $query->select(
 										<td><em>required</em></td>
 										<td>an array containing column names</td>
 									</tr>
+									<tr>
+										<th><kbd>$reset</kbd></th>
+										<td><em>bool</em></td>
+										<td><pre class="php"><code>false</code></pre></td>
+										<td>If true, do not append, but overwrite</td>
+									</tr>
 								</table>
 							</td>
 						</tr>
@@ -206,7 +210,16 @@ $query->select_array(array(
 	'birthdate'
 ));
 
-// SELECT `surname`, `email`, `is_active` as active, `birthdate` FROM `users ...
+// produces SELECT `name`, `surname`, `email`, `is_active` AS `active`, `birthdate` FROM `users` ...
+
+// Supply an array to use an alias and reset the previous select
+$query->select_array(array(
+	array('surname', 'name'),
+	'birthdate'
+), true);
+
+// produces SELECT `surname` AS `name`, `birthdate` FROM `users` ...
+
 </code></pre>
 							</td>
 						</tr>
@@ -385,6 +398,76 @@ $query->join('profiles');
 $query->on('users.id', '=', 'profiles.user_id');
 
 // SELECT * FROM `users` JOIN `profiles` ON `users`.`id` = `profiles`.`user_id`
+</code></pre>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_and_on">and_on()</h4>
+				<p>The <strong>and_on</strong> method is an alias for <a href="#method_on">on</a>.</p>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_or_on">or_ on($c1, $op, $c2)</h4>
+				<p>The <strong>on</strong> method adds "OR ON ..." conditions for the last created JOIN statement.</p>
+				<table class="method">
+					<tbody>
+						<tr>
+							<th>Static</th>
+							<td>No</td>
+						</tr>
+						<tr>
+							<th>Parameters</th>
+							<td>
+								<table class="parameters">
+									<tr>
+										<th>Param</th>
+										<th>Type</th>
+										<th>Default</th>
+										<th class="description">Description</th>
+									</tr>
+									<tr>
+										<th><kbd>$c1</kbd></th>
+										<td><em>mixed</em></td>
+										<td><em>required</em></td>
+										<td>table name or array($table, $alias)</td>
+									</tr>
+									<tr>
+										<th><kbd>$op</kbd></th>
+										<td><em>string</em></td>
+										<td><em>required</em></td>
+										<td>logical operator</td>
+									</tr>
+									<tr>
+										<th><kbd>$c2</kbd></th>
+										<td><em>mixed</em></td>
+										<td><em>required</em></td>
+										<td>table name or array($table, $alias)</td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<th>Returns</th>
+							<td>Returns the current instance.</td>
+						</tr>
+						<tr>
+							<th>Example</th>
+							<td>
+								<pre class="php"><code>// prepare a select statement
+$query = DB::select()->from('users');
+
+// Join a table
+$query->join('profiles');
+$query->on('users.id', '=', 'profiles.user_id');
+
+// Add an OR ON condition
+$query->or_on('users.id', '=', 'profiles.other_id');
+
+// SELECT * FROM `users` JOIN `profiles` ON `users`.`id` = `profiles`.`user_id` OR `users`.`id` = `profiles`.`other_id`
 </code></pre>
 							</td>
 						</tr>
@@ -719,50 +802,6 @@ $query->and_having_close();
 			</article>
 
 			<article>
-				<h4 class="method" id="method_and_having_close">and_having_close()</h4>
-				<p>The <strong>and_having_close</strong> method closes an SQL closure.</p>
-				<table class="method">
-					<tbody>
-						<tr>
-							<th>Static</th>
-							<td>No</td>
-						</tr>
-						<tr>
-							<th>Parameters</th>
-							<td>
-								<em>None</em>
-							</td>
-						</tr>
-						<tr>
-							<th>Returns</th>
-							<td>Returns the current instance.</td>
-						</tr>
-						<tr>
-							<th>Example</th>
-							<td>
-								<pre class="php"><code>// prepare a select statement
-$query = DB::select('*')->from('users');
-
-// Set a HAVING statement
-$query->having('email', 'like', '%@example.com');
-
-// Open a closure
-$query->and_having_open();
-
-// Set a HAVING statement
-$query->having('name', '=', 'John');
-$query->or_where('surname', 'Doe');
-
-$query->and_having_close();
-// SELECT * FROM `users` HAVING `email` LIKE "%example.com" AND (`name` = "John" OR `surname` = "Doe")
-</code></pre>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</article>
-
-			<article>
 				<h4 class="method" id="method_or_having_close">or_having_close()</h4>
 				<p>The <strong>or_having_close</strong> method closes an SQL closure.</p>
 				<table class="method">
@@ -959,7 +998,7 @@ $query->select('email')->from('admins')->where('role', 'superadmin');
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

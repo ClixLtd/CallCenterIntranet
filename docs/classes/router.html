@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -221,6 +221,46 @@ return array(
 // this call will return 'http://your_base_url/welcome/hello'
 echo Router::get('hello');
 </code></pre>
+<br />
+<p>
+	You can also do this if your route contains a named parameters, a regex, or a combination of both.
+</p>
+							<pre class="php"><code>// if your route is defined like this:
+return array(
+    'thread/(?P&lt;thread_id&gt;\d+?)/post' => array('post', 'name' => 'post'),
+);
+
+// these will return 'thread/1/post':
+echo Router::get('post', array('thread_id' => 1));
+echo Router::get('post', array('$1' => 1));
+echo Router::get('post', array(1));
+
+// if your route is defined like this:
+return array(
+    'country/(?P&lt;country&gt;\d+?)/state/(?P&lt;state&gt;\d+?)/location' => array('location', 'name' => 'location'),
+);
+
+// these will return 'country/japan/state/tokyo/location':
+echo Router::get('location', array('country' => 'japan', 'state' => 'tokyo'));
+echo Router::get('location', array('$1' => 'japan', '$2' => 'tokyo'));
+echo Router::get('location', array('japan', 'tokyo'));
+echo Router::get('location', array('country' => 'japan', 'tokyo'));
+echo Router::get('location', array('$1' => 'japan', 'tokyo'));
+</code></pre>
+<br />
+<p class="note">
+	Note that if your route contains a mix of a traditional regex and a named parameter or a regex shortcut,
+	they will be replaced together, which might lead to unexpected results.
+</p>
+							<pre class="php"><code>// if your route is defined like this:
+return array(
+	'hello/(:name)(/:segment)' => array('welcome/user', 'name' => 'user'),
+);
+
+// note that "(/:segment)" will be replaced entirely by "article", so
+// this call will return 'http://your_base_url/welcome/user/johnarticle' !
+echo Router::get('user', array('name' => 'john', 'article'));
+</code></pre>
 						</td>
 					</tr>
 					</tbody>
@@ -250,7 +290,7 @@ echo Router::get('hello');
 								<tr>
 									<th><kbd>$path</kbd></th>
 									<td><i>required</i></td>
-									<td>The URI path to be matched. This is the left side of your routes.php route definition.</td>
+									<td>The URI path, or an array of paths, to be matched. This is the left side of your routes.php route definition.</td>
 								</tr>
 								<tr>
 									<th><kbd>$case_sensitive</kbd></th>
@@ -270,6 +310,9 @@ echo Router::get('hello');
 							<pre class="php"><code>// delete the route for 'this/that'
 Router::delete('this/that');
 
+// delete the routes for 'this/that' and 'some/other'
+Router::delete(array('this/that', 'some/other'));
+
 // force it to be case sensitive
 Router::delete('this/that', true);
 
@@ -286,7 +329,7 @@ Router::delete('module/controller(:any)');
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

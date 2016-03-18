@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -54,6 +54,19 @@
 				Use the <a href="./config.html#method_set">Config set method</a> to change the value.
 			</p>
 			<pre class="php"><code>Config::set('language', 'cy');</code></pre>
+			<p>
+				You can also define a fallback language in your configuration, which is either a language code, or an array of
+				language codes. The fallback is used whenever you load a language file, and the file does not exist for the
+				specified language.
+			</p>
+
+			<h3 id="multi_lang">Multi-language support</h3>
+
+			<p>
+				The Lang class supports multiple languages, which can be used concurrently. By default the currently set language
+				is used to load files and retrieve language strings, but you can switch this dynamically using the method described
+				above, or by specifying the required language code in one of the Lang class method calls.
+			</p>
 
 			<h3 id="lang_groups">Lang File Types</h3>
 
@@ -82,12 +95,24 @@ key=value</code></pre>
 	}
 }</code></pre>
 				</li>
+				<li>
+					DB. Use the following table structure:
+					<pre class="php"><code>  CREATE TABLE IF NOT EXISTS `lang` (
+  `identifier` char(100) NOT NULL,
+  `language` char(10) NOT NULL,
+  `lang` longtext NOT NULL,
+  `hash` char(13) NOT NULL,
+  PRIMARY KEY (`identifier`, `language`)
+)</code></pre>
+					By default it will use the table name 'lang'. You can override this by defining your table name in
+					<code>app/config/config.php</code>, using the <strong>lang.table_name</strong> key.
+				</li>
 			</ul>
 
 			<p>If you don't specify a file type, Lang::load() will default to the 'php' type.</p>
 
 			<article>
-				<h4 class="method" id="method_load">load($file, $group = null, $language = null, $overwrite = false)</h4>
+				<h4 class="method" id="method_load">load($file, $group = null, $language = null, $overwrite = false, $reload = false)</h4>
 				<p>The <strong>load</strong> method allows you to load a language file.</p>
 				<table class="method">
 					<tbody>
@@ -122,7 +147,12 @@ key=value</code></pre>
 								<tr>
 									<th><kbd>$overwrite</kbd></th>
 									<td><kbd>false</kbd></td>
-									<td>(Optional) If set to <kbd>true</kbd> the loaded configuration items will be merged with the items already loaded in a non-recursive manner, with will overwrite array values in a multidimensional array, rather then merging them.</td>
+									<td>(Optional) If set to <kbd>true</kbd> the loaded language items will be merged with the items already loaded in a non-recursive manner, with will overwrite array values in a multidimensional array, rather then merging them.</td>
+								</tr>
+								<tr>
+									<th><kbd>$reload</kbd></th>
+									<td><kbd>false</kbd></td>
+									<td>(Optional) If set to <kbd>true</kbd> a reload of the requested language file is forced, erasing cached language items related to the lang file to be loaded.</td>
 								</tr>
 							</table>
 						</td>
@@ -164,7 +194,7 @@ Lang::load('foo::example', 'bar', 'it');</code></pre>
 			</article>
 
 			<article>
-				<h4 class="method" id="method_get">get($line, $params = array())</h4>
+				<h4 class="method" id="method_get">get($line, $params = array(), $default = null, $language = null)</h4>
 				<p>The <strong>get</strong> method allows you to get a specific line from the language file.</p>
 				<table class="method">
 					<tbody>
@@ -191,6 +221,16 @@ Lang::load('foo::example', 'bar', 'it');</code></pre>
 									<td><pre class="php"><code>array()</code></pre></td>
 									<td>Sets an array of parameter that might be passed to the line.</td>
 								</tr>
+								<tr>
+									<th><kbd>$default</kbd></th>
+									<td><pre class="php"><code>null</code></pre></td>
+									<td>Value to return if $line could not be found.</td>
+								</tr>
+								<tr>
+									<th><kbd>$language</kbd></th>
+									<td><pre class="php"><code>null</code></pre></td>
+									<td>Language code for which this line should be retrieved. If not given the current active language will be used.</td>
+								</tr>
 							</table>
 						</td>
 					</tr>
@@ -201,11 +241,14 @@ Lang::load('foo::example', 'bar', 'it');</code></pre>
 					<tr>
 						<th>Example</th>
 						<td>
-							<pre class="php"><code>// Outputs Hello world
+              <pre class="php"><code>// Given this lang file
+return array('hello' => 'Hello :name');
+// Outputs Hello world
 $this->output = Lang::get('hello', array('name' => 'world'));
 
 // Outputs Plop
-$this->output = Lang::get('test.something');</code></pre>
+$this->output = Lang::get('test.something');
+</code></pre>
 						</td>
 					</tr>
 					</tbody>
@@ -213,7 +256,7 @@ $this->output = Lang::get('test.something');</code></pre>
 			</article>
 
 			<article>
-				<h4 class="method" id="method_set">set($line, $value, $group = null)</h4>
+				<h4 class="method" id="method_set">set($line, $value, $group = null, $language = null)</h4>
 				<p>The <strong>set</strong> method allows you to set a specific line to the language file.</p>
 				<table class="method">
 					<tbody>
@@ -244,6 +287,11 @@ $this->output = Lang::get('test.something');</code></pre>
 									<th><kbd>$group</kbd></th>
 									<td><pre class="php"><code>null</code></pre></td>
 									<td>Sets a language group to be used.</td>
+								</tr>
+								<tr>
+									<th><kbd>$language</kbd></th>
+									<td><pre class="php"><code>null</code></pre></td>
+									<td>Language code for which this line should be set. If not given the current active language will be used.</td>
 								</tr>
 							</table>
 						</td>
@@ -332,6 +380,142 @@ Lang::save('foo::custom', 'bar');</code></pre>
 				</table>
 			</article>
 
+			<article>
+				<h4 class="method" id="method_delete">delete($item, $group = null, $language = null)</h4>
+				<p>The <strong>delete</strong> method allows you to delete a specific line from the <em>loaded</em> language file.</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$item</kbd></th>
+									<td><i>required</i></td>
+									<td>The desired line's identifier.</td>
+								</tr>
+								<tr>
+									<th><kbd>$group</kbd></th>
+									<td><pre class="php"><code>null</code></pre></td>
+									<td>Sets a language group to be used.</td>
+								</tr>
+								<tr>
+									<th><kbd>$language</kbd></th>
+									<td><pre class="php"><code>null</code></pre></td>
+									<td>Language code for which this line should be deleted. If not given the current active language will be used.</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>void</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// delete the 'hello' language key
+Lang::delete('hello');
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+				<p class="note">
+					Note that this deletes the language item stored in the language class, it does <em>NOT</em> delete it from the language file on disk!
+				</p>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_get_lang">get_lang()</h4>
+				<p>The <strong>get_lang</strong> method allows you to retrieve currently active language. Typically it will be same as <a href="../classes/config.html#method_get">Config::get('language')</a>.</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td><i>None</i></td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td><kbd>String</kbd> with currently active language.</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// will return currently active language, most likely 'en'
+Lang::get_lang();
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_set_lang">set_lang($language, $reload = false)</h4>
+				<p>
+					The <strong>set_lang</strong> method allows you to set the new active language, and optionally
+					it attempts to reload all language file already loaded for that language.
+					This will call <a href="../classes/config.html#method_set">Config::set('language')</a> to set
+					the new language globally. Typically it will be used to set or switch to a user configurable language.
+				</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$language</kbd></th>
+									<td><i>required</i></td>
+									<td>Language code to set.</td>
+								</tr>
+								<tr>
+									<th><kbd>$reload</kbd></th>
+									<td><kbd>false</kbd></td>
+									<td>(Optional) If set to <kbd>true</kbd> all already loaded language files will be reloaded for the new language set.</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td><kbd>Bool</kbd> indicating success or failure.</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// switch to French, and reload all loaded language files
+Lang::set_lang('fr', true);
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
 			<h3 id="procedural_helpers">Procedural helpers</h3>
 
 			<article>
@@ -383,7 +567,7 @@ $this->output = __('test.something');</code></pre>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

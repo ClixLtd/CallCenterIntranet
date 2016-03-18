@@ -17,8 +17,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -115,10 +115,11 @@
 						<tr>
 							<th>model_to</th>
 							<td>Calculated from alias</td>
-							<td>If specified, must the the full class name of the target model (ex. <kbd>Model_Comment</kbd>).<br />
+							<td>If specified, must the full class name of the target model (ex. <kbd>Model_Comment</kbd>).<br />
 								By default, this value is formed by prepending 'Model_' to the singular form of the alias
-								(ex. 'comments' becomes 'Model_Comment'), it is also expected to be in the same namespace as
-								the current model.</td>
+								(ex. 'comments' becomes 'Model_Comment'). If your model is in another namespace, you must specify
+								the full namespace, excluding the leading backslash (ex. 'Admin\Model_User'), PHP doesn't support
+								relative namespaces in strings.</td>
 						</tr>
 						<tr>
 							<th>key_from</th>
@@ -167,14 +168,17 @@
 				<pre class="php"><code>// eager loading, using joins:
 $post = Model_Post::find('all', array('related' => array('comments')));
 // or
-$post = Model_Post::find()->related('comments')->get();
+$post = Model_Post::query()->related('comments')->get();
 // $post->comments is available without any further querying after this
 
 // or use lazy loading, it won't use joins but query a relation once requested
 // first get a "post", 1 query without join
 $post = Model_Post::find('first');
 // now request the comments (not yet loaded), which will do another query without join automatically
-$comments = $post->comments;</code></pre>
+$comments = $post->comments;
+
+// alternatively, you can use get(), which allows additional conditions:
+$comments = $post->get('comments', array('where' => array(array('field', '=', $value))));</code></pre>
 
 				<h3 id="usage_rel_conditions">Usage with where/order_by conditions</h3>
 
@@ -263,20 +267,42 @@ $post = Model_Post::query()
 
 				<p>By default the Orm will join relations using a 'left' join. To specify a different join you utilize the 'join_type' condition:</p>
 
-				<pre class="php"><code>
-				$post = Model_Post::find('first', array(
+				<pre class="php"><code>$post = Model_Post::find('first', array(
     'related' => array(
         'articles' => array(
-        	'join_type' => 'inner',
-            'order_by' => array('id' => 'desc'),
+            'join_type' => 'inner',
             'where' => array(
-                array('publish_date', '>', time()),
-                array('published', '=', 1),
-        	),
-    	),
-	),
+                array('publish_date', '>', DB::expr(time())),
+                array('published', '=', DB::expr(1)),
+            ),
+            'order_by' => array('id' => 'desc'),
+        ),
+    ),
 ));
 				</code></pre>
+
+				<p>
+					Since 'where' clauses are executed before the JOIN is executed, you can not get a full OUTER JOIN results when
+					you include a 'where' clause, it will act like a pre-join filter. The solution is to define the filter on the
+					JOIN itself:
+				</p>
+
+				<pre class="php"><code>$post = Model_Post::find('all', array(
+    'related' => array(
+        'articles' => array(
+            'join_type' => 'left outer',
+            'join_on' => array(
+                array('publish_date', '>', DB::expr(time())),
+                array('published', '=', DB::expr(1)),
+            ),
+            'order_by' => array('id' => 'desc'),
+        ),
+    ),
+));
+				</code></pre>
+				<p>This will make the selection criteria part of the ON clause, instead of the WHERE clause.</p>
+
+				<p class='note'>Note that if you want to pass a literal value to a join, you will have to encapsulate it in a DB::expr() to avoid it being escaped as a column name.</p>
 			</article>
 
 			<article id="relation_types">
@@ -303,7 +329,7 @@ $post = Model_Post::query()
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

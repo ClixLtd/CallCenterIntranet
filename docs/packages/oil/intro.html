@@ -17,8 +17,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -58,6 +58,8 @@
 					<li><a href="../../packages/oil/refine.html">Refine</a> - Run tasks such as migrate and your own custom ones.</li>
 					<li><a href="../../packages/oil/package.html">Package</a> - Install, update and remove packages.</li>
 					<li><a href="../../packages/oil/console.html">Console</a> - Test your code in real time using an interactive shell.</li>
+					<li><a href="../../packages/oil/test.html">Test</a> - Run PHPUnit tests.</li>
+					<li><a href="../../packages/oil/server.html">Server</a> - Run FuelPHP using the PHP 5.4+ built-in webserver.</li>
 				</ul>
 
 				<p>
@@ -68,7 +70,7 @@
 				<pre class="cli"><code>$ cd Sites/fuel
 $ php oil -v
 Fuel: 1.2</code></pre>
-				
+
 				<h3 id="environments">Environments</h3>
 
 				<p>
@@ -86,20 +88,29 @@ Fuel: 1.2</code></pre>
 				<pre class="cli"><code>$ php oil help
 
 Usage:
-  php oil [console|generate|package|refine|help|test]
+  php oil [cell|console|generate|package|refine|help|server|test]
 
 Runtime options:
   -f, [--force]    # Overwrite files that already exist
   -s, [--skip]     # Skip files that already exist
-  -q, [--quiet]    # Suppress status output
+  -q, [--quiet]    # Supress status output
   -t, [--speak]    # Speak errors in a robot voice
 
 Description:
   The 'oil' command can be used in several ways to facilitate quick development, help with
   testing your application and for running Tasks.
 
+Environment:
+  If you want to specify a specific environment oil has to run in, overload the environment
+  variable on the commandline: FUEL_ENV=staging php oil &lt;commands&gt;
+
+More information:
+  You can pass the parameter "help" to each of the defined command to get information
+  about that specific command: php oil package help
+
 Documentation:
   http://docs.fuelphp.com/packages/oil/intro.html
+
 </code></pre>
 
 				<p>Each of these commands has its own help section which can be found by typing:</p>
@@ -112,7 +123,7 @@ Documentation:
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

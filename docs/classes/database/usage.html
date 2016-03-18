@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -110,7 +110,7 @@ $result = DB::select('id','name')->from('users')->execute();
 					allows you to dynamically build your array of column names.
 				</p>
 				<pre class="php"><code>// Will execute SELECT `id`, `name` FROM `users`
-$colums = array('id', 'name');
+$columns = array('id', 'name');
 $result = DB::select_array($columns)->from('users')->execute();
 </code></pre>
 
@@ -156,7 +156,14 @@ $result = DB::select('id','name')->from('users')->as_object()->execute();
 
 // Will fetch the result as an Model_Users object.
 $result = DB::select()->from('users')->as_object('Model_Users')->execute();
+
+// Will fetch the result as an Model_Users object (a model from the Users module).
+$result = DB::select()->from('users')->as_object('\\Users\\Model_Users')->execute();
 </code></pre>
+				<p class="note">
+					When you pass a class name to as_object(), make sure you include any namespace if needed. If the class
+					specified does not exist, as_object() will be ignored and an indexed array will be returned.
+				</p>
 				<p>Want to know how many records you have fetched? It's dead simple!</p>
 				<pre class="php"><code>
 $result = DB::select('*')->from('users')->execute();
@@ -224,7 +231,7 @@ $result = DB::select()->from('users')->where('id', '!=', 1)->execute();
 
 // Will execute SELECT * FROM `users` WHERE `name` LIKE "john%"
 $who = "john%";
-$result = DB::select()->from('users')->where('id', 'like', $who)->execute();
+$result = DB::select()->from('users')->where('name', 'like', $who)->execute();
 </code></pre>
 
 				<p id="grouped_where">Grouped where statements are also supported:</p>
@@ -272,7 +279,7 @@ DB::select()->from('users')->limit(1);
 DB::select()->from('users')->limit(10)->offset(5);
 
 // SELECT * FROM `users` ORDER BY `id` ASC LIMIT 10
-DB::select('users')->order_by('id','asc')->limit(10);
+DB::select()->from('users')->order_by('id','asc')->limit(10);
 </code></pre>
 
 			</article>
@@ -365,6 +372,9 @@ $result = DB::select()->from('users')->join('roles','LEFT')->on('roles.id', '=',
 
 // Will execute SELECT * FROM `users` RIGHT OUTER JOIN `roles` ON `roles`.`id` = `users`.`role_id`
 $result = DB::select()->from('users')->join('roles','right outer')->on('roles.id', '=', 'users.role_id');
+
+// join on a literal value 1 instead of a column name
+$result = DB::select()->from('users')->join('roles','right outer')->on('roles.id', '=', DB::expr('1'));
 </code></pre>
 
 			</article>
@@ -381,7 +391,7 @@ DB::update('users')->where('id', '=', 1)->set(array(
 	'some_column' => DB::expr('DEFAULT'),
 ))->execute();
 
-// SELECT COUNT(*) FROM `users`
+// SELECT COUNT(*) as count FROM `users`
 $result = DB::select(DB::expr('COUNT(*) as count'))->from('users')->execute();
 
 // Get the current/first result
@@ -499,7 +509,7 @@ Cache::delete_all("db");</code></pre>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

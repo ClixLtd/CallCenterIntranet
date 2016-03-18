@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -66,7 +66,7 @@
 					<li><a href="#usage">Usage</a></li>
 					<li><a href="#file_handler">File handler</a></li>
 					<li><a href="#directory_handler">Directory handler</a></li>
-					<li><a href="#predefined_handlers">Writing handlers</a></li>
+					<li><a href="#writing_handlers">Writing handlers</a></li>
 				</ul>
 
 			</article>
@@ -491,7 +491,7 @@ $modified_at = $handler->get_time();
 
 				<article>
 					<h4 class="method" id="method_file_get_size">get_size()</h4>
-					<p>The <strong>get_time</strong> method is a shortcut to <a href="usage.html#method_get_size">File::get_size</a>.</p>
+					<p>The <strong>get_size</strong> method is a shortcut to <a href="usage.html#method_get_size">File::get_size</a>.</p>
 					<table class="method">
 						<tbody>
 							<tr>
@@ -506,6 +506,30 @@ $modified_at = $handler->get_time();
 								<th>Example</th>
 								<td>
 									<pre class="php"><code>$file_size = $handler->get_size();</code></pre>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</article>
+
+				<article>
+					<h4 class="method" id="method_file_get_path">get_path()</h4>
+					<p>The <strong>get_path</strong> method returns the file path.</p>
+					<table class="method">
+						<tbody>
+							<tr>
+								<th>Static</th>
+								<td>No</td>
+							</tr>
+							<tr>
+								<th>Returns</th>
+								<td>The file path</td>
+							</tr>
+							<tr>
+								<th>Example</th>
+								<td>
+									<pre class="php"><code>$file_path = $handler->get_path();
+									// returns "/path/to/file.txt"</code></pre>
 								</td>
 							</tr>
 						</tbody>
@@ -929,7 +953,7 @@ class File_Handler_XML extends \File_Handler_File
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

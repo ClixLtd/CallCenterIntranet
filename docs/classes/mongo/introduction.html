@@ -17,8 +17,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -76,7 +76,7 @@
 						<th>hostname</th>
 						<td>string</td>
 						<td>yes</td>
-						<td>the hostname</td>
+						<td>the TCP hostname, OR a UNIX socket filepath</td>
 					</tr>
 					<tr>
 						<th>database</th>
@@ -88,7 +88,13 @@
 						<th>port</th>
 						<td>number</td>
 						<td>no</td>
-						<td>the port to use in the connection</td>
+						<td>the port to use in the connection, OR <em>0</em> if the <strong>hostname</strong> is a UNIX socket</td>
+					</tr>
+					<tr>
+						<th>replicaset</th>
+						<td>string</td>
+						<td>no</td>
+						<td>the name of the replicaset to use for the connection</td>
 					</tr>
 					<tr>
 						<th>username</th>
@@ -112,17 +118,27 @@
 		'mongo' => array(
 			// This group is used when no instance name has been provided.
 			'default' => array(
-				'hostname' => 'localhost',
-				'database' => 'mongo_fuel',
+				'hostname'   => 'localhost',
+				'database'   => 'mongo_fuel',
 			),
+
 
 			// List your own groups below.
 			'my_mongo_connection' => array(
-				'hostname' => 'localhost',
-				'database' => 'my_db',
-				'username' => 'user',
-				'password' => 'p@s$w0rD',
+				'hostname'   => 'localhost',
+				'database'   => 'my_db',
+				'replicaset' => 'replica',
+				'username'   => 'user',
+				'password'   => 'p@s$w0rD',
 			),
+
+			// An alternative group example using a UNIX socket connection, instead of the TCP localhost
+			'my_mongo_sock' => array(
+				'hostname'   => '/tmp/mongodb-27017.sock',
+				'port'   => 0,
+				'database'   => 'mongo_fuel',
+			),
+
 		),
 	</code></pre>
 
@@ -137,7 +153,7 @@
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

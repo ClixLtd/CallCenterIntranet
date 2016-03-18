@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -59,6 +59,17 @@
 					MUST implement.
 				</p>
 
+
+				<h3 id="static">Static interface</h3>
+
+				<p>For ease of use, the <kbd>has_access()</kbd> method is exposed through the generic Auth static interface.</p>
+
+				<p>Using the static interface, you can do</p>
+
+								<pre class="php"><code>// returns true if the current user has the required permissions
+$may_access_comments = Auth::has_access('comments[read,write]');
+</code></pre>
+
 				<h3 id="generic_methods">Generic methods</h3>
 
 				<p>
@@ -90,7 +101,7 @@
 							<th>Example</th>
 							<td>
 								<pre class="php"><code>// returns 'simpleacl'
-$id = Auth::instance('simpleacl')->get_id();
+$id = Auth::acl()->get_id();
 </code></pre>
 							</td>
 						</tr>
@@ -137,7 +148,7 @@ $id = Auth::instance('simpleacl')->get_id();
 							<th>Example</th>
 							<td>
 								<pre class="php"><code>// set a config value on the simpleacl driver
-Auth::instance('simpleacl')->set_config('key', 'value');
+Auth::acl()->set_config('key', 'value');
 </code></pre>
 							</td>
 						</tr>
@@ -238,7 +249,7 @@ $key = Auth::instance(simpleacl)->get_config('key', false);
 							<th>Example</th>
 							<td>
 								<pre class="php"><code>// check if user is allowed to comment
-if ( ! Auth::instance('simpleacl')->has_access('comments.create'), array('simplegroup', 1))
+if ( ! Auth::acl()->has_access('comments.create'), array('simplegroup', 1))
 {
 	Response::redirect('no_admin');
 }</code></pre>
@@ -254,7 +265,7 @@ if ( ! Auth::instance('simpleacl')->has_access('comments.create'), array('simple
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

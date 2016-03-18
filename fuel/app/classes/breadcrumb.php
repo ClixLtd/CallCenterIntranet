@@ -1,6 +1,6 @@
 <?php
 
-namespace Breadcrumb;
+//namespace Breadcrumb;
 
 /**
  * Breadcrumb solution

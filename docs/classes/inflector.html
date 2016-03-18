@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -47,10 +47,20 @@
 
 			<h2>Inflector Class</h2>
 
-			<p>The Inflector class allows you to transforms words from singular to plural, class names to table names, modularized class names to ones without, and class names to foreign keys.</p>
+			<p>
+				The Inflector class allows you to transforms words from singular to plural,
+				class names to table names, modularized class names to ones without,
+				and class names to foreign keys.
+			</p>
+			<p>
+				Inflector rulesets can be defined as language files, to be able to localize them.
+				The framework comes with a default set of rules for the English language, which
+				can act as a template for localisation.
+			</p>
+
 
 			<article>
-				<h4 class="method" id="method_ascii">ascii($str)</h4>
+				<h4 class="method" id="method_ascii">ascii($str, $allow_non_ascii = false)</h4>
 				<p>The <strong>ascii</strong> method allows you to translate a string to a 7-bit ASCII string. This method only works with UTF-8.</p>
 				<table class="method">
 					<tbody>
@@ -71,6 +81,11 @@
 									<th><kbd>$str</kbd></th>
 									<td><i>Required</i></td>
 									<td>The string to translate.</td>
+								</tr>
+								<tr>
+									<th><kbd>$allow_non_ascii</kbd></th>
+									<td><pre class="php"><code>false</code></pre></td>
+									<td>Whether to allow non ASCII chars.</td>
 								</tr>
 							</table>
 						</td>
@@ -388,7 +403,7 @@ echo Inflector::foreign_key('Inflector', false); // returns inflectorid</code></
 			</article>
 
 			<article>
-				<h4 class="method" id="method_friendly_title">friendly_title($str, $sep = '-', $lowercase = false)</h4>
+				<h4 class="method" id="method_friendly_title">friendly_title($str, $sep = '-', $lowercase = false, $allow_non_ascii = false)</h4>
 				<p>The <strong>friendly_title</strong> method allows you to convert your text to a URL-friendly title so that it can be used in the URL. It only works with UTF-8 input and outputs 7 bit ASCII characters.</p>
 				<table class="method">
 					<tbody>
@@ -419,6 +434,11 @@ echo Inflector::foreign_key('Inflector', false); // returns inflectorid</code></
 									<th><kbd>$lowercase</kbd></th>
 									<td><pre class="php"><code>false</code></pre></td>
 									<td>Whether to use lowercase or not.</td>
+								</tr>
+								<tr>
+									<th><kbd>$allow_non_ascii</kbd></th>
+									<td><pre class="php"><code>false</code></pre></td>
+									<td>Whether to allow non ASCII chars.</td>
 								</tr>
 							</table>
 						</td>
@@ -520,7 +540,7 @@ echo Inflector::is_countable('apple'); // returns true</code></pre>
 			</article>
 
 			<article>
-				<h4 class="method" id="method_pluralize">pluralize($word)</h4>
+				<h4 class="method" id="method_pluralize">pluralize($word, $count)</h4>
 				<p>The <strong>pluralize</strong> method allows you get the plural version of the given word.</p>
 				<table class="method">
 					<tbody>
@@ -542,6 +562,11 @@ echo Inflector::is_countable('apple'); // returns true</code></pre>
 									<td><i>Required</i></td>
 									<td>The word you want to pluralize.</td>
 								</tr>
+								<tr>
+									<th><kbd>$count</kbd></th>
+									<td><strong>0</strong></td>
+									<td>An instance, which if equal <kbd>1</kbd> will return the string as a singular.</td>
+								</tr>
 							</table>
 						</td>
 					</tr>
@@ -552,7 +577,8 @@ echo Inflector::is_countable('apple'); // returns true</code></pre>
 					<tr>
 						<th>Example</th>
 						<td>
-							<pre class="php"><code>echo Inflector::pluralize('apple'); // returns apples</code></pre>
+							<pre class="php"><code>echo Inflector::pluralize('apple'); // returns apples
+echo Inflector::pluralize('apple', 1); // returns apple</code></pre>
 						</td>
 					</tr>
 					</tbody>
@@ -719,11 +745,46 @@ echo Inflector::is_countable('apple'); // returns true</code></pre>
 				</table>
 			</article>
 
+			<article>
+				<h4 class="method" id="method_load_rules">load_rules()</h4>
+				<p>
+					The <strong>load_rules</strong> method loads the inflector rules based on the current
+					language configuration. If no rulesset can be found (i.e. no inflector lang file exists),
+					the class will default to a ruleset for the English language. If you have loaded a ruleset,
+					you change your language configuration, reload again, but the new configuration doesn't have
+					a ruleset defined, Inflector will continue to use the current one.
+				</p>
+				<p class="note">
+					Upon first use the Inflector class will autoload the the ruleset based on the language
+					configuration. Normally you do not have to use this method.
+				</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							None
+						</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>Inflector::load_rules(); // (re)loads the Inflector ruleset</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
 		</div>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

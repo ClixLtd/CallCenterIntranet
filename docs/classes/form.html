@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -49,7 +49,7 @@
 
 			<p>
 				The Form class can both be used to create individual form elements or to create a full form along with
-				validation, the latter is done in combination with the <a href="fieldset.html">Fieldset</a> class.
+				validation, the latter is done in combination with the <a href="fieldset/fieldset.html">Fieldset</a> class.
 			</p>
 
 			<h3 id="creatin_elements">Create individual form elements</h3>
@@ -249,6 +249,12 @@ echo Form::close();</code></pre>
 			</article>
 
 			<article>
+				<h4 class="method" id="method_csrf">csrf()</h4>
+
+				<p>Creates an html input element with the <kbd>value</kbd> attribute automatically set to the generated CSRF token.</p>
+			</article>
+
+			<article>
 				<h4 class="method" id="method_password">password($field, $value = null, $attributes = array())</h4>
 
 				<p>This is an alias for <kbd>Form::input()</kbd> that automatically sets the <kbd>type</kbd> attribute to
@@ -256,11 +262,12 @@ echo Form::close();</code></pre>
 			</article>
 
 			<article>
-				<h4 class="method" id="method_radio">radio($field, $value = null, $attributes = array())</h4>
+				<h4 class="method" id="method_radio">radio($field, $value = null, $checked = null, $attributes = array())</h4>
 
 				<p>This is an alias for <kbd>Form::input()</kbd> that automatically sets the <kbd>type</kbd> attribute to
-				<kbd>'radio'</kbd>.<br />
-				<em>For backwards compatibility this method also accepts: <kbd>checkbox($field, $value = null, array $attributes = array())</kbd></em></p>
+				<kbd>'radio'</kbd>.</p>
+				<p><em>For backwards compatibility this method also accepts: <kbd>checkbox($field, $value = null, array $attributes = array())</kbd></em></p>
+
 				<table class="method">
 					<tbody>
 					<tr>
@@ -322,8 +329,8 @@ echo Form::radio('gender', 'Female');</code></pre>
 				<h4 class="method" id="method_checkbox">checkbox($field, $value = null, $checked = null, $attributes = array())</h4>
 
 				<p>This is an alias for <kbd>Form::input()</kbd> that automatically sets the <kbd>type</kbd> attribute to
-				<kbd>'checkbox'</kbd>.<br />
-				<em>For backwards compatibility this method also accepts: <kbd>checkbox($field, $value = null, array $attributes = array())</kbd></em></p>
+				<kbd>'checkbox'</kbd>.</p>
+				<p><em>For backwards compatibility this method also accepts: <kbd>checkbox($field, $value = null, array $attributes = array())</kbd></em></p>
 <table class="method">
 					<tbody>
 					<tr>
@@ -658,13 +665,13 @@ echo Form::fieldset_close();</code></pre>
 
 			<h3 id="create_forms_oop">Create forms in an OOP way using fieldsets</h3>
 
-			<p>See <a href="fieldset.html">Fieldset</a></p>
+			<p>See <a href="fieldset/fieldset.html">Fieldset</a></p>
 
 		</div>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

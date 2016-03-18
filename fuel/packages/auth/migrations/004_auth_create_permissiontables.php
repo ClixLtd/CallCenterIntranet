@@ -2,21 +2,23 @@
 
 namespace Fuel\Migrations;
 
+include __DIR__."/../normalizedrivertypes.php";
+
 class Auth_Create_Permissiontables
 {
 	function up()
 	{
-		// get the driver used
-		\Config::load('auth', true);
-
-		$drivers = \Config::get('auth.driver', array());
-		is_array($drivers) or $drivers = array($drivers);
+		// get the drivers defined
+		$drivers = normalize_driver_types();
 
 		if (in_array('Ormauth', $drivers))
 		{
 			// get the tablename
 			\Config::load('ormauth', true);
 			$table = \Config::get('ormauth.table_name', 'users');
+
+			// make sure the correct connection is used
+			$this->dbconnection('ormauth');
 
 			// table users_perms
 			\DBUtil::create_table($table.'_permissions', array(
@@ -32,15 +34,15 @@ class Auth_Create_Permissiontables
 			// add a unique index on group and permission
 			\DBUtil::create_index($table.'_permissions', array('area', 'permission'), 'permission', 'UNIQUE');
 		}
+
+		// reset any DBUtil connection set
+		$this->dbconnection(false);
 	}
 
 	function down()
 	{
-		// get the driver used
-		\Config::load('auth', true);
-
-		$drivers = \Config::get('auth.driver', array());
-		is_array($drivers) or $drivers = array($drivers);
+		// get the drivers defined
+		$drivers = normalize_driver_types();
 
 		if (in_array('Ormauth', $drivers))
 		{
@@ -48,8 +50,45 @@ class Auth_Create_Permissiontables
 			\Config::load('ormauth', true);
 			$table = \Config::get('ormauth.table_name', 'users');
 
+			// make sure the correct connection is used
+			$this->dbconnection('ormauth');
+
 			// drop the admin_users_perms table
 			\DBUtil::drop_table($table.'_permissions');
+		}
+
+		// reset any DBUtil connection set
+		$this->dbconnection(false);
+	}
+
+	/**
+	 * check if we need to override the db connection for auth tables
+	 */
+	protected function dbconnection($type = null)
+	{
+		static $connection;
+
+		switch ($type)
+		{
+			// switch to the override connection
+			case 'simpleauth':
+			case 'ormauth':
+				if ($connection = \Config::get($type.'.db_connection', null))
+				{
+					\DBUtil::set_connection($connection);
+				}
+				break;
+
+			// switch back to the configured migration connection, or the default one
+			case false:
+				if ($connection)
+				{
+					\DBUtil::set_connection(\Config::get('migrations.connection', null));
+				}
+				break;
+
+			default:
+				// noop
 		}
 	}
 }

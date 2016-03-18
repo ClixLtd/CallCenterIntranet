@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -56,8 +56,6 @@
 				Query_Builder_Where class, so all the methods are inherited.
 			</p>
 
-			<h2 id="methods">Methods</h2>
-
 			<article>
 				<h4 class="method" id="method_table">table($table)</h4>
 				<p>The <strong>table</strong> method sets/changes the table to delete from.</p>
@@ -93,7 +91,7 @@
 						<tr>
 							<th>Example</th>
 							<td>
-								<pre class="php"><code>// prepare an update statement
+								<pre class="php"><code>// prepare a delete statement
 $query = DB::delete('users');
 
 // Set the table to delete from
@@ -142,7 +140,7 @@ $query->table('admins');
 						<tr>
 							<th>Example</th>
 							<td>
-								<pre class="php"><code>// prepare an update statement
+								<pre class="php"><code>// prepare a delete statement
 $query = DB::delete('users');
 
 // Set a where statement
@@ -184,7 +182,7 @@ $sql = $query->compile($connection);
 						<tr>
 							<th>Example</th>
 							<td>
-								<pre class="php"><code>// prepare an update statement
+								<pre class="php"><code>// prepare a delete statement
 $query = DB:delete('users');
 
 // Set a where statement
@@ -214,7 +212,7 @@ $sql = $query->compile($connection);
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

@@ -17,8 +17,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -259,7 +259,7 @@ $var = Uri::segment(3) ?: 'default';</code></pre>
 			<p>Comparing function/method returns and variables should be type aware, for example some functions may return
 				<kbd>false</kbd>, and when comparing this return the type sensitive operators such as <kbd>===</kbd> or <kbd>!==</kbd>. Additionally, use of
 				<kbd>and</kbd> or <kbd>or</kbd> is preferred over <kbd>&amp;&amp;</kbd> or <kbd>||</kbd> for readability. In some cases, this cannot be avoided and the use of
-				<kbd>&amp;&amp;</kbd> or <kbd>||</kbd> as its required may be used. The <kbd>!</kbd> should have spaces on both sides when used.</p>
+				<kbd>&amp;&amp;</kbd> or <kbd>||</kbd> as it's required may be used. The <kbd>!</kbd> should have spaces on both sides when used.</p>
 
 			<pre class="php"><code>if ($var == false and $other_var != 'some_value')
 if ($var === false or my_function() !== false)
@@ -333,11 +333,36 @@ $var = $some_var + $other_var; //space before and after math operator
 $var++; // no space before increment
 ++$var; //no space after increment</code></pre>
 
+			<h5 id="dot-notation">Array dot-notation</h5>
+
+			<p>
+				Although strictly speaking it's not a coding standard, it's used a lot within the frameworks classes and this documentation,
+				and since it's not a common PHP notation, it might confuse people new to the framework.
+			</p>
+			<pre class="php"><code>// when you see "always_load.packages = array()", it is shorthand for:
+array("always_load" => array("packages" => array(...) ) );
+</code></pre>
+
+			<p>This notation is used by the Arr class, but also the Lang, Config and Session classes, to quickly access individual elements from a multi-dimensional array.</p>
+			<pre class="php"><code>// when you have an array structure like this
+$array = array(
+    "always_load" => array(
+        "packages" => array(
+            "orm",
+            "package" => "/my/special/package.php",
+        )
+     )
+);
+
+// then this will return "/my/special/package.php":
+$path = Arr::get($array, 'always_load.packages.package');
+</code></pre>
+
 		</div>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

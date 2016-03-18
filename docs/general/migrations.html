@@ -17,8 +17,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -50,6 +50,60 @@
 
 			<p>The database table `migration` tracks which migrations have already been run so all you have to do is update your application files and call <kbd>Migrate::current()</kbd> to work out which migrations should be run. The current version is found in core/config/migration.php so like any other config file you should copy this to app/config to make changes.</p>
 
+			<h3><a class="internal_link" href="#/config">Configuration</a></h3>
+
+			<table class="config">
+				<tbody>
+					<tr class="header">
+						<th>Key</th>
+						<th>Type</th>
+						<th>Default</th>
+						<th>Description</th>
+					</tr>
+					<tr>
+						<th>folder</th>
+						<td>string</td>
+						<td>
+							<pre class="php">
+								<code>'migrations/'</code>
+							</pre>
+						</td>
+						<td>
+							The folder in which migration files will be found.
+						</td>
+					</tr>
+					<tr>
+						<th>connection</th>
+						<td>string</td>
+						<td>
+							<pre class="php">
+								<code>null</code>
+							</pre>
+						</td>
+						<td>
+							Configuration name of a database connection to use to write migrations.
+						</td>
+					</tr>
+					<tr>
+						<th>table</th>
+						<td>string</td>
+						<td>
+							<pre class="php">
+								<code>'migration'</code>
+							</pre>
+						</td>
+						<td>
+							The database table used to store migration data.
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p class="note">
+				<strong>Note: </strong>
+				After migrations have been run, the configuration file will be rewritten with version information included. These version numbers are used internally and should not be changed.
+			</p>
+
 			<h3>Creating a Migration</h3>
 
 			<p>Create a file in the app/migrations folder. The prefix should be an incremental count starting at 001, do not skip numbers and do not have two numbers that match. The first would be something like <kbd>app/migrations/001_example.php</kbd>.</p>
@@ -73,7 +127,7 @@ class Example
     }
 }</code></pre>
 
-			<h3 id="run_a_mirgation">Run a Migration</h3>
+			<h3 id="run_a_migration">Run a Migration</h3>
 
 			<p>A migration can be run in two ways:</p>
 
@@ -109,11 +163,43 @@ $ php oil refine migrate --version=10</code></pre>
 				config number so the current command will not be relevant in many situations.
 			</p>
 
+			<h3 id="skip_migrations">Skipping migrations</h3>
+
+			<p>
+				You can abort the migration process by having your <kbd>up()</kbd> or <kbd>down()</kbd> method return
+				<kbd>false</kbd>. This can be useful if your migration has external dependencies, for example the existence of a table created in a different
+				migration.
+			</p>
+
+			<p class="note">
+				This will only abort the migration stack currently being processed, either the application migrations, or the migrations in a single module or package.
+				All migrations in other stacks will be processed as normal.
+			</p>
+
+			<h3 id="prep_migration">Prepping a migration</h3>
+
+			<p>
+				Optionally, a migration class can contain <kbd>before()</kbd> and/or <kbd>after()</kbd> methods, that can be used for prepping, validation
+				or cleanup functionality. If you have generic functionality, you could create a migration base class for your migrations containing these
+				methods, so you don't have to duplicate code in every migration.
+			</p>
+
+			<p>
+				Like with the <kbd>up()</kbd> method, the <kbd>before()</kbd> and <kbd>after()</kbd> methods can return <kbd>false</kbd> to signal a failure.
+				This can be useful if your migration has generic external dependencies, or perhaps additional validation steps. When it does, the migration will
+				be skipped, and ultimately aborted if a retry fails too. In the case of the <kbd>after()</kbd> method returning <kbd>false</kbd>, the migration
+				will be reverted by calling the reverse migration method (i.e. calling down() when on an up() migration, and vice-versa).
+			</p>
+
+			<p class="note">
+				The <kbd>after()</kbd> method will only be called if the migration itself was succesful. If the migration method returns <kbd>false</kbd>, it
+				will not be called.
+			</p>
 		</div>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

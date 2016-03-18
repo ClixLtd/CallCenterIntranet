@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -67,13 +67,13 @@
 									<th class="description">Description</th>
 								</tr>
 								<tr>
-									<th><kbd>$arr</kbd></th>
+									<th><kbd>$setup</kbd></th>
 									<td><em>mixed</em></td>
 									<td><pre class="php"><code>null</code></pre></td>
 									<td>Supply <em>null</em> for default config, a setup group name, or a config array.</td>
 								</tr>
 								<tr>
-									<th><kbd>$arr</kbd></th>
+									<th><kbd>$config</kbd></th>
 									<td><em>mixed</em></td>
 									<td><pre class="php"><code>null</code></pre></td>
 									<td>An additional config array to modify default configs on the fly.</td>
@@ -137,7 +137,7 @@ $email = \Email::forge('my_defaults', array(
 									<th class="description">Description</th>
 								</tr>
 								<tr>
-									<th><kbd>$arr</kbd></th>
+									<th><kbd>$body</kbd></th>
 									<td><em>string</em></td>
 									<td><em>required</em></td>
 									<td>The message body.</td>
@@ -182,7 +182,7 @@ $email->body(\View::forge('my/view', $data);</code></pre>
 									<th class="description">Description</th>
 								</tr>
 								<tr>
-									<th><kbd>$arr</kbd></th>
+									<th><kbd>$alt_body</kbd></th>
 									<td><em>string</em></td>
 									<td><em>required</em></td>
 									<td>The message body.</td>
@@ -626,7 +626,7 @@ $email->reply_to(array(
 					</tbody>
 				</table>
 			</article>
-			
+
 			<article>
 				<h4 class="method" id="method_header">header($header, $value = null)</h4>
 				<p>The <strong>header</strong> method adds a custom header to you mail headers.</p>
@@ -918,7 +918,7 @@ $email->clear_reply_to();
 			</article>
 
 			<article>
-				<h4 class="method" id="method_attach">attach($file, $inline = false, $cid = null, $mime = null)</h4>
+				<h4 class="method" id="method_attach">attach($file, $inline = false, $cid = null, $mime = null, $name = null)</h4>
 				<p>The <strong>attach</strong> method attaches a file.</p>
 				<p class="note">This method will search for the file in the attachment paths set (config/email.php) in the <em>attach_paths</em> array</p>
 				<table class="method">
@@ -960,6 +960,12 @@ $email->clear_reply_to();
 									<td><em>string</em></td>
 									<td><pre class="php"><code>null</code></pre></td>
 									<td>By default the mimetype is looked up in the core/config/mimes array, use this to overwrite it.</td>
+								</tr>
+								<tr>
+									<th><kbd>$name</kbd></th>
+									<td><em>string</em></td>
+									<td><pre class="php"><code>null</code></pre></td>
+									<td>Attachment name overwrite.</td>
 								</tr>
 							</table>
 						</td>
@@ -1088,7 +1094,7 @@ $email->clear_attachments();
 			</article>
 
 			<article>
-				<h4 class="method" id="method_send">send()</h4>
+				<h4 class="method" id="method_send">send($validate = null)</h4>
 				<p>The <strong>send</strong> method sends the mail.</p>
 				<table class="method">
 					<tbody>
@@ -1099,12 +1105,25 @@ $email->clear_attachments();
 					<tr>
 						<th>Parameters</th>
 						<td>
-							<em>None</em>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Type</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$validate</kbd></th>
+									<td><em>bool</em></td>
+									<td><pre class="php"><code>null</code></pre></td>
+									<td>Whether to validate the addresses, falls back to config setting.</td>
+								</tr>
+							</table>
 						</td>
 					</tr>
 					<tr>
 						<th>Returns</th>
-						<td>$this</td>
+						<td>boolean</td>
 					</tr>
 					<tr>
 						<th>Example</th>
@@ -1167,7 +1186,7 @@ catch(\EmailValidationFailedException $e)
 					</tbody>
 				</table>
 			</article>
-                        
+
 			<article>
 				<h4 class="method" id="method_from">return_path($email)</h4>
 				<p>The <strong>return_path</strong> method sets return-path address.</p>
@@ -1208,13 +1227,276 @@ catch(\EmailValidationFailedException $e)
 					</tr>
 					</tbody>
 				</table>
-			</article>                        
+			</article>
 
+			<article>
+				<h4 class="method" id="method_pipelining">pipelining($pipelining = true)</h4>
+				<p>
+					The <strong>pipelining</strong> method enables pipelining (sending multiple messages in one go). For drivers that
+					do not support this, this method is a NOOP. Pipelining is disabled by default.
+				</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>No</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Type</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$pipelining</kbd></th>
+									<td><em>boolean</em></td>
+									<td><pre class="php"><code>true</code></pre></td>
+									<td>Whether or not pipelining should be enabled.</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>$this</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>$email->pipelining(true);</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<h2 id="email_getters">Email getters</h2>
+
+			<article>
+				<h4 class="method" id="method_get_from">get_from()</h4>
+				<p>The <strong>get_from</strong> method returns the configured "from" address.</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>No</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<em>None</em>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>string</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// returns the address set by from()
+$from = $email->get_from();
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_get_to">get_to()</h4>
+				<p>The <strong>get_to</strong> method returns the configured "to" addresses.</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>No</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<em>None</em>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>array</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// returns the addresses set by to()
+$to = $email->get_to();
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_get_cc">get_cc()</h4>
+				<p>The <strong>get_cc</strong> method returns the configured "cc" addresses.</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>No</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<em>None</em>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>array</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// returns the address set by cc()
+$cc = $email->get_cc();
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_get_bcc">get_bcc()</h4>
+				<p>The <strong>get_bcc</strong> method returns the configured "bcc" addresses.</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>No</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<em>None</em>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>array</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// returns the address set by bcc()
+$bcc = $email->get_bcc();
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_get_reply_to">get_reply_to()</h4>
+				<p>The <strong>get_reply_to</strong> method returns the configured "reply_to" address.</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>No</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<em>None</em>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>string</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// returns the addresses set by reply_to()
+$reply_to = $email->get_reply_to();
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_get_body">get_body()</h4>
+				<p>The <strong>get_body</strong> method returns the email body set.</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>No</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<em>None</em>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>string</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// returns the email body
+$text = $email->get_body();
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_subject">get_subject()</h4>
+				<p>The <strong>get_subject</strong> method returns the configured email "subject".</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>No</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<em>None</em>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>string</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// returns the subject set by subject()
+$subject = $email->get_subject();
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
 		</div>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

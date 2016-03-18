@@ -17,8 +17,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -99,12 +99,17 @@ class Controller_Widget
 }
 </code></pre>
 
+			<p class="note">
+				If you have moved your controllers into a namespace like it is explained <a href="./namespacing.html#controllers">here</a>, you have to use
+				the same setup for your module controllers. In this example the namespace will be <var>Mymodule\Controller</var>, the classname <var>Widget</var>.
+			</p>
+
 			<h3 id="folder_structure">Module folder structure</h3>
 
 			<p>
 				You start creating a module by creating a folder for your new module in the modules folder you have defined in the configuration.
 				The folders name determines the name of the module, and the name of the namespace for the classes in the module.
-				This name is also used in the URI if you want to route to the modules controllers, or as part of the <a href="../classes/request.html">Request</a> in case of an HMVC call.
+				This name is also used in the URI if you want to route to the modules controllers, or as part of the <a href="../classes/request/request.html">Request</a> in case of an HMVC call.
 			</p>
 			<p>
 				As a module can be viewed as a self contained part of the application, you'll notice that the module folder structure is very familiar.
@@ -120,13 +125,9 @@ class Controller_Widget
 				</li>
 				<li>config</li>
 				<li>lang</li>
+				<li>tasks</li>
 				<li>views</li>
 			</ul>
-
-			<p class="note">
-				<strong>Note:</strong> At the time of writing, tasks are
-				not yet supported within a module.
-			</p>
 
 			<h3 id="cross_module_file_loading">Cross modules file loading</h3>
 
@@ -140,6 +141,12 @@ class Controller_Widget
 
 // Cross load a view
 \View::forge('othermodule::subdir/view');</code></pre>
+
+            		<p>Run a task from module:</p>
+
+			<pre class="cli"><code>$ php oil refine &lt;modulename&gt;::&lt;taskname&gt;:&lt;methodname&gt;</code></pre>
+
+
 
 			<h3 id="module_routing">Module routing</h3>
 
@@ -206,7 +213,7 @@ Module::load('mymodule');</code></pre>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

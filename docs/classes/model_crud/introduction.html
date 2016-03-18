@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -68,7 +68,7 @@
 				To use the Model_Crud class, create a class that extends \Model_Crud. Example:
 			</p>
 
-			<pre class="php"><code>&lt;php
+			<pre class="php"><code>&lt;?php
 
 class Model_Users extends \Model_Crud
 {
@@ -154,7 +154,7 @@ class Model_Users extends \Model_Crud
 						<td>
 							<pre class="php"><code>protected static $_properties = array(
 	'id',
-	'name'
+	'name',
 	'age',
 	'birth_date',
 	'gender',
@@ -162,14 +162,63 @@ class Model_Users extends \Model_Crud
 						</td>
 					</tr>
 					<tr>
+						<th><strong>$_mass_whitelist</strong></th>
+						<td>array</td>
+						<td><em>none</em></td>
+						<td>
+							Array of columns which can be set with:<br />__construct,<br />::forge<br />->set()
+						</td>
+						<td>
+							<pre class="php"><code>protected static $_mass_whitelist = array(
+	'first_name',
+	'last_name',
+	'age',
+);</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<th><strong>$_mass_blacklist</strong></th>
+						<td>array</td>
+						<td><em>none</em></td>
+						<td>
+							Array of columns which could not be set with: __construct, ::forge and ->set() method.
+						</td>
+						<td>
+							<pre class="php"><code>protected static $_mass_blacklist = array(
+	'password',
+	'is_admin',
+);</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="5">
+							<p class="note">
+								$_mass_whitelist is like a allows for extra security when mass-assigning
+								propperties. Do note that this only works with <strong>__construct</strong>,
+								<strong>::forge</strong> and <strong>->set</strong>.
+							</p>
+						</td>
+					</tr>
+					<tr>
 						<th><strong>$_connection</strong></th>
 						<td>string</td>
 						<td><em>none</em></td>
 						<td>
-							The database connection to use.
+							The database connection to use, or the connection used for reads in a master/slave setup. If not configured, the DB config default will be used.
 						</td>
 						<td>
 							<pre class="php"><code>protected static $_connection = null;</code></pre>
+						</td>
+					</tr>
+					<tr>
+						<th><strong>$_write_connection</strong></th>
+						<td>string</td>
+						<td><em>none</em></td>
+						<td>
+							The database connection to use for writes in a master/slave setup.
+						</td>
+						<td>
+							<pre class="php"><code>protected static $_write_connection = 'master';</code></pre>
 						</td>
 					</tr>
 					<tr>
@@ -229,7 +278,7 @@ class Model_Users extends \Model_Crud
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

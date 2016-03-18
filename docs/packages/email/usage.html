@@ -17,8 +17,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -122,7 +122,7 @@ $email->alt_body('This is my alt body, for non-html viewers.');</code></pre>
 
 			<p>
 				The Email package supports two kinds of attachments: normal (attachment), and inline. Use an inline attachment if
-				you want to use in inside the mail. You might, for instance, want to have a graphic in your mail, and you want people to
+				you want to use in inside the mail. You might, for instance, want to have a graphic in your mail, and you want people to see
 				that image offline also. Some clients don't cache that, and yes that's dumb. But it's the interwebs and stuff like that happens.
 			</p>
 
@@ -157,7 +157,7 @@ $email->string_attach($contents, $filename);
 
 			<p>The last tag you saw (with the cid:) is also not included. In this situation the email expects you to attach that file yourself using an inline attachment.</p>
 
-			<h3 id="priorities">Priotity</h3>
+			<h3 id="priorities">Priority</h3>
 
 			<p>
 				Alter a mail's priority by using the <a href="./methods.html#method_priority">priority</a> method.
@@ -165,13 +165,59 @@ $email->string_attach($contents, $filename);
 
 			<pre class="php"><code>$email->priority(\Email::P_HIGH);</code></pre>
 
-		</div>
+			<h3 id="pipelining">Pipelining</h3>
+
+			<p>
+				Pipelining is a mechanism with which you can send out multiple emails at once.
+			</p>
+
+			<pre class="php"><code>$email->pipelining($true);</code></pre>
+
+			<p>
+				Once enabled, you can use the same <code>$email</code> object to construct and send multiple emails, re-using the same connection to the mailserver.
+				You should consult with your mail server hosting company to see if this is allowed, and what the maximum amount of emails is that you
+				can send out in a single pipeline. Most hosters limit this to a specific amount, after which the server disconnects.
+			</p>
+			<p>
+				Currently, only the SMTP driver supports pipelining.
+			</p>
+
+
+            <h2 id="drivers">Drivers</h2>
+            <h3 id="mailgun">Mailgun driver</h3>
+            <p><a href="http://www.mailgun.com/">Mailgun</a> is a service by Rackspace that allows you to send emails by demand. You will need to install the <a href="https://github.com/mailgun/mailgun-php">Mailgun library</a> with composer in your FuelPHP.</p>
+
+            <p>Add the next line to your <i>composer.json</i> file and execute the update</p>
+
+            <pre class="cli"><code class="body">"mailgun/mailgun-php": "1.6"</code></pre>
+
+            <pre class="cli"><code>$ composer update</code></pre>
+
+            <p>Once you have installed the package you will have to set up the config for your App.</p>
+
+            <pre class="php"><code>
+/**
+ * Override default Email.php config
+ */
+return array(
+    'defaults' => array(
+        'driver' => 'mailgun',
+        'mailgun' => array(
+            'key' => 'YOUR KEY',
+            'domain' => 'YOUR DOMAIN'
+        ),
+    ),
+);
+            </code></pre>
+
+        </div>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
+
 	</div>
 </body>
 </html>

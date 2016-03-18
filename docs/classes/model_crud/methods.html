@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -138,7 +138,7 @@ $user = Model_User::forge(array(
 							<pre class="php"><code>// Get a record where `id` = 2
 $user = Model_User::find_by_pk(2);
 
-if($user === null)
+if ($user === null)
 {
 	// not found
 }
@@ -204,7 +204,7 @@ else
 							<pre class="php"><code>// Get a record where `email` = "info@example.com"
 $user = Model_User::find_one_by('email', 'info@example.com');
 
-if($user === null)
+if ($user === null)
 {
 	// not found
 }
@@ -288,7 +288,7 @@ $users = \Model_User::find_by(array(
 	array('surname', 'like', '%Surname%'),
 ), null, null, 10);
 
-if($users === null)
+if ($users === null)
 {
 	// not found
 }
@@ -424,7 +424,7 @@ $users = Model_User::find_all(10, 20);
 	'where' => array(
 		array('name', 'like', '%Name%'),
 		'suspended' => 'no',
-		array('id', 'in', array(1, 2, 3, 4));
+		array('id', 'in', array(1, 2, 3, 4)),
 	),
 	'order_by' => array(
 		'name' => 'asc',
@@ -440,7 +440,7 @@ $users = Model_User::find_all(10, 20);
 		'active' => 'yes',
 		'banned' => 'no',
 	),
-	'order_by' => array('id', 'desc'),
+	'order_by' => array('id' => 'desc'),
 ), 'id');</code></pre>
 							<hr>
 							<strong>Advanced Usage with Closure</strong>
@@ -458,7 +458,7 @@ $users = Model_User::find_all(10, 20);
 			</article>
 
 			<article>
-				<h4 class="method" id="method_pre_find">pre_find(&$query)</h4>
+				<h4 class="method" id="method_pre_find">pre_find(&amp;$query)</h4>
 				<p>Replace the <strong>pre_find</strong> method to alter the query before executing.</p>
 				<table class="method">
 					<tbody>
@@ -543,7 +543,7 @@ protected static function pre_find(&$query)
 							<pre class="php"><code>// Inside your model
 protected static function post_find($result)
 {
-	if($result !== null)
+	if ($result !== null)
 	{
 		// alter the result array
 	}
@@ -627,7 +627,7 @@ protected static function post_find($result)
 									<th><kbd>$validate</kbd></th>
 									<th><em>boolean</em></th>
 									<td><pre class="php"><code>true</code></pre></td>
-									<td>Wether to run the validation.</td>
+									<td>Whether to run the validation.</td>
 								</tr>
 							</table>
 						</td>
@@ -686,7 +686,7 @@ $user->save(false);
 						<th>Example</th>
 						<td>
 							<pre class="php"><code>$user = Model_User::find_by_pk(2);
-if($user)
+if ($user)
 {
 	// delete the user;
 	$user->delete();
@@ -751,8 +751,73 @@ $user->save();
 			</article>
 
 			<article>
-				<h4 class="method" id="method_is_frozen">is_frozen($frozen = null)</h4>
-				<p>The <strong>is_frozen</strong> method checks if the record is frozen or sets whether it is frozen or not.</p>
+				<h4 class="method" id="method_count">count($column = null, $distinct = true, $where = array(), $group_by = null)</h4>
+				<p>The <strong>count</strong> method returns a row count.</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Type</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$column</kbd></th>
+									<th><em>string</em></th>
+									<td><pre class="php"><code>null</code></pre></td>
+									<td>The name of the column to count on. If not given the primary key will be used.</td>
+								</tr>
+								<tr>
+									<th><kbd>$distinct</kbd></th>
+									<th><em>boolean</em></th>
+									<td><pre class="php"><code>true</code></pre></td>
+									<td>Whether or not to run a distinct query.</td>
+								</tr>
+								<tr>
+									<th><kbd>$where</kbd></th>
+									<th><em>array</em></th>
+									<td><pre class="php"><code>array()</code></pre></td>
+									<td>Array with where clauses to filter the result.</td>
+								</tr>
+								<tr>
+									<th><kbd>$group_by</kbd></th>
+									<th><em>string</em></th>
+									<td><pre class="php"><code>null</code></pre></td>
+									<td>Column to group by.</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>Mixed. Integer with the result of the count query, or false in case the query failed.</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// count all records in the table
+$nbr_of_records = Model_User::count();
+
+// filter the result count by only counting admin users
+$nbr_of_records = Model_User::count('id', true, array('group', '=', 100));
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_frozen">frozen($frozen = null)</h4>
+				<p>The <strong>frozen</strong> method checks if the record is frozen or sets whether it is frozen or not.</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -833,7 +898,7 @@ $validation_object = $user->validation();
 
 			<article>
 				<h4 class="method" id="method_validates">validates()</h4>
-				<p>The <strong>validates</strong> method returns wether the instance will pass validation.</p>
+				<p>The <strong>validates</strong> method returns whether or not the instance will pass validation.</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -848,7 +913,7 @@ $validation_object = $user->validation();
 					</tr>
 					<tr>
 						<th>Returns</th>
-						<td>A succes boolean.</td>
+						<td>A success boolean.</td>
 					</tr>
 					<tr>
 						<th>Example</th>
@@ -892,7 +957,7 @@ else
 					</tr>
 					<tr>
 						<th>Returns</th>
-						<td>A Validation instance.</td>
+						<td>array</td>
 					</tr>
 					<tr>
 						<th>Example</th>
@@ -944,10 +1009,12 @@ $user_array = $user->to_array();
 							<pre class="php"><code>// Inside your model
 protected function pre_save(&$query)
 {
-	// change the query
-	$query->set(array('field' => 'value'));
-}
-</code></pre>
+	// conditionally add a where clause
+	if ($something)
+	{
+		$query->where('field', '=', $something);
+	}
+}</code></pre>
 						</td>
 					</tr>
 					</tbody>
@@ -1121,7 +1188,7 @@ protected function post_update($result)
 									<th><kbd>$query</kbd></th>
 									<th><em>\Database_Query_Builder_Delete object</em></th>
 									<td><em>required</em></td>
-									<td>The update query object.</td>
+									<td>The delete query object.</td>
 								</tr>
 							</table>
 						</td>
@@ -1341,7 +1408,7 @@ protected function prep_values($data)
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

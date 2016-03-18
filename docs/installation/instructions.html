@@ -17,8 +17,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -58,17 +58,52 @@
 
 			<p>Now you can just use 'oil' instead of 'php oil' in your projects.</p>
 
+			<p class="note">If you had installed the oil script before version 1.6, you have to re-install it to have it run composer too!</p>
+
 			<p>To create a new project simply run:</p>
 
 			<pre class="cli"><code>$ oil create &lt;project_name&gt;</code></pre>
 
 			<p>This will create a folder in the directory you are in with the project name you gave.  It will then clone the repository and all submodules into that directory.</p>
 
-			<p>Note: This will also run <code class="cli">$ oil refine install</code>, which makes the necessary directories writable.</p>
+			<p>
+				Note: This will also run <code class="cli">$ oil refine install</code> which makes the necessary directories writable,
+				and <code class="cli">$ php composer.phar update</code> to pull in the defined composer dependencies.
+			</p>
 
 			<h3 id="manual">Manual Installation Instructions</h3>
 
-			<p>This will create the default installation of the Fuel framework on your web server.</p>
+			<p>This will create the default installation of the Fuel framework on your virtual host root directory.</p>
+
+			<h4 id="from_github">Clone the latest release from github</h4>
+
+<pre class="cli"><code>$ cd /where/ever/your/virtualhost/root/is
+$ git clone git://github.com/fuel/fuel.git .
+$ ./composer.phar self-update
+$ ./composer.phar update --prefer-dist
+</code></pre>
+
+			<p>Don't forget the single dot, otherwise this will create a folder called <strong>fuel</strong> in your virtual host root directory!</p>
+
+			<p>Alternatively, you can use composer to install everything in one go:</p>
+<pre class="cli"><code>$ composer create-project fuel/fuel:dev-1.7/master --prefer-dist .
+</code></pre>
+
+			<h4 id="from_github">Clone the latest development branch from github</h4>
+
+<pre class="cli"><code>$ cd /where/ever/your/virtualhost/root/is
+$ git clone git://github.com/fuel/fuel.git -b 1.8/develop .
+$ ./composer.phar self-update
+$ ./composer.phar update
+</code></pre>
+
+			<p>Don't forget the single dot, otherwise this will create a folder called <strong>fuel</strong> in your virtual host root directory!</p>
+
+			<p>Alternatively, you can use composer to install everything in one go:</p>
+<pre class="cli"><code>$ composer create-project fuel/fuel:dev-1.8/develop --prefer-source .
+</code></pre>
+
+			<h4 id="from_zip">Download the zip file</h4>
 
 			<ol>
 				<li><a href="download.html">Download the Fuel Framework</a></li>
@@ -83,6 +118,7 @@
 						<li>Edit the paths in index.php to point to your app, core &amp; packages directories.</li>
 					</ul>
 <pre class="plain"><code>/
+  docs/
   fuel/
     app/
     core/
@@ -94,8 +130,10 @@
   oil
 </code></pre>
 				</li>
-				<li>
-					Set permissions on writable folders manually, or run:
+			</ol>
+
+			<p>After installation, make sure the permissions are correct on folders that the framework needs access to. There is an oil task
+			available to set the default folders writable:</p>
 <pre class="cli"><code>$ php oil refine install
 	Made writable: APPPATH/cache
 	Made writable: APPPATH/logs
@@ -103,36 +141,136 @@
 	Made writable: APPPATH/config
 </code>
 </pre>
-				</li>
-			</ol>
+
+			<h2 id="composer">Composer</h2>
+
+			<p>
+				As of version 1.6, FuelPHP uses the <a href="http://getcomposer.org">Composer</a> package manager to dynamically pull dependencies it,
+				either from <a href="http://packagist.org">Packagist</a>, from Github, or from a custom defined location. As of version 1.7.2, all
+				FuelPHP framework components are also installed through composer. Composer is controlled via the composer.json file, which you will
+				find in the root of your FuelPHP installation. For your convienience, we have included the composer.phar library so you can run composer
+				directly:
+			</p>
+
+<pre class="cli"><code>$ php composer.phar self-update
+$ php composer.phar update
+</code>
+</pre>
+			<p class="note">If you don't execute this step, FuelPHP will not start, as vital framework components are being loaded through composer!</p>
 
 			<h2 id="configuration">Configuration</h2>
 
 			<p>The main configuration can be found at app/config/config.php. Edit it to your liking.</p>
 
+			<h2 id="url_rewriting">URL rewriting</h2>
+
+			<p>
+				Fuel comes with default rewrite rules for Apache (.htaccess) and IIS (web.config). You can find
+				these files in the web application DOCROOT, by default this is the "public folder". If you use Nginx,
+				please find an <a href="#nginx">example</a> here.
+			</p>
+			<p class="note">
+				Please note that in some default webserver configuration, URL rewriting is disabled by default. To
+				quickly check if this is the case, make a typo in your rewrite config (for example, in your .htaccess
+				file). If your webserver can read and process the file, a typo should give you a 500 Server error. If
+				the typo you introduced doesn't make a change, changes are rewriting or htaccess processing is disabled
+				in the global config.
+			</p>
+
 			<h2 id="install_inside_root">Install inside the document root</h2>
 
-			<p>As explained in point 3, for security reasons it is strongly advised NOT to install Fuel inside your webserver's document root.</p>
+			<p>As explained in point 3, for security reasons it is strongly advised <strong>NOT</strong> to install Fuel inside your webserver's document root.</p>
 			<p>
 				However, there are cases where you would like to do that, for example for a (local) development environment where Apache's dynamic mass virtual hosting module
 				is used to quickly setup new development environments without the need to restart the webserver.
 			</p>
-			<p>In that case, you need an additional .htaccess file that you need to place in your document root, which will redirect requests to the site root to your public folder, and also modifies the rewrites to include the public folder:</p>
-<pre class="plain"><code>
-&lt;IfModule mod_rewrite.c>
+			<p>
+				If you need this, install FuelPHP in the folder you have designated to be the installation root. After you have done that, go into the public folder,
+				move everything in the public folder one level up, and remove the public folder. The only purpose of that folder is to provide an anchor point for
+				your webservers DocumentRoot. You don't need that anymore, since you have installed FuelPHP in the folder that is the DocumentRoot.
+			</p>
+			<p>After the move, change the location of the application, the packages and the framework core in your index.php to:</p>
+            <pre class="php"><code>define('APPPATH', realpath(__DIR__.'/fuel/app/').DIRECTORY_SEPARATOR);<br>define('PKGPATH', realpath(__DIR__.'/fuel/packages/').DIRECTORY_SEPARATOR);<br>define('COREPATH', realpath(__DIR__.'/fuel/core/').DIRECTORY_SEPARATOR);</code></pre>
+
+			<h3 id="install_inside_root2">What about several folders deep?</h3>
+
+			<p>That doesn't make a difference, the procedure remains exactly the same.</p>
+
+			<p>
+				In this case however, accessing your application might be a bit more complicated due to the folder structure involved. But you can't just put
+				a simple .htaccess in, you probably still want to access other stuff installed in that same folder structure.
+			</p>
+			<p>
+				Assuming you have installed FuelPHP in the folder "/deep/sub/folder" of your DocumentRoot, you would normally have to access your FuelPHP application
+				using the URL http://example.org/deep/sub/folder.
+			</p>
+
+			<h4>Apache</h4>
+			<p>
+				By placing this .htaccess into one of the higher folders, you can have the browser redirect to your FuelPHP application if no match was found on
+				file or	directory name:</p>
+<pre class="plain"><code>&lt;IfModule mod_rewrite.c>
 	RewriteEngine on
 
-	RewriteBase /public
-
-	RewriteRule ^(/)?$ index.php/$1 [L]
-
+	# Send request to the subfolder, if it's not a real file, folder or it's a root request
 	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME} !-d [OR]
+	RewriteCond $1 ^$
 
-	RewriteRule ^(.*)$ index.php/$1 [L]
+	RewriteRule ^(.*)$ /deep/sub/folder [R=301,L]
 &lt;/IfModule>
 </code>
 </pre>
+			<p>Note that this does a redirect, it therefore does not hide the subfolders in the path from the user. If you want that, use this instead:</p>
+
+<pre class="plain"><code>&lt;IfModule mod_rewrite.c>
+	RewriteEngine on
+
+	# Send request to the subfolder, if it's not a real file, folder or it's a root request
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d [OR]
+	RewriteCond $1 ^$
+
+	RewriteRule ^(.*)$ /deep/sub/folder [QSA,L]
+&lt;/IfModule>
+</code>
+</pre>
+			<p>Obviously, if you place it in the "sub" folder, you can hide "sub/folder" from the URL, but not "deep"...</p>
+
+			<p class="note">
+				Note that having a .htaccess enabled will slow your Apache server down considerably. If you have access to the server configuration,
+				consider disabling this functionality, and add the rewrite rules to the virtualhost definition.
+			</p>
+
+			<h4 id="nginx">Nginx</h4>
+
+			<p>
+				Nginx doesn't support client configurated files, you so need to add the rewrite to the Nginx configuration file for the virtual host.
+				You can use this as a guideline:
+			</p>
+
+<pre class="plain"><code>server {
+	server_name fuelphp.local;
+
+	# make sure Nginx can write to these files
+	access_log /var/www/fuelphp/nginxlogs/access.log;
+	error_log /var/www/fuelphp/nginxlogs/error.log;
+	root /var/www/fuelphp/public;
+
+	location / {
+		index index.php;
+		try_files $uri $uri/ /index.php$is_args$args;
+	}
+
+	location ~ \.php$ {
+		include /etc/nginx/fastcgi_params;
+		fastcgi_pass 127.0.0.1:9000;
+		fastcgi_index index.php;
+		fastcgi_param FUEL_ENV "production";
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+	}
+}
+</code></pre>
 
 			<h2 id="setting_the_environment">Setting the Environment</h2>
 
@@ -144,14 +282,14 @@
 			</p>
 			<pre class="plain"><code>SetEnv FUEL_ENV production</code></pre>
 			<p>
-				Available options are detailed in the <a href="../classes/fuel.html#class_constants">Class constants</a> of the Fuel Class.
+				For Nginx, you use the "fastcgi_param" statement as shown in the example above. Available options are detailed in the <a href="../classes/fuel.html#class_constants">Class constants</a> of the Fuel Class.
 			</p>
 
 		</div>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

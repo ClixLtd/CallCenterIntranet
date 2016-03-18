@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -76,7 +76,7 @@
 								<tr>
 									<th><kbd>$include_index</kbd></th>
 									<td><pre class="php"><code>true</code></pre></td>
-									<td>Wether to append the index to the returned url.</td>
+									<td>Whether to append the index to the returned url.</td>
 								</tr>
 							</table>
 						</td>
@@ -296,8 +296,8 @@ echo Uri::segments(); // returns array(0 => 'controller', 1 => 'method')</code><
 			</article>
 
 			<article>
-				<h4 class="method" id="method_to_assoc">to_assoc()</h4>
-				<p>The <strong>to_assoc</strong> method takes the segments array and turns it into an associative array if the number of segments is even.  If the number of segments is odd, it returns <kbd>null</kbd>.</p>
+				<h4 class="method" id="method_segment_replace">segment_replace($url, $secure = null)</h4>
+				<p>The <strong>segment_replace</strong> method allows you to replace wildcards in a given url by the current URI segment in that position.</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -306,11 +306,149 @@ echo Uri::segments(); // returns array(0 => 'controller', 1 => 'method')</code><
 					</tr>
 					<tr>
 						<th>Parameters</th>
-						<td>None</td>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$url</kbd></th>
+									<td><i>Required</i></td>
+									<td>The url containing wildcards. A wildcard is defined by a * character.</td>
+								</tr>
+								<tr>
+									<th><kbd>$secure</kbd></th>
+									<td><pre class="php"><code>null</code></pre></td>
+									<td>If false, the url returned will use HTTP, if true, it will use HTTPS.</td>
+								</tr>
+							</table>
+						</td>
 					</tr>
 					<tr>
 						<th>Returns</th>
-						<td>array|null</td>
+						<td>string</td>
+					</tr>
+					<tr>
+						<th>Throws</th>
+						<td>OutOfBoundsException, if a wildcard is at a segment location for which no value exists.</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// Example: Current URL = http://localhost/one/two, with segments 'one' and 'two'
+
+// returns http://localhost/one/two/three
+echo Uri::segment_replace('http://localhost/*/*/three');
+
+// throws an exception, as there is no third segment available
+echo Uri::segment_replace('http://localhost/this/that/*/other');
+
+// returns https://localhost/one/two/three
+echo Uri::segment_replace('http://localhost/*/*/three', true);</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_update_query_string">update_query_string($vars = array(), $uri = null, $secure = null)</h4>
+				<p>
+					The <strong>update_query_string</strong> method allows you to update the query string in the current or passed URI.
+				</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$vars</kbd></th>
+									<td><pre class="php"><code>array()</code></pre></td>
+									<td>An assoc array of query variables, or a string containing the variable name.</td>
+								</tr>
+								<tr>
+									<th><kbd>$uri</kbd></th>
+									<td><pre class="php"><code>null</code></pre></td>
+									<td>
+										The url to use. If not given, the current url will be used. If $vars is a string, this will contain
+										the variables value (which implies you can't pass a custom uri in that case!).
+									</td>
+								</tr>
+								<tr>
+									<th><kbd>$secure</kbd></th>
+									<td><pre class="php"><code>null</code></pre></td>
+									<td>If false, the url returned will use HTTP, if true, it will use HTTPS.</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>string</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// Example: Current URL = http://localhost/test?one=1&amp;two=2
+
+// returns http://localhost/test?one=1&amp;two=2&amp;three=3
+echo Uri::update_query_string(array('three' => 3));
+
+// returns http://localhost/test?one=1&amp;two=3
+echo Uri::update_query_string(array('two' => 3));
+
+// returns http://localhost/controller?four=4
+echo Uri::update_query_string(array('four' => 4), 'http://localhost/controller');
+
+// returns https://localhost/test?one=1&amp;two=2&amp;three=3
+echo Uri::update_query_string('three', 3, true);</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_to_assoc">to_assoc($start = 1)</h4>
+				<p>The <strong>to_assoc</strong> method takes the segments array and turns it into an associative array if the number of segments is even.  If the number of segments is odd, the last array key will have a value of <code>null</code>.</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$start</kbd></th>
+									<td><pre class="php"><code>1</code></pre></td>
+									<td>The segment number to start with. This allows you to strip leading segments.</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>array</td>
 					</tr>
 					<tr>
 						<th>Example</th>
@@ -329,7 +467,9 @@ array(
 $arr = Uri::to_assoc();
 /*
 Result:
-null
+array(
+    'welcome' => null,
+);
 */</code></pre>
 						</td>
 					</tr>
@@ -365,11 +505,55 @@ echo Uri::string(); // returns controller/method</code></pre>
 				</table>
 			</article>
 
+			<article>
+				<h4 class="method" id="method_build_query_string">build_query_string($values ...)</h4>
+				<p>
+					The <strong>build_query_string</strong> method allows you to generate a query string from one or more passed assoc array or string values.
+					You can pass in Input::get() to construct an updated query string from the existing one. If you pass a string, it will be assumed to be a
+					switch, and will be converted to "string=1".
+				</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$values</kbd></th>
+									<td><i>Required</i></td>
+									<td>One or more associative array's or string values</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>string</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>// returns "varA=varA&amp;varB=1&amp;varC=varC"
+echo Uri::build_query_string(array('varA' => 'varA'), 'varB', array('varC' => 'varC'));</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
 		</div>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

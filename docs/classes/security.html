@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -65,11 +65,11 @@
 							<th>Description</th>
 						</tr>
 						<tr>
-							<th>csrf_autoload</th>
-							<td>boolean</td>
-							<td><pre class="php"><code>true</code></pre></td>
+							<th>token_salt</th>
+							<td>string</td>
+							<td><pre class="php"><code>'put your salt value here...'</code></pre></td>
 							<td>
-								When true, load and check the CSRF token using check_token() automatically.
+								Salt used to generate secure tokens. Make sure this contains something random to make sure your tokens are not predictable.
 							</td>
 						</tr>
 						<tr>
@@ -86,6 +86,15 @@
 							<td><pre class="php"><code>0</code></pre></td>
 							<td>
 								Expiration time for the CRSF token cookie. Default, the cookie expires at end of browser session.
+							</td>
+						</tr>
+						<tr>
+							<th>csrf_bad_request_on_fail</th>
+							<td>boolean</td>
+							<td><pre class="php"><code>false</code></pre></td>
+							<td>
+								If <strong>true</strong>, a HttpBadRequestException will be thrown when csrf token validation fails. If <strong>false</strong>, a
+								generic SecurityException will be thrown. Defaults to <strong>false</strong> for B/C reasons.
 							</td>
 						</tr>
 						<tr>
@@ -109,7 +118,7 @@
 							<td>array</td>
 							<td><pre class="php"><code>array('Security::htmlentities')</code></pre></td>
 							<td>
-								Array of callable items (PHP functions, object methods, static class methods) used to filter variables send to a View or Viewmodel.
+								Array of callable items (PHP functions, object methods, static class methods) used to filter variables send to a View or Presenter.
 								For security reasons, you are <strong>required</strong> to define an output filter.
 							</td>
 						</tr>
@@ -130,7 +139,7 @@
 							</td>
 						</tr>
 						<tr>
-							<th>auto_encode_view_data</th>
+							<th>auto_filter_output</th>
 							<td>boolean</td>
 							<td><pre class="php"><code>true</code></pre></td>
 							<td>
@@ -140,14 +149,40 @@
 						<tr>
 							<th>whitelisted_classes</th>
 							<td>array</td>
-							<td><pre class="php"><code>array('stdClass', 'Fuel\\Core\\View',<br /> 'Fuel\\Core\\ViewModel', 'Closure')</code></pre></td>
+							<td><pre class="php"><code>array('stdClass', 'Fuel\\Core\\View',<br /> 'Fuel\\Core\\Presenter', 'Closure')</code></pre></td>
 							<td>
 								When auto encoding of view variables is enabled, you can run into issues when passing objects to the view. Classes defined in this
 								array will be exempt from auto encoding.
 							</td>
 						</tr>
+						<tr>
+							<th>csrf_autoload</th>
+							<td>boolean</td>
+							<td><pre class="php"><code>false</code></pre></td>
+							<td>
+								When true, load and check the CSRF token using check_token() automatically. A SecurityException will be thrown if the check fails.
+							</td>
+						</tr>
+						<tr>
+							<th>csrf_autoload_methods</th>
+							<td>array</td>
+							<td><pre class="php"><code>array('post', 'put', 'delete')</code></pre></td>
+							<td>
+								When csrf_autoload is true, the CSRF token will be validated for all http methods in this array.
+							</td>
+						</tr>
+						<tr>
+							<th>csrf_auto_token</th>
+							<td>boolean</td>
+							<td><pre class="php"><code>false</code></pre></td>
+							<td>
+								When true, Form::open() adds CSRF token hidden field automatically.
+							</td>
+						</tr>
 					</tbody>
 				</table>
+				<p class="note">Note that if you enable "csrf_autoload", <strong>ALL</strong> your HTTP requests of the specified type <strong>MUST</strong> contain a CSRF token, or the validation will fail and a SecurityException will be thrown.</p>
+				<p class="note">If you want to deal with CSRF validation failures when autoload is enabled, you can catch the SecurityException in your index.php.</p>
 			</section>
 
 			<article>
@@ -173,7 +208,7 @@
 								<tr>
 									<th><kbd>$value</kbd></th>
 									<td><pre class="php"><code>null</code></pre></td>
-									<td>CSRF token to be checked, checks value from POST when empty.</td>
+									<td>CSRF token to be checked, checks value from POST or JSON input when not given.</td>
 								</tr>
 							</table>
 						</td>
@@ -255,7 +290,14 @@ echo Security::js_fetch_token();
 
 			<article>
 				<h4 class="method" id="method_js_set_token">js_set_token()</h4>
-				<p>The <strong>js_set_token</strong> method allows you to produce JavaScript fuel_set_csrf_token() function that will set the current CSRF token field in the form when called. Use this on an onsubmit of a form, to update the hidden token field in the form with the current value of the csrf cookie.</p>
+				<p>
+					The <strong>js_set_token</strong> method allows you to produce JavaScript
+					fuel_set_csrf_token() function that will set the current CSRF token field
+					in the form when called. Use this on an onsubmit of a form, to update the
+					hidden token field in the form with the current value of the csrf cookie.
+					You have to use this when you want to allow multiple windows open, and
+					use a strict rotation and expiry of the CSRF token.
+				</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -282,6 +324,37 @@ echo Security::js_set_token();
 	&lt;!-- do your stuff here --&gt;
 &lt;/form&gt;
 </code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+			<article>
+				<h4 class="method" id="method_generate_token">generate_token()</h4>
+				<p>
+					The <strong>generate_token</strong> method allows you to generate a secury token.
+					This method is used to generate CSRF tokens, but can be used anywhere in your application where you need
+					a secure random token.
+				</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>None</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>string</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>$token = Security::generate_token();</code></pre>
 						</td>
 					</tr>
 					</tbody>
@@ -380,7 +453,7 @@ $text = Security::strip_tags($text);</code></pre>
 			</article>
 
 			<article>
-				<h4 class="method" id="method_xss_clean">xss_clean($value)</h4>
+				<h4 class="method" id="method_xss_clean">xss_clean($value, array $options = array())</h4>
 				<p>The <strong>xss_clean</strong> method allows you to strip dangerous HTML tags from a string, using the HTMLawed library.</p>
 				<table class="method">
 					<tbody>
@@ -401,6 +474,11 @@ $text = Security::strip_tags($text);</code></pre>
 									<th><kbd>$value</kbd></th>
 									<td><i>Required</i></td>
 									<td>The input string.</td>
+								</tr>
+								<tr>
+									<th><kbd>$options</kbd></th>
+									<td><pre class="php"><code>array()</code></pre></td>
+									<td>Optional configuration array for htmLawed, if you require custom cleaning rules.</td>
 								</tr>
 							</table>
 						</td>
@@ -526,7 +604,7 @@ $text = e($text);</code></pre>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

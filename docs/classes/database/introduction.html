@@ -17,8 +17,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -64,8 +64,11 @@
 				<h3 id="configuration">Configuration</h3>
 
 				<p>
-					In order to begin working with databases, you must change the database settings. The
-					database config file is located at <em>APPPATH/config/db.php</em>.
+					In order to begin working with databases, you must change the database settings. The global
+					settings, that are valid for all your <a href="../../general/environments.html">environments</a>,
+					are defined in <em>APPPATH/config/db.php</em>. You define environment specific database settings
+					in the <em>db.php</em> located in the appropriate environment configuration folder. The two will
+					be merged to form the complete database configuration.
 				</p>
 				<p>
 					Database configurations are formated like so:
@@ -80,27 +83,47 @@
 		'username'       => 'your_username',
 		'password'       => 'y0uR_p@ssW0rd',
 		'persistent'     => false,
+		'compress'       => false,
 	),
+	'identifier'     => '`',
 	'table_prefix'   => '',
 	'charset'        => 'utf8',
 	'enable_cache'   => true,
 	'profiling'      => false,
+	'readonly'       => false,
 ),
 
-// a PDO driver configuration
+// a PDO driver configuration, using PostgreSQL
 'production' => array(
 	'type'           => 'pdo',
 	'connection'     => array(
-		'dsn'            => 'mysql:host=localhost;dbname=fuel_db',
+		'dsn'            => 'pgsql:host=localhost;dbname=fuel_db',
 		'username'       => 'your_username',
 		'password'       => 'y0uR_p@ssW0rd',
 		'persistent'     => false,
+		'compress'       => false,
 	),
+	'identifier'     => '"',
 	'table_prefix'   => '',
 	'charset'        => 'utf8',
 	'enable_cache'   => true,
 	'profiling'      => false,
-),</code></pre>
+	'readonly'       => array('slave1', 'slave2', 'slave3'),
+),
+
+'slave1' => array(
+	// configuration of the first production readonly slave db
+),
+
+'slave2' => array(
+	// configuration of the second production readonly slave db
+),
+
+'slave3' => array(
+	// configuration of the third production readonly slave db
+),
+</code></pre>
+				<p class="note">Please note that type is required for all connections.</p>
 				<h3 id="config_settings">All Config Settings</h3>
 				<table class="method">
 					<tbody>
@@ -112,7 +135,7 @@
 						<tr>
 							<th><kbd>type</kbd></th>
 							<td>string</td>
-							<td>What type of connection to use. Can be mysq, mysqli or pdo.</td>
+							<td>What type of connection to use. Can be mysql, mysqli or pdo.</td>
 						</tr>
 						<tr>
 							<th><kbd>connection</kbd></th>
@@ -120,9 +143,9 @@
 							<td>Connection settings array</td>
 						</tr>
 						<tr>
-							<th><kbd>connection.dns</kbd></th>
+							<th><kbd>connection.dsn</kbd></th>
 							<td>string</td>
-							<td>Connection DNS for PDO.</td>
+							<td>Connection DSN for PDO.</td>
 						</tr>
 						<tr>
 							<th><kbd>connection.username</kbd></th>
@@ -137,7 +160,17 @@
 						<tr>
 							<th><kbd>connection.persistent</kbd></th>
 							<td>boolean</td>
-							<td>Wether to initiate a persisten connection.</td>
+							<td>Whether to initiate a persisten connection.</td>
+						</tr>
+						<tr>
+							<th><kbd>connection.compress</kbd></th>
+							<td>boolean</td>
+							<td>Whether to use client compression when using MySQL / MySQLi.</td>
+						</tr>
+						<tr>
+							<th><kbd>identifier</kbd></th>
+							<td>string</td>
+							<td>Delimiter used to quote identifiers.</td>
 						</tr>
 						<tr>
 							<th><kbd>table_prefix</kbd></th>
@@ -152,12 +185,17 @@
 						<tr>
 							<th><kbd>enable_cache</kbd></th>
 							<td>boolean</td>
-							<td>Wether to allow caching, will overwrite query cache settings on a connection basis.</td>
+							<td>Whether to allow caching, will overwrite query cache settings on a connection basis.</td>
 						</tr>
 						<tr>
 							<th><kbd>profiling</kbd></th>
 							<td>boolean</td>
-							<td>Wether to add the connections queries to the profiler.</td>
+							<td>Whether to add the connections queries to the profiler.</td>
+						</tr>
+						<tr>
+							<th><kbd>readonly</kbd></th>
+							<td>array|false</td>
+							<td>If you have a database in a master/slave setup, you can use this to define an array of slave connections, which will be used at random for read operations.</td>
 						</tr>
 					</tbody>
 				</table>
@@ -170,7 +208,7 @@
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

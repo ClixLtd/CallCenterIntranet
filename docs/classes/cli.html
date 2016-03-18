@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -91,7 +91,7 @@
 
 
 			<article>
-				<h4 class="method" id="method_color">color($text, $foreground, $background = null)</h4>
+				<h4 class="method" id="method_color">color($text, $foreground, $background = null, $format = null)</h4>
 				<p>The <strong>color</strong> method changes the color of a piece of text.</p>
 				<table class="method">
 					<tbody>
@@ -123,6 +123,11 @@
 									<td><i>null</i></td>
 									<td>Background color of the string.</td>
 								</tr>
+								<tr>
+									<th><kbd>$format</kbd></th>
+									<td><i>null</i></td>
+									<td>Other formatting to apply. Currently only the format 'underline' is support.</td>
+								</tr>
 							</table>
 						</td>
 					</tr>
@@ -153,7 +158,7 @@ Cli::write($message);</code></pre>
 
 			<article>
 				<h4 class="method" id="method_error">error($text)</h4>
-				<p>The <strong>error</strong> method will write a line of text to the command line as an error (similar to <strong>write</strong> but uses STDERR instead of STDOUT.</p>
+				<p>The <strong>error</strong> method will write a line of text to the command line as an error (similar to <strong>write</strong> but uses STDERR instead of STDOUT).</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -194,7 +199,7 @@ Cli::write($message);</code></pre>
 
 			<article>
 				<h4 class="method" id="method_prompt">prompt($question = null, $options = array())</h4>
-				<p>The <strong>read</strong> method prompts the user for input.</p>
+				<p>The <strong>prompt</strong> method prompts the user for input.</p>
 				<table class="method">
 					<tbody>
 					<tr>
@@ -391,11 +396,124 @@ Cli::wait(5, true);</code></pre>
 				</table>
 			</article>
 
+			<article>
+				<h4 class="method" id="method_stdout">stdout($resource = null)</h4>
+				<p>
+					Changes or retrieves the current stdout stream. This is STDOUT by default.<br/>
+					<br/>
+					Note the public property <code>$nocolor</code> can be set to true to force all output
+					to plaintext.
+				</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$resource</kbd></th>
+									<td><i>null</i></td>
+									<td>Any writable filehandle, or null to retrieve the current filehandle.</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>The previous value of the filehandle (or current value if you are not changing it)</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>$buffer = fopen('php://temp', 'w+');
+$stdout = Cli::stdout($buffer);
+Cli::write("Hello World!");
+Cli::error("Where's my text? :(");
+Cli::stdout($stdout);
+Cli::write("There it is!");
+
+rewind($buffer);
+file_put_contents('out.log', stream_get_contents($buffer));
+
+// $ cat out.log
+// Hello World!</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
+
+
+			<article>
+				<h4 class="method" id="method_stderr">stderr($resource = null)</h4>
+				<p>
+					Changes or retrieves the current stderr stream. This is STDERR by default.<br/>
+					<br/>
+					Note the public property <code>$nocolor</code> can be set to true to force all output
+					to plaintext.
+				</p>
+				<table class="method">
+					<tbody>
+					<tr>
+						<th class="legend">Static</th>
+						<td>Yes</td>
+					</tr>
+					<tr>
+						<th>Parameters</th>
+						<td>
+							<table class="parameters">
+								<tr>
+									<th>Param</th>
+									<th>Default</th>
+									<th class="description">Description</th>
+								</tr>
+								<tr>
+									<th><kbd>$resource</kbd></th>
+									<td><i>null</i></td>
+									<td>Any writable filehandle, or null to retrieve the current filehandle.</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<th>Returns</th>
+						<td>The previous value of the filehandle (or current value if you are not changing it)</td>
+					</tr>
+					<tr>
+						<th>Example</th>
+						<td>
+							<pre class="php"><code>$errors = fopen('php://temp', 'w+');
+$stderr = Cli::stderr($errors);
+Cli::write("Hello World!");
+Cli::error("Where's my text? :(");
+Cli::stderr($stderr);
+Cli::write("There it is!");
+
+rewind($errors);
+file_put_contents('out.log', stream_get_contents($errors));
+
+// $ cat out.log
+// Where's my text? :(
+</code></pre>
+						</td>
+					</tr>
+					</tbody>
+				</table>
+			</article>
 		</div>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

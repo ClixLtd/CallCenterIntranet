@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -84,6 +84,14 @@
 							<td><pre class="php"><code>''</code></pre></td>
 							<td>
 								Optional: Name of the password to connect with, if login is required.
+							</td>
+						</tr>
+						<tr>
+							<th>timeout</th>
+							<td>integer</td>
+							<td><pre class="php"><code>90</code></pre></td>
+							<td>
+								Timeout in seconds for all subsequent network operations.
 							</td>
 						</tr>
 						<tr>
@@ -173,6 +181,7 @@ $ftp3 = Ftp::forge(array(
 	'hostname' => 'fuelphp.com',
 	'username' => '',
 	'password' => '',
+	'timeout'  => 90,
 	'port'     => 21,
 	'passive'  => true,
 	'ssl_mode' => false,
@@ -223,6 +232,7 @@ $ftp = Ftp::forge(array(
 	'hostname' => 'ftp.example.com',
 	'username' => '',
 	'password' => '',
+	'timeout'  => 90,
 	'port'     => 21,
 	'passive'  => true,
 	'ssl_mode' => false,
@@ -597,7 +607,7 @@ $ftp->close();</code></pre>
 							<pre class="php"><code>// connect to an FTP server
 $ftp = Ftp::forge($config);
 
-// delete a folder with all it's contents
+// delete a folder with all its contents
 if ( ! $ftp->delete_dir('/path/to/folder'))
 {
 	// delete failed
@@ -829,7 +839,7 @@ if ( ! $ftp->close())
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

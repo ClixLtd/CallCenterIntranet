@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -147,11 +147,11 @@
 						</tr>
 						<tr>
 							<th>rotation_time</th>
-							<td>integer</td>
+							<td>mixed</td>
 							<td><pre class="php"><code>300</code></pre></td>
 							<td>
 								To prevent session hijacking due to session fixation, Fuel automatically encrypts the session cookie data.
-								It also changes the session IDs at the interval specified here.
+								It also changes the session IDs at the interval specified here. Automatic rotation can be disabled to settings this value to <kbd>false</kbd>.
 								If not given, or an invalid value is defined, the rotation time defaults to 300 seconds.
 							</td>
 						</tr>
@@ -183,6 +183,34 @@
 								For situations where no cookies are sent to the server (for example, when you use Flash objects), you can use client side code to copy the contents of the session cookie into a variable that will be send to the server as part of a POST request.
 								You can use this variable to define the name of the POST variable.
 								<br />Note that this variable will only be checked when no session cookie can be found.
+							</td>
+						</tr>
+						<tr>
+							<th>http_header_name</th>
+							<td>string</td>
+							<td><pre class="php"><code>'Session-Id'</code></pre></td>
+							<td>
+								For situations where no cookies are sent to the server, you can also use client side code to set a custom HTTP header
+								to pass the session cookie to the server.
+								<br />Note that this variable will only be checked when no session cookie can be found.
+							</td>
+						</tr>
+						<tr>
+							<th>enable_cookie</th>
+							<td>boolean</td>
+							<td><pre class="php"><code>true</code></pre></td>
+							<td>
+								When set to false, no session cookie will be created and added to the response send back to the client. This means
+								you have to use other means (GET, POST or HTTP-HEADER) to pass the session-id back from the client to the server
+								on the next request.
+							</td>
+						</tr>
+						<tr>
+							<th>native_emulation</th>
+							<td>boolean</td>
+							<td><pre class="php"><code>false</code></pre></td>
+							<td>
+								When set to true, the session class will add support for PHP native sessions through <a href="#native_emulation">emulation</a>.
 							</td>
 						</tr>
 						<tr>
@@ -257,6 +285,17 @@
 					This section contains the driver specific parameters, and you can use it to override
 					global parameters for that specific storage driver.
 				</p>
+
+				<p>
+					The Session class checks the following locations for a session id, in this order. It doesn't validate at this point, the
+					first value found is used, and if that turns out not to be valid, a new session is created:
+				</p>
+				<ul>
+					<li>Posted data, it will check <code class="php">Input::post</code> for the variable defined in "post_cookie_name".</li>
+					<li>Cookies, it will check for a valid cookie with the name defined in "cookie_name".</li>
+					<li>Get data, it will check <code class="php">Input::get</code> for the variable with the name defined in "cookie_name".</li>
+					<li>http headers, it will check for the header with the name defined in "http_header_name".</li>
+				</ul>
 
 				<p class="note">
 					The session class configuration is independent from the cookie class configuration.
@@ -381,24 +420,6 @@ CREATE TABLE IF NOT EXISTS `sessions` (
 							</tr>
 						</tbody>
 					</table>
-
-					<h3 id="oil_session_setup">Using Oil to Create/Control Your Sessions Table</h3>
-						<p>
-							An oil task has been provided to allow you to create, remove and clear your sessions table using
-							the oil command line utility.
-						</p>
-						<pre class="cli"><code># display menu
-$ php oil r session
-
-#reate the sessions table
-$ php oil r session:create
-
-# remove the sessions table
-$ php oil r session:remove
-
-# clear (truncate) the sessions table
-$ php oil r session:clear</code></pre>
-					
 				</section>
 
 				<section>
@@ -469,13 +490,53 @@ $ php oil r session:clear</code></pre>
 					</table>
 				</section>
 
+				<h3 id="oil_session_setup">Using Oil to Create/Control Your Sessions Table</h3>
+					<p>
+						An oil task has been provided to allow you to create, remove and clear your sessions table using
+						the oil command line utility.
+					</p>
+					<pre class="cli"><code># display menu
+$ php oil r session
+
+# create the sessions table
+$ php oil r session:create
+
+# remove the sessions table
+$ php oil r session:remove
+
+# clear (truncate) the sessions table
+$ php oil r session:clear</code></pre>
+
+				<h3 id="native_emulation">PHP native session emulation</h3>
+
+				<p>
+					When activated via the configuration, the Session class will enable some basic emulation of PHP's native session mechanism that
+					can be accessed via the <kbd>$_SESSION</kbd> global variable. This only works on the default session instance, the one accessable via the
+					static interface.
+				</p>
+				<p>
+					When enabled, the Session class will setup a custom session handler, that will capture the calls to the PHP functions
+					<kbd>session_start()</kbd>, <kbd>session_close()</kbd> and <kbd>session_write_close()</kbd>. If will force a close at shutdown when an open native session
+					is detected.
+				</p>
+				<ul>
+					<li>When <kbd>session_start()</kbd> is called, all session data stored in the Fuel session store you have configured will be copied into the <kbd>$_SESSION</kbd> array, so it can be accessed by non-Fuel code requiring sessions.</li>
+					<li>When the session is closed, a diff is made and changes in $_SESSION are copied back into the Fuel session store.</li>
+				</ul>
+
+				<p class="note">
+					This mechanism means that if you have a session variable that is modified both inside- and outside Fuel, it is undetermined which of
+					the changes will be saved. This depends on the position of the last <kbd>session_close()</kbd> call in the code. If the session is
+					not closed, Fuel's shutdown event will close it, and it will overwrite any data set via standard Session calls!
+				</p>
+
 			</section>
 
 		</div>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

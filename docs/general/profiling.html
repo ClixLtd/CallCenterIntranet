@@ -17,8 +17,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -92,8 +92,9 @@
 			<h3 id="database_profiling">Database profiling</h3>
 
 				<p>
-					Profiling your database connection is disabled by default too. Database profiling is activated on a per connection basis, and can be
-					activated by setting the 'profiler' option of the connection configuration in your config/db.php to true.
+					Database profiling is disabled by default too. Database profiling is activated per defined database, and is
+					activated by setting the 'profiling' option of the database configuration you want to profile in your
+					config/&lt;environment&gt;/db.php to true.
 				</p>
 
 				<pre class="php"><code>'profiling'  => true,
@@ -108,7 +109,7 @@
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -98,7 +98,8 @@
 										<th><kbd>$type</kbd></th>
 										<td><pre class="php"><code>null</code></pre></td>
 										<td>
-											If adding a folder, the type to add it to. Currently, 'img', 'css' and 'js' are suppored.
+											If adding a folder, the type to add it to. The asset class has the types 'img', 'css' and 'js' predefined.
+											If you pass an undefined type, a new paths structure will be created for this type.
 											To add the same path to multiple types, pass them as an array of types.
 										</td>
 									</tr>
@@ -127,6 +128,11 @@ Asset::add_path('assets/global/', array('css', 'js', 'img'));
 Asset::add_path('assets/icons/', 'img');
 Asset::add_path('assets/images/', 'img');
 Asset::add_path('assets/css/', 'css');
+
+/*
+ * Create a new asset type
+ */
+Asset::add_path('assets/docs/', 'pdf');
 
 /*
  * You can chain the calls as well.
@@ -162,7 +168,7 @@ Asset::add_path('resources/templates/dark/')
 									<tr>
 										<th><kbd>$stylesheets</kbd></th>
 										<td><i>required</i></td>
-										<td>An array/string of stylesheet filename(s) to be added to the group or be returned as tags.</td>
+										<td>An array/string of stylesheet filename(s) to be added to the group or be returned as tags, or a string containing inline CSS.</td>
 									</tr>
 									<tr>
 										<th><kbd>$attr</kbd></th>
@@ -177,7 +183,7 @@ Asset::add_path('resources/templates/dark/')
 									<tr>
 										<th><kbd>$raw</kbd></th>
 										<td><pre class="php"><code>false</code></pre></td>
-										<td>If set to true the result css tags will include the file contents directly instead of via a link tag.</td>
+										<td>If set to true, the result css tags will include the string or file contents directly in the HTML, instead of via a link tag.</td>
 									</tr>
 								</table>
 							</td>
@@ -205,7 +211,20 @@ echo Asset::css('inline.css');
  * #header {height: 50px}
  * &lt;/style&gt;
  */
-echo Asset::css('inline.css', array(), null, true);</code></pre>
+echo Asset::css('inline.css', array(), null, true);
+
+/* returns
+ * &lt;style&gt;
+ * .bold_class { font-weight: bold }
+ * #header {height: 50px}
+ * &lt;/style&gt;
+ */
+Asset::css(".bold_class { font-weight: bold }\n#header {height: 50px}", array(), 'inline', true);
+echo Asset::render('inline');
+
+/* this will do the same */
+echo Asset::css(".bold_class { font-weight: bold }\n#header {height: 50px}", array(), null, true);
+</code></pre>
 							</td>
 						</tr>
 						</tbody>
@@ -344,7 +363,7 @@ Asset::img(array('bob.jpg', 'joe.jpg', 'sally.jpg'), array('class' => 'thumbnail
 									<tr>
 										<th><kbd>$scripts</kbd></th>
 										<td><i>required</i></td>
-										<td>An array/string of stylesheet filename(s) to be added to the group or be returned as tags.</td>
+										<td>An array/string of javascript filename(s) to be added to the group or be returned as tags, or a string containing inline javascript.</td>
 									</tr>
 									<tr>
 										<th><kbd>$attr</kbd></th>
@@ -359,7 +378,7 @@ Asset::img(array('bob.jpg', 'joe.jpg', 'sally.jpg'), array('class' => 'thumbnail
 									<tr>
 										<th><kbd>$raw</kbd></th>
 										<td><pre class="php"><code>false</code></pre></td>
-										<td>If set to true the result js tags will include the file contents directly instead of via a script src tag.</td>
+										<td>If set to true, the result javascript tags will include the string or file contents directly in the HTML, instead of via a script tag.</td>
 									</tr>
 								</table>
 							</td>
@@ -387,7 +406,20 @@ echo Asset::js('menu_init.js', array(), null, true);
  * if auto_render in the config is set to true.
  * if not, the asset will be added to the default group for later rendering
  */
-echo Asset::js('jquery.js');</code></pre>
+echo Asset::js('jquery.js');
+
+/* returns
+ * &lt;script type="text/javascript"&gt;
+ * var menu = getElementById('menu');
+ * menu.initialize_menu();
+ * &lt;/script&gt;
+ */
+Asset::js("var menu = getElementById('menu');\nmenu.initialize_menu();", array(), 'inline', true);
+echo Asset::render('inline');
+
+/* this will do the same */
+echo Asset::js("var menu = getElementById('menu');\nmenu.initialize_menu();", array(), null, true);
+</code></pre>
 							</td>
 						</tr>
 						</tbody>
@@ -438,7 +470,7 @@ echo Asset::js('jquery.js');</code></pre>
 							<th>Example</th>
 							<td>
 								<pre class="php"><code>// returns something like 'http://example.org/assets/js/jquery.js'
-echo Asset::get_file('jquery.js');</code></pre>
+echo Asset::get_file('jquery.js', 'js');</code></pre>
 							</td>
 						</tr>
 						</tbody>
@@ -577,7 +609,7 @@ echo Asset::render();</code></pre>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

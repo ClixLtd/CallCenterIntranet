@@ -505,21 +505,22 @@ html{
 	font-weight: normal;
 	line-height: 66px;
 	font-size: 25px;
-	display: block;
 	height: 60px;
-	padding-left: 0px;
+	padding: 2px 0px 14px 0px;
 	color: #e3e3e3;
 }
 
+#header h1 img{
+	margin: 13px 10px 0px 0px;
+	vertical-align: top;
+}
+
 #header h1 strong{
-	display: inline-block;
-	height: 37px;
-	width: 147px;
-	background: url(../img/fuel.png) no-repeat;
-	text-indent: -7000px;
-	overflow: hidden;
-	position: relative;
-	top: 5px;
+	font-weight: normal;
+}
+
+#header h1 span{
+	font-size: 34px;
 	margin-right: 10px;
 }
 
@@ -560,7 +561,7 @@ html{
 
 .table{
 	display: table;
-	width: 850px;
+	width: 965px;
 	margin: auto;
 	overflow: hidden;
 }
@@ -675,10 +676,10 @@ ol{
 
 #google_search{
 	height: 40px;
-	padding-top: 20px;
+	padding-top: 8px;
 	padding-right: 0px;
 	float: right;
-	width: 240px;
+	width: 320px;
 	overflow: hidden;
 	margin-top: -60px;
 }
@@ -689,10 +690,10 @@ ol{
 }
 
 #search_input{
-	height: 20px;
-	line-height: 20px;
+	height: 25px;
+	line-height: 25px;
 	padding: 0px 5px;
-	width: 150px;
+	width: 200px;
 	-moz-border-radius-topleft: 5px;
 	border-top-left-radius: 5px;
 	-moz-border-radius-bottomleft: 5px;
@@ -711,10 +712,10 @@ ol{
 
 #search_submit{
 	margin: 0;
-	height: 22px;
+	height: 27px;
 	line-height: 19px;
-	padding: 0px 5px;
-	width: 50px;
+	padding: 0px 10px 3px 10px;
+	width: 70px;
 	color: #fff;
 	background: #3c3c3c;
 	-moz-border-radius-topright: 5px;
@@ -726,7 +727,7 @@ ol{
 
 #search_clear{
 	display: inline-block;
-	height: 22px;
+	height: 25px;
 	width: 25px;
 	background: url(../img/clear.gif) no-repeat center center;
 	cursor: pointer;
@@ -735,7 +736,7 @@ ol{
 
 #main{
 	margin: auto;
-	width: 850px;
+	width: 996px;
 	padding: 40px 15px 50px 15px;
 }
 
@@ -759,11 +760,15 @@ ol{
 	padding-top: 10px;
 }
 
-#main ul{
+#main ul {
 	list-style: inside;
 	padding-bottom: 24px;
 	padding-left: 20px;
 	text-indent: -18px;
+}
+
+#main ul.toc ul {
+	padding-bottom: 0px;
 }
 
 #main li{
@@ -810,6 +815,17 @@ ol{
 
 #main p{
 	padding-bottom: 24px;
+}
+
+div .image{
+	text-align:center;
+	padding-bottom:10px;
+}
+
+div .image img{
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+   border-left: 1px solid #C73DFF;
 }
 
 a{
@@ -916,7 +932,13 @@ table table th{
 */	text-shadow: none;
 }
 
-p code {
+li blockquote {
+	display:inline;
+	border: 1px solid #999999;
+	padding: 4px;
+}
+
+p code, li blockquote code {
 	background: #999;
 	padding: 3px 5px 3px 5px;
 	-moz-border-radius: 3px;

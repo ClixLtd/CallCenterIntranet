@@ -216,7 +216,7 @@ return array(
 		'packages'  => array(
 			'orm',
 			'auth',
-			'subpackage',
+			//'subpackage',
 			'printmanager',
 			'goautodial',
 			'simple_html_dom',
@@ -225,12 +225,12 @@ return array(
 			#'sexyticket',
 			'reports',
 			'ppi-api',
-			'pdf',
-			'crm',
-			'report',
+			//'pdf',
+			//'crm',
+			//'report',
 			#'messages',
 			'log',
-			'sms',
+			//'sms',
 		),
 
 		/**

@@ -17,8 +17,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -54,7 +54,7 @@
 
 				<p>
 					Writing drivers can be done in two ways. Either by extending the Auth driver classes
-					to create a new driver from scratch or extending the SimpleAuth classes and changing them where needed.
+					to create a new driver from scratch or extending a existing driver class and changing them where needed.
 				</p>
 
 				<p>
@@ -73,14 +73,14 @@
 
 				<pre class="php"><code>&lt;?php
 
-class Auth_Login_MyDriver extends \Auth\Auth_Login_Driver
+class Auth_Login_Mydriver extends \Auth\Auth_Login_Driver
 {
 
 	// Implement all the needed functions and variables defined in the driver class.
 
 }
 
-/* End of file mydriver.php */
+/* End of file app/classes/auth/login/mydriver.php */
 </code></pre>
 
 				<h3 id="implementing_function">Implementing functions</h3>
@@ -107,7 +107,7 @@ abstract public function get_user_id();</code></pre>
 				</p>
 
 				<p>
-					Here is that same function but then the implementation from the SimpleAuth driver.
+					Here is that same function but then the implementation from the Simpleauth driver.
 				</p>
 
 				<pre class="php"><code>/**
@@ -127,16 +127,16 @@ public function get_user_id()
 </code></pre>
 
 				<p>
-					Once you have everything in place for the new driver. Replace or add it to the auth <a href="intro.html#configuration">config</a>.
+					Once you have everything in place for the new driver, replace or add it to the auth <a href="intro.html#configuration">config</a>.
 				</p>
 
 				<pre class="php"><code>// Inside config/auth.php array
 
-// Add it as a driver
-'driver' => array('SimpleAuth', 'MyDriver'),
+// Add it as a second driver
+'driver' => array('Simpleauth', 'Mydriver'),
 
-// or replace the SimpleAuth driver
-'driver' => array('MyDriver'),
+// or replace the existing driver
+'driver' => array('Mydriver'),
 </code></pre>
 
 			</section>
@@ -145,7 +145,7 @@ public function get_user_id()
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>

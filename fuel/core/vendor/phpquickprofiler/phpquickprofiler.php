@@ -145,7 +145,7 @@ class PhpQuickProfiler {
 			$rs = false;
 			try {
 				$sql = 'EXPLAIN '.html_entity_decode($query['sql'], ENT_QUOTES);
-				$rs = \DB::query($sql, \DB::SELECT)->execute()->as_array();
+				$rs = \DB::query($sql, \DB::SELECT)->execute($query['dbname'])->as_array();
 			}
 			catch(Exception $e)
 			{}
@@ -223,7 +223,10 @@ class PhpQuickProfiler {
 		$this->gatherQueryData();
 		$this->gatherSpeedData();
 		require_once('display.php');
-		return displayPqp($this->output);
+		if (function_exists('displayPqp'))
+		{
+			return displayPqp($this->output);
+		}
 	}
 
 }

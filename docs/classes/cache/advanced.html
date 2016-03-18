@@ -18,8 +18,8 @@
 		<header id="header">
 			<div class="table">
 				<h1>
-					<strong>FuelPHP, a PHP 5.3 Framework</strong>
-					Documentation
+					<a href="http://fuelphp.com"><img height="37px" width="147px" src="./../../assets/img/fuel.png" /></a>
+					<strong>Documentation</strong>
 				</h1>
 
 				<form id="google_search">
@@ -52,15 +52,21 @@
 			<section>
 				<h3>Advanced usage</h3>
 
-				<p>Here we'll explain how to use caches as object instances.<br />
-				To be written.</p>
+                                <p>Using cache as an object instance.</p>
+                                <pre><code>$options = array(...); //These are the same as in the cache config file.
+
+$cache = Cache::forge('my_cache', $options)</code></pre>
+                                <p>Data can then be saved to the cache using the <kbd>set()</kbd> function.</p>
+                                <pre id="php"><code>$cache-&gt;set($myData, 604800);</code></pre>
+                                <p>This sets the data in one block and sets the expiration time to one week (604800 seconds). If the second parameter is set to null then the cache will never expire.</p>
+                                <p>Data can be retrieved in the same way as when using <kbd>Cache</kbd> statically.</p>
 			</section>
 
 		</div>
 
 		<footer>
 			<p>
-				&copy; FuelPHP Development Team 2010-2012 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
+				&copy; FuelPHP Development Team 2010-2016 - <a href="http://fuelphp.com">FuelPHP</a> is released under the MIT license.
 			</p>
 		</footer>
 	</div>
