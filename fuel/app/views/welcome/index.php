@@ -2,7 +2,7 @@
 
 	<div class="article-container">
 		<header>
-			<h2>Gregson and Brooke Intranet</h2>
+			<h2>Data Importer</h2>
 			
 		</header>
 	
