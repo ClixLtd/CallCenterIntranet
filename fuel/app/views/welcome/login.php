@@ -14,12 +14,12 @@
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 	
 	<!-- CSS Styles -->
-	<?php echo Asset::css('style.css'); ?>
-	<?php echo Asset::css('colors.css'); ?>
-	<?php echo Asset::css('jquery.tipsy.css'); ?>
+	<link href="/assets/css/style.css" type="text/css" rel="stylesheet"/>
+	<link href="/assets/css/colors.css" type="text/css" rel="stylesheet"/>
+	<link href="/assets/css/jquery.tipsy.css" type="text/css" rel="stylesheet"/>
 	
 	<!-- Google WebFonts -->
-	<link href='http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic' rel='stylesheet' type='text/css'>
 	
 	<script src="js/libs/modernizr-1.7.min.js"></script>
 </head>
@@ -92,8 +92,8 @@
 	</section>
 
 	<!-- JS Libs at the end for faster loading -->
-	<?php echo Asset::js('jquery/jquery-1.5.1.min.js'); ?>
-	<?php echo Asset::js('libs/selectivizr.js'); ?>
-	<?php echo Asset::js('jquery/jquery.tipsy.js'); ?>
-	<?php echo Asset::js('login.js'); ?>
+	<script src="/assetes/js/jquery/jquery-1.5.1.min.js" type="text/javascript"></script>
+	<script src="/assetes/js/jquery/jquery.tipsy.js" type="text/javascript"></script>
+	<script src="/assetes/js/libs/selectivizr.js" type="text/javascript"></script>
+	<script src="/assetes/js/login.js" type="text/javascript"></script>
 </html>

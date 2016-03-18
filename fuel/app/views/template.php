@@ -15,24 +15,23 @@
 	<link rel="shortcut icon" href="/favicon.ico">
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-    <?php echo Asset::css('bootstrap.min.css'); ?>
+	<link href="/assetes/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 
 	<!-- CSS Styles -->
-	<?php echo Asset::css('style.css'); ?>
-	<?php echo Asset::css('colors.css'); ?>
-	<?php echo Asset::css('jquery.tipsy.css'); ?>
-	<?php echo Asset::css('jquery-ui.min.css'); ?>
-	<?php echo Asset::css('jquery.wysiwyg.css'); ?>
-	<?php echo Asset::css('jquery.datatables.css'); ?>
-	<?php echo Asset::css('jquery.nyromodal.css'); ?>
-	<?php echo Asset::css('jquery.datepicker.css'); ?>
-	<?php echo Asset::css('jquery.fileinput.css'); ?>
-	<?php echo Asset::css('jquery.fullcalendar.css'); ?>
-	<?php echo Asset::css('jquery.visualize.css'); ?>
-	<?php echo Asset::css('dropdown.css'); ?>
-  
-  <?php echo Asset::css('hr.css'); ?>
-	
+	<link href="/assetes/css/style.css" rel="stylesheet" type="text/css" />
+	<link href="/assetes/css/colors.css" rel="stylesheet" type="text/css" />
+	<link href="/assetes/css/jquery.tipsy.css" rel="stylesheet" type="text/css" />
+	<link href="/assetes/css/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+	<link href="/assetes/css/jquery.wysiwyg.css" rel="stylesheet" type="text/css" />
+	<link href="/assetes/css/jquery.datatables.css" rel="stylesheet" type="text/css" />
+	<link href="/assetes/css/jquery.nyromodal.css" rel="stylesheet" type="text/css" />
+	<link href="/assetes/css/jquery.datepicker.css" rel="stylesheet" type="text/css" />
+	<link href="/assetes/css/jquery.fileinput.css" rel="stylesheet" type="text/css" />
+	<link href="/assetes/css/jquery.fullcalendar.css" rel="stylesheet" type="text/css" />
+	<link href="/assetes/css/jquery.visualize.css" rel="stylesheet" type="text/css" />
+	<link href="/assetes/css/dropdown.css" rel="stylesheet" type="text/css" />
+
+	<link href="/assetes/css/hr.css" rel="stylesheet" type="text/css" />
 
 
 
