@@ -9,8 +9,8 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	
-	<?php echo Asset::js('jquery/jquery-1.5.1.min.js'); ?>
+
+	<script src="/assets/js/jquery/jquery-1.5.1.min.js" type="text/javascript"></script>
 	
 	<link rel="shortcut icon" href="/favicon.ico">
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png">
