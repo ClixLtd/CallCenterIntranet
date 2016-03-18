@@ -26,7 +26,7 @@
 <body class="login">
 	<section role="main">
 	
-		<img src="https://s3-eu-west-1.amazonaws.com/teleoutsourcing/images/TeleoutsLogo.png" >
+		<img src="https://s3-eu-west-1.amazonaws.com/teleoutsourcing/images/TeleoutsLogo.png" width="271">
 
 		<!-- Login box -->
 		<article id="login-box">

@@ -70,7 +70,7 @@
 	<section role="navigation">
 		<!-- Header with logo and headline -->
 		<div align="center" id="gablogo">
-			<?php echo Html::anchor('/', '<img src="https://s3-eu-west-1.amazonaws.com/teleoutsourcing/images/TeleoutsLogo.png">'); ?>
+			<?php echo Html::anchor('/', '<img src="https://s3-eu-west-1.amazonaws.com/teleoutsourcing/images/TeleoutsLogo.png" width="271" ">'); ?>
 		</div>
 		
 		<!-- User Info -->
