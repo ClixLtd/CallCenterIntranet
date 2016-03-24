@@ -7,7 +7,7 @@ use Data\Model_Data;
 class Data
 {
     
-    const       SIMULLISTS      = 2;
+    const       SIMULLISTS      = 3;
 
 
 	public static function run()
@@ -80,7 +80,7 @@ class Data
 	    if (count($currentCopyCount) > Data::SIMULLISTS)
 	    {
 	        // Too many copying or importing to continue so stop
-	        return false;
+	        returnfalse;
 	    }
 	    else
 	    {

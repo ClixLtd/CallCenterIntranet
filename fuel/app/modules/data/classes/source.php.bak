@@ -24,8 +24,8 @@ class Source
     protected  $supplier_id     = null;
     
     protected  $purchased_leads = null;
-    protected  $duplicates      = 0;
-    protected  $tps             = 0;
+    protected  $duplicates      = null;
+    protected  $tps             = null;
     protected  $dialable_leads  = null;
                
     protected  $added_date      = null;
@@ -97,8 +97,32 @@ class Source
                 }
                 else
                 {
-                    // This shouldn't be a duplicate
-                    $returnNumbers[] = $number;
+                    // As backup, check the dialler database
+                    
+                    $diallerResult = \DB::select('list_id')->from('vicidial_list')->where_open()
+                    	->where('phone_number', $number)
+                    	->or_where('alt_phone', $number)
+                    ->where_close()->where('entry_date', '>=', date('Y-m-d 00:00:00', strtotime('today -6 months')))->execute('dialler')->as_array();
+                    
+                    if (count($diallerResult) > 0)
+                    {
+                        $listIDs = array();
+                        foreach ($diallerResult as $nr)
+                        {
+                            $listIDs[] = $nr['list_id'];
+                            
+                            $duplicateNumbers = array(
+                                'number' => $number,
+                                'list_ids' => $listIDs,
+                            );
+                        }
+                    }
+                    else
+                    {
+                        // This shouldn't be a duplicate
+                        $returnNumbers[] = $number;
+                    }
+                    
                 }
             }
             
@@ -176,25 +200,11 @@ class Source
         // Get a list of all lead IDs and Numbers from this data set
         $allDataArray = \DB::select('id','phone_number','alt_phone')->from('data_holder')->where('data_id', $this->id)->execute()->as_array();
         
-        $allDuplicates = $this->duplicates;
-        $allTps = $this->tps;
-        $inserted = $this->dialable_leads;
-        $queryString = ""; //-- UDPATED James is to blame.
+        $allDuplicates = 0;
+        $allTps = 0;
+        $inserted = 0;
         foreach ($allDataArray as $singleData)
         {
-//            time_nanosleep(0, 200000000);
-
-	    // Check if already imported
-	    $importCheck = \DB::select('id')->from('data_dialler_copy')->where('data_lead_id', $singleData['id'])->execute()->as_array();
-
-	    if (count($importCheck) > 0)
-	    {
-		// We have already done this lead
-		if (\Fuel::$is_cli) \Cli::write('Lead '.$singleData['id'].' was already imported.');
-
-	    } else {
-
-
             $telephoneNumbers = array(
                 $singleData['phone_number'],
                 $singleData['alt_phone'],
@@ -268,22 +278,9 @@ class Source
                 );
                 
                 
-//                list($dialler_lead_id, $rows_affected) = \DB::insert('vicidial_list')->set($diallerDetails)->execute('dialler');
+                list($dialler_lead_id, $rows_affected) = \DB::insert('vicidial_list')->set($diallerDetails)->execute('dialler');
                 
-		$newInsertQuery = \DB::insert('vicidial_list')->set($diallerDetails)->compile('dialler');
-		$queryString .= $newInsertQuery . ";";
-
                 $inserted++;
-
-		if ( ($inserted%500) == 0 )
-		{
-		    $ranQuery = \DB::query($queryString)->execute('dialler');
-		    $queryString = "";
-		    \DB::update('data')->value('dialable_leads', $inserted)->where('id', $this->id)->execute();
-		    time_nanosleep(2, 500000000);
-		}
-
-//		\DB::update('data')->value('dialable_leads', $inserted)->where('id', $this->id)->execute();
                 
                 // If we are in CLI mode then write to CLI every 1000 leads
                 if (\Fuel::$is_cli && ($inserted==0 || ($inserted)%1000 == 0) )
@@ -297,13 +294,11 @@ class Source
                 if ($isDuplicate)
                 {
                     $allDuplicates++;
-		    \DB::update('data')->value('duplicates', $allDuplicates)->where('id', $this->id)->execute();
                 }
                 
                 if ($isTps)
                 {
                     $allTps++;
-		    \DB::update('data')->value('tps', $allTps)->where('id', $this->id)->execute();
                 }
             }
                 
@@ -316,16 +311,10 @@ class Source
                     'tps'         => $tpsNumbers,
                 )),
             ))->execute();
-
-	    }            
+            
 
         }
-	if (strlen($queryString) > 5)
-	{        
-        	$ranQuery = \DB::query($queryString)->execute('dialler');
-	}
-                    $queryString = "";
-
+        
         // If we are in CLI mode then write to CLI every 1000 leads
         if (\Fuel::$is_cli) \Cli::write($inserted . ' leads copied to the dialler.');
         
@@ -465,10 +454,10 @@ class Source
         // E-Mail Managers with new campaign lists
 		$email = \Email::forge();
 		
-		$email->from('noreply@mysecureportal.net', 'MySecurePortal');
+		$email->from('noreply@expertmoneysolutions.co.uk', 'Expert Money Solutions');
+		
 		$email->to(array(
-			'mattwilliams0604@gmail.com'  => 'Matt Williams',
-            's.skinner@teleoutsourcing.co.uk' => 'Simon Skinner',
+			'data-forward@expertmoneysolutions.co.uk'  => 'Data Updates',
 		));
 		
 		$email->priority(\Email::P_HIGH);
@@ -597,21 +586,21 @@ class Source
                                 LEFT JOIN
                                   Leadpool_GABFS.dbo.LeadBatch AS L_LB ON L_CLD.LeadBatchID=L_LB.ID
                                 LEFT JOIN
-                                  Debtsolv_GABFS.dbo.Type_Lead_Source AS L_TLS ON L_LB.LeadSourceID=L_TLS.ID
+                                  Debtsolv_MMS.dbo.Type_Lead_Source AS L_TLS ON L_LB.LeadSourceID=L_TLS.ID
                                 LEFT JOIN
                                   Leadpool_GABFS.dbo.Campaign_Contacts AS CC ON L_CLD.ClientID = CC.ClientID
                                 LEFT JOIN
                                   Leadpool_GABFS.dbo.Type_ContactResult AS TCR ON CC.ContactResult = TCR.ID
                                 LEFT JOIN
-                                  Debtsolv_GABFS.dbo.Client_LeadData AS D_CLD ON L_CLD.ClientID = D_CLD.LeadPoolReference
+                                  Debtsolv_MMS.dbo.Client_LeadData AS D_CLD ON L_CLD.ClientID = D_CLD.LeadPoolReference
                                 LEFT JOIN
                                   Dialler.dbo.client_dates AS DCD ON D_CLD.Client_ID=DCD.ClientID
                                 LEFT JOIN
-                                  Debtsolv_GABFS.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID = D_TLS.ID
+                                  Debtsolv_MMS.dbo.Type_Lead_Source AS D_TLS ON D_CLD.SourceID = D_TLS.ID
                                 LEFT JOIN
                                   Dialler.dbo.referrals AS DMR ON D_CLD.LeadPoolReference=DMR.leadpool_id
                                 LEFT JOIN
-                                  Debtsolv_GABFS.dbo.Client_PaymentData AS D_PD ON D_CLD.Client_ID=D_PD.ClientID
+                                  Debtsolv_MMS.dbo.Client_PaymentData AS D_PD ON D_CLD.Client_ID=D_PD.ClientID
                                 WHERE
                                   L_TLS.Reference = '".$this->listID."'
                                 OR
