@@ -14,7 +14,7 @@ class Controller_Data extends \Templates\Controller_Force
         );
         
         $this->template->title = 'Example Page';
-        $this->template->content = "hello";
+        $this->template->content = "List has been uploaded, and start importing shortly.";
     }
 
 

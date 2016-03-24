@@ -6,7 +6,7 @@
 return array(
 	'default' => array(
 		'connection'  => array(
-			'dsn'        => 'mysql:host=127.0.0.1;dbname=gbs_intranet',
+			'dsn'        => 'mysql:host=192.168.99.100;dbname=gbs_intranet;port=32777',
 			'username'   => 'root',
 			'password'   => 'password',
 		),
